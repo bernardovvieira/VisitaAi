@@ -13,6 +13,7 @@ return new class extends Migration
             $table->bigIncrements('use_id');
 
             // Campos conforme diagrama
+            $table->string('use_nome'); // Nome completo
             $table->string('use_cpf')->unique();
             $table->string('use_email')->unique();
             $table->string('use_senha');
