@@ -1,22 +1,46 @@
-LICENÇA DE SOFTWARE RESTRITA  
-Copyright (c) 2025 Bernardo Vivian Vieira.  
+# LICENÇA DE USO RESTRITO DE SOFTWARE
 
-1. **Propriedade**  
-   Este software é de propriedade exclusiva de **Bernardo Vivian Vieira**.  
+Copyright (c) 2025  
+**Bernardo Vivian Vieira**
 
-2. **Uso Autorizado**  
-   - **Uso Interno na UPF**: permitido apenas para fins acadêmicos relacionados à disciplina de Engenharia de Software.  
-   - **Distribuição Externa**:  
-     A redistribuição ou uso comercial deste software **só é permitida** se realizada por:  
-     - Bernardo Vivian Vieira (desenvolvedor). 
+---
 
-3. **Restrições**  
-   - É proibido modificar, sublicenciar, redistribuir ou utilizar este software fora do escopo acadêmico sem autorização escrita do detentor.  
-   - É proibido realizar engenharia reversa, descompilar ou desmontar o código-fonte.  
+## 1. Titularidade
 
-4. **Isenção de Garantias**  
-   O software é fornecido "COMO ESTÁ", sem garantias de qualquer tipo.  
+Este software é de titularidade exclusiva de **Bernardo Vivian Vieira**, sendo protegido pelas leis brasileiras de propriedade intelectual e demais legislações aplicáveis.
 
-5. **Contato para Autorização**  
-   Solicitações devem ser enviadas para:  
-   - Bernardo Vivian Vieira: [179835@upf.br](mailto:179835@upf.br). 
+---
+
+## 2. Permissão de Uso
+
+O uso deste software é restrito aos seguintes fins:
+
+- **Finalidade acadêmica:** permitido exclusivamente para fins didáticos, de estudo e demonstração, no contexto de disciplinas da Universidade de Passo Fundo (UPF).
+- **Proprietário:** qualquer redistribuição, publicação ou uso fora do escopo acima só poderá ser realizada pelo autor, Bernardo Vivian Vieira, ou mediante sua autorização expressa e por escrito.
+
+---
+
+## 3. Restrições
+
+É vedado ao usuário:
+
+- Copiar, modificar, sublicenciar, distribuir ou explorar comercialmente este software sem autorização prévia e formal do titular.
+- Realizar engenharia reversa, desmontagem ou qualquer forma de tentativa de acesso ao código-fonte, fora das permissões previstas nesta licença.
+- Utilizar este software em sistemas de produção, ambientes corporativos ou serviços públicos sem permissão específica.
+
+---
+
+## 4. Isenção de Responsabilidade
+
+Este software é fornecido **"NO ESTADO EM QUE SE ENCONTRA"**, sem qualquer tipo de garantia, expressa ou implícita, incluindo, mas não se limitando a garantias de adequação para um propósito específico, ausência de erros ou funcionamento contínuo.
+
+O autor não será responsável por quaisquer danos diretos, indiretos, incidentais, consequenciais ou especiais decorrentes do uso ou da incapacidade de uso do software.
+
+---
+
+## 5. Contato para Autorização
+
+Dúvidas, permissões específicas ou solicitações devem ser encaminhadas para:
+
+**Bernardo Vivian Vieira**  
+📧 [179835@upf.br](mailto:179835@upf.br)
