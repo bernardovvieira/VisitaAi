@@ -6,10 +6,10 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-^12.x-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel Version">
-  <img src="https://img.shields.io/badge/License-Restricted-red?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Licença-Restrita-red?style=for-the-badge" alt="License">
 </p>
 
-<br><br>
+<br>
 
 # Visita Aí - Controle de Visitas Epidemiológicas
 
@@ -24,69 +24,115 @@ Sistema acadêmico desenvolvido para a gestão de visitas epidemiológicas, util
 
 Para rodar este projeto, você precisará de:
 
-- **PHP 8.2+**
+- **PHP 8.2 ou superior**
 - **Composer** (gerenciador de pacotes PHP)
-- **Node.js** e **NPM** (para compilar os assets frontend)
-- **Banco de dados MySQL** ou equivalente
-- **Servidor Web** (Apache, Nginx ou `php artisan serve`)
+- **Node.js e NPM** (para compilar os assets do frontend)
+- **Banco de dados MySQL** (ou equivalente)
+- **Servidor Web** (`php artisan serve`)
 
-> ⚡ Pode ser necessário habilitar algumas extensões do PHP para funcionamento correto.
+> ⚡ Algumas extensões do PHP podem ser necessárias (`pdo`, `mbstring`, `openssl`, `fileinfo`, entre outras).
 
 ---
 
 ## 🛠️ Instalação
 
-Clone o repositório e acesse a pasta:
+Clone o repositório:
 
 ```bash
 git clone https://github.com/bernardovvieira/visita-ai.git
 cd visita-ai
 ```
-Instale as dependências do PHP:
+
+Instale as dependências do projeto:
+
 ```bash
 composer install
-```
-Instale as dependências do Node.js:
-```bash
 npm install
+npm run dev
 ```
-Compile os assets frontend:
-```bash
-npm run build
-```
-Copie o arquivo `.env.example` para `.env` e configure as variáveis de ambiente, especialmente as de banco de dados:
+
+Copie e edite o arquivo de ambiente:
+
 ```bash
 cp .env.example .env
 ```
-Gere a chave de aplicação:
+
+Gere a chave da aplicação:
+
 ```bash
 php artisan key:generate
 ```
-Crie o banco de dados e execute as migrações:
+
+Configure o banco de dados no arquivo `.env`, então crie o banco manualmente (no MySQL):
+
+```sql
+CREATE DATABASE visita_ai CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Execute as migrações:
+
 ```bash
 php artisan migrate
-php artisan db:seed
+php artisan db:seed  # (opcional, se houver dados iniciais)
 ```
-Inicie o servidor embutido do Laravel:
+
+Inicie os servidores da aplicação:
+
 ```bash
 php artisan serve
 ```
-Acesse o sistema pelo navegador em `http://localhost:8000`.
+```bash
+npm run dev
+```
+> Deixe ambos os comandos rodando em terminais separados.
+
+Abra o navegador e acesse: [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 🔁 Instalação — Todos os Comandos Resumidos
+
+```bash
+git clone https://github.com/bernardovvieira/visita-ai.git
+cd visita-ai
+
+composer install
+npm install
+
+cp .env.example .env
+php artisan key:generate
+
+# Criar banco no MySQL com:
+# CREATE DATABASE visita_ai CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+php artisan migrate
+php artisan db:seed  # se necessário
+
+php artisan serve
+npm run dev
+```
 
 ---
 
 ## 🫱🏽‍🫲🏼 Contribuição
-A contribuição para este projeto é restrita. Se você deseja colaborar, entre em contato com o autor.
+
+Este repositório possui **licença restrita** e a colaboração é limitada.  
+Caso tenha interesse em contribuir, entre em contato diretamente com o autor.
 
 ---
 
 ## 📃 Licença
-Este projeto é restrito e não está disponível para uso público. Todos os direitos reservados ao autor. Confire a licença para mais detalhes.
+
+Este projeto é **de uso acadêmico e restrito**.  
+**Não está autorizado para distribuição, modificação ou uso comercial.**  
+Todos os direitos reservados ao autor.
 
 ---
 
 ## 📱 Contato
-Para mais informações, entre em contato: 
-> Bernardo Vivian Vieira
-> E-mail: 179835@upf.br
-> Linkedin: www.linkedin.com/in/bernardovivianvieira
+
+Para mais informações:
+
+> Bernardo Vivian Vieira  
+> E-mail: 179835@upf.br  
+> LinkedIn: [linkedin.com/in/bernardovivianvieira](https://www.linkedin.com/in/bernardovivianvieira)
