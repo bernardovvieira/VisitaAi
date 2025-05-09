@@ -12,17 +12,17 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
-    // Tabela e PK com prefixo “use_”
+    // Tabela e PK com prefixo
     protected $table        = 'users';
     protected $primaryKey   = 'use_id';
     public    $incrementing = true;
-    public    $timestamps   = false; // usamos datas customizadas
+    public    $timestamps   = false;
 
     /**
      * Atributos em massa.
      */
     protected $fillable = [
-        'use_nome',           // Nome completo
+        'use_nome',           
         'use_cpf',
         'use_email',
         'use_senha',

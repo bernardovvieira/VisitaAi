@@ -15,8 +15,11 @@
                     </x-nav-link>
 
                     @if(Auth::user()->isGestor())
+                        <x-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">
+                            {{ __('Doenças') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
-                            {{ __('Gerenciar Usuários') }}
+                            {{ __('Usuários') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
                             {{ __('Relatórios') }}
@@ -93,9 +96,12 @@
                 {{ __('Página Inicial') }}
             </x-responsive-nav-link>
             @if(Auth::user()->isGestor())
+                <x-responsive-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">
+                    {{ __('Doenças') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.users.index')"
                                        :active="request()->routeIs('gestor.users.*')">
-                    {{ __('Gerenciar Usuários') }}
+                    {{ __('Usuários') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.users.index')"
                                        :active="request()->routeIs('gestor.users.*')">

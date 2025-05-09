@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Gestor\UserApprovalController;
 use App\Http\Controllers\Gestor\UserController;
+use App\Http\Controllers\DoencaController;
 use App\Http\Middleware\CheckApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,9 @@ Route::middleware('auth')->group(function () {
 
             // CRUD completo de usuários (RF02)
             Route::resource('users', UserController::class)->except(['show']);
+
+            // CRUD completo de doenças (RF03)
+            Route::resource('doencas', DoencaController::class)->except(['show']);
         });
 
     });
