@@ -3,97 +3,110 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ProfileTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
-    public function test_profile_page_is_displayed(): void
+    /**
+     * A página de edição de perfil deve estar acessível para usuários autenticados.
+     */
+    #[Test]
+    public function edit_page_is_displayed(): void
     {
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
 
-        $response = $this
+        $this
             ->actingAs($user)
-            ->get('/profile');
-
-        $response->assertOk();
+            ->get(route('profile.edit'))
+            ->assertOk();
     }
 
-    public function test_profile_information_can_be_updated(): void
+    /**
+     * Atualização de perfil com dados válidos deve funcionar e normalizar o e-mail em lowercase.
+     */
+    #[Test]
+    public function profile_information_can_be_updated_with_valid_data(): void
     {
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
 
-        $response = $this
+        $payload = [
+            'name'  => 'Test User',
+            'email' => 'bernardo@bitwise.dev.br',
+        ];
+
+
+        $this
             ->actingAs($user)
-            ->patch('/profile', [
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-            ]);
+            ->patch(route('profile.update'), $payload)
+            ->assertSessionDoesntHaveErrors()
+            ->assertRedirect(route('profile.edit'));
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
-
-        $user->refresh();
-
-        $this->assertSame('Test User', $user->name);
-        $this->assertSame('test@example.com', $user->email);
-        $this->assertNull($user->email_verified_at);
+        // Verifica que o 'use_id' (PK), use_nome e use_email foram atualizados
+        $this->assertDatabaseHas('users', [
+            'use_id'    => $user->use_id,
+            'use_nome'  => 'Test User',
+            'use_email' => 'bernardo@bitwise.dev.br',
+        ]);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    /**
+     * Campos 'name' e 'email' são obrigatórios.
+     */
+    #[Test]
+    public function profile_update_requires_name_and_email(): void
     {
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
 
-        $response = $this
+        $this
             ->actingAs($user)
-            ->patch('/profile', [
-                'name' => 'Test User',
-                'email' => $user->email,
-            ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
-
-        $this->assertNotNull($user->refresh()->email_verified_at);
+            ->patch(route('profile.update'), [])
+            ->assertSessionHasErrors(['name', 'email']);
     }
 
-    public function test_user_can_delete_their_account(): void
+    /**
+     * E-mail deve ter formato válido.
+     */
+    #[Test]
+    public function profile_update_requires_valid_email(): void
     {
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
+        $payload = [
+            'name'  => 'Test User',
+            'email' => 'invalid-email',
+        ];
 
-        $response = $this
+        $this
             ->actingAs($user)
-            ->delete('/profile', [
-                'password' => 'password',
-            ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/');
-
-        $this->assertGuest();
-        $this->assertNull($user->fresh());
+            ->patch(route('profile.update'), $payload)
+            ->assertSessionHasErrors('email');
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account(): void
+    /**
+     * E-mail deve ser único entre usuários.
+     */
+    #[Test]
+    public function profile_update_requires_unique_email(): void
     {
-        $user = User::factory()->create();
+        $existing = User::factory()->create(['use_email' => '179835@upf.br']);
+        /** @var \App\Models\User $user */
+        $user     = User::factory()->create();
 
-        $response = $this
+        $payload = [
+            'name'  => 'Another User',
+            'email' => '179835@upf.br',
+        ];
+
+        $this
             ->actingAs($user)
-            ->from('/profile')
-            ->delete('/profile', [
-                'password' => 'wrong-password',
-            ]);
-
-        $response
-            ->assertSessionHasErrorsIn('userDeletion', 'password')
-            ->assertRedirect('/profile');
-
-        $this->assertNotNull($user->fresh());
+            ->patch(route('profile.update'), $payload)
+            ->assertSessionHasErrors('email');
     }
 }

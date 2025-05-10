@@ -16,7 +16,7 @@
 
                     @if(Auth::user()->isGestor())
                         <x-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">
-                            {{ __('Doenças') }}
+                            {{ __('Doenças Monitoradas') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
                             {{ __('Usuários') }}
@@ -25,6 +25,9 @@
                             {{ __('Relatórios') }}
                         </x-nav-link>
                     @elseif(Auth::user()->isAgente())
+                        <x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">
+                            {{ __('Doenças Monitoradas') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
                             {{ __('Minhas Visitas') }}
                         </x-nav-link>
@@ -97,7 +100,7 @@
             </x-responsive-nav-link>
             @if(Auth::user()->isGestor())
                 <x-responsive-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">
-                    {{ __('Doenças') }}
+                    {{ __('Doenças Monitoradas') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.users.index')"
                                        :active="request()->routeIs('gestor.users.*')">
@@ -108,6 +111,10 @@
                     {{ __('Relatórios') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgente())
+                <x-responsive-nav-link :href="route('agente.doencas.index')"
+                                        :active="request()->routeIs('agente.doencas.*')">
+                    {{ __('Doenças Monitoradas') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('agente.visitas.index')"
                                        :active="request()->routeIs('agente.visitas.*')">
                     {{ __('Minhas Visitas') }}

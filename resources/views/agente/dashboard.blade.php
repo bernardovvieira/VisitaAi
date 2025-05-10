@@ -43,24 +43,27 @@
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 dark:text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.386 0 4.616.657 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 21C12 21 5 14.5 5 9a7 7 0 0114 0c0 5.5-7 12-7 12z" />
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Locais Cadastrados</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    --
+                    ---
                 </p>
             </div>
             <!-- Doenças Monitoradas -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 dark:text-red-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 4H7m1-8h8M6 6h.01M18 18h.01" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M9 17v-6m4 6v-10m4 10v-4" />
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Doenças Monitoradas</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    --
+                    {{ \App\Models\Doenca::count() }}
                 </p>
             </div>
         </div>
@@ -72,25 +75,25 @@
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Ações Rápidas</h2>
         </header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition">
+            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
                 Registrar Visita
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition">
+            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
                 Minhas Visitas
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition">
+            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
                 Locais Cadastrados
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition">
+            <a href="{{ route('agente.doencas.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -107,7 +110,7 @@
         <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
             <p class="mt-2 text-gray-600 dark:text-gray-400">Encontrou algum problema? Contate:</p>
             <ul class="mt-2 space-y-1 text-gray-600 dark:text-gray-400">
-                <li><b>E-mail:</b> <a href="mailto:bernardo@bitwise.dev.br" class="underline text-gray-800 dark:text-gray-100">bernardo@bitwise.dev.br</a></li>
+                <li><b>E-mail:</b> <a href="mailto:bernardo@bitwise.dev.br" class="underline text-gray-800 dark:text-gray-100 hover:text-black dark:hover:text-gray-200 transition-colors">bernardo@bitwise.dev.br</a></li>
                 <li><b>WhatsApp:</b> <a href="https://wa.me/5554996605584" class="underline text-gray-800 dark:text-gray-100">+55 54 9 9660-5584</a></li>
             </ul>
         </div>

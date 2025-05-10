@@ -3,19 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doenca;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\DoencaRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class DoencaController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         $search = $request->input('search');
     
         $query = Doenca::query();
-    
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->whereRaw("doe_nome LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"])
@@ -24,13 +31,27 @@ class DoencaController extends Controller
                   ->orWhereRaw("doe_medidas_controle->> '$' LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"]);
             });
         }
+        $doencas = $query->paginate(10)->appends(['search' => $search]);
     
-        $doencas = $query
-            ->paginate(10)
-            ->appends(['search' => $search]);
-    
+        if ($user && $user->isAgente()) {
+            return view('agente.doencas.index', compact('doencas', 'search'));
+        }
         return view('gestor.doencas.index', compact('doencas', 'search'));
-    }    
+    }
+    
+    /**
+     * Display the specified resource.
+     */
+    public function show(Doenca $doenca)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user && $user->isAgente()) {
+            return view('agente.doencas.show', compact('doenca'));
+        }
+        return view('gestor.doencas.show', compact('doenca'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -72,20 +93,13 @@ class DoencaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DoencaRequest $request)
     {
-        $data = $request->validate([
-            'doe_nome'               => 'required|string|max:255',
-            'doe_sintomas'           => 'required|array|min:1',
-            'doe_sintomas.*'         => 'string',
-            'doe_transmissao'        => 'required|array|min:1',
-            'doe_transmissao.*'      => 'string',
-            'doe_medidas_controle'   => 'required|array|min:1',
-            'doe_medidas_controle.*' => 'string',
-        ]);
-
+        // Só os campos validados serão retornados
+        $data = $request->validated();
+    
         Doenca::create($data);
-
+    
         return redirect()
             ->route('gestor.doencas.index')
             ->with('success', 'Doença cadastrada com sucesso.');
@@ -132,20 +146,10 @@ class DoencaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Doenca $doenca)
+    public function update(DoencaRequest $request, Doenca $doenca)
     {
-        $data = $request->validate([
-            'doe_nome'               => 'required|string|max:255',
-            'doe_sintomas'           => 'required|array|min:1',
-            'doe_sintomas.*'         => 'string',
-            'doe_transmissao'        => 'required|array|min:1',
-            'doe_transmissao.*'      => 'string',
-            'doe_medidas_controle'   => 'required|array|min:1',
-            'doe_medidas_controle.*' => 'string',
-        ]);
-
-        $doenca->update($data);
-
+        $doenca->update($request->validated());
+    
         return redirect()
             ->route('gestor.doencas.index')
             ->with('success', 'Doença atualizada com sucesso.');
@@ -162,4 +166,5 @@ class DoencaController extends Controller
             ->route('gestor.doencas.index')
             ->with('success', 'Doença excluída com sucesso.');
     }
+
 }

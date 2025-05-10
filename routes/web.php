@@ -45,8 +45,14 @@ Route::middleware('auth')->group(function () {
             Route::view('visitas', 'agente.dashboard')->name('visitas.index');
             Route::view('visitas/create', 'agente.dashboard')->name('visitas.create');
             Route::view('locais', 'agente.dashboard')->name('locais.index');
-            Route::view('doencas', 'agente.dashboard')->name('doencas.index');
+
+            // agora usa o controller para listar e ver detalhes de doenças
+            Route::get('doencas', [DoencaController::class, 'index'])->name('doencas.index')
+            ->middleware('can:viewAny,App\Models\Doenca');
+            Route::get('doencas/{doenca}', [DoencaController::class, 'show'])->name('doencas.show')
+                    ->middleware('can:view,doenca');
         });
+
 
         // Perfil
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -65,7 +71,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('users', UserController::class)->except(['show']);
 
             // CRUD completo de doenças (RF03)
-            Route::resource('doencas', DoencaController::class)->except(['show']);
+            Route::resource('doencas', DoencaController::class)
+                ->middleware('auth');
         });
 
     });
