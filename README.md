@@ -26,11 +26,12 @@ Para rodar este projeto, você precisará de:
 
 - **PHP 8.2 ou superior**
 - **Composer** (gerenciador de pacotes PHP)
-- **Node.js e NPM** (para compilar os assets do frontend)
-- **Banco de dados MySQL** (ou equivalente)
-- **Servidor Web** (`php artisan serve`)
+- **Node.js 18 ou superior** (necessário para compilar os assets do frontend)
+- **NPM** (instalado automaticamente com o Node.js)
+- **MySQL ou equivalente** (banco de dados relacional)
+- **Servidor Web** (use o servidor embutido com `php artisan serve` ou configure Apache/Nginx)
 
-> ⚡ Algumas extensões do PHP podem ser necessárias (`pdo`, `mbstring`, `openssl`, `fileinfo`, entre outras).
+> ⚡ Algumas extensões do PHP podem ser necessárias (`intl`, `pdo`, `mbstring`, `openssl`, `fileinfo`, entre outras).
 
 ---
 
