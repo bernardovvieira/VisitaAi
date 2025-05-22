@@ -87,35 +87,41 @@
     </p>
 
     {{-- carregar jQuery e Mask Plugin --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-    <script>
-    $(function(){
-      var $login = $('#login');
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+$(function(){
+  var $login = $('#login');
 
-      // sempre permita só números ou letras conforme o padrão
-      $login.on('input', function(){
-        var val = $login.val();
+  function toggleCpfMask(){
+    // extrai apenas dígitos
+    var digits = $login.val().replace(/\D/g, '');
 
-        // se começar com dígito, aplica máscara de CPF
-        if (/^[0-9]/.test(val)) {
-          // se ainda não tiver máscara, ativa
-          if (!$login.data('mask-applied')) {
-            $login.mask('000.000.000-00');
-            $login.data('mask-applied', true);
-          }
-        } else {
-          // se não começa com dígito e máscara está ativa, remova
-          if ($login.data('mask-applied')) {
-            $login.unmask();
-            $login.data('mask-applied', false);
-          }
-        }
-      });
+    if (digits.length === 11) {
+      if (!$login.data('mask-applied')) {
+        // aplica máscara de CPF (reverse: true para facilitar a digitação)
+        $login.mask('000.000.000-00', { reverse: true });
+        $login.data('mask-applied', true);
+      }
+    } else {
+      if ($login.data('mask-applied')) {
+        // remove máscara sempre que não tiver 11 dígitos
+        $login.unmask();
+        $login.data('mask-applied', false);
+      }
+    }
+  }
 
-      // opcional: ao focar já dispara a verificação
-      $login.trigger('input');
+  $login
+    .on('input', toggleCpfMask)
+    .on('paste', function(){
+      // aguarda o paste ser inserido no campo
+      setTimeout(toggleCpfMask, 0);
     });
-    </script>
+
+  // dispara ao carregar a página, caso já venha com valor
+  toggleCpfMask();
+});
+</script>
     
 </x-guest-layout>
