@@ -51,7 +51,7 @@
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Locais Cadastrados</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    ---
+                    {{ \App\Models\Local::count() }}
                 </p>
             </div>
             <!-- Doenças Monitoradas -->
