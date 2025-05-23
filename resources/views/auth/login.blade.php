@@ -87,41 +87,41 @@
     </p>
 
     {{-- carregar jQuery e Mask Plugin --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-<script>
-$(function(){
-  var $login = $('#login');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+    $(function(){
+    var $login = $('#login');
 
-  function toggleCpfMask(){
-    // extrai apenas dígitos
-    var digits = $login.val().replace(/\D/g, '');
+    function toggleCpfMask(){
+        // extrai apenas dígitos
+        var digits = $login.val().replace(/\D/g, '');
 
-    if (digits.length === 11) {
-      if (!$login.data('mask-applied')) {
-        // aplica máscara de CPF (reverse: true para facilitar a digitação)
-        $login.mask('000.000.000-00', { reverse: true });
-        $login.data('mask-applied', true);
-      }
-    } else {
-      if ($login.data('mask-applied')) {
-        // remove máscara sempre que não tiver 11 dígitos
-        $login.unmask();
-        $login.data('mask-applied', false);
-      }
+        if (digits.length === 11) {
+        if (!$login.data('mask-applied')) {
+            // aplica máscara de CPF (reverse: true para facilitar a digitação)
+            $login.mask('000.000.000-00', { reverse: true });
+            $login.data('mask-applied', true);
+        }
+        } else {
+        if ($login.data('mask-applied')) {
+            // remove máscara sempre que não tiver 11 dígitos
+            $login.unmask();
+            $login.data('mask-applied', false);
+        }
+        }
     }
-  }
 
-  $login
-    .on('input', toggleCpfMask)
-    .on('paste', function(){
-      // aguarda o paste ser inserido no campo
-      setTimeout(toggleCpfMask, 0);
+    $login
+        .on('input', toggleCpfMask)
+        .on('paste', function(){
+        // aguarda o paste ser inserido no campo
+        setTimeout(toggleCpfMask, 0);
+        });
+
+    // dispara ao carregar a página, caso já venha com valor
+    toggleCpfMask();
     });
-
-  // dispara ao carregar a página, caso já venha com valor
-  toggleCpfMask();
-});
-</script>
+    </script>
     
 </x-guest-layout>

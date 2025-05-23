@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Gestor\UserApprovalController;
 use App\Http\Controllers\Gestor\UserController;
 use App\Http\Controllers\DoencaController;
+use App\Http\Controllers\VisitaController;
+use App\Http\Controllers\LocalController;
 use App\Http\Middleware\CheckApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,17 +44,34 @@ Route::middleware('auth')->group(function () {
 
         // Rotas específicas do Agente
         Route::prefix('agente')->name('agente.')->group(function () {
-            Route::view('visitas', 'agente.dashboard')->name('visitas.index');
-            Route::view('visitas/create', 'agente.dashboard')->name('visitas.create');
-            Route::view('locais', 'agente.dashboard')->name('locais.index');
 
-            // agora usa o controller para listar e ver detalhes de doenças
-            Route::get('doencas', [DoencaController::class, 'index'])->name('doencas.index')
-            ->middleware('can:viewAny,App\Models\Doenca');
-            Route::get('doencas/{doenca}', [DoencaController::class, 'show'])->name('doencas.show')
-                    ->middleware('can:view,doenca');
+            // Locais
+            Route::resource('locais', LocalController::class)
+                ->except(['show'])
+                ->middleware('can:viewAny,App\Models\Local');
+
+            Route::get('locais/{local}', [LocalController::class, 'show'])
+                ->name('locais.show')
+                ->middleware('can:view,local');
+
+            // Visitas
+            Route::resource('visitas', VisitaController::class)
+                ->except(['show'])
+                ->middleware('can:viewAny,App\Models\Visita');
+
+            Route::get('visitas/{visita}', [VisitaController::class, 'show'])
+                ->name('visitas.show')
+                ->middleware('can:view,visita');
+
+            // Doenças (somente leitura)
+            Route::get('doencas', [DoencaController::class, 'index'])
+                ->name('doencas.index')
+                ->middleware('can:viewAny,App\Models\Doenca');
+
+            Route::get('doencas/{doenca}', [DoencaController::class, 'show'])
+                ->name('doencas.show')
+                ->middleware('can:view,doenca');
         });
-
 
         // Perfil
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -73,6 +92,24 @@ Route::middleware('auth')->group(function () {
             // CRUD completo de doenças (RF03)
             Route::resource('doencas', DoencaController::class)
                 ->middleware('auth');
+
+            // CRUD completo de locais (RF04)
+            Route::get('locais', [LocalController::class, 'index'])
+                ->name('locais.index')
+                ->middleware('can:viewAny,App\Models\Local');
+
+            Route::get('locais/{local}', [LocalController::class, 'show'])
+                ->name('locais.show')
+                ->middleware('can:view,local');
+
+            // CRUD completo de visitas 
+            Route::get('visitas', [VisitaController::class, 'index'])
+                ->name('visitas.index')
+                ->middleware('can:viewAny,App\Models\Visita');
+
+            Route::get('visitas/{visita}', [VisitaController::class, 'show'])
+                ->name('visitas.show')
+                ->middleware('can:view,visita');
         });
 
     });

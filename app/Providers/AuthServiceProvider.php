@@ -6,6 +6,12 @@ use App\Models\User;
 use App\Policies\UserPolicy;
 use App\Models\Doenca;
 use App\Policies\DoencaPolicy;
+use App\Models\Local;
+use App\Policies\LocalPolicy;
+use App\Models\Visita;
+use App\Policies\VisitaPolicy;
+use App\Models\Monitorada;
+use App\Policies\MonitoradaPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -19,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => UserPolicy::class,
         Doenca::class  => DoencaPolicy::class,
+        Local::class   => LocalPolicy::class,
+        Visita::class  => VisitaPolicy::class,
+        Monitorada::class => MonitoradaPolicy::class,
     ];
 
     /**

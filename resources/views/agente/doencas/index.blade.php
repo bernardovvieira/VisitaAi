@@ -7,9 +7,10 @@
   <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Doenças Monitoradas</h1>
 
   <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-    <p class="text-gray-600 dark:text-gray-400">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+    <p class="mt-2 text-gray-600 dark:text-gray-400">
       Abaixo estão as doenças que você está autorizado a visualizar. Para detalhes, clique em “Ver detalhes”.
-    </p>
+    </p> 
   </section>
 
   <section x-data="{ search: '{{ request('search') }}' }" class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
@@ -34,8 +35,8 @@
     </p>
 
     <div class="overflow-x-auto">
-      <table class="min-w-full">
-        <thead class="bg-gray-100 dark:bg-gray-700">
+      <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
+          <thead class="bg-gray-100 dark:bg-gray-700">
           <tr>
             <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>
             <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Nome</th>
