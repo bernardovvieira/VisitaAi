@@ -13,10 +13,16 @@ return new class extends Migration
     {
         Schema::create('locais', function (Blueprint $table) {
             $table->bigIncrements('loc_id');
-            $table->string('loc_endereco');
-            $table->string('loc_bairro');
-            $table->string('loc_coordenadas'); // armazenar como texto tipo "lat,long"
-            $table->string('loc_codigo_unico')->unique();
+            $table->string('loc_cep', 9);
+            $table->string('loc_endereco', 255);
+            $table->string('loc_numero', 20);
+            $table->string('loc_bairro', 100);
+            $table->string('loc_cidade', 100)->nullable();
+            $table->string('loc_estado', 2)->nullable();
+            $table->string('loc_pais', 100)->default('Brasil');
+            $table->string('loc_latitude', 20);
+            $table->string('loc_longitude', 20);
+            $table->string('loc_codigo_unico', 255)->unique();
             $table->timestamps();
         });
     }

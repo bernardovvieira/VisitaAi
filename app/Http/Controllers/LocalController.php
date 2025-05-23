@@ -12,7 +12,6 @@ class LocalController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
         $search = $request->input('search');
 
         $query = Local::query();
@@ -49,15 +48,17 @@ class LocalController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'loc_endereco'       => 'required|string|max:255|unique:locais,loc_endereco',
-            'loc_bairro'         => 'required|string|max:255',
-            'latitude'           => 'required|string',
-            'longitude'          => 'required|string',
+            'loc_cep'            => 'required|string|size:9',
+            'loc_endereco'       => 'required|string|max:255',
+            'loc_numero'         => 'required|string|max:20',
+            'loc_bairro'         => 'required|string|max:100',
+            'loc_cidade'         => 'nullable|string|max:100',
+            'loc_estado'         => 'nullable|string|max:2',
+            'loc_pais'           => 'nullable|string|max:100',
+            'loc_latitude'       => 'required|string|max:20',
+            'loc_longitude'      => 'required|string|max:20',
             'loc_codigo_unico'   => 'required|string|max:255|unique:locais,loc_codigo_unico',
         ]);
-
-        $validated['loc_coordenadas'] = "{$validated['latitude']},{$validated['longitude']}";
-        unset($validated['latitude'], $validated['longitude']);
 
         Local::create($validated);
 
@@ -68,26 +69,23 @@ class LocalController extends Controller
 
     public function edit(Local $local)
     {
-        // Divide latitude/longitude antes de enviar para view
-        [$lat, $lng] = explode(',', $local->loc_coordenadas);
-        $local->latitude = $lat;
-        $local->longitude = $lng;
-
         return view('agente.locais.edit', compact('local'));
     }
 
     public function update(Request $request, Local $local)
     {
         $validated = $request->validate([
+            'loc_cep'            => 'required|string|size:9',
             'loc_endereco'       => 'required|string|max:255|unique:locais,loc_endereco,' . $local->loc_id . ',loc_id',
-            'loc_bairro'         => 'required|string|max:255',
-            'latitude'           => 'required|string',
-            'longitude'          => 'required|string',
+            'loc_numero'         => 'required|string|max:20',
+            'loc_bairro'         => 'required|string|max:100',
+            'loc_cidade'         => 'nullable|string|max:100',
+            'loc_estado'         => 'nullable|string|max:2',
+            'loc_pais'           => 'nullable|string|max:100',
+            'loc_latitude'       => 'required|string|max:20',
+            'loc_longitude'      => 'required|string|max:20',
             'loc_codigo_unico'   => 'required|string|max:255|unique:locais,loc_codigo_unico,' . $local->loc_id . ',loc_id',
         ]);
-
-        $validated['loc_coordenadas'] = "{$validated['latitude']},{$validated['longitude']}";
-        unset($validated['latitude'], $validated['longitude']);
 
         $local->update($validated);
 
