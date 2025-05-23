@@ -26,13 +26,23 @@
             <x-alert type="success" :message="session('success')" />
         @endif
 
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6">
             @csrf
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP <span class="text-red-500">*</span></label>
-                    <input id="cep" name="cep" type="text" maxlength="9" placeholder="00000-000" required
+                    <input id="loc_cep" name="loc_cep" type="text" maxlength="9" placeholder="00000-000" required
                            class="cep mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
@@ -45,7 +55,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="numero" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número <span class="text-red-500">*</span></label>
-                    <input id="numero" name="numero" type="text" required
+                    <input id="loc_numero" name="loc_numero" type="number" required
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
@@ -57,28 +67,28 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label for="cidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade</label>
-                    <input id="cidade" name="cidade" type="text" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    <label for="cidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade <span class="text-red-500">*</span></label>
+                    <input id="loc_cidade" required name="loc_cidade" type="text" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
-                    <label for="estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado</label>
-                    <input id="estado" name="estado" type="text" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    <label for="estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado <span class="text-red-500">*</span></label>
+                    <input id="loc_estado" required name="loc_estado" type="text" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
-                    <label for="pais" class="block text-sm font-medium text-gray-700 dark:text-gray-300">País</label>
-                    <input id="pais" name="pais" type="text" value="Brasil" readonly class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    <label for="pais" class="block text-sm font-medium text-gray-700 dark:text-gray-300">País <span class="text-red-500">*</span></label>
+                    <input id="loc_pais" name="loc_pais" type="text" value="Brasil" required readonly class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div>
                     <label for="latitude" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Latitude <span class="text-red-500">*</span></label>
-                    <input id="latitude" name="latitude" type="text" required
+                    <input id="loc_latitude" name="loc_latitude" type="text" required
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
                     <label for="longitude" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Longitude <span class="text-red-500">*</span></label>
-                    <input id="longitude" name="longitude" type="text" required
+                    <input id="loc_longitude" name="loc_longitude" type="text" required
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div class="flex justify-end">
@@ -98,7 +108,7 @@
 
             <div>
                 <label for="loc_codigo_unico" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código Único do Imóvel<span class="text-red-500">*</span></label>
-                <input id="loc_codigo_unico" name="loc_codigo_unico" type="text" value="{{ old('loc_codigo_unico') }}" required
+                <input id="loc_codigo_unico" name="loc_codigo_unico" type="number" value="{{ old('loc_codigo_unico') }}" required
                         class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 @error('loc_codigo_unico')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
             </div>
@@ -119,7 +129,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    $('#cep').mask('00000-000');
+    $('#loc_cep').mask('00000-000');
 });
 
 let map = L.map('map').setView([-28.7, -52.3], 13);
@@ -130,15 +140,15 @@ let marker = L.marker([-28.7, -52.3], { draggable: true }).addTo(map);
 
 marker.on('dragend', function(e) {
     const pos = e.target.getLatLng();
-    document.getElementById('latitude').value = pos.lat.toFixed(7);
-    document.getElementById('longitude').value = pos.lng.toFixed(7);
+    document.getElementById('loc_latitude').value = pos.lat.toFixed(7);
+    document.getElementById('loc_longitude').value = pos.lng.toFixed(7);
 });
 
 function setMapPosition(lat, lng) {
     marker.setLatLng([lat, lng]);
     map.setView([lat, lng], 16);
-    document.getElementById('latitude').value = lat;
-    document.getElementById('longitude').value = lng;
+    document.getElementById('loc_latitude').value = lat;
+    document.getElementById('loc_longitude').value = lng;
 }
 
 function obterMinhaLocalizacao() {
@@ -159,7 +169,7 @@ function obterMinhaLocalizacao() {
     }
 }
 
-const cepInput = document.getElementById('cep');
+const cepInput = document.getElementById('loc_cep');
 cepInput.addEventListener('blur', () => {
     let cep = cepInput.value.replace(/\D/g, '');
     if (cep.length === 8) {
@@ -169,9 +179,9 @@ cepInput.addEventListener('blur', () => {
                 if (!data.erro) {
                     document.getElementById('loc_endereco').value = data.logradouro || '';
                     document.getElementById('loc_bairro').value = data.bairro || '';
-                    document.getElementById('cidade').value = data.localidade || '';
-                    document.getElementById('estado').value = data.uf || '';
-                    document.getElementById('pais').value = 'Brasil';
+                    document.getElementById('loc_cidade').value = data.localidade || '';
+                    document.getElementById('loc_estado').value = data.uf || '';
+                    document.getElementById('loc_pais').value = 'Brasil';
                 } else {
                     alert('CEP não encontrado.');
                 }

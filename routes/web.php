@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
             // Locais
             Route::resource('locais', LocalController::class)
+                ->parameters(['locais' => 'local']) // 👈 ADICIONE ISSO
                 ->except(['show'])
                 ->middleware('can:viewAny,App\Models\Local');
 
@@ -94,9 +95,11 @@ Route::middleware('auth')->group(function () {
                 ->middleware('auth');
 
             // CRUD completo de locais (RF04)
-            Route::get('locais', [LocalController::class, 'index'])
-                ->name('locais.index')
+            Route::resource('locais', LocalController::class)
+                ->parameters(['locais' => 'local']) 
+                ->except(['show'])
                 ->middleware('can:viewAny,App\Models\Local');
+
 
             Route::get('locais/{local}', [LocalController::class, 'show'])
                 ->name('locais.show')

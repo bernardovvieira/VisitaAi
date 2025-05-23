@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Local;
+use App\Http\Requests\LocalRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,22 +46,9 @@ class LocalController extends Controller
         return view('agente.locais.create');
     }
 
-    public function store(Request $request)
+    public function store(LocalRequest $request)
     {
-        $validated = $request->validate([
-            'loc_cep'            => 'required|string|size:9',
-            'loc_endereco'       => 'required|string|max:255',
-            'loc_numero'         => 'required|string|max:20',
-            'loc_bairro'         => 'required|string|max:100',
-            'loc_cidade'         => 'nullable|string|max:100',
-            'loc_estado'         => 'nullable|string|max:2',
-            'loc_pais'           => 'nullable|string|max:100',
-            'loc_latitude'       => 'required|string|max:20',
-            'loc_longitude'      => 'required|string|max:20',
-            'loc_codigo_unico'   => 'required|string|max:255|unique:locais,loc_codigo_unico',
-        ]);
-
-        Local::create($validated);
+        Local::create($request->validated());
 
         return redirect()
             ->route('agente.locais.index')
@@ -72,22 +60,9 @@ class LocalController extends Controller
         return view('agente.locais.edit', compact('local'));
     }
 
-    public function update(Request $request, Local $local)
+    public function update(LocalRequest $request, Local $local)
     {
-        $validated = $request->validate([
-            'loc_cep'            => 'required|string|size:9',
-            'loc_endereco'       => 'required|string|max:255|unique:locais,loc_endereco,' . $local->loc_id . ',loc_id',
-            'loc_numero'         => 'required|string|max:20',
-            'loc_bairro'         => 'required|string|max:100',
-            'loc_cidade'         => 'nullable|string|max:100',
-            'loc_estado'         => 'nullable|string|max:2',
-            'loc_pais'           => 'nullable|string|max:100',
-            'loc_latitude'       => 'required|string|max:20',
-            'loc_longitude'      => 'required|string|max:20',
-            'loc_codigo_unico'   => 'required|string|max:255|unique:locais,loc_codigo_unico,' . $local->loc_id . ',loc_id',
-        ]);
-
-        $local->update($validated);
+        $local->update($request->validated());
 
         return redirect()
             ->route('agente.locais.index')
