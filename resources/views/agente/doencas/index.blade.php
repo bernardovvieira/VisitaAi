@@ -49,7 +49,11 @@
         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
           @forelse($doencas as $doenca)
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td class="p-4 text-gray-800 dark:text-gray-100">{{ $doenca->doe_id }}</td>
+              <td class="p-4 text-gray-800 dark:text-gray-100">
+                  <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+                      #{{ $visita->doe_id }}
+                  </span>
+              </td>
               <td class="p-4 text-gray-800 dark:text-gray-100">{{ $doenca->doe_nome }}</td>
               <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_sintomas), 30) }}</td>
               <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_transmissao), 30) }}</td>

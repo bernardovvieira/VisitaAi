@@ -62,10 +62,26 @@
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($visitas as $visita)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $visita->vis_id }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">Cód. {{ $visita->local->loc_codigo_unico }} - 
-                                {{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}, {{ $visita->local->loc_bairro }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+                                    #{{ $visita->vis_id }}
+                                </span>
+                            </td>
+                           <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
+                                <div class="font-semibold">
+                                    {{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}
+                                </div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
+                                <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    Bairro: {{ $visita->local->loc_bairro }}<br>
+                                    Cód: {{ $visita->local->loc_codigo_unico }}
+                                </div>
+                            </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 @foreach($visita->doencas as $doenca)
                                     <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mr-1 mb-1">

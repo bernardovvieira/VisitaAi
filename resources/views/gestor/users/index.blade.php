@@ -59,7 +59,11 @@
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($usuarios as $usuario)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_id }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+                                    #{{ $usuario->use_id }}
+                                </span>
+                            </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_nome }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', $usuario->use_cpf) }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_email }}</td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Gestor\UserController;
 use App\Http\Controllers\DoencaController;
 use App\Http\Controllers\VisitaController;
 use App\Http\Controllers\LocalController;
+use App\Http\Controllers\RelatorioController;
 use App\Http\Middleware\CheckApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -113,6 +114,14 @@ Route::middleware('auth')->group(function () {
             Route::get('visitas/{visita}', [VisitaController::class, 'show'])
                 ->name('visitas.show')
                 ->middleware('can:view,visita');
+
+            // CRUD completo de relatórios (RF05)
+            Route::get('relatorios', [RelatorioController::class, 'index'])
+                ->name('relatorios.index');
+            
+            Route::post('relatorios/pdf', [RelatorioController::class, 'gerarPdf'])
+                ->name('relatorios.pdf');
+
         });
 
     });

@@ -30,6 +30,11 @@ class Visita extends Model
         return $this->belongsTo(User::class, 'fk_usuario_id');
     }
 
+    public function agente()
+    {
+        return $this->usuario(); 
+    }
+
     public function doencas()
     {
         return $this->belongsToMany(Doenca::class, 'monitoradas', 'fk_visita_id', 'fk_doenca_id');

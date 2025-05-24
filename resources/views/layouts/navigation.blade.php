@@ -24,7 +24,7 @@
                         <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
                             {{ __('Visitas Realizadas') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
+                        <x-nav-link :href="route('gestor.relatorios.index')" :active="request()->routeIs('gestor.relatorios.*')">
                             {{ __('Relatórios') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
@@ -117,7 +117,7 @@
                 <x-responsive-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
                     {{ __('Visitas Realizadas') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
+                <x-responsive-nav-link :href="route('gestor.relatorios.index')" :active="request()->routeIs('gestor.relatorios.*')">
                     {{ __('Relatórios') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">

@@ -118,15 +118,15 @@ class DatabaseSeeder extends Seeder
         $locais = [
             [
                 'loc_codigo_unico' => '1000',
-                'loc_cep'          => '99052-900',
-                'loc_endereco'     => 'Rodovia BR-285',
-                'loc_numero'       => '292',
-                'loc_bairro'       => 'São José',
-                'loc_cidade'       => 'Passo Fundo',
+                'loc_cep'          => '99300-000',
+                'loc_endereco'     => 'Rua 7 de Setembro',
+                'loc_numero'       => '404',
+                'loc_bairro'       => 'Farroupilha',
+                'loc_cidade'       => 'Soledade',
                 'loc_estado'       => 'RS',
                 'loc_pais'         => 'Brasil',
-                'loc_latitude'     => '-28.2323675',
-                'loc_longitude'    => '-52.3822600',
+                'loc_latitude'     => '-28.8353131',
+                'loc_longitude'    => '-52.5081682',
             ],
             [
                 'loc_codigo_unico' => '1001',
