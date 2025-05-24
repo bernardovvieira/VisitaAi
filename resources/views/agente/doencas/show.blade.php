@@ -52,7 +52,7 @@
     @if(count($doenca->doe_sintomas))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_sintomas as $s)
-          <span class="inline-block px-3 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-full text-xs">{{ $s }}</span>
+          <span class="inline-block bg-blue-200 dark:bg-blue-700 text-blue-900 dark:text-blue-100 text-xs font-medium px-2 py-0.5 rounded">{{ $s }}</span>
         @endforeach
       </div>
     @else
@@ -66,7 +66,7 @@
     @if(count($doenca->doe_transmissao))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_transmissao as $t)
-          <span class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-xs">{{ $t }}</span>
+          <span class="inline-block bg-yellow-200 dark:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-xs font-medium px-2 py-0.5 rounded">{{ $t }}</span>
         @endforeach
       </div>
     @else
@@ -80,7 +80,7 @@
     @if(count($doenca->doe_medidas_controle))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_medidas_controle as $m)
-          <span class="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-xs">{{ $m }}</span>
+          <span class="inline-block bg-green-200 dark:bg-green-700 text-green-900 dark:text-green-100 text-xs font-medium px-2 py-0.5 rounded">{{ $m }}</span>
         @endforeach
       </div>
     @else

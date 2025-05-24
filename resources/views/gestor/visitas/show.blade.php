@@ -8,7 +8,7 @@
 @section('content')
 <div class="container mx-auto p-6 max-w-4xl space-y-6">
     <div class="flex justify-between items-center">
-        <a href="{{ route('agente.visitas.index') }}"
+        <a href="{{ route('gestor.visitas.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />

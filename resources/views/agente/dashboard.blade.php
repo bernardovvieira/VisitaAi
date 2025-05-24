@@ -24,9 +24,22 @@
     <!-- Estatísticas Pessoais -->
     <section class="space-y-4">
         <header>
-            <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Minhas Estatísticas</h2>
+            <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Estatísticas</h2>
         </header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Minhas visitas -->
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Minhas Visitas</h3>
+                </div>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
+                    {{ \App\Models\Visita::where('fk_usuario_id', Auth::user()->use_id)->count() }}
+                </p>
+            </div>
             <!-- Visitas Realizadas -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
@@ -36,7 +49,7 @@
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas Realizadas</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    --
+                    {{ \App\Models\Visita::count() }}
                 </p>
             </div>
             <!-- Locais Cadastrados -->
@@ -75,19 +88,19 @@
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Ações Rápidas</h2>
         </header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
+            <a href="{{ route('agente.visitas.create') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
                 Registrar Visita
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
+            <a href="{{ route('agente.visitas.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-                Minhas Visitas
+                Visitas Realizadas
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
+            <a href="{{ route('agente.locais.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>

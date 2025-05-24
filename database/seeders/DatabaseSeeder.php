@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Doenca;
 use App\Models\Local;
+use App\Models\Visita;
 
 class DatabaseSeeder extends Seeder
 {
@@ -144,5 +145,22 @@ class DatabaseSeeder extends Seeder
         foreach ($locais as $local) {
             Local::create($local);
         }
+
+        // Visitas
+        $visita1 = Visita::create([
+            'vis_data' => now()->toDateString(),
+            'vis_observacoes' => 'Primeira visita de teste',
+            'fk_local_id' => 1,
+            'fk_usuario_id' => 2,
+        ]);
+        $visita1->doencas()->attach([2, 4]); // Dengue, Influenza
+
+        $visita2 = Visita::create([
+            'vis_data' => now()->toDateString(),
+            'vis_observacoes' => 'Segunda visita de teste',
+            'fk_local_id' => 2,
+            'fk_usuario_id' => 3,
+        ]);
+        $visita2->doencas()->attach([1, 3]); // COVID-19, Hepatite A
     }
 }

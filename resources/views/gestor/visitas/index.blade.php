@@ -14,15 +14,8 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Aqui você pode visualizar, buscar, editar ou remover visitas epidemiológicas registradas.
+            Aqui você pode visualizar e buscar visitas epidemiológicas registradas.
         </p>
-        <a href="{{ route('agente.visitas.create') }}"
-           class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Registrar Visita
-        </a>
     </section>
 
     <!-- Campo de Busca -->
@@ -31,7 +24,7 @@
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Visita</label>
                 <input type="text" id="search" name="busca" x-model="search" x-init="$el.focus()"
-                       @input.debounce.500ms="window.location.href = '{{ route('agente.visitas.index') }}' + '?busca=' + encodeURIComponent(search)"
+                       @input.debounce.500ms="window.location.href = '{{ route('gestor.visitas.index') }}' + '?busca=' + encodeURIComponent(search)"
                        placeholder="Filtrar por local, agente ou doença..."
                        class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
             </div>
@@ -76,7 +69,7 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $visita->usuario->use_nome }}</td>
                             <td class="p-4 text-center">
                                 <div class="flex justify-center gap-3">
-                                    <a href="{{ route('agente.visitas.show', $visita) }}"
+                                    <a href="{{ route('gestor.visitas.show', $visita) }}"
                                        class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition">
                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -85,27 +78,7 @@
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                         Visualizar
-                                    </a>
-                                    <a href="{{ route('agente.visitas.edit', $visita) }}"
-                                        class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition">
-                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
-                                        </svg>
-                                        Editar
-                                    </a> 
-                                    <form method="POST" action="{{ route('agente.visitas.destroy', $visita) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Excluir esta visita?')"
-                                                class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition">
-                                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                    d="M4 6H20 M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2 M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6 M10 11v6 M14 11v6" />
-                                                </svg>
-                                            Excluir
-                                        </button>
-                                    </form>
+                                    </a>                                   
                                 </div>
                             </td>
                         </tr>

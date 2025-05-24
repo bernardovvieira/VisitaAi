@@ -76,16 +76,16 @@
                                 );
                             })" :key="local.loc_id">
                                 <li>
-                                    <button type="button" @click="selectedId = local.loc_id; search = local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
+                                    <button type="button" @click="selectedId = local.loc_id; search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
                                             class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <span x-text="local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado + ' (' + local.loc_codigo_unico + ')'">
+                                        <span x-text="'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado">
                                         </span>
                                     </button>
                                 </li>
                             </template>
                         </ul>
                     </div>
-                    <input type="hidden" name="fk_local_id" :value="selectedId">
+                    <input type="hidden" name="fk_local_id" :value="selectedId" x-model="selectedId">
                 </div>
             </div>
 

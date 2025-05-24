@@ -27,7 +27,8 @@
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a7 7 0 00-14 0v2h5m4-4a4 4 0 10-8 0h8zM10 8a4 4 0 118 0 4 4 0 01-8 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z" />
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total de Agentes</h3>
                 </div>
@@ -56,8 +57,17 @@
             <!-- Total de Doenças -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 dark:text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M9 17v-6m4 6v-10m4 10v-4" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400 dark:text-teal-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="
+                            M12 2v2
+                            M12 20v2
+                            M4.93 4.93l1.41 1.41
+                            M17.66 17.66l1.41 1.41
+                            M2 12h2
+                            M20 12h2
+                            M4.93 19.07l1.41-1.41
+                            M17.66 6.34l1.41-1.41" />
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total de Doenças</h3>
                 </div>
@@ -71,7 +81,7 @@
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total de Visitas</h3>
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">--</p>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ \App\Models\Visita::count() }}</p>
             </div>
         </div>
     </section>
@@ -96,19 +106,19 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-                Gerenciar Doenças
+                Doenças Monitoradas
+            </a>
+            <a href="{{ route('gestor.visitas.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                Visitas Realizadas
             </a>
             <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-                Gerenciar Visitas
-            </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-                Gerar Relatórios
+                Visualizar Relatórios
             </a>
             <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">

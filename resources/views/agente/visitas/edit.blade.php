@@ -49,7 +49,7 @@
                 <div
                     x-data="{
                         open: false,
-                        search: '{{ old('local_search', $visita->local->loc_endereco . ", " . $visita->local->loc_numero . " - " . $visita->local->loc_bairro . ", " . $visita->local->loc_cidade . "/" . $visita->local->loc_estado) }}',
+                        search: 'Cód. {{ $visita->local->loc_codigo_unico }} - {{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }} - {{ $visita->local->loc_bairro }}, {{ $visita->local->loc_cidade }}/{{ $visita->local->loc_estado }}',
                         selectedId: '{{ old('fk_local_id', $visita->fk_local_id) }}',
                         locais: {{ Js::from($locais) }},
                         limparSelecao() {
@@ -68,22 +68,23 @@
                                class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
 
                         <ul x-show="open" @click.away="open = false" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto">
-                            <template x-for="local in locais.filter(l => {
-                                const query = search.toLowerCase();
-                                return (
-                                    l.loc_endereco.toLowerCase().includes(query) ||
-                                    l.loc_bairro.toLowerCase().includes(query) ||
-                                    l.loc_codigo_unico.toString().includes(query)
-                                );
-                            })" :key="local.loc_id">
-                                <li>
-                                    <button type="button" @click="selectedId = local.loc_id; search = local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
-                                            class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <span x-text="local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado + ' (' + local.loc_codigo_unico + ')'">
-                                        </span>
-                                    </button>
-                                </li>
-                            </template>
+                        <template x-for="local in locais.filter(l => {
+                            const query = search.toLowerCase();
+                            return (
+                                l.loc_endereco.toLowerCase().includes(query) ||
+                                l.loc_bairro.toLowerCase().includes(query) ||
+                                l.loc_codigo_unico.toString().includes(query)
+                            );
+                        })" :key="local.loc_id">
+                            <li>
+                                <button type="button"
+                                        @click="selectedId = local.loc_id; search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
+                                        class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <span x-text="'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado">
+                                    </span>
+                                </button>
+                            </li>
+                        </template>
                         </ul>
                     </div>
                     <input type="hidden" name="fk_local_id" :value="selectedId">

@@ -22,6 +22,9 @@
                             {{ __('Locais Cadastrados') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
+                            {{ __('Visitas Realizadas') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
                             {{ __('Relatórios') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
@@ -35,7 +38,7 @@
                             {{ __('Locais Cadastrados') }}
                         </x-nav-link>
                         <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
-                            {{ __('Minhas Visitas') }}
+                            {{ __('Visitas Realizadas') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -112,6 +115,9 @@
                     {{ __('Locais Cadastrados') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
+                    {{ __('Visitas Realizadas') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
                     {{ __('Relatórios') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
@@ -125,7 +131,7 @@
                     {{ __('Locais Cadastrados') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
-                    {{ __('Minhas Visitas') }}
+                    {{ __('Visitas Realizadas') }}
                 </x-responsive-nav-link>
             @endif
         </div>
