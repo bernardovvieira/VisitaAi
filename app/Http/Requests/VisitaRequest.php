@@ -19,7 +19,8 @@ class VisitaRequest extends FormRequest
             'vis_observacoes' => ['nullable', 'string'],
             'fk_local_id'     => ['required', 'exists:locais,loc_id'],
             'fk_usuario_id'   => ['required', 'exists:users,use_id'],
-            'fk_doenca_id'    => ['required', 'exists:doencas,doe_id'],
+            'doencas'         => ['required', 'array'],
+            'doencas.*'       => ['exists:doencas,doe_id'],
         ];
     }
 }

@@ -18,7 +18,6 @@ class Visita extends Model
         'vis_observacoes',
         'fk_local_id',
         'fk_usuario_id',
-        'fk_doenca_id',
     ];
 
     public function local()
@@ -31,9 +30,9 @@ class Visita extends Model
         return $this->belongsTo(User::class, 'fk_usuario_id');
     }
 
-    public function doenca()
+    public function doencas()
     {
-        return $this->belongsTo(Doenca::class, 'fk_doenca_id');
+        return $this->belongsToMany(Doenca::class, 'monitoradas', 'fk_visita_id', 'fk_doenca_id');
     }
 
     public function monitoradas()

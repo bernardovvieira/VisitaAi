@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Visita;
 use App\Models\Local;
 use App\Models\Doenca;
+use App\Http\Requests\VisitaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,21 +47,16 @@ class VisitaController extends Controller
         return view('agente.visitas.create', compact('locais', 'doencas'));
     }
 
-    public function store(Request $request)
+    public function store(VisitaRequest $request)
     {
-        $validated = $request->validate([
-            'vis_data'        => 'required|date',
-            'vis_observacoes' => 'nullable|string',
-            'fk_local_id'     => 'required|exists:locais,loc_id',
-            'fk_usuario_id'   => 'required|exists:users,use_id',
-            'fk_doenca_id'    => 'required|exists:doencas,doe_id',
-        ]);
+        $validated = $request->validated();
+        $doencas = $validated['doencas'];
+        unset($validated['doencas']);
 
-        Visita::create($validated);
+        $visita = Visita::create($validated);
+        $visita->doencas()->sync($doencas);
 
-        return redirect()
-            ->route('agente.visitas.index')
-            ->with('success', 'Visita registrada com sucesso.');
+        return redirect()->route('agente.visitas.index')->with('success', 'Visita registrada com sucesso.');
     }
 
     public function edit(Visita $visita)
@@ -71,21 +67,16 @@ class VisitaController extends Controller
         return view('agente.visitas.edit', compact('visita', 'locais', 'doencas'));
     }
 
-    public function update(Request $request, Visita $visita)
+    public function update(VisitaRequest $request, Visita $visita)
     {
-        $validated = $request->validate([
-            'vis_data'        => 'required|date',
-            'vis_observacoes' => 'nullable|string',
-            'fk_local_id'     => 'required|exists:locais,loc_id',
-            'fk_usuario_id'   => 'required|exists:users,use_id',
-            'fk_doenca_id'    => 'required|exists:doencas,doe_id',
-        ]);
+        $validated = $request->validated();
+        $doencas = $validated['doencas'];
+        unset($validated['doencas']);
 
         $visita->update($validated);
+        $visita->doencas()->sync($doencas);
 
-        return redirect()
-            ->route('agente.visitas.index')
-            ->with('success', 'Visita atualizada com sucesso.');
+        return redirect()->route('agente.visitas.index')->with('success', 'Visita atualizada com sucesso.');
     }
 
     public function destroy(Visita $visita)
