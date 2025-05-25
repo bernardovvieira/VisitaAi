@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Helpers\LogHelper;
 
 class ProfileController extends Controller
 {
@@ -31,6 +32,13 @@ class ProfileController extends Controller
         $user->use_email = $request->validated()['email'];
     
         $user->save();
+
+        LogHelper::registrar(
+            'Atualização de perfil',
+            'Usuário',
+            'update',
+            'Usuário atualizou nome para: ' . $user->use_nome . ', email: ' . $user->use_email
+        );
     
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }    

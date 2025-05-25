@@ -120,7 +120,7 @@
                 </svg>
                 Visualizar Relatórios
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
+            <a href="{{ route('gestor.logs.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>

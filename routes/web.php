@@ -7,6 +7,7 @@ use App\Http\Controllers\DoencaController;
 use App\Http\Controllers\VisitaController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\RelatorioController;
+use App\Http\Controllers\Gestor\LogController;
 use App\Http\Middleware\CheckApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -121,6 +122,11 @@ Route::middleware('auth')->group(function () {
             
             Route::post('relatorios/pdf', [RelatorioController::class, 'gerarPdf'])
                 ->name('relatorios.pdf');
+
+            // Log de atividades (RF07)
+            Route::get('logs', [LogController::class, 'index'])
+                ->name('logs.index')
+                ->middleware('can:viewAny,App\Models\Log');
 
         });
 

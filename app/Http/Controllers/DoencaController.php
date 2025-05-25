@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\DoencaRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Helpers\LogHelper;
 
 class DoencaController extends Controller
 {
@@ -98,6 +99,13 @@ class DoencaController extends Controller
         $data = $request->validated();
     
         Doenca::create($data);
+
+        LogHelper::registrar(
+            'Cadastro de doença',
+            'Doença',
+            'create',
+            'Doença cadastrada: ' . $data['doe_nome']
+        );
     
         return redirect()
             ->route('gestor.doencas.index')
@@ -148,6 +156,13 @@ class DoencaController extends Controller
     public function update(DoencaRequest $request, Doenca $doenca)
     {
         $doenca->update($request->validated());
+
+        LogHelper::registrar(
+            'Atualização de doença',
+            'Doença',
+            'update',
+            'Doença atualizada: ' . $doenca->doe_nome
+        );
     
         return redirect()
             ->route('gestor.doencas.index')
@@ -159,7 +174,16 @@ class DoencaController extends Controller
      */
     public function destroy(Doenca $doenca)
     {
+        $nome = $doenca->doe_nome;
+
         $doenca->delete();
+
+        LogHelper::registrar(
+            'Exclusão de doença',
+            'Doença',
+            'delete',
+            'Doença excluída: ' . $nome
+        );
 
         return redirect()
             ->route('gestor.doencas.index')

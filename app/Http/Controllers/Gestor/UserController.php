@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
 
 class UserController extends Controller
 {
@@ -52,6 +53,13 @@ class UserController extends Controller
 
         User::create($dados);
 
+        LogHelper::registrar(
+            'Cadastro de usuário',
+            'Usuário',
+            'create',
+            'Usuário criado: ' . $dados['use_nome'] . ' (' . $dados['use_email'] . ')'
+        );
+
         return redirect()->route('gestor.users.index')->with('status', 'Usuário cadastrado com sucesso.');
     }
 
@@ -75,6 +83,13 @@ class UserController extends Controller
         }
     
         $user->update($dados);
+
+        LogHelper::registrar(
+            'Atualização de usuário',
+            'Usuário',
+            'update',
+            'Usuário atualizado: ' . $user->use_nome . ' (ID: ' . $user->use_id . ')'
+        );
     
         return redirect()->route('gestor.users.index')->with('status', 'Usuário atualizado com sucesso.');
     }
@@ -99,6 +114,13 @@ class UserController extends Controller
             'fk_gestor_id'   => null, 
             'use_data_anonimizacao' => now(),
         ]);
+
+        LogHelper::registrar(
+            'Anonimização de usuário',
+            'Usuário',
+            'delete',
+            'Usuário anonimizado: ID ' . $user->use_id
+        );
 
         return redirect()->route('gestor.users.index')->with('status', 'Usuário anonimizado com sucesso.');
     }

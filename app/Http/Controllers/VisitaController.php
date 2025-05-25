@@ -8,6 +8,7 @@ use App\Models\Doenca;
 use App\Http\Requests\VisitaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
 
 class VisitaController extends Controller
 {
@@ -74,6 +75,13 @@ class VisitaController extends Controller
         $visita = Visita::create($validated);
         $visita->doencas()->sync($doencas);
 
+        LogHelper::registrar(
+            'Registro de visita',
+            'Visita',
+            'create',
+            'Visita realizada no local: ' . $visita->local->loc_endereco . ', ' . $visita->local->loc_numero
+        );
+
         return redirect()->route('agente.visitas.index')->with('success', 'Visita registrada com sucesso.');
     }
 
@@ -94,12 +102,28 @@ class VisitaController extends Controller
         $visita->update($validated);
         $visita->doencas()->sync($doencas);
 
+        LogHelper::registrar(
+            'Edição de visita',
+            'Visita',
+            'update',
+            'Visita atualizada no local: ' . $visita->local->loc_endereco . ', ' . $visita->local->loc_numero
+        );
+
         return redirect()->route('agente.visitas.index')->with('success', 'Visita atualizada com sucesso.');
     }
 
     public function destroy(Visita $visita)
     {
+        $descricao = 'Visita removida do local: ' . $visita->local->loc_endereco . ', código: ' . $visita->local->loc_codigo_unico;
+        
         $visita->delete();
+
+        LogHelper::registrar(
+            'Exclusão de visita',
+            'Visita',
+            'delete',
+            $descricao
+        );
 
         return redirect()
             ->route('agente.visitas.index')

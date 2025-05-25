@@ -6,6 +6,7 @@ use App\Models\Local;
 use App\Http\Requests\LocalRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
 
 class LocalController extends Controller
 {
@@ -48,7 +49,14 @@ class LocalController extends Controller
 
     public function store(LocalRequest $request)
     {
-        Local::create($request->validated());
+        $local = Local::create($request->validated());
+
+        LogHelper::registrar(
+            'Cadastro de local',
+            'Local',
+            'create',
+            'Local cadastrado: ' . $local->loc_endereco . ', ' . $local->loc_numero
+        );
 
         return redirect()
             ->route('agente.locais.index')
@@ -64,6 +72,13 @@ class LocalController extends Controller
     {
         $local->update($request->validated());
 
+        LogHelper::registrar(
+            'Atualização de local',
+            'Local',
+            'update',
+            'Local atualizado: ' . $local->loc_endereco . ', nº ' . $local->loc_numero
+        );
+
         return redirect()
             ->route('agente.locais.index')
             ->with('success', 'Local atualizado com sucesso.');
@@ -71,7 +86,16 @@ class LocalController extends Controller
 
     public function destroy(Local $local)
     {
+        $descricao = $local->loc_endereco . ', ' . $local->loc_numero;
+        
         $local->delete();
+
+        LogHelper::registrar(
+            'Exclusão de local',
+            'Local',
+            'delete',
+            'Local excluído: ' . $descricao
+        );
 
         return redirect()
             ->route('agente.locais.index')

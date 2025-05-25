@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Helpers\LogHelper;
 
 class UserApprovalController extends Controller
 {
@@ -33,6 +34,13 @@ class UserApprovalController extends Controller
             'use_aprovado'  => true,
             'fk_gestor_id' => $gestorId,
         ]);
+
+        LogHelper::registrar(
+            'Aprovação de usuário',
+            'Usuário',
+            'approve',
+            'Usuário aprovado: ' . $user->use_nome . ' (ID: ' . $user->use_id . ')'
+        );
 
         return back()->with('status', 'Usuário aprovado com sucesso!');
     }

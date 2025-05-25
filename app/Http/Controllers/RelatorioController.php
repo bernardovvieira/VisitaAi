@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Visita;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogHelper;
 
 class RelatorioController extends Controller
 {
@@ -88,6 +89,19 @@ public function gerarPdf(Request $request)
     $doencasDetectadas = $visitas->flatMap->doencas->unique('doe_id');
     $gestorNome = Auth::user()->use_nome ?? 'Gestor';
     $bairro = $request->bairro;
+
+    $descricao = 'Relatório gerado entre ' . $data_inicio . ' e ' . $data_fim;
+
+    if ($bairro) {
+        $descricao .= ' para o bairro: ' . $bairro;
+    }
+
+    LogHelper::registrar(
+        'Geração de relatório',
+        'Relatório',
+        'export',
+        $descricao
+    );
 
     return Pdf::loadView('gestor.relatorios.pdf', compact(
         'visitas',

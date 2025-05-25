@@ -30,6 +30,9 @@
                         <x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
                             {{ __('Usuários') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">
+                            {{ __('Logs') }}
+                        </x-nav-link>
                     @elseif(Auth::user()->isAgente())
                         <x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">
                             {{ __('Doenças Monitoradas') }}
@@ -122,6 +125,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">
                     {{ __('Usuários') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">
+                    {{ __('Logs') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgente())
                 <x-responsive-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">

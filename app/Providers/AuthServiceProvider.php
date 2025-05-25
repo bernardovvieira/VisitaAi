@@ -12,6 +12,8 @@ use App\Models\Visita;
 use App\Policies\VisitaPolicy;
 use App\Models\Monitorada;
 use App\Policies\MonitoradaPolicy;
+use App\Models\Log;
+use App\Policies\LogPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -28,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Local::class   => LocalPolicy::class,
         Visita::class  => VisitaPolicy::class,
         Monitorada::class => MonitoradaPolicy::class,
+        Log::class => LogPolicy::class,
     ];
 
     /**
