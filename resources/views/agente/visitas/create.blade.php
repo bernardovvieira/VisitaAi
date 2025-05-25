@@ -90,7 +90,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Doenças Detectadas <span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Doenças Detectadas</label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     @foreach ($doencas as $doenca)
                         <label class="flex items-start gap-2">

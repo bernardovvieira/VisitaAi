@@ -1,8 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Overlay de carregamento -->
+<div id="overlayCarregando" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
+        <p class="text-white text-lg font-semibold">Gerando relatório, aguarde...</p>
+    </div>
+</div>
+
 <div class="container mx-auto p-6 space-y-6 max-w-7xl">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Relatórios</h1>
+
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded relative mb-4">
+            <strong>Erro:</strong> {{ session('error') }}
+        </div>
+    @endif
 
     {{-- Filtros Avançados --}}
     <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
@@ -292,6 +306,9 @@
 
     // Função para gerar o PDF
     async function gerarBase64Graficos(callback) {
+        // Mostrar overlay
+        document.getElementById('overlayCarregando').classList.remove('hidden');
+
         await new Promise(resolve => setTimeout(resolve, 300));
 
         const canvasBairros = document.getElementById('graficoBairros');
@@ -329,12 +346,28 @@
             form.appendChild(input);
         }
 
+        // Filtros do formulário
+        const dataInicio = document.querySelector('[name="data_inicio"]')?.value || '';
+        const dataFim = document.querySelector('[name="data_fim"]')?.value || '';
+        const bairro = document.querySelector('[name="bairro"]')?.value || '';
+
+        addField('data_inicio', dataInicio);
+        addField('data_fim', dataFim);
+        addField('bairro', bairro);
+
+        // Imagens em base64
         addField('graficoBairrosBase64', base64Bairros);
         addField('graficoDoencasBase64', base64Doencas);
         addField('mapaCalorBase64', base64Mapa);
 
         document.body.appendChild(form);
         form.submit();
+
+        // Recarrega a página após o envio
+        setTimeout(() => {
+            document.getElementById('overlayCarregando').classList.add('hidden');
+            location.reload();
+        }, 1000);
     }
 </script>
 @endsection

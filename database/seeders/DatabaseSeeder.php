@@ -148,7 +148,7 @@ class DatabaseSeeder extends Seeder
 
         // Visitas
         $visita1 = Visita::create([
-            'vis_data' => now()->toDateString(),
+            'vis_data' => now()->subDays(1)->toDateString(),
             'vis_observacoes' => 'Primeira visita de teste',
             'fk_local_id' => 1,
             'fk_usuario_id' => 2,
@@ -161,6 +161,6 @@ class DatabaseSeeder extends Seeder
             'fk_local_id' => 2,
             'fk_usuario_id' => 3,
         ]);
-        $visita2->doencas()->attach([1, 3]); // COVID-19, Hepatite A
+        $visita2->doencas()->attach([4]); // COVID-19, Hepatite A
     }
 }

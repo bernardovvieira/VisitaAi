@@ -83,11 +83,17 @@
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
-                                @foreach($visita->doencas as $doenca)
-                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mr-1 mb-1">
-                                        {{ $doenca->doe_nome }}
+                                @if($visita->doencas->isEmpty())
+                                    <span class="inline-block bg-red-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                        Nenhuma doença registrada
                                     </span>
-                                @endforeach
+                                @else
+                                    @foreach($visita->doencas as $doenca)
+                                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mr-1 mb-1">
+                                            {{ $doenca->doe_nome }}
+                                        </span>
+                                    @endforeach
+                                @endif
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $visita->usuario->use_nome }}</td>
                             <td class="p-4 text-center">

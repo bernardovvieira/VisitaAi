@@ -66,7 +66,7 @@ class VisitaController extends Controller
     public function store(VisitaRequest $request)
     {
         $validated = $request->validated();
-        $doencas = $validated['doencas'];
+        $doencas = $validated['doencas'] ?? [];
         unset($validated['doencas']);
 
         $validated['fk_usuario_id'] = Auth::id();
@@ -88,7 +88,7 @@ class VisitaController extends Controller
     public function update(VisitaRequest $request, Visita $visita)
     {
         $validated = $request->validated();
-        $doencas = $validated['doencas'];
+        $doencas = $validated['doencas'] ?? [];
         unset($validated['doencas']);
 
         $visita->update($validated);
