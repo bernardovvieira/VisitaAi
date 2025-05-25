@@ -92,7 +92,7 @@
             <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
                 <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Distribuição de Doenças</h3>
                 <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    O gráfico de pizza mostra a distribuição percentual das doenças registradas nas visitas.
+                    O gráfico de pizza mostra a proporção de cada doença registrada nas visitas epidemiológicas.
                 </p>
                 <canvas id="graficoDoencas" class="w-full" style="height: 240px; max-height: 240px;"></canvas>
             </div>
