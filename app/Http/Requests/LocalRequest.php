@@ -26,7 +26,7 @@ class LocalRequest extends FormRequest
             'loc_pais'           => ['nullable', 'string', 'max:100'],
             'loc_latitude'       => ['required', 'string', 'max:20'],
             'loc_longitude'      => ['required', 'string', 'max:20'],
-            'loc_codigo_unico'   => ['required', 'string', 'max:255', "unique:locais,loc_codigo_unico,{$localId},loc_id"],
+            'loc_codigo_unico' => ['nullable', 'string', 'max:255', "unique:locais,loc_codigo_unico,{$localId},loc_id"],
         ];
     }
 }

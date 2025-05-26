@@ -60,27 +60,29 @@ class DoencaController extends Controller
     {
         // Lista completa de opções para vigilância epidemiológica
         $optionsSintomas = [
-            'Febre', 'Calafrios', 'Tosse', 'Tosse seca', 'Tosse produtiva',
-            'Fadiga', 'Dor de cabeça', 'Mialgias', 'Artralgias',
-            'Dispneia', 'Odinofagia', 'Congestão nasal', 'Coriza',
-            'Anosmia', 'Ageusia', 'Náusea', 'Vômito', 'Diarreia',
-            'Sudorese noturna', 'Rigidez de nuca', 'Rash cutâneo',
-            'Dor abdominal', 'Conjuntivite'
+            'Febre alta', 'Febre baixa', 'Dor de cabeça', 'Dor atrás dos olhos',
+            'Dor muscular', 'Dor nas articulações', 'Manchas vermelhas na pele',
+            'Conjuntivite', 'Náusea', 'Vômito', 'Coceira', 'Fadiga', 'Cefaleia'
         ];
+
         $optionsTransmissao = [
-            'Contato direto', 'Gotículas respiratórias', 'Aerossois (transmissão aérea)',
-            'Água contaminada', 'Alimentos contaminados', 'Fômites',
-            'Vetor biológico', 'Vetor mecânico', 'Transmissão vertical',
-            'Hemocontato (sangue)', 'Transmissão sexual'
+            'Picada do mosquito Aedes aegypti',
+            'Transmissão sexual',
+            'Transmissão vertical (gestante para o feto)',
+            'Contato direto',
+            'Hemocontato (sangue)'
         ];
+
         $optionsMedidas = [
-            'Higienização das mãos', 'Máscara cirúrgica', 'Máscara N95/FFP2',
-            'Protetor ocular', 'Luvas descartáveis', 'Avental',
-            'Isolamento de casos', 'Quarentena de contatos', 'Etiqueta respiratória',
-            'Distanciamento físico', 'Ventilação adequada',
-            'Limpeza e desinfecção', 'Controle de vetores',
-            'Vacinação', 'WASH (água, saneamento e higiene)',
-            'Educação em saúde', 'Vigilância epidemiológica'
+            'Eliminação de criadouros',
+            'Uso de repelentes',
+            'Controle de vetores',
+            'Educação em saúde',
+            'Telagem de recipientes',
+            'Proteção da gestante',
+            'Acompanhamento médico',
+            'Vacinação',
+            'Campanhas de conscientização'
         ];
 
         return view('gestor.doencas.create', compact(

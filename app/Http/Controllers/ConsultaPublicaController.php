@@ -2,56 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Visita;
 use App\Models\Local;
 use App\Models\Doenca;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ConsultaPublicaController extends Controller
 {
     public function index()
     {
-        // Carrega visitas com local e doenças (sem dados sensíveis)
-        $visitas = Visita::with(['local', 'doencas'])->get();
-
-        // Total de visitas
-        $totalVisitas = $visitas->count();
-
-        // Doenças
         $doencas = Doenca::all();
 
-        // Locais com pelo menos uma visita com doença marcada
-        $locaisComFoco = $visitas->filter(fn($v) => $v->doencas->isNotEmpty())
-                                ->pluck('local.loc_codigo_unico')
-                                ->unique()
-                                ->count();
+        // Pega o primeiro local com cidade preenchida
+        $primeiroLocal = Local::whereNotNull('loc_cidade')->first();
+        $cidade = $primeiroLocal?->loc_cidade;
+        $estado = $primeiroLocal?->loc_estado;
 
-        // Doença mais recorrente
-        $todasDoencas = $visitas->flatMap(fn($v) => $v->doencas->pluck('doe_nome'));
-        $doencaMaisRecorrente = $todasDoencas->countBy()->sortDesc()->keys()->first();
+        // Fallback
+        $coordenadas = ['lat' => -28.655, 'lng' => -52.425];
 
-        // Bairro com mais ocorrências
-        $bairros = $visitas->pluck('local.loc_bairro')->filter();
-        $bairroMaisFrequente = $bairros->countBy()->sortDesc()->keys()->first();
+        // Busca coordenadas da cidade via Nominatim
+        if ($cidade && $estado) {
+            $query = urlencode("$cidade, $estado, Brasil");
+            $url = "https://nominatim.openstreetmap.org/search?q=$query&format=json&limit=1";
 
-        return view('consulta.index', compact(
-            'visitas',
-            'totalVisitas',
-            'locaisComFoco',
-            'doencaMaisRecorrente',
-            'bairroMaisFrequente',
-            'doencas'
-        ));
+            try {
+                $response = Http::withoutVerifying()->get($url);
+                $dados = $response->json();
+                if (!empty($dados[0])) {
+                    $coordenadas = [
+                        'lat' => floatval($dados[0]['lat']),
+                        'lng' => floatval($dados[0]['lon']),
+                    ];
+                }
+            } catch (\Exception $e) {
+                // falha silenciosa, usa fallback
+            }
+        }
+
+        return view('consulta.index', compact('doencas', 'coordenadas'));
     }
 
     public function consultaPorMatricula(Request $request)
     {
-        $matricula = $request->input('matricula');
+        $codigo = $request->input('matricula');
 
-        $local = Local::where('loc_codigo_unico', $matricula)->first();
+        $local = Local::where('loc_codigo_unico', $codigo)->first();
 
         if (!$local) {
-            return redirect()->back()->with('erro', 'matrícula não encontrada.');
+            return redirect()->back()->with('erro', 'Código não encontrado.');
         }
 
         $visitas = $local->visitas()->with('doencas')->get();

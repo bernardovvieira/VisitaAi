@@ -59,53 +59,45 @@ class DatabaseSeeder extends Seeder
             User::factory()->create($usuario);
         }
 
-        // Doenças monitoradas
+        // Doenças monitoradas (prioridade: arboviroses)
         $doencas = [
-            [
-                'doe_nome' => 'COVID-19',
-                'doe_sintomas' => [
-                    'Febre', 'Tosse seca', 'Fadiga', 'Dispneia', 'Anosmia', 'Ageusia',
-                    'Congestão nasal', 'Dor de cabeça', 'Dor abdominal', 'Diarreia'
-                ],
-                'doe_transmissao' => [
-                    'Gotículas respiratórias', 'Aerossois (transmissão aérea)', 'Fômites'
-                ],
-                'doe_medidas_controle' => [
-                    'Higienização das mãos', 'Máscara cirúrgica', 'Máscara N95/FFP2',
-                    'Ventilação adequada', 'Isolamento de casos', 'Vacinação'
-                ],
-            ],
             [
                 'doe_nome' => 'Dengue',
                 'doe_sintomas' => [
-                    'Febre', 'Dor de cabeça', 'Mialgias', 'Artralgias', 'Rash cutâneo', 'Náusea'
+                    'Febre alta', 'Dor de cabeça intensa', 'Dor atrás dos olhos',
+                    'Dor muscular e nas articulações', 'Náusea', 'Vômito', 'Manchas na pele'
                 ],
-                'doe_transmissao' => ['Vetor biológico'],
+                'doe_transmissao' => ['Picada do mosquito Aedes aegypti'],
                 'doe_medidas_controle' => [
-                    'Controle de vetores', 'Educação em saúde', 'Vigilância epidemiológica'
+                    'Eliminação de criadouros', 'Uso de repelentes', 'Telagem de recipientes',
+                    'Educação em saúde', 'Ações de controle vetorial'
                 ],
             ],
             [
-                'doe_nome' => 'Hepatite A',
-                'doe_sintomas' => ['Febre', 'Náusea', 'Vômito', 'Dor abdominal', 'Diarreia'],
-                'doe_transmissao' => [
-                    'Água contaminada', 'Alimentos contaminados', 'Transmissão fecal-oral'
-                ],
-                'doe_medidas_controle' => [
-                    'Higienização das mãos', 'WASH (água, saneamento e higiene)', 'Vacinação'
-                ],
-            ],
-            [
-                'doe_nome' => 'Influenza',
+                'doe_nome' => 'Zika',
                 'doe_sintomas' => [
-                    'Febre', 'Tosse', 'Calafrios', 'Fadiga', 'Congestão nasal', 'Dor de cabeça'
+                    'Febre baixa', 'Conjuntivite', 'Dor nas articulações',
+                    'Manchas vermelhas na pele', 'Dor de cabeça', 'Coceira'
                 ],
                 'doe_transmissao' => [
-                    'Gotículas respiratórias', 'Fômites', 'Contato direto'
+                    'Picada do mosquito Aedes aegypti',
+                    'Transmissão sexual', 'Transmissão vertical (gestante para o feto)'
                 ],
                 'doe_medidas_controle' => [
-                    'Máscara cirúrgica', 'Etiqueta respiratória', 'Vacinação',
-                    'Distanciamento físico', 'Ventilação adequada'
+                    'Eliminação de criadouros', 'Uso de preservativos',
+                    'Proteção da gestante', 'Controle vetorial', 'Repelente'
+                ],
+            ],
+            [
+                'doe_nome' => 'Chikungunya',
+                'doe_sintomas' => [
+                    'Febre alta', 'Dor intensa nas articulações', 'Dor muscular',
+                    'Cefaleia', 'Manchas vermelhas na pele', 'Fadiga'
+                ],
+                'doe_transmissao' => ['Picada do mosquito Aedes aegypti'],
+                'doe_medidas_controle' => [
+                    'Controle de vetores', 'Repelente', 'Acompanhamento médico',
+                    'Eliminação de água parada', 'Campanhas de conscientização'
                 ],
             ],
         ];
@@ -117,7 +109,7 @@ class DatabaseSeeder extends Seeder
         // Locais
         $locais = [
             [
-                'loc_codigo_unico' => '1000',
+                'loc_codigo_unico' => '85121055',
                 'loc_cep'          => '99300-000',
                 'loc_endereco'     => 'Rua 7 de Setembro',
                 'loc_numero'       => '404',
@@ -129,7 +121,7 @@ class DatabaseSeeder extends Seeder
                 'loc_longitude'    => '-52.5081682',
             ],
             [
-                'loc_codigo_unico' => '1001',
+                'loc_codigo_unico' => '25164321',
                 'loc_cep'          => '99300-000',
                 'loc_endereco'     => 'Rua Venâncio Aires',
                 'loc_numero'       => '947',

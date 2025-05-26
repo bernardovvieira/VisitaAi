@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
 
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Color\Color;
+
+
 class LocalController extends Controller
 {
     public function index(Request $request)
@@ -35,11 +43,26 @@ class LocalController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        $qrCode = new QrCode(
+            data: route('consulta.matricula', ['matricula' => $local->loc_codigo_unico]),
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 250,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        $qrCodeBase64 = base64_encode($result->getString());
+
         $view = $user->isAgente()
             ? 'agente.locais.show'
             : 'gestor.locais.show';
 
-        return view($view, compact('local'));
+        return view($view, compact('local', 'qrCodeBase64'));
     }
 
     public function create()
@@ -49,8 +72,18 @@ class LocalController extends Controller
 
     public function store(LocalRequest $request)
     {
-        $local = Local::create($request->validated());
 
+        $data = $request->validated();
+
+        // Gera um código único aleatório de 8 dígitos, garantindo que não exista no banco
+        do {
+            $codigo = mt_rand(10000000, 99999999);
+        } while (Local::where('loc_codigo_unico', $codigo)->exists());
+
+        $data['loc_codigo_unico'] = $codigo;
+
+        $local = Local::create($data);
+        
         LogHelper::registrar(
             'Cadastro de local',
             'Local',
