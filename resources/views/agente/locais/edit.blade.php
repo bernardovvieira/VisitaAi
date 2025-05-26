@@ -65,20 +65,24 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label for="loc_cidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade <span class="text-red-500">*</span></label>
-                    <input id="loc_cidade" name="loc_cidade" type="text" value="{{ old('loc_cidade', $local->loc_cidade) }}" required
+                    <input id="loc_cidade" name="loc_cidade" type="text" value="{{ old('loc_cidade', $local->loc_cidade) }}" required readonly
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
                     <label for="loc_estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado <span class="text-red-500">*</span></label>
-                    <input id="loc_estado" name="loc_estado" type="text" value="{{ old('loc_estado', $local->loc_estado) }}" required
+                    <input id="loc_estado" name="loc_estado" type="text" value="{{ old('loc_estado', $local->loc_estado) }}" required readonly
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
                     <label for="loc_pais" class="block text-sm font-medium text-gray-700 dark:text-gray-300">País <span class="text-red-500">*</span></label>
-                    <input id="loc_pais" name="loc_pais" type="text" value="{{ old('loc_pais', $local->loc_pais ?? 'Brasil') }}" required readonly
+                    <input id="loc_pais" name="loc_pais" type="text" value="{{ old('loc_pais', $local->loc_pais) }}" required readonly
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
             </div>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 italic">
+                Os campos <strong>cidade</strong>, <strong>estado</strong> e <strong>país</strong> serão preenchidos automaticamente após digitar um CEP válido.
+            </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                 <div>
