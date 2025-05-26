@@ -13,6 +13,11 @@
                 <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
                     Bem-vindo ao <span class="text-blue-400 dark:text-blue-400">Visita Aí</span>
                 </h1>
+                @if ($local)
+                    <p class="text-blue-600 dark:text-blue-400 text-lg font-medium">
+                        {{ $local->loc_cidade }}/{{ $local->loc_estado }}
+                    </p>
+                @endif
                 <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed max-w-md">
                     Sistema inteligente de apoio à vigilância epidemiológica municipal.<br>
                     Acompanhe, consulte e controle visitas de forma ágil, segura e eficiente.

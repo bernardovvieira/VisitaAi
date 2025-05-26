@@ -9,6 +9,7 @@ use App\Http\Controllers\LocalController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\Gestor\LogController;
 use App\Http\Controllers\ConsultaPublicaController;
+use App\Http\Controllers\PublicController;
 use App\Http\Middleware\CheckApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Página pública
-Route::view('/', 'welcome');
+Route::get('/', [PublicController::class, 'welcome']);
 
 // Página de consulta pública
 Route::get('/consulta-publica', [ConsultaPublicaController::class, 'index'])

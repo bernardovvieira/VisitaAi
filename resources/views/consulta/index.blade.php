@@ -29,6 +29,13 @@
         </div>
     </form>
 
+    @if (session('erro'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">
+            <strong class="font-bold">Erro:</strong>
+            <span class="block sm:inline">{{ session('erro') }}</span>
+        </div>
+    @endif
+
     {{-- Indicadores gerais do município --}}
     <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">

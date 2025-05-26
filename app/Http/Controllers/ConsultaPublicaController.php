@@ -51,7 +51,7 @@ class ConsultaPublicaController extends Controller
         $local = Local::where('loc_codigo_unico', $matricula)->first();
 
         if (!$local) {
-            return redirect()->back()->with('erro', 'Matrícula não encontrada.');
+            return redirect()->back()->with('erro', 'matrícula não encontrada.');
         }
 
         $visitas = $local->visitas()->with('doencas')->get();
