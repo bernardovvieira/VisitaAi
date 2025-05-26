@@ -6,18 +6,16 @@
 @section('content')
 <div class="container mx-auto p-6 max-w-4xl space-y-10">
 
-    {{-- Voltar --}}
-    <div>
-        <a href="{{ route('consulta.index') }}"
-           class="inline-flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium transition">
+    {{-- Cabeçalho --}}
+    <div class="flex items-center justify-between" style="padding-top: 2rem;">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Resultado da Consulta</h1>
+        <a href="{{ route('consulta.index') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Voltar à Consulta
         </a>
     </div>
-
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Resultado da Consulta</h1>
 
     {{-- Endereço e mapa --}}
     <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6 items-start">

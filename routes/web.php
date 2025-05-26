@@ -26,8 +26,8 @@ Route::get('/', [PublicController::class, 'welcome']);
 // Página de consulta pública
 Route::get('/consulta-publica', [ConsultaPublicaController::class, 'index'])
     ->name('consulta.index');
-Route::get('/consulta-publica/matricula', [ConsultaPublicaController::class, 'consultaPorMatricula'])
-    ->name('consulta.matricula');
+Route::get('/consulta-publica/codigo', [ConsultaPublicaController::class, 'consultaPorCodigo'])
+    ->name('consulta.codigo');
 
 // Página de "conta pendente"
 Route::view('/pendente', 'auth.pending')->name('pendente');

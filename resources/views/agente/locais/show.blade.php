@@ -77,7 +77,7 @@
             </p>
             <img src="data:image/png;base64,{{ $qrCodeBase64 }}" alt="QR Code" class="mx-auto w-40 h-40 my-2">
             <p class="text-xs break-all text-center">
-                {{ route('consulta.matricula', ['matricula' => $local->loc_codigo_unico]) }}
+                {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
             </p>
         </div>
     </div>

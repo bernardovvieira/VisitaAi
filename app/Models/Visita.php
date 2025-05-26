@@ -18,6 +18,7 @@ class Visita extends Model
         'vis_observacoes',
         'fk_local_id',
         'fk_usuario_id',
+        'vis_tipo',
     ];
 
     public function local()

@@ -23,46 +23,46 @@
 
             <div class="relative mt-1">
                 <input
-                :type="show ? 'text' : 'password'"
-                id="password"
-                name="password"
-                required
-                autocomplete="current-password"
-                class="block w-full pr-10 @error('password') border-red-500 @enderror"
+                    :type="show ? 'text' : 'password'"
+                    id="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full pr-10 @error('password') border-red-500 @enderror"
                 />
 
                 <button
-                type="button"
-                @click="show = !show"
-                class="absolute inset-y-0 right-0 px-3 flex items-center"
-                tabindex="-1"
+                    type="button"
+                    @click="show = !show"
+                    class="absolute inset-y-0 right-0 px-3 flex items-center"
+                    tabindex="-1"
                 >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    :class="show ? 'hidden' : 'block'"
-                    class="h-5 w-5 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    :class="show ? 'block' : 'hidden'"
-                    class="h-5 w-5 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.27-2.944-9.543-7a10.05 10.05 0 012.166-3.823m1.43-1.43A9.966 9.966 0 0112 5c4.478 0 8.27 2.944 9.543 7a9.97 9.97 0 01-4.032 5.687M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 3l18 18"/>
-                </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        :class="show ? 'hidden' : 'block'"
+                        class="h-5 w-5 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        :class="show ? 'block' : 'hidden'"
+                        class="h-5 w-5 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.27-2.944-9.543-7a10.05 10.05 0 012.166-3.823m1.43-1.43A9.966 9.966 0 0112 5c4.478 0 8.27 2.944 9.543 7a9.97 9.97 0 01-4.032 5.687M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3l18 18"/>
+                    </svg>
                 </button>
             </div>
 

@@ -53,6 +53,7 @@
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Visita</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Local</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Doenças</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Agente</th>
@@ -73,6 +74,12 @@
                                 </div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
                                     {{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                                <div class="font-semibold">{{ $visita->local->loc_nome }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ $visita->vis_tipo }}
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">

@@ -20,6 +20,7 @@ class VisitaRequest extends FormRequest
             'fk_local_id'     => ['required', 'exists:locais,loc_id'],
             'doencas'         => ['nullable', 'array'],
             'doencas.*'       => ['exists:doencas,doe_id'],
+            'vis_tipo' => ['required', 'in:LI+T,LIRAa'],
         ];
     }
 }

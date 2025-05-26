@@ -44,7 +44,7 @@ class LocalController extends Controller
         $user = Auth::user();
 
         $qrCode = new QrCode(
-            data: route('consulta.matricula', ['matricula' => $local->loc_codigo_unico]),
+            data: route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]),
             encoding: new Encoding('UTF-8'),
             errorCorrectionLevel: ErrorCorrectionLevel::Low,
             size: 250,

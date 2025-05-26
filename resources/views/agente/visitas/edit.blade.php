@@ -46,7 +46,19 @@
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
 
-                <div
+                <div>
+                    <label for="vis_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Tipo de Visita <span class="text-red-500">*</span>
+                    </label>
+                    <select id="vis_tipo" name="vis_tipo" required
+                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        <option value="">Selecione...</option>
+                        <option value="LI+T" {{ old('vis_tipo', $visita->vis_tipo) === 'LI+T' ? 'selected' : '' }}>LI+T (Levantamento de Índice + Tratamento)</option>
+                        <option value="LIRAa" {{ old('vis_tipo', $visita->vis_tipo) === 'LIRAa' ? 'selected' : '' }}>LIRAa (Índice Rápido para Aedes aegypti)</option>
+                    </select>
+                </div>
+
+                <div class="col-span-1 sm:col-span-2"
                     x-data="{
                         open: false,
                         search: 'Cód. {{ $visita->local->loc_codigo_unico }} - {{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }} - {{ $visita->local->loc_bairro }}, {{ $visita->local->loc_cidade }}/{{ $visita->local->loc_estado }}',

@@ -25,7 +25,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div>
                 <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">Data da Visita</h3>
                 <p class="text-base text-gray-900 dark:text-gray-100">{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</p>
@@ -33,6 +33,14 @@
             <div>
                 <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">Agente Responsável</h3>
                 <p class="text-base text-gray-900 dark:text-gray-100">{{ $visita->usuario->use_nome }}</p>
+            </div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">Tipo de Visita</h3>
+                <p class="text-base text-gray-900 dark:text-gray-100">
+                    <span class="inline-block bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-200 text-xs font-semibold px-2 py-1 rounded">
+                        {{ $visita->vis_tipo }}
+                    </span>
+                </p>
             </div>
         </div>
 
