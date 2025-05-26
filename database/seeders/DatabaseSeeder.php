@@ -145,7 +145,7 @@ class DatabaseSeeder extends Seeder
             'fk_local_id' => 1,
             'fk_usuario_id' => 2,
         ]);
-        $visita1->doencas()->attach([2, 4]); // Dengue, Influenza
+        $visita1->doencas()->attach([1, 2]); // Dengue, Zika
 
         $visita2 = Visita::create([
             'vis_data' => now()->toDateString(),
@@ -153,6 +153,6 @@ class DatabaseSeeder extends Seeder
             'fk_local_id' => 2,
             'fk_usuario_id' => 3,
         ]);
-        $visita2->doencas()->attach([4]); // COVID-19, Hepatite A
+        $visita2->doencas()->attach([3]); // Chikungunya
     }
 }
