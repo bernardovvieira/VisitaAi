@@ -20,17 +20,12 @@ class VisitaController extends Controller
 
         $visitas = Visita::with(['local', 'doencas', 'usuario'])
             ->when($busca, function ($query) use ($busca) {
-                $query->whereHas('local', function ($q) use ($busca) {
-                    $q->where('loc_endereco', 'like', '%' . $busca . '%');
-                })
-                ->orWhereHas('local', function ($q) use ($busca) {
-                    $q->where('loc_codigo_unico', '=', $busca);
-                })
-                ->orWhereHas('usuario', function ($q) use ($busca) {
-                    $q->where('use_nome', 'like', '%' . $busca . '%');
-                })
-                ->orWhereHas('doencas', function ($q) use ($busca) {
-                    $q->where('doe_nome', 'like', '%' . $busca . '%');
+                $query->where(function ($q) use ($busca) {
+                    $q->whereHas('local', fn($q) => $q->where('loc_endereco', 'like', '%' . $busca . '%'))
+                    ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
+                    ->orWhereHas('usuario', fn($q) => $q->where('use_nome', 'like', '%' . $busca . '%'))
+                    ->orWhereHas('doencas', fn($q) => $q->where('doe_nome', 'like', '%' . $busca . '%'))
+                    ->orWhere('vis_tipo', 'like', '%' . $busca . '%');
                 });
             })
             ->orderByDesc('vis_data')
