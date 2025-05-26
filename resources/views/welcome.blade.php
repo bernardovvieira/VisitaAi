@@ -19,8 +19,8 @@
                     </p>
                 @endif
                 <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed max-w-md">
-                    Sistema inteligente de apoio à vigilância epidemiológica municipal.<br>
-                    Acompanhe, consulte e controle visitas de forma ágil, segura e eficiente.
+                    Sistema de apoio à vigilância epidemiológica municipal.<br>
+                    Acompanhe, consulte e controle visitas de forma ágil e segura.
                 </p>
             </div>
 
