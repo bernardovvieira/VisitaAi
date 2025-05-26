@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Visita;
 use App\Models\Local;
 use App\Models\Doenca;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
 
 class ConsultaPublicaController extends Controller
 {
