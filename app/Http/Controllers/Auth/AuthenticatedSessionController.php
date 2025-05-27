@@ -32,9 +32,15 @@ class AuthenticatedSessionController extends Controller
 
         // Redireciona conforme o perfil
         $user     = $request->user();
-        $redirect = $user->isGestor()
-                    ? route('gestor.dashboard',  [], false)
-                    : route('agente.dashboard', [], false);
+        if ($user->isGestor()) {
+            $redirect = route('gestor.dashboard', [], false);
+        } elseif ($user->isAgenteSaude()) {
+            $redirect = route('saude.dashboard', [], false);
+        } elseif ($user->isAgenteEndemias()) {
+            $redirect = route('agente.dashboard', [], false);
+        } else {
+            abort(403);
+        }
 
         return redirect()->intended($redirect);
     }
