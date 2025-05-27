@@ -94,7 +94,12 @@
                                     @endforeach
                                 @endif
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $visita->usuario->use_nome }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                                <div class="font-semibold">{{ $visita->usuario->use_nome }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ $visita->usuario->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : 'Agente de Saúde' }}
+                                </div>
+                            </td>
                             <td class="p-4 text-center">
                                 <div class="flex justify-center gap-3">
                                     <a href="{{ route('gestor.visitas.show', $visita) }}"

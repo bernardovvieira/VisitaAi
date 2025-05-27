@@ -32,7 +32,6 @@ class VisitaController extends Controller
             $query->where('fk_usuario_id', $user->use_id)->where('vis_tipo', 'LIRAa');
             $view = 'saude.visitas.index';
         } elseif ($user->isAgenteEndemias()) {
-            $query->where('fk_usuario_id', $user->use_id);
             $view = 'agente.visitas.index';
         } else {
             $view = 'gestor.visitas.index';

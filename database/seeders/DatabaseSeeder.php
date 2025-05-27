@@ -131,6 +131,18 @@ class DatabaseSeeder extends Seeder
                 'loc_pais'         => 'Brasil',
                 'loc_latitude'     => '-28.8283392',
                 'loc_longitude'    => '-52.5098634',
+            ],
+            [
+                'loc_codigo_unico' => '12345678',
+                'loc_cep'          => '99300-000',
+                'loc_endereco'     => 'Avenida Marechal Floriano Peixoto',
+                'loc_numero'       => '3033',
+                'loc_bairro'       => 'Botucaraí',
+                'loc_cidade'       => 'Soledade',
+                'loc_estado'       => 'RS',
+                'loc_pais'         => 'Brasil',
+                'loc_latitude'     => '-28.8109116',
+                'loc_longitude'    => '-52.5078464',
             ]
         ];
 
@@ -144,7 +156,7 @@ class DatabaseSeeder extends Seeder
             'vis_observacoes' => 'Primeira visita de teste',
             'vis_tipo' => 'LI+T',
             'fk_local_id' => 1,
-            'fk_usuario_id' => 2,
+            'fk_usuario_id' => 2, // Agente Um (agente_endemias)
         ]);
         $visita1->doencas()->attach([1, 2]); // Dengue, Zika
 
@@ -153,8 +165,17 @@ class DatabaseSeeder extends Seeder
             'vis_observacoes' => 'Segunda visita de teste',
             'vis_tipo' => 'LI+T',
             'fk_local_id' => 2,
-            'fk_usuario_id' => 3,
+            'fk_usuario_id' => 2, // Agente Um (agente_endemias)
         ]);
         $visita2->doencas()->attach([3]); // Chikungunya
+
+        $visita3 = Visita::create([
+            'vis_data' => now()->subDays(2)->toDateString(),
+            'vis_observacoes' => 'Visita de acompanhamento',
+            'vis_tipo' => 'LIRAa',
+            'fk_local_id' => 3,
+            'fk_usuario_id' => 3, // Agente Dois (agente_saude)
+        ]);
+        $visita3->doencas()->attach([1]); // Dengue
     }
 }
