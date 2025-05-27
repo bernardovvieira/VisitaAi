@@ -52,5 +52,11 @@ class AuthServiceProvider extends ServiceProvider
 
         // Apenas usuários aprovados
         Gate::define('isAprovado', fn(User $user) => $user->isAprovado());
+
+        // Apenas agentes de saúde
+        Gate::define('isAgenteSaude', fn(User $user) => $user->isAgenteSaude());
+
+        // Apenas agentes de endemias
+        Gate::define('isAgenteEndemias', fn(User $user) => $user->isAgenteEndemias());
     }
 }

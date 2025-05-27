@@ -110,7 +110,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAgente(): bool
     {
-        return $this->use_perfil === 'agente';
+        return in_array($this->use_perfil, ['agente_endemias', 'agente_saude']);
+    }
+
+    public function isAgenteEndemias(): bool
+    {
+        return $this->use_perfil === 'agente_endemias';
+    }
+
+    public function isAgenteSaude(): bool
+    {
+        return $this->use_perfil === 'agente_saude';
     }
 
     public function isGestor(): bool

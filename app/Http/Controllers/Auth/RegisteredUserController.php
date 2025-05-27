@@ -54,7 +54,7 @@ class RegisteredUserController extends Controller
             'use_cpf'          => $request->input('cpf'),
             'use_email'        => $request->input('email'),
             'use_senha'        => Hash::make($request->input('password')),
-            'use_perfil'       => 'agente',   // padrão
+            'use_perfil'       => 'agente_endemias',   // padrão
             'use_aprovado'     => false,      // aguardando aprovação do gestor
             'use_data_criacao' => now(),
         ]);

@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // 1) Garante que use_perfil seja ENUM('gestor','agente')
-            $table->enum('use_perfil', ['gestor', 'agente'])
+            // 1) Garante que use_perfil seja ENUM('gestor','agente_endemias','agente_saude')
+            $table->enum('use_perfil', ['gestor', 'agente_endemias', 'agente_saude'])
                   ->change();
 
             // 2) Converte use_data_criacao para TIMESTAMP com CURRENT_TIMESTAMP

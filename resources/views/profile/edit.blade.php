@@ -27,7 +27,7 @@
                 <div class="flex justify-between"><dt class="font-medium">CPF</dt><dd>{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', Auth::user()->use_cpf) }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd>{{ Auth::user()->use_email }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ ucfirst(Auth::user()->use_perfil) }}</dd></div>
+                <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor') }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente de Aprovação</span> @endif</dd></div>
             </dl>
