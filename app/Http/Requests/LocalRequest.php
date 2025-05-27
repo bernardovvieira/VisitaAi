@@ -18,8 +18,10 @@ class LocalRequest extends FormRequest
 
         return [
             'loc_cep'            => ['required', 'string', 'size:9'],
+            'loc_tipo'           => ['required', 'string', 'max:50'],
+            'loc_quarteirao'     => ['required', 'string', 'max:50'],
             'loc_endereco'       => ['required', 'string', 'max:255', "unique:locais,loc_endereco,{$localId},loc_id"],
-            'loc_numero'         => ['required', 'string', 'max:20'],
+            'loc_numero'         => ['nullable', 'string', 'max:20'],
             'loc_bairro'         => ['required', 'string', 'max:100'],
             'loc_cidade'         => ['nullable', 'string', 'max:100'],
             'loc_estado'         => ['nullable', 'string', 'max:2'],

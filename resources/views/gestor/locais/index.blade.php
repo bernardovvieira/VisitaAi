@@ -41,6 +41,8 @@
                 <thead class="bg-gray-100 dark:bg-gray-700">
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Imóvel</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Quarteirão</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Endereço</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Bairro</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Cidade</th>
@@ -56,7 +58,23 @@
                                     #{{ $local->loc_codigo_unico }}
                                 </span>
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_endereco }}, {{ $local->loc_numero }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
+                                @if ($local->loc_tipo == 'R')
+                                    <div class="text-sm text-gray-600 dark:text-gray-400" title="Residencial">
+                                        R
+                                    </div>
+                                @elseif ($local->loc_tipo == 'C')
+                                    <div class="text-sm text-gray-600 dark:text-gray-400" title="Comercial">
+                                        C
+                                    </div>
+                                @elseif ($local->loc_tipo == 'T')
+                                    <div class="text-sm text-gray-600 dark:text-gray-400" title="Terreno Baldio">
+                                        T
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="p-4 text-sm text-gray-600 dark:text-gray-400">{{ $local->loc_quarteirao }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_bairro }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_cidade }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>

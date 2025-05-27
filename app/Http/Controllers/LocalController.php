@@ -83,6 +83,8 @@ class LocalController extends Controller
         $data['loc_codigo_unico'] = $codigo;
 
         $local = Local::create($data);
+
+        $local->loc_numero = $local->loc_numero ?: 'N/A';
         
         LogHelper::registrar(
             'Cadastro de local',
@@ -105,6 +107,8 @@ class LocalController extends Controller
     {
         $local->update($request->validated());
 
+        $local->loc_numero = $local->loc_numero ?: 'N/A';
+
         LogHelper::registrar(
             'Atualização de local',
             'Local',
@@ -119,6 +123,8 @@ class LocalController extends Controller
 
     public function destroy(Local $local)
     {
+        $local->loc_numero = $local->loc_numero ?: 'N/A';
+
         $descricao = $local->loc_endereco . ', ' . $local->loc_numero;
         
         $local->delete();

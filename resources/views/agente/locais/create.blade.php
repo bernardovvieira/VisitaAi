@@ -39,6 +39,17 @@
         <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6">
             @csrf
 
+            <div>
+                <label for="loc_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Imóvel <span class="text-red-500">*</span></label>
+                <select id="loc_tipo" name="loc_tipo" required
+                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    <option value="" disabled selected>Selecione o tipo de imóvel</option>
+                    <option value="R" {{ old('loc_tipo') == 'R' ? 'selected' : '' }}>Residencial (R)</option>
+                    <option value="C" {{ old('loc_tipo') == 'C' ? 'selected' : '' }}>Comercial (C)</option>
+                    <option value="T" {{ old('loc_tipo') == 'T' ? 'selected' : '' }}>Terreno Baldio (T)</option>
+                </select>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP <span class="text-red-500">*</span></label>
@@ -52,16 +63,21 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label for="numero" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número <span class="text-red-500">*</span></label>
-                    <input id="loc_numero" name="loc_numero" type="number" required
+                    <label for="numero" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número</label>
+                    <input id="loc_numero" name="loc_numero" type="number"
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <div>
                     <label for="loc_bairro" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bairro <span class="text-red-500">*</span></label>
                     <input id="loc_bairro" name="loc_bairro" type="text" value="{{ old('loc_bairro') }}" required
                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                </div>
+                <div>
+                    <label for="loc_quarteirao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quarteirão <span class="text-red-500">*</span></label>
+                    <input id="loc_quarteirao" name="loc_quarteirao" type="number" value="{{ old('loc_quarteirao') }}" required
+                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
             </div>
 

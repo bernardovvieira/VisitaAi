@@ -22,7 +22,7 @@
 
 <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6 space-y-8">
     <!-- Dados principais -->
-    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
+    <dl class="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
         <div>
             <dt class="font-medium">Código Único do Imóvel</dt>
             <dd class="mt-1">
@@ -31,13 +31,26 @@
                 </span>
             </dd>
         </div>
-        <div class="sm:col-span-2">
+
+        <div>
+            <dt class="font-medium">Tipo de Imóvel</dt>
+            <dd class="mt-1">{{ $tipos[$local->loc_tipo] ?? 'Desconhecido' }}</dd>
+        </div>
+
+        <div>
+            <dt class="font-medium">Quarteirão</dt>
+            <dd class="mt-1">{{ $local->loc_quarteirao ?? 'N/A' }}</dd>
+        </div>
+        
+        <div class="sm:col-span-3">
             <dt class="font-medium">Endereço Completo</dt>
             <dd class="mt-1 text-gray-900 dark:text-gray-100">
-                {{ $local->loc_endereco }}, {{ $local->loc_numero }} - {{ $local->loc_bairro }},
+                {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif - {{ $local->loc_bairro }},
                 {{ $local->loc_cidade }}/{{ $local->loc_estado }} - {{ $local->loc_pais }}, {{ $local->loc_cep }}
             </dd>
         </div>
+    </dl>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
         <div>
             <dt class="font-medium">Latitude</dt>
             <dd class="mt-1">{{ $local->loc_latitude }}</dd>
@@ -72,7 +85,7 @@
         <div id="adesivo" class="inline-block bg-white mt-3 text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px]">
             <h3 class="text-lg font-bold mb-1">VISITA AÍ – CONSULTA PÚBLICA</h3>
             <p class="text-sm mb-2 leading-tight">
-                {{ $local->loc_endereco }}, {{ $local->loc_numero }}<br>
+                {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif<br>
                 {{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}
             </p>
             <img src="data:image/png;base64,{{ $qrCodeBase64 }}" alt="QR Code" class="mx-auto w-40 h-40 my-2">

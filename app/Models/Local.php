@@ -15,6 +15,8 @@ class Local extends Model
 
     protected $fillable = [
         'loc_cep',
+        'loc_tipo',
+        'loc_quarteirao',
         'loc_endereco',
         'loc_numero',
         'loc_bairro',

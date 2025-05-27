@@ -21,7 +21,9 @@
     <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div class="space-y-2 text-sm text-gray-800 dark:text-gray-100">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Imóvel Consultado</h2>
-            <p><strong>Endereço:</strong> {{ $local->loc_endereco }}, {{ $local->loc_numero }}</p>
+            <p><strong>Tipo de Imóvel:</strong> {{ $local->loc_tipo === 'R' ? 'Residencial' : ($local->loc_tipo === 'C' ? 'Comercial' : 'Terreno Baldio') }}</p>
+            <p><strong>Quarteirão:</strong> {{ $local->loc_quarteirao ?? 'N/A' }}</p>
+            <p><strong>Endereço:</strong> {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</p>
             <p><strong>Bairro:</strong> {{ $local->loc_bairro }}</p>
             <p><strong>Cidade:</strong> {{ $local->loc_cidade }}/{{ $local->loc_estado }}</p>
             <p><strong>Código de Identificação:</strong> {{ $local->loc_codigo_unico }}</p>
@@ -87,6 +89,11 @@
 {{-- Mapa --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+@php
+    $numero = $local->loc_numero !== null && $local->loc_numero !== '' ? $local->loc_numero : 'N/A';
+@endphp
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const lat = parseFloat("{{ $local->loc_latitude }}");
@@ -98,11 +105,12 @@
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(mapa);
             L.marker([lat, lng]).addTo(mapa)
-                .bindPopup("{{ $local->loc_endereco }}, {{ $local->loc_numero }}")
+                .bindPopup("{{ $local->loc_endereco }}, {{ $numero }}")
                 .openPopup();
         } else {
             document.getElementById('mapa-local').innerHTML = '<div class="text-center text-sm text-gray-500 pt-16">Coordenadas indisponíveis para este local.</div>';
         }
     });
 </script>
+
 @endsection

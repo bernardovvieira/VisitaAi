@@ -110,6 +110,8 @@ class DatabaseSeeder extends Seeder
         $locais = [
             [
                 'loc_codigo_unico' => '85121055',
+                'loc_tipo'          => 'T', // T = Terreno Baldio
+                'loc_quarteirao'   => '6',
                 'loc_cep'          => '99300-000',
                 'loc_endereco'     => 'Rua 7 de Setembro',
                 'loc_numero'       => '404',
@@ -122,6 +124,8 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'loc_codigo_unico' => '25164321',
+                'loc_tipo'          => 'R', // R = Residencial
+                'loc_quarteirao'   => '3',
                 'loc_cep'          => '99300-000',
                 'loc_endereco'     => 'Rua Venâncio Aires',
                 'loc_numero'       => '947',
@@ -134,6 +138,8 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'loc_codigo_unico' => '12345678',
+                'loc_tipo'          => 'C', // C = Comercial
+                'loc_quarteirao'   => '2',
                 'loc_cep'          => '99300-000',
                 'loc_endereco'     => 'Avenida Marechal Floriano Peixoto',
                 'loc_numero'       => '3033',
