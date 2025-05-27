@@ -32,11 +32,16 @@ class DoencaController extends Controller
             });
         }
         $doencas = $query->paginate(10)->appends(['search' => $search]);
-    
-        if ($user && $user->isAgente()) {
+
+        if ($user && $user->isAgenteEndemias()) {
             return view('agente.doencas.index', compact('doencas', 'search'));
+        } elseif ($user && $user->isAgenteSaude()) {
+            return view('saude.doencas.index', compact('doencas', 'search'));
+        } elseif ($user && $user->isGestor()) {
+            return view('gestor.doencas.index', compact('doencas', 'search'));
+        } else {
+            abort(403, 'Acesso não autorizado.');
         }
-        return view('gestor.doencas.index', compact('doencas', 'search'));
     }
     
     /**
@@ -47,10 +52,15 @@ class DoencaController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if ($user && $user->isAgente()) {
+        if ($user && $user->isAgenteEndemias()) {
             return view('agente.doencas.show', compact('doenca'));
+        } elseif ($user && $user->isAgenteSaude()) {
+            return view('saude.doencas.show', compact('doenca'));
+        } elseif ($user && $user->isGestor()) {
+            return view('gestor.doencas.show', compact('doenca'));
+        } else {
+            abort(403, 'Acesso não autorizado.');
         }
-        return view('gestor.doencas.show', compact('doenca'));
     }
 
     /**
