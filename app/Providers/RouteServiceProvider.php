@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Middleware\CheckApproved;
+use App\Http\Middleware\CheckPerfil;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -29,6 +30,10 @@ class RouteServiceProvider extends ServiceProvider
          */
         if (! array_key_exists('approved', Route::getFacadeRoot()->getMiddleware())) {
             Route::aliasMiddleware('approved', CheckApproved::class);
+        }
+
+        if (! array_key_exists('perfil', Route::getFacadeRoot()->getMiddleware())) {
+            Route::aliasMiddleware('perfil', CheckPerfil::class);
         }
 
         // Rate limiting

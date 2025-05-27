@@ -13,6 +13,7 @@ use App\Http\Controllers\VisitaController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\ConsultaPublicaController;
 use App\Http\Controllers\PublicController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,8 +52,8 @@ Route::middleware('auth')->group(function () {
         /**
          * AGENTE DE ENDEMIAS
          */
-        Route::prefix('agente')->name('agente.')->group(function () {
-            Route::view('/dashboard', 'agente.dashboard')->name('dashboard');
+        Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->group(function () {
+            Route::view('/dashboard', 'agente.dashboard')->name('dashboard');        
 
             Route::resource('locais', LocalController::class)
                 ->parameters(['locais' => 'local'])
@@ -81,7 +82,7 @@ Route::middleware('auth')->group(function () {
         /**
          * AGENTE DE SAÚDE
          */
-        Route::prefix('saude')->name('saude.')->group(function () {
+        Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group(function () {
             Route::view('/dashboard', 'saude.dashboard')->name('dashboard');
 
             Route::resource('visitas', VisitaController::class)

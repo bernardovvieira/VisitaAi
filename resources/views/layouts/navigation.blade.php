@@ -44,7 +44,7 @@
                             {{ __('Visitas Realizadas') }}
                         </x-nav-link>
                     @elseif(Auth::user()->isAgenteSaude())
-                        <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
+                        <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
                             {{ __('Minhas Visitas') }}
                         </x-nav-link>
                     @endif
@@ -144,7 +144,7 @@
                     {{ __('Visitas Realizadas') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgenteSaude())
-                <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
+                <x-responsive-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
                     {{ __('Minhas Visitas') }}
                 </x-responsive-nav-link>
             @endif
