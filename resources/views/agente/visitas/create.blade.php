@@ -212,7 +212,7 @@
                         <div class="flex justify-end" x-show="i > 0">
                             <button type="button" @click="tratamentos.splice(i, 1)"
                                     class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded shadow">
-                                Remover
+                                - Remover Tratamento
                             </button>
                         </div>
                     </div>
@@ -221,7 +221,7 @@
                 <div class="flex justify-start">
                     <button type="button"
                             @click="tratamentos.push({trat_forma:'Focal', linha:'', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded shadow">
+                            class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded shadow">
                         + Adicionar Tratamento
                     </button>
                 </div>
@@ -251,6 +251,9 @@
                 <textarea name="vis_observacoes" id="vis_observacoes" rows="5"
                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">{{ old('vis_observacoes') }}</textarea>
             </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.
+            </p>
 
             <div class="flex justify-end">
                 <button type="submit"
