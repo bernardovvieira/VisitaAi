@@ -228,7 +228,12 @@
             </div>
 
             {{-- Imóveis e Depósitos --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="vis_imoveis_inspecionados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imóveis Inspecionados</label>
+                    <input type="number" name="vis_imoveis_inspecionados" id="vis_imoveis_inspecionados" min="0" value="{{ old('vis_imoveis_inspecionados') }}"
+                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                </div>
                 <div>
                     <label for="vis_imoveis_tratados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imóveis Tratados</label>
                     <input type="number" name="vis_imoveis_tratados" id="vis_imoveis_tratados" min="0" value="{{ old('vis_imoveis_tratados') }}"
