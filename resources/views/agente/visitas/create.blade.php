@@ -40,35 +40,97 @@
             @csrf
 
             {{-- Dados básicos --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label for="vis_data" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data da Visita <span class="text-red-500">*</span></label>
-                    <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required
-                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+            <fieldset class="space-y-3">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Dados Básicos</legend>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="vis_data" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data da Visita <span class="text-red-500">*</span></label>
+                        <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required
+                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    </div>
+                    <div>
+                        <label for="vis_ciclo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ciclo/Ano <span class="text-red-500">*</span></label>
+                        <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required
+                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                            placeholder="mm/aa">
+                    </div>
                 </div>
-                <div>
-                    <label for="vis_ciclo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ciclo/Ano <span class="text-red-500">*</span></label>
-                    <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required
-                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
-                           placeholder="mm/aa">
-                </div>
-            </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/25" para janeiro de 2025.
+                </p>
+            </fieldset>
 
-            <div>
-                <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade PNCD <span class="text-red-500">*</span></label>
-                <select id="vis_atividade" name="vis_atividade" required
-                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                    <option value="">Selecione...</option>
-                    <option value="1" {{ old('vis_atividade') == '1' ? 'selected' : '' }}>1 - LI (Levantamento de Índice)</option>
-                    <option value="2" {{ old('vis_atividade') == '2' ? 'selected' : '' }}>2 - LI+T (Levantamento + Tratamento)</option>
-                    <option value="3" {{ old('vis_atividade') == '3' ? 'selected' : '' }}>3 - PPE+T (Ponto Estratégico + Tratamento)</option>
-                    <option value="4" {{ old('vis_atividade') == '4' ? 'selected' : '' }}>4 - T (Tratamento)</option>
-                    <option value="5" {{ old('vis_atividade') == '5' ? 'selected' : '' }}>5 - DF (Delimitação de Foco)</option>
-                    <option value="6" {{ old('vis_atividade') == '6' ? 'selected' : '' }}>6 - PVE (Pesquisa Vetorial Especial)</option>
-                    <option value="7" {{ old('vis_atividade') == '7' ? 'selected' : '' }}>7 - LIRAa (Levantamento de Índice Rápido)</option>
-                    <option value="8" {{ old('vis_atividade') == '8' ? 'selected' : '' }}>8 - PE (Ponto Estratégico)</option>
-                </select>
-            </div>
+            {{-- Localização --}}
+            <fieldset class="space-y-3">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Localização</legend>
+                <div class="col-span-1 sm:col-span-2"
+                    x-data="{
+                        open: false,
+                        search: '',
+                        selectedId: {{ old('fk_local_id') ?? 'null' }},
+                        locais: {{ Js::from($locais) }},
+                        limparSelecao() {
+                            if (!this.selectedId) return;
+                            this.selectedId = '';
+                            this.search = '';
+                            this.open = true;
+                            this.$nextTick(() => this.$refs.input.focus());
+                        }
+                    }"
+                    x-init="$watch('search', () => open = true)">
+
+                    <label for="fk_local_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Local Visitado <span class="text-red-500">*</span></label>
+                    <div class="relative mt-1">
+                        <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="Buscar local..." required
+                                class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+
+                        <ul x-show="open" @click.away="open = false" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto">
+                            <template x-for="local in locais.filter(l => {
+                                const query = search.toLowerCase();
+                                return (
+                                    l.loc_endereco.toLowerCase().includes(query) ||
+                                    l.loc_bairro.toLowerCase().includes(query) ||
+                                    l.loc_codigo_unico.toString().includes(query)
+                                );
+                            })" :key="local.loc_id">
+                                <li>
+                                    <button type="button" @click="selectedId = local.loc_id; search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
+                                            class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <span x-text="'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado">
+                                        </span>
+                                    </button>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Se o local visitado não estiver na lista, você pode adicioná-lo na seção de <a href="{{ route('agente.locais.create') }}" class="text-gray-800 hover:underline">locais</a>.
+                </p>
+                <input type="hidden" name="fk_local_id" :value="selectedId">
+            </fieldset>
+
+            <fieldset class="space-y-3">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atvidades</legend>
+                <div>
+                    <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade PNCD <span class="text-red-500">*</span></label>
+                    <select id="vis_atividade" name="vis_atividade" required
+                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        <option value="">Selecione...</option>
+                        <option value="1" {{ old('vis_atividade') == '1' ? 'selected' : '' }}>1 - LI (Levantamento de Índice)</option>
+                        <option value="2" {{ old('vis_atividade') == '2' ? 'selected' : '' }}>2 - LI+T (Levantamento + Tratamento)</option>
+                        <option value="3" {{ old('vis_atividade') == '3' ? 'selected' : '' }}>3 - PPE+T (Ponto Estratégico + Tratamento)</option>
+                        <option value="4" {{ old('vis_atividade') == '4' ? 'selected' : '' }}>4 - T (Tratamento)</option>
+                        <option value="5" {{ old('vis_atividade') == '5' ? 'selected' : '' }}>5 - DF (Delimitação de Foco)</option>
+                        <option value="6" {{ old('vis_atividade') == '6' ? 'selected' : '' }}>6 - PVE (Pesquisa Vetorial Especial)</option>
+                        <option value="7" {{ old('vis_atividade') == '7' ? 'selected' : '' }}>7 - LIRAa (Levantamento de Índice Rápido)</option>
+                        <option value="8" {{ old('vis_atividade') == '8' ? 'selected' : '' }}>8 - PE (Ponto Estratégico)</option>
+                    </select>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        O tipo "7 - LIRAa" é um tipo especial e não faz parte da tabela original PNCD.
+                    </p>
+                </div>
+            </fieldset>
 
             {{-- Tipo PNCD --}}
             <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
@@ -81,13 +143,10 @@
                         <option value="R" {{ old('vis_visita_tipo') == 'R' ? 'selected' : '' }}>Recuperação</option>
                     </select>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    O tipo "7 - LIRAa" é um tipo especial e não faz parte da tabela original PNCD.
-                </p>
             </div>
 
             {{-- Depósitos Inspecionados --}}
-            <fieldset class="space-y-4">
+            <fieldset class="space-y-3">
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Depósitos Inspecionados</legend>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     @foreach (['a1', 'a2', 'b', 'c', 'd1', 'd2', 'e'] as $tipo)
@@ -114,16 +173,24 @@
                         <p>E – Naturais (oclusões em árvores, folhas, rochas).</p>
                     </div>
                 </div>
+                <div>
+                    <label for="vis_depositos_eliminados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Depósitos Eliminados</label>
+                    <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados') }}"
+                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                </div>
             </fieldset>
             
             {{-- Tubitos e amostra --}}
-            <fieldset class="space-y-4">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Coleta de Amostra</legend>
-                <div class="flex items-center mt-6" style="padding-bottom: 1rem;">
+            <fieldset class="space-y-3">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style="padding-bottom: 1rem;">Coleta de Amostra</legend>
+                <div class="flex items-center mt-6">
                     <input type="checkbox" name="vis_coleta_amostra" id="vis_coleta_amostra" value="1" {{ old('vis_coleta_amostra') ? 'checked' : '' }}
                         class="mr-2 text-green-600 dark:text-green-400">
                     <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">Houve coleta de amostra?</label>
                 </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" style="padding-bottom: 1rem;">
+                    Se marcado, você poderá informar o número de amostra inicial e final, além da quantidade de tubitos utilizados.
+                </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="vis_amos_inicial" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Inicial</label>
@@ -142,7 +209,7 @@
                         class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Para habilitar os campos de coleta de amostra, marque a opção "Houve coleta de amostra?".
+                    Se a coleta de amostra for realizada, informe os números de amostra inicial e final, além da quantidade de tubitos utilizados.
                 </p>
             </fieldset>
 
@@ -227,25 +294,19 @@
                 </div>
             </div>
 
-            {{-- Imóveis e Depósitos --}}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                    <label for="vis_imoveis_inspecionados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imóveis Inspecionados</label>
-                    <input type="number" name="vis_imoveis_inspecionados" id="vis_imoveis_inspecionados" min="0" value="{{ old('vis_imoveis_inspecionados') }}"
-                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+            {{-- Pendências --}}
+            <div class="space-y-3">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pendências</label>
+                <div class="flex items-center" style="padding-top: 1rem;">
+                    <input type="checkbox" name="vis_pendencias" id="vis_pendencias" value="1" {{ old('vis_pendencias') ? 'checked' : '' }}
+                           class="mr-2 text-green-600 dark:text-green-400">
+                    <label for="vis_pendencias" class="text-sm text-gray-700 dark:text-gray-300">Houve alguma pendência na visita?</label>
                 </div>
-                <div>
-                    <label for="vis_imoveis_tratados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imóveis Tratados</label>
-                    <input type="number" name="vis_imoveis_tratados" id="vis_imoveis_tratados" min="0" value="{{ old('vis_imoveis_tratados') }}"
-                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                </div>
-                <div>
-                    <label for="vis_depositos_eliminados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Depósitos Eliminados</label>
-                    <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados') }}"
-                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                </div>
-            </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" style="padding-bottom: 1rem;">
+                    Se marcado, você pode informar as pendências no campo de observações abaixo.
+                </p>
 
+            {{-- Observações --}}
             <div>
                 <label for="vis_observacoes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observações</label>
                 <textarea name="vis_observacoes" id="vis_observacoes" rows="5"

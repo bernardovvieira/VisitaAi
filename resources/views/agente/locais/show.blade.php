@@ -34,6 +34,13 @@
 
         <div>
             <dt class="font-medium">Tipo de Imóvel</dt>
+            @php
+                $tipos = [
+                    'R' => 'Residencial',
+                    'C' => 'Comercial',
+                    'T' => 'Terreno Baldio',
+                ];
+            @endphp
             <dd class="mt-1">{{ $tipos[$local->loc_tipo] ?? 'Desconhecido' }}</dd>
         </div>
 
