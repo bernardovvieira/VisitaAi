@@ -157,31 +157,31 @@ class DatabaseSeeder extends Seeder
         }
 
         // Visitas
-        $visita1 = Visita::create([
-            'vis_data' => now()->subDays(1)->toDateString(),
-            'vis_observacoes' => 'Primeira visita de teste',
-            'vis_tipo' => 'LI+T',
-            'fk_local_id' => 1,
-            'fk_usuario_id' => 2, // Agente Um (agente_endemias)
-        ]);
-        $visita1->doencas()->attach([1, 2]); // Dengue, Zika
+        // $visita1 = Visita::create([
+        //     'vis_data' => now()->subDays(1)->toDateString(),
+        //     'vis_observacoes' => 'Primeira visita de teste',
+        //     'vis_tipo' => 'LI+T',
+        //     'fk_local_id' => 1,
+        //     'fk_usuario_id' => 2, // Agente Um (agente_endemias)
+        // ]);
+        // $visita1->doencas()->attach([1, 2]); // Dengue, Zika
 
-        $visita2 = Visita::create([
-            'vis_data' => now()->toDateString(),
-            'vis_observacoes' => 'Segunda visita de teste',
-            'vis_tipo' => 'LI+T',
-            'fk_local_id' => 2,
-            'fk_usuario_id' => 2, // Agente Um (agente_endemias)
-        ]);
-        $visita2->doencas()->attach([3]); // Chikungunya
+        // $visita2 = Visita::create([
+        //     'vis_data' => now()->toDateString(),
+        //     'vis_observacoes' => 'Segunda visita de teste',
+        //     'vis_tipo' => 'LI+T',
+        //     'fk_local_id' => 2,
+        //     'fk_usuario_id' => 2, // Agente Um (agente_endemias)
+        // ]);
+        // $visita2->doencas()->attach([3]); // Chikungunya
 
-        $visita3 = Visita::create([
-            'vis_data' => now()->subDays(2)->toDateString(),
-            'vis_observacoes' => 'Visita de acompanhamento',
-            'vis_tipo' => 'LIRAa',
-            'fk_local_id' => 3,
-            'fk_usuario_id' => 3, // Agente Dois (agente_saude)
-        ]);
-        $visita3->doencas()->attach([1]); // Dengue
+        // $visita3 = Visita::create([
+        //     'vis_data' => now()->subDays(2)->toDateString(),
+        //     'vis_observacoes' => 'Visita de acompanhamento',
+        //     'vis_tipo' => 'LIRAa',
+        //     'fk_local_id' => 3,
+        //     'fk_usuario_id' => 3, // Agente Dois (agente_saude)
+        // ]);
+        // $visita3->doencas()->attach([1]); // Dengue
     }
 }

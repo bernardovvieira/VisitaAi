@@ -3,6 +3,7 @@
 @section('head')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @endsection
 
 @section('content')
@@ -20,7 +21,7 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Registrar Visita</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Informe os dados da visita realizada, incluindo o local, data e doenças detectadas.
+            Preencha os dados da visita e tratamentos realizados conforme a ficha PNCD.
         </p>
     </section>
 
@@ -38,111 +39,212 @@
         <form method="POST" action="{{ route('agente.visitas.store') }}" class="space-y-6">
             @csrf
 
+            {{-- Dados básicos --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="vis_data" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data da Visita <span class="text-red-500">*</span></label>
-                    <input id="vis_data" name="vis_data" type="date" value="{{ old('vis_data', now()->toDateString()) }}" required
-                           class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required
+                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
-
                 <div>
-                    <label for="vis_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Tipo de Visita <span class="text-red-500">*</span>
-                    </label>
-                    <select id="vis_tipo" name="vis_tipo" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                        <option value="">Selecione...</option>
-                        <option value="LI+T" {{ old('vis_tipo') === 'LI+T' ? 'selected' : '' }}>LI+T (Levantamento de Índice + Tratamento)</option>
-                        <option value="LIRAa" {{ old('vis_tipo') === 'LIRAa' ? 'selected' : '' }}>LIRAa (Índice Rápido para Aedes aegypti)</option>
-                    </select>
-                </div>
-
-                <div class="col-span-1 sm:col-span-2"
-                    x-data="{
-                        open: false,
-                        search: '',
-                        selectedId: {{ old('fk_local_id') ?? 'null' }},
-                        locais: {{ Js::from($locais) }},
-                        limparSelecao() {
-                            if (!this.selectedId) return;
-                            this.selectedId = '';
-                            this.search = '';
-                            this.open = true;
-                            this.$nextTick(() => this.$refs.input.focus());
-                        }
-                    }"
-                    x-init="$watch('search', () => open = true)">
-
-                    <label for="fk_local_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Local Visitado <span class="text-red-500">*</span></label>
-                    <div class="relative mt-1">
-                        <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="Buscar local..." required
-                               class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-
-                        <ul x-show="open" @click.away="open = false" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto">
-                            <template x-for="local in locais.filter(l => {
-                                const query = search.toLowerCase();
-                                return (
-                                    l.loc_endereco.toLowerCase().includes(query) ||
-                                    l.loc_bairro.toLowerCase().includes(query) ||
-                                    l.loc_codigo_unico.toString().includes(query)
-                                );
-                            })" :key="local.loc_id">
-                                <li>
-                                    <button type="button" @click="selectedId = local.loc_id; search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
-                                            class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <span x-text="'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado">
-                                        </span>
-                                    </button>
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
-                    <input type="hidden" name="fk_local_id" :value="selectedId" x-model="selectedId">
+                    <label for="vis_ciclo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ciclo/Ano <span class="text-red-500">*</span></label>
+                    <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required
+                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                           placeholder="mm/aa">
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Doenças Detectadas</label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    @foreach ($doencas as $doenca)
-                        <label class="flex items-start gap-2">
-                            <input type="checkbox" name="doencas[]" value="{{ $doenca->doe_id }}"
-                                   class="form-checkbox h-4 w-4 text-green-600 dark:text-green-400 mt-1">
-                            @php
-                                $sintomas = is_array($doenca->doe_sintomas) ? $doenca->doe_sintomas : explode(',', $doenca->doe_sintomas);
-                                $transmissao = is_array($doenca->doe_transmissao) ? $doenca->doe_transmissao : explode(',', $doenca->doe_transmissao);
-                                $medidas = is_array($doenca->doe_medidas_controle) ? $doenca->doe_medidas_controle : explode(',', $doenca->doe_medidas_controle);
+                <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade PNCD <span class="text-red-500">*</span></label>
+                <select id="vis_atividade" name="vis_atividade" required
+                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    <option value="">Selecione...</option>
+                    <option value="1" {{ old('vis_atividade') == '1' ? 'selected' : '' }}>1 - LI (Levantamento de Índice)</option>
+                    <option value="2" {{ old('vis_atividade') == '2' ? 'selected' : '' }}>2 - LI+T (Levantamento + Tratamento)</option>
+                    <option value="3" {{ old('vis_atividade') == '3' ? 'selected' : '' }}>3 - PPE+T (Ponto Estratégico + Tratamento)</option>
+                    <option value="4" {{ old('vis_atividade') == '4' ? 'selected' : '' }}>4 - T (Tratamento)</option>
+                    <option value="5" {{ old('vis_atividade') == '5' ? 'selected' : '' }}>5 - DF (Delimitação de Foco)</option>
+                    <option value="6" {{ old('vis_atividade') == '6' ? 'selected' : '' }}>6 - PVE (Pesquisa Vetorial Especial)</option>
+                    <option value="7" {{ old('vis_atividade') == '7' ? 'selected' : '' }}>7 - LIRAa (Levantamento de Índice Rápido)</option>
+                    <option value="8" {{ old('vis_atividade') == '8' ? 'selected' : '' }}>8 - PE (Ponto Estratégico)</option>
+                </select>
+            </div>
 
-                                $formatar = fn($label, $itens) => $label . ":\n" . collect($itens)->map(fn($i) => '- ' . trim($i))->implode("\n");
+            {{-- Tipo PNCD --}}
+            <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
+                <div>
+                    <label for="vis_visita_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo da Visita PNCD</label>
+                    <select name="vis_visita_tipo" id="vis_visita_tipo"
+                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        <option value="">Selecione...</option>
+                        <option value="N" {{ old('vis_visita_tipo') == 'N' ? 'selected' : '' }}>Normal</option>
+                        <option value="R" {{ old('vis_visita_tipo') == 'R' ? 'selected' : '' }}>Recuperação</option>
+                    </select>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    O tipo "7 - LIRAa" é um tipo especial e não faz parte da tabela original PNCD.
+                </p>
+            </div>
 
-                                $title = implode("\n\n", [
-                                    $formatar('Sintomas', $sintomas),
-                                    $formatar('Transmissão', $transmissao),
-                                    $formatar('Medidas de Controle', $medidas),
-                                ]);
-                            @endphp
-                            <div class="flex items-center gap-2">
-                                <span class="text-gray-800 dark:text-gray-100 text-sm font-medium">
-                                    {{ $doenca->doe_nome }}
-                                </span>
-                                <div title="{{ $title }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         class="h-4 w-4 text-blue-600 hover:text-blue-800 cursor-help"
-                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </label>
+            {{-- Depósitos Inspecionados --}}
+            <fieldset class="space-y-4">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Depósitos Inspecionados</legend>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    @foreach (['a1', 'a2', 'b', 'c', 'd1', 'd2', 'e'] as $tipo)
+                        <div>
+                            <label for="insp_{{ $tipo }}" class="block text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Depósito {{ strtoupper($tipo) }}</label>
+                            <input id="insp_{{ $tipo }}" name="insp_{{ $tipo }}" type="number" min="0" value="{{ old('insp_' . $tipo) }}"
+                                   class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        </div>
                     @endforeach
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Os depósitos são classificados como:
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p>A1– Depósitos elevados com água (caixas d’água, tambores).</p>    
+                        <p>A2 – Depósitos ao nível do solo (cisternas, filtros, barris).</p>    
+                        <p>B – Pequenos móveis (vasos, pratos, pingadeiras, fontes).</p>    
+                        <p>C – Fixos ou de difícil remoção (calhas, ralos, lajes).</p> 
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p>D1 – Pneus e materiais rodantes.</p>    
+                        <p>D2 – Lixo, sucatas e entulho.</p>    
+                        <p>E – Naturais (oclusões em árvores, folhas, rochas).</p>
+                    </div>
+                </div>
+            </fieldset>
+            
+            {{-- Tubitos e amostra --}}
+            <fieldset class="space-y-4">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Coleta de Amostra</legend>
+                <div class="flex items-center mt-6" style="padding-bottom: 1rem;">
+                    <input type="checkbox" name="vis_coleta_amostra" id="vis_coleta_amostra" value="1" {{ old('vis_coleta_amostra') ? 'checked' : '' }}
+                        class="mr-2 text-green-600 dark:text-green-400">
+                    <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">Houve coleta de amostra?</label>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="vis_amos_inicial" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Inicial</label>
+                        <input type="number" name="vis_amos_inicial" id="vis_amos_inicial" min="0" value="{{ old('vis_amos_inicial') }}" disabled
+                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    </div>
+                    <div>
+                        <label for="vis_amos_final" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Final</label>
+                        <input type="number" name="vis_amos_final" id="vis_amos_final" min="0" value="{{ old('vis_amos_final') }}" disabled
+                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                    </div>
+                </div>
+                <div>
+                    <label for="vis_qtd_tubitos" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade de Tubitos Utilizados</label>
+                    <input type="number" name="vis_qtd_tubitos" id="vis_qtd_tubitos" min="0" value="{{ old('vis_qtd_tubitos') }}" disabled
+                        class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Para habilitar os campos de coleta de amostra, marque a opção "Houve coleta de amostra?".
+                </p>
+            </fieldset>
+
+            {{-- Tratamentos --}}
+            <div x-data="{ tratamentos: {{ old('tratamentos') ? json_encode(old('tratamentos')) : '[{trat_forma: \'Focal\', linha: \'\', trat_tipo: \'Larvicida\', qtd_gramas: null, qtd_depositos_tratados: null, qtd_cargas: null}]' }} }" class="space-y-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tratamentos Realizados</label>
+
+                <template x-for="(t, i) in tratamentos" :key="i">
+                    <div class="p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Forma</label>
+                                <select :name="`tratamentos[${i}][trat_forma]`"
+                                        x-model="t.trat_forma"
+                                        @change="
+                                            if (t.trat_forma === 'Focal') {
+                                                t.trat_tipo = 'Larvicida';
+                                                t.qtd_cargas = null;
+                                            } else {
+                                                t.trat_tipo = 'Adulticida';
+                                                t.linha = '';
+                                                t.qtd_gramas = null;
+                                                t.qtd_depositos_tratados = null;
+                                            }
+                                        "
+                                        class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                    <option value="Focal" selected>Focal</option>
+                                    <option value="Perifocal">Perifocal</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Tipo</label>
+                                <input type="text" :name="`tratamentos[${i}][trat_tipo]`" x-model="t.trat_tipo" readonly
+                                    class="mt-1 block w-full rounded bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm cursor-not-allowed">
+                            </div>
+                            <div x-show="t.trat_forma === 'Focal'">
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Linha</label>
+                                <select :name="`tratamentos[${i}][linha]`" x-model="t.linha"
+                                        class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="t.trat_forma === 'Focal'">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade (gramas)</label>
+                                <input type="number" min="0" :name="`tratamentos[${i}][qtd_gramas]`" x-model="t.qtd_gramas"
+                                    class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Depósitos Tratados</label>
+                                <input type="number" min="0" :name="`tratamentos[${i}][qtd_depositos_tratados]`" x-model="t.qtd_depositos_tratados"
+                                    class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="t.trat_forma === 'Perifocal'">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade de Cargas</label>
+                                <input type="number" min="0" :name="`tratamentos[${i}][qtd_cargas]`" x-model="t.qtd_cargas"
+                                    class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end" x-show="i > 0">
+                            <button type="button" @click="tratamentos.splice(i, 1)"
+                                    class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded shadow">
+                                Remover
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="flex justify-start">
+                    <button type="button"
+                            @click="tratamentos.push({trat_forma:'Focal', linha:'', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded shadow">
+                        + Adicionar Tratamento
+                    </button>
+                </div>
+            </div>
+
+            {{-- Imóveis e Depósitos --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="vis_imoveis_tratados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imóveis Tratados</label>
+                    <input type="number" name="vis_imoveis_tratados" id="vis_imoveis_tratados" min="0" value="{{ old('vis_imoveis_tratados') }}"
+                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                </div>
+                <div>
+                    <label for="vis_depositos_eliminados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Depósitos Eliminados</label>
+                    <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados') }}"
+                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                 </div>
             </div>
 
             <div>
                 <label for="vis_observacoes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observações</label>
-                <textarea id="vis_observacoes" name="vis_observacoes" rows="6"
-                          class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">{{ old('vis_observacoes') }}</textarea>
+                <textarea name="vis_observacoes" id="vis_observacoes" rows="5"
+                          class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">{{ old('vis_observacoes') }}</textarea>
             </div>
 
             <div class="flex justify-end">
@@ -154,4 +256,33 @@
         </form>
     </section>
 </div>
+
+<!-- mascara ciclo -mm/aa com barra -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cicloInput = document.getElementById('vis_ciclo');
+        cicloInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+            if (this.value.length >= 2) {
+                this.value = this.value.slice(0, 2) + '/' + this.value.slice(2);
+            }
+        });
+    });
+
+    document.getElementById('vis_coleta_amostra').addEventListener('change', function() {
+        const amostraInicial = document.getElementById('vis_amos_inicial');
+        const amostraFinal = document.getElementById('vis_amos_final');
+        const qtdTubitos = document.getElementById('vis_qtd_tubitos');
+
+        if (this.checked) {
+            amostraInicial.disabled = false;
+            amostraFinal.disabled = false;
+            qtdTubitos.disabled = false;
+        } else {
+            amostraInicial.disabled = true;
+            amostraFinal.disabled = true;
+            qtdTubitos.disabled = true;
+        }
+    });
+</script>
 @endsection

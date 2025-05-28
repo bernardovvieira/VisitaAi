@@ -24,12 +24,12 @@ class VisitaController extends Controller
                   ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
                   ->orWhereHas('usuario', fn($q) => $q->where('use_nome', 'like', "%$busca%"))
                   ->orWhereHas('doencas', fn($q) => $q->where('doe_nome', 'like', "%$busca%"))
-                  ->orWhere('vis_tipo', 'like', "%$busca%");
+                  ->orWhere('vis_atividade', 'like', "%$busca%");
             });
         }
 
         if ($user->isAgenteSaude()) {
-            $query->where('fk_usuario_id', $user->use_id)->where('vis_tipo', 'LIRAa');
+            $query->where('fk_usuario_id', $user->use_id)->where('vis_atividade', '7');
             $view = 'saude.visitas.index';
         } elseif ($user->isAgenteEndemias()) {
             $view = 'agente.visitas.index';
@@ -61,15 +61,11 @@ class VisitaController extends Controller
         $locais = Local::all();
         $doencas = Doenca::all();
 
-        $tiposPermitidos = $user->isAgenteSaude()
-            ? ['LIRAa']
-            : ['LI+T', 'LIRAa'];
-
         $view = $user->isAgenteSaude()
             ? 'saude.visitas.create'
             : ($user->isAgenteEndemias() ? 'agente.visitas.create' : 'gestor.visitas.create');
 
-        return view($view, compact('locais', 'doencas', 'tiposPermitidos'));
+        return view($view, compact('locais', 'doencas'));
     }
 
     public function store(VisitaRequest $request)
@@ -77,23 +73,39 @@ class VisitaController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $validated = $request->validated();
+
         $doencas = $validated['doencas'] ?? [];
         unset($validated['doencas']);
 
-        $validated['fk_usuario_id'] = $user->use_id;
+        $tratamentos = $validated['tratamentos'] ?? [];
+        unset($validated['tratamentos']);
 
-        if ($user->isAgenteSaude()) {
-            $validated['vis_tipo'] = 'LIRAa';
-        }
+        $validated['fk_usuario_id'] = $user->use_id;
+        $validated['vis_coleta_amostra'] = $request->boolean('vis_coleta_amostra');
+        $validated['vis_concluida'] = $request->boolean('vis_concluida');
 
         $visita = Visita::create($validated);
         $visita->doencas()->sync($doencas);
+
+        foreach ($tratamentos as $t) {
+            if (!empty($t['trat_tipo']) && !empty($t['trat_forma'])) {
+                $visita->tratamentos()->create([
+                    'trat_tipo'               => $t['trat_tipo'],
+                    'trat_forma'              => $t['trat_forma'],
+                    'linha'                   => $t['linha'] ?? null,
+                    'produto'                 => $t['produto'] ?? null,
+                    'qtd_gramas'              => $t['qtd_gramas'] ?? null,
+                    'qtd_depositos_tratados'  => $t['qtd_depositos_tratados'] ?? null,
+                    'qtd_cargas'              => $t['qtd_cargas'] ?? null,
+                ]);
+            }
+        }
 
         LogHelper::registrar(
             'Registro de visita',
             'Visita',
             'create',
-            'Visita realizada no local: ' . $visita->local->loc_endereco . ', ' . $visita->local->loc_numero
+            'Visita realizada no local: ' . $visita->local->loc_endereco . ', ' . ($visita->local->loc_numero ?: 'S/N')
         );
 
         return redirect()
@@ -120,17 +132,39 @@ class VisitaController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $validated = $request->validated();
+
         $doencas = $validated['doencas'] ?? [];
         unset($validated['doencas']);
 
+        $tratamentos = $validated['tratamentos'] ?? [];
+        unset($validated['tratamentos']);
+
+        $validated['vis_coleta_amostra'] = $request->boolean('vis_coleta_amostra');
+        $validated['vis_concluida'] = $request->boolean('vis_concluida');
+
         $visita->update($validated);
         $visita->doencas()->sync($doencas);
+
+        $visita->tratamentos()->delete();
+        foreach ($tratamentos as $t) {
+            if (!empty($t['trat_tipo']) && !empty($t['trat_forma'])) {
+                $visita->tratamentos()->create([
+                    'trat_tipo'               => $t['trat_tipo'],
+                    'trat_forma'              => $t['trat_forma'],
+                    'linha'                   => $t['linha'] ?? null,
+                    'produto'                 => $t['produto'] ?? null,
+                    'qtd_gramas'              => $t['qtd_gramas'] ?? null,
+                    'qtd_depositos_tratados'  => $t['qtd_depositos_tratados'] ?? null,
+                    'qtd_cargas'              => $t['qtd_cargas'] ?? null,
+                ]);
+            }
+        }
 
         LogHelper::registrar(
             'Edição de visita',
             'Visita',
             'update',
-            'Visita atualizada no local: ' . $visita->local->loc_endereco . ', ' . $visita->local->loc_numero
+            'Visita atualizada no local: ' . $visita->local->loc_endereco . ', ' . ($visita->local->loc_numero ?: 'S/N')
         );
 
         return redirect()
