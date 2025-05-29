@@ -15,12 +15,13 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Detalhes do Local</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Informações completas do local registrado no sistema.
+            Detalhes do local selecionado, incluindo informações de localização, tipo e categoria.
         </p>
     </section>
 
     <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6 space-y-8">
-        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Informações do Local</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
                 <dt class="font-medium">Código Único do Imóvel</dt>
                 <dd class="mt-1">
@@ -30,20 +31,20 @@
                 </dd>
             </div>
             <div>
-                <dt class="font-medium">Tipo</dt>
-                <dd class="mt-1">{{ ['R' => 'Residencial', 'C' => 'Comercial', 'T' => 'Terreno Baldio'][$local->loc_tipo] ?? 'N/A' }}</dd>
-            </div>
-            <div>
-                <dt class="font-medium">Zona</dt>
-                <dd class="mt-1">{{ ['U' => 'Urbana', 'R' => 'Rural'][$local->loc_zona] ?? 'N/A' }}</dd>
-            </div>
-            <div>
                 <dt class="font-medium">Código da Localidade</dt>
                 <dd class="mt-1">{{ $local->loc_codigo ?? 'N/A' }}</dd>
             </div> 
             <div>
                 <dt class="font-medium">Categoria da Localidade</dt>
                 <dd class="mt-1">{{ $local->loc_categoria ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Tipo</dt>
+                <dd class="mt-1">{{ ['R' => 'Residencial', 'C' => 'Comercial', 'T' => 'Terreno Baldio'][$local->loc_tipo] ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Zona</dt>
+                <dd class="mt-1">{{ ['U' => 'Urbana', 'R' => 'Rural'][$local->loc_zona] ?? 'N/A' }}</dd>
             </div>
             <div>
                 <dt class="font-medium">Quarteirão</dt>
@@ -57,7 +58,7 @@
                 <dt class="font-medium">Lado</dt>
                 <dd class="mt-1">{{ $local->loc_lado ?? 'N/A' }}</dd>
             </div>
-            <div class="sm:col-span-3">
+            <div class="sm:col-span-4" style="padding-top: 0.5rem;">
                 <dt class="font-medium">Endereço Completo</dt>
                 <dd class="mt-1 text-gray-900 dark:text-gray-100">
                     {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }} - {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }} - {{ $local->loc_pais }} | CEP: {{ $local->loc_cep }}<br>
@@ -92,13 +93,15 @@
                 A posição exibida é baseada nas coordenadas fornecidas.
             </p>
         </div>
+    </section>
 
-        <div class="pt-4 border-t border-gray-200 dark:border-gray-600 text-center">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Adesivo para impressão</h3>
-
-            <div id="adesivo" class="inline-block bg-white mt-3 text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px]">
-                <h3 class="text-lg font-bold mb-1">VISITA AÍ – CONSULTA PÚBLICA</h3>
-                <p class="text-sm mb-2 leading-tight">
+    {{-- Adesivo --}}
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
+        <div class="flex justify-center" style="padding-top: 2rem;">
+            <div id="adesivo" class="bg-white text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px]">
+                <h3 class="text-lg font-bold mb-1 text-center">VISITA AÍ – CONSULTA PÚBLICA</h3>
+                <p class="text-sm mb-2 leading-tight text-center">
                     {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
                     {{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}
                 </p>
@@ -109,16 +112,21 @@
             </div>
         </div>
 
-        <div class="text-center">
+        <div class="text-center" style="padding-top: 0.5rem;">
             <button onclick="baixarAdesivo()"
-                class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded shadow transition">
+                    class="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded shadow transition">
+                    <svg class="w-4 h-4 mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                    </svg>
                 Salvar Adesivo
             </button>
+            <p class="mt-3 text-sm text-gray-600 dark:text-gray-400" style="padding-top: 0.5rem;">
+                O adesivo pode ser impresso e colado no local para facilitar o acesso à consulta pública.
+            </p>
         </div>
-        <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            O adesivo pode ser impresso e colado no local para facilitar o acesso à consulta pública.
-        </p>
     </section>
+
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
