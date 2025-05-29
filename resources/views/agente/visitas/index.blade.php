@@ -38,6 +38,27 @@
         </div>
     </section>
 
+    @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
+        <section class="p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg shadow border border-yellow-300 dark:border-yellow-700">
+            <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                Locais em que há pendências e não foram revisitados
+            </h3>
+            <ul class="space-y-2 text-sm text-yellow-900 dark:text-yellow-100 list-disc list-inside">
+                @foreach ($locaisComPendenciasNaoRevisitadas as $local)
+                    @php
+                        $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
+                    @endphp
+                    <li>
+                        {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }} – {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}
+                        <span class="text-xs text-yellow-700 dark:text-yellow-300 ml-2 italic">
+                            Última pendência em {{ \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y') }}
+                        </span>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
+
     <!-- Contador de resultados -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
@@ -53,9 +74,9 @@
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Visita</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Local</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Doenças</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Agente</th>
                         <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                     </tr>
@@ -77,9 +98,46 @@
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
-                                <div class="font-semibold">{{ $visita->local->loc_nome }}</div>
+                                @if($visita->vis_pendencias)
+                                    <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                        Pendente
+                                    </span>
+
+                                    @php
+                                        $revisitaPosterior = $visita->local->visitas()
+                                            ->where('vis_pendencias', false)
+                                            ->where('vis_data', '>', $visita->vis_data)
+                                            ->orderBy('vis_data')
+                                            ->first();
+                                    @endphp
+
+                                    @if($revisitaPosterior)
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            Revisitado {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }} 
+                                        </div>
+                                    @endif
+                                @else
+                                    <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                        Concluída
+                                    </span>
+                                @endif
+                            </td>
+                            @php
+                                $atividades = [
+                                    '1' => 'LI',
+                                    '2' => 'LI+T',
+                                    '3' => 'PPE+T',
+                                    '4' => 'T',
+                                    '5' => 'DF',
+                                    '6' => 'PVE',
+                                    '7' => 'LIRAa',
+                                    '8' => 'PE',
+                                ];
+                            @endphp
+
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ $visita->vis_tipo }}
+                                    {{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
@@ -88,19 +146,6 @@
                                     Bairro: {{ $visita->local->loc_bairro }}<br>
                                     Cód: {{ $visita->local->loc_codigo_unico }}
                                 </div>
-                            </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
-                                @if($visita->doencas->isEmpty())
-                                    <span class="inline-block bg-red-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                        Nenhuma doença registrada
-                                    </span>
-                                @else
-                                    @foreach($visita->doencas as $doenca)
-                                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mr-1 mb-1">
-                                            {{ $doenca->doe_nome }}
-                                        </span>
-                                    @endforeach
-                                @endif
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 <div class="font-semibold">{{ $visita->usuario->use_nome }}</div>
@@ -145,7 +190,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="p-6 text-center text-gray-600 dark:text-gray-400">Nenhuma visita registrada.</td>
+                            <td colspan="7" class="p-6 text-center text-gray-600 dark:text-gray-400">Nenhuma visita registrada.</td>
                         </tr>
                     @endforelse
                 </tbody>

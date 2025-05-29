@@ -21,15 +21,16 @@ class VisitaController extends Controller
         if ($busca) {
             $query->where(function ($q) use ($busca) {
                 $q->whereHas('local', fn($q) => $q->where('loc_endereco', 'like', "%$busca%"))
-                  ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
-                  ->orWhereHas('usuario', fn($q) => $q->where('use_nome', 'like', "%$busca%"))
-                  ->orWhereHas('doencas', fn($q) => $q->where('doe_nome', 'like', "%$busca%"))
-                  ->orWhere('vis_atividade', 'like', "%$busca%");
+                ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
+                ->orWhereHas('usuario', fn($q) => $q->where('use_nome', 'like', "%$busca%"))
+                ->orWhereHas('doencas', fn($q) => $q->where('doe_nome', 'like', "%$busca%"))
+                ->orWhere('vis_atividade', 'like', "%$busca%");
             });
         }
 
         if ($user->isAgenteSaude()) {
-            $query->where('fk_usuario_id', $user->use_id)->where('vis_atividade', '7');
+            $query->where('fk_usuario_id', $user->use_id)
+                ->where('vis_atividade', '7');
             $view = 'saude.visitas.index';
         } elseif ($user->isAgenteEndemias()) {
             $view = 'agente.visitas.index';
@@ -37,9 +38,25 @@ class VisitaController extends Controller
             $view = 'gestor.visitas.index';
         }
 
-        $visitas = $query->orderByDesc('vis_data')->paginate(10)->appends(['busca' => $busca]);
+        $visitas = $query->orderByDesc('vis_data')
+                        ->paginate(10)
+                        ->appends(['busca' => $busca]);
 
-        return view($view, compact('visitas', 'busca'));
+        // NOVO: busca locais com pendência não revisitada
+        $locaisComPendenciasNaoRevisitadas = \App\Models\Local::whereHas('visitas', fn($q) => $q->where('vis_pendencias', true))
+            ->with(['visitas' => fn($q) => $q->orderByDesc('vis_data')])
+            ->get()
+            ->filter(function ($local) {
+                $ultimaPendencia = $local->visitas->firstWhere('vis_pendencias', true);
+
+                $temRevisita = $local->visitas->firstWhere(fn($v) =>
+                    !$v->vis_pendencias && $v->vis_data > $ultimaPendencia->vis_data
+                );
+
+                return $ultimaPendencia && !$temRevisita;
+            });
+
+        return view($view, compact('visitas', 'busca', 'locaisComPendenciasNaoRevisitadas'));
     }
 
     public function show(Visita $visita)
