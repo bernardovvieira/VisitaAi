@@ -8,7 +8,7 @@
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Olá, {{ Auth::user()->use_nome }}!</h2>
         <p class="text-gray-600 dark:text-gray-400">
-            Aqui você pode atualizar seus dados ou excluir sua conta se desejar.
+            Aqui você pode atualizar seus dados pessoais, como nome e e-mail. Algumas informações, como CPF e perfil, são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se precisar de ajuda, entre em contato com o suporte técnico.
         </p>
     </section>
 
@@ -26,10 +26,10 @@
                 <div class="flex justify-between"><dt class="font-medium">ID</dt><dd>{{ Auth::id() }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">CPF</dt><dd>{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', Auth::user()->use_cpf) }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd>{{ Auth::user()->use_email }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor') }}</dd></div>
+                <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gary-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
+                <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor Municipal') }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente de Aprovação</span> @endif</dd></div>
+                <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">O usuário está com o acesso ativo no sistema</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">O usuário está pendente de aprovação no sistema</span> @endif</dd></div>
             </dl>
         </div>
 
@@ -65,7 +65,7 @@
 
                 <div class="flex justify-end">
                     <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition">
-                        Salvar
+                        Aplicar Alterações
                     </button>
                 </div>
             </form>

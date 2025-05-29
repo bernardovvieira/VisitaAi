@@ -68,7 +68,7 @@
                                 <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
                                     #{{ $doenca->doe_id }}
                                 </span>
-                            </td>
+                            </td> 
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $doenca->doe_nome }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_sintomas), 30) }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_transmissao), 30) }}</td>

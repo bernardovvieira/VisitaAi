@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 space-y-6">
+<div class="container mx-auto p-6 max-w-4xl space-y-6">
 
     <!-- Botão Voltar -->
     <div>
@@ -55,15 +55,19 @@
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($pendentes as $u)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_id }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+                                    #{{ $u->use_id }}
+                                </span>
+                            </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_nome }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', $u->use_cpf) }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_email }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100"><a href="mailto:{{ $u->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ $u->use_email }}</a></td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_data_criacao->format('d/m/Y') }}</td>
                             <td class="p-4 text-center">
                                 <form method="POST" action="{{ route('gestor.approve', $u) }}">
                                     @csrf
-                                    <button type="submit" 
+                                    <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')" 
                                         class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-md shadow-md transition">
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />

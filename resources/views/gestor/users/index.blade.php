@@ -66,8 +66,25 @@
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_nome }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', $usuario->use_cpf) }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_email }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100 capitalize">{{ ucfirst($usuario->use_perfil) }}</td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100"><a href="mailto:{{ $usuario->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ $usuario->use_email }}</a></td>
+                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                                @php
+                                    switch ($usuario->use_perfil) {
+                                        case 'gestor':
+                                            $perfil = 'Gestor Municipal';
+                                            break;
+                                        case 'agente_endemias':
+                                            $perfil = 'Agente de Endemias';
+                                            break;
+                                        case 'agente_saude':
+                                            $perfil = 'Agente de Saúde';
+                                            break;
+                                        default:
+                                            $perfil = ucfirst($usuario->use_perfil);
+                                    }
+                                @endphp
+                                {{ $perfil }}
+                            </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_data_criacao->format('d/m/Y') }}</td>
                             <td class="p-4 text-center">
                             @if($usuario->use_data_anonimizacao)

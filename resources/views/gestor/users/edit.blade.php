@@ -64,9 +64,9 @@
                 <label for="use_perfil" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Perfil <span class="text-red-500">*</span></label>
                 <select id="use_perfil" name="use_perfil"
                         class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm" required>
-                    <option value="gestor" {{ $user->use_perfil == 'gestor' ? 'selected' : '' }}>Gestor</option>
+                    <option value="gestor" {{ $user->use_perfil == 'gestor' ? 'selected' : '' }}>Gestor Municipal</option>
                     <option value="agente_endemias" {{ $user->use_perfil == 'agente' ? 'selected' : '' }}>Agente de Endemias</option>
-                    <option value="agente_saude" {{ $user->use_perfil == 'tecnico' ? 'selected' : '' }}>Técnico de Saúde</option>
+                    <option value="agente_saude" {{ $user->use_perfil == 'tecnico' ? 'selected' : '' }}>Agente de Saúde</option>
                 </select>
             </div>
 

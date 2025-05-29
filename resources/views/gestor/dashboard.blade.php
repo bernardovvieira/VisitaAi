@@ -32,7 +32,7 @@
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total de Agentes</h3>
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ \App\Models\User::where('use_perfil','agente')->where('use_aprovado', true)->count() }}</p>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">    {{ \App\Models\User::where(function($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count() }}</p>
             </div>
             <!-- Agentes Pendentes -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
@@ -42,7 +42,7 @@
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Agentes Pendentes</h3>
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ \App\Models\User::where('use_perfil','agente')->where('use_aprovado', false)->count() }}</p>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ \App\Models\User::where(function($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', false)->count() }}</p>
             </div>
             <!-- Total de Gestores -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
