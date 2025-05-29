@@ -93,8 +93,8 @@ class VisitaController extends Controller
                 !empty($t['trat_tipo']) &&
                 !empty($t['trat_forma']) &&
                 (
-                    ($t['trat_forma'] === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
-                    ($t['trat_forma'] === 'perifocal' && !empty($t['qtd_cargas']))
+                    (strtolower($t['trat_forma']) === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
+                    (strtolower($t['trat_forma']) === 'perifocal' && !empty($t['qtd_cargas']))
                 )
             ) {
                 $visita->tratamentos()->create([

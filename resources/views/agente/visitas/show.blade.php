@@ -1,13 +1,10 @@
 @extends('layouts.app')
 
-@section('head')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-@endsection
-
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl space-y-6">
-    <div class="flex justify-between items-center">
+<div class="container mx-auto p-6 max-w-4xl space-y-10">
+
+    {{-- Botão Voltar --}}
+    <div>
         <a href="{{ route('agente.visitas.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -17,118 +14,152 @@
         </a>
     </div>
 
+    {{-- Cabeçalho --}}
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detalhes da Visita Epidemiológica</h1>
+        <p class="text-sm text-gray-600 dark:text-gray-300">Informações completas da visita registrada no sistema.</p>
+    </section>
+
+    {{-- Local --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Local Visitado</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
+            <div>
+                <dt class="font-medium">Código Único</dt>
+                <dd><span class="inline-block bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-semibold">
+                    {{ $visita->local->loc_codigo_unico }}</span>
+                </dd>
+            </div>
+            <div>
+                <dt class="font-medium">Tipo</dt>
+                <dd>{{ ['R'=>'Residencial','C'=>'Comercial','T'=>'Terreno Baldio'][$visita->local->loc_tipo] ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Zona</dt>
+                <dd>{{ ['U'=>'Urbana','R'=>'Rural'][$visita->local->loc_zona] ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Código da Localidade</dt>
+                <dd>{{ $visita->local->loc_codigo ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Categoria</dt>
+                <dd>{{ $visita->local->loc_categoria ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Quarteirão</dt>
+                <dd>{{ $visita->local->loc_quarteirao ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Sequência</dt>
+                <dd>{{ $visita->local->loc_sequencia ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Lado</dt>
+                <dd>{{ $visita->local->loc_lado ?? 'N/A' }}</dd>
+            </div>
+            <div class="sm:col-span-3">
+                <dt class="font-medium">Endereço</dt>
+                <dd class="text-gray-900 dark:text-gray-100">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero ?? 'S/N' }} - {{ $visita->local->loc_bairro }}, {{ $visita->local->loc_cidade }}/{{ $visita->local->loc_estado }} - {{ $visita->local->loc_pais }} | CEP: {{ $visita->local->loc_cep }}</dd>
+                <dd class="text-sm text-gray-600 dark:text-gray-400">Complemento: {{ $visita->local->loc_complemento ?? 'N/A' }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Latitude</dt>
+                <dd>{{ $visita->local->loc_latitude }}</dd>
+            </div>
+            <div>
+                <dt class="font-medium">Longitude</dt>
+                <dd>{{ $visita->local->loc_longitude }}</dd>
+            </div>
+        </dl>
+
         <div>
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Detalhes da Visita</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">
-                Informações completas da visita epidemiológica registrada.
-            </p>
+            <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">Mapa da Localização</h3>
+            <div id="map" class="h-72 rounded border shadow border-gray-300"></div>
+            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">A posição exibida é baseada nas coordenadas fornecidas.</p>
         </div>
+    </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    {{-- Doenças --}}
+    @if ($visita->doencas->count())
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Doenças Identificadas</h2>
+        <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
+            @foreach ($visita->doencas as $doenca)
+                <li>{{ $doenca->doe_nome }}</li>
+            @endforeach
+        </ul>
+    </section>
+    @endif
+
+    {{-- Depósitos Inspecionados --}}
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Depósitos Inspecionados</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            @foreach (['a1','a2','b','c','d1','d2','e'] as $tipo)
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded shadow text-center">
+                    <p class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{{ strtoupper($tipo) }}</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $visita->{'insp_'.$tipo} ?? 0 }}</p>
+                </div>
+            @endforeach
+            <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 col-span-2 sm:col-span-4 p-4 rounded-lg text-center font-bold text-lg shadow">
+                Eliminados: {{ $visita->vis_depositos_eliminados ?? 0 }}
+            </div>
+        </div>
+    </section>
+
+    {{-- Coleta de Amostra --}}
+    @if ($visita->vis_coleta_amostra)
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Coleta de Amostra</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">Data da Visita</h3>
-                <p class="text-base text-gray-900 dark:text-gray-100">{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</p>
+                <dt class="font-medium">Nº Inicial</dt>
+                <dd>{{ $visita->vis_amos_inicial }}</dd>
             </div>
             <div>
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">Agente Responsável</h3>
-                <p class="text-base text-gray-900 dark:text-gray-100">{{ $visita->usuario->use_nome }}</p>
+                <dt class="font-medium">Nº Final</dt>
+                <dd>{{ $visita->vis_amos_final }}</dd>
             </div>
             <div>
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">Tipo de Visita</h3>
-                <p class="text-base text-gray-900 dark:text-gray-100">
-                    <span class="inline-block bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-200 text-xs font-semibold px-2 py-1 rounded">
-                        {{ $visita->vis_tipo }}
-                    </span>
-                </p>
+                <dt class="font-medium">Tubitos</dt>
+                <dd>{{ $visita->vis_qtd_tubitos }}</dd>
             </div>
-        </div>
+        </dl>
+    </section>
+    @endif
 
-        <div class="pt-4">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Local Visitado</h3>
-            <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                <span class="inline-block bg-purple-200 dark:bg-purple-800 text-purple-900 dark:text-purple-100 text-xs font-semibold px-2 py-1 rounded">
-                    Cód. {{ $visita->local->loc_codigo_unico }}
-                </span>
-            </p>
-            <p class="text-base text-gray-900 dark:text-gray-100 mt-1">
-                {{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }} -
-                {{ $visita->local->loc_bairro }}, {{ $visita->local->loc_cidade }}/{{ $visita->local->loc_estado }}<br>
-                {{ $visita->local->loc_pais }}, {{ $visita->local->loc_cep }}
-            </p>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                Coordenadas: {{ $visita->local->loc_latitude }}, {{ $visita->local->loc_longitude }}
-            </p>
-        </div>
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Tratamentos Realizados</h2>
 
-        <div class="pt-6">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças Detectadas</h3>
-            <div class="space-y-4 mt-2">
-                @foreach ($visita->doencas as $doenca)
-                    <div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
-                        <h4 class="text-base font-bold text-blue-700 dark:text-blue-300">{{ $doenca->doe_nome }}</h4>
-
-                        <div class="mt-2">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">Sintomas:</span><br>
-                            @if(is_array($doenca->doe_sintomas))
-                                <div class="mt-1 space-y-1">
-                                    @foreach($doenca->doe_sintomas as $item)
-                                        <span class="inline-block bg-blue-200 dark:bg-blue-700 text-blue-900 dark:text-blue-100 text-xs font-medium px-2 py-0.5 rounded">{{ $item }}</span>
-                                    @endforeach
-                                </div>
-                            @else
-                                <span>{{ $doenca->doe_sintomas }}</span>
-                            @endif
-                        </div>
-
-                        <div class="mt-2">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">Transmissão:</span><br>
-                            @if(is_array($doenca->doe_transmissao))
-                                <div class="mt-1 space-y-1">
-                                    @foreach($doenca->doe_transmissao as $item)
-                                        <span class="inline-block bg-yellow-200 dark:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-xs font-medium px-2 py-0.5 rounded">{{ $item }}</span>
-                                    @endforeach
-                                </div>
-                            @else
-                                <span>{{ $doenca->doe_transmissao }}</span>
-                            @endif
-                        </div>
-
-                        <div class="mt-2">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">Medidas de Controle:</span><br>
-                            @if(is_array($doenca->doe_medidas_controle))
-                                <div class="mt-1 space-y-1">
-                                    @foreach($doenca->doe_medidas_controle as $item)
-                                        <span class="inline-block bg-green-200 dark:bg-green-700 text-green-900 dark:text-green-100 text-xs font-medium px-2 py-0.5 rounded">{{ $item }}</span>
-                                    @endforeach
-                                </div>
-                            @else
-                                <span>{{ $doenca->doe_medidas_controle }}</span>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
+        @if ($visita->tratamentos && count($visita->tratamentos))
+            @foreach ($visita->tratamentos as $t)
+            <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-600 text-sm text-gray-800 dark:text-gray-100 space-y-1">
+                <p><strong>Forma:</strong> {{ $t['trat_forma'] ?? '-' }}</p>
+                <p><strong>Tipo:</strong> {{ $t['trat_tipo'] ?? '-' }}</p>
+                <p><strong>Linha:</strong> {{ $t['linha'] ?? '-' }}</p>
+                <p><strong>Gramas:</strong> {{ $t['qtd_gramas'] ?? '-' }}</p>
+                <p><strong>Depósitos Tratados:</strong> {{ $t['qtd_depositos_tratados'] ?? '-' }}</p>
+                <p><strong>Cargas:</strong> {{ $t['qtd_cargas'] ?? '-' }}</p>
             </div>
-        </div>
-
-        <div class="pt-6">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Observações</h3>
-            <p class="text-base text-gray-900 dark:text-gray-100 mt-2">
-                {{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}
+            @endforeach
+        @else
+            <p class="text-sm text-gray-600 dark:text-gray-300 italic">
+                Nenhum tratamento foi realizado durante esta visita.
             </p>
-        </div>
+        @endif
+    </section>
 
-        <div class="pt-6">
-            <div id="map" class="h-72 rounded-md shadow border border-gray-300"></div>
-            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
-                Localização exibida com base nas coordenadas registradas.
-            </p>
-        </div>
+    {{-- Observações --}}
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Observações</h2>
+        <p class="text-sm text-gray-900 dark:text-gray-100">{{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}</p>
     </section>
 </div>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+{{-- Mapa --}}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const lat = parseFloat("{{ $visita->local->loc_latitude }}") || -28.7;
