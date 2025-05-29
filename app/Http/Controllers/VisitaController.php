@@ -117,11 +117,10 @@ class VisitaController extends Controller
                 $visita->tratamentos()->create([
                     'trat_tipo'               => $t['trat_tipo'],
                     'trat_forma'              => $t['trat_forma'],
-                    'linha'                   => $t['linha'] ?? null,
-                    'produto'                 => $t['produto'] ?? null,
-                    'qtd_gramas'              => $t['qtd_gramas'] ?? null,
-                    'qtd_depositos_tratados'  => $t['qtd_depositos_tratados'] ?? null,
-                    'qtd_cargas'              => $t['qtd_cargas'] ?? null,
+                    'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                    'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                    'qtd_depositos_tratados'  => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                    'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
                 ]);
             }
         }
@@ -171,25 +170,27 @@ class VisitaController extends Controller
         $visita->update($validated);
         $visita->doencas()->sync($doencas);
 
-        $visita->tratamentos()->delete();
-        foreach ($tratamentos as $t) {
-            if (
-                !empty($t['trat_tipo']) &&
-                !empty($t['trat_forma']) &&
-                (
-                    ($t['trat_forma'] === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
-                    ($t['trat_forma'] === 'perifocal' && !empty($t['qtd_cargas']))
-                )
-            ) {
-                $visita->tratamentos()->create([
-                    'trat_tipo'               => $t['trat_tipo'],
-                    'trat_forma'              => $t['trat_forma'],
-                    'linha'                   => $t['linha'] ?? null,
-                    'produto'                 => $t['produto'] ?? null,
-                    'qtd_gramas'              => $t['qtd_gramas'] ?? null,
-                    'qtd_depositos_tratados'  => $t['qtd_depositos_tratados'] ?? null,
-                    'qtd_cargas'              => $t['qtd_cargas'] ?? null,
-                ]);
+        if (!empty($tratamentos)) {
+            $visita->tratamentos()->delete();
+
+            foreach ($tratamentos as $t) {
+                if (
+                    !empty($t['trat_tipo']) &&
+                    !empty($t['trat_forma']) &&
+                    (
+                        (strtolower($t['trat_forma']) === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
+                        (strtolower($t['trat_forma']) === 'perifocal' && !empty($t['qtd_cargas']))
+                    )
+                ) {
+                    $visita->tratamentos()->create([
+                        'trat_tipo'               => $t['trat_tipo'],
+                        'trat_forma'              => $t['trat_forma'],
+                        'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                        'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                        'qtd_depositos_tratados'  => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                        'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
+                    ]);
+                }
             }
         }
 

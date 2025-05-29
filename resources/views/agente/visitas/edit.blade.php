@@ -205,15 +205,16 @@
                 </div>
             </fieldset>
 
+            {{-- Tratamentos --}}
             <div x-data="{ exibirTratamentos: {{ old('tratamentos') || ($visita->tratamentos && count($visita->tratamentos)) ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', json_encode($visita->tratamentos ?? [])) }} }" class="space-y-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tratamentos Realizados</label>
 
-                <template x-if="!exibirTratamentos">
+                <template x-if="tratamentos.length === 0">
                     <div class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
                         Nenhum tratamento foi informado. Caso tenha realizado algum, clique no botão abaixo.
                         <div class="mt-2">
                             <button type="button"
-                                    @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
+                                    @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
                                     class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded shadow">
                                 + Adicionar Tratamento
                             </button>
@@ -282,7 +283,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex justify-end" x-show="i > 0">
+                                <div class="flex justify-end">
                                     <button type="button" @click="tratamentos.splice(i, 1)"
                                             class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded shadow">
                                         - Remover Tratamento
@@ -291,14 +292,19 @@
                             </div>
                         </template>
 
-                        <div class="flex justify-start">
+                        <div class="flex justify-start" x-show="tratamentos.length > 0">
                             <button type="button"
-                                    @click="tratamentos.push({trat_forma:'Focal', linha:'', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
+                                    @click="tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
                                     class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded shadow">
                                 + Adicionar Tratamento
                             </button>
                         </div>
                     </div>
+                </template>
+
+                <!-- Campo oculto com os dados serializados -->
+                <template x-if="exibirTratamentos">
+                    <input type="hidden" name="tratamentos" :value="JSON.stringify(tratamentos)">
                 </template>
             </div>
 

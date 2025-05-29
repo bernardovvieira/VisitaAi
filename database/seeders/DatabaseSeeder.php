@@ -171,32 +171,51 @@ class DatabaseSeeder extends Seeder
             Local::create($local);
         }
 
-        // Visitas
-        // $visita1 = Visita::create([
-        //     'vis_data' => now()->subDays(1)->toDateString(),
-        //     'vis_observacoes' => 'Primeira visita de teste',
-        //     'vis_tipo' => 'LI+T',
-        //     'fk_local_id' => 1,
-        //     'fk_usuario_id' => 2, // Agente Um (agente_endemias)
-        // ]);
-        // $visita1->doencas()->attach([1, 2]); // Dengue, Zika
+        // Visitas e Tratamentos
+        $visita1 = Visita::create([
+            'fk_usuario_id' => 2,
+            'fk_local_id' => 2,
+            'vis_data' => '2025-05-30',
+            'vis_ciclo' => '05/25',
+            'vis_atividade' => '2',
+            'vis_pendencias' => true,
+            'vis_coleta_amostra' => false,
+            'vis_concluida' => false,
+            'vis_observacoes' => 'Inspeção de rotina com pendências a serem resolvidas.'
+        ]);
 
-        // $visita2 = Visita::create([
-        //     'vis_data' => now()->toDateString(),
-        //     'vis_observacoes' => 'Segunda visita de teste',
-        //     'vis_tipo' => 'LI+T',
-        //     'fk_local_id' => 2,
-        //     'fk_usuario_id' => 2, // Agente Um (agente_endemias)
-        // ]);
-        // $visita2->doencas()->attach([3]); // Chikungunya
+        $visita2 = Visita::create([
+            'fk_usuario_id' => 2,
+            'fk_local_id' => 3,
+            'vis_data' => '2025-05-29',
+            'vis_ciclo' => '05/25',
+            'vis_atividade' => '7',
+            'vis_pendencias' => false,
+            'vis_coleta_amostra' => true,
+            'vis_concluida' => true,
+            'vis_amos_inicial' => 100,
+            'vis_amos_final' => 103,
+            'vis_qtd_tubitos' => 3,
+            'vis_observacoes' => 'Coleta de amostra em terreno baldio com presença de larvas.',
+            'insp_a1' => 2,
+            'insp_a2' => 1,
+            'vis_depositos_eliminados' => 1,
+        ]);
 
-        // $visita3 = Visita::create([
-        //     'vis_data' => now()->subDays(2)->toDateString(),
-        //     'vis_observacoes' => 'Visita de acompanhamento',
-        //     'vis_tipo' => 'LIRAa',
-        //     'fk_local_id' => 3,
-        //     'fk_usuario_id' => 3, // Agente Dois (agente_saude)
-        // ]);
-        // $visita3->doencas()->attach([1]); // Dengue
+        // Tratamentos da visita 2
+        $visita2->tratamentos()->createMany([
+            [
+                'trat_tipo' => 'Larvicida',
+                'trat_forma' => 'Focal',
+                'linha' => 1,
+                'qtd_gramas' => 2,
+                'qtd_depositos_tratados' => 2,
+            ],
+            [
+                'trat_tipo' => 'Adulticida',
+                'trat_forma' => 'Perifocal',
+                'qtd_cargas' => 3,
+            ],
+        ]);
     }
 }

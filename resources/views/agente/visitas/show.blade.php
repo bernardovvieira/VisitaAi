@@ -144,6 +144,12 @@
         </dl>
     </section>
 
+    {{-- Observações --}}
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Observações</h2>
+        <p class="text-sm text-gray-900 dark:text-gray-100">{{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}</p>
+    </section>
+
     {{-- Doenças --}}
     @if ($visita->doencas->count())
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
@@ -198,26 +204,32 @@
 
         @if ($visita->tratamentos && count($visita->tratamentos))
             @foreach ($visita->tratamentos as $t)
-            <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-600 text-sm text-gray-800 dark:text-gray-100 space-y-1">
-                <p><strong>Forma:</strong> {{ $t['trat_forma'] ?? '-' }}</p>
-                <p><strong>Tipo:</strong> {{ $t['trat_tipo'] ?? '-' }}</p>
-                <p><strong>Linha:</strong> {{ $t['linha'] ?? '-' }}</p>
-                <p><strong>Gramas:</strong> {{ $t['qtd_gramas'] ?? '-' }}</p>
-                <p><strong>Depósitos Tratados:</strong> {{ $t['qtd_depositos_tratados'] ?? '-' }}</p>
-                <p><strong>Cargas:</strong> {{ $t['qtd_cargas'] ?? '-' }}</p>
-            </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-600 text-sm text-gray-800 dark:text-gray-100 space-y-1">
+                    @if (!empty($t->trat_forma))
+                        <p><strong>Forma:</strong> {{ $t->trat_forma }}</p>
+                    @endif
+                    @if (!empty($t->trat_tipo))
+                        <p><strong>Tipo:</strong> {{ $t->trat_tipo }}</p>
+                    @endif
+                    @if (!is_null($t->linha))
+                        <p><strong>Linha:</strong> {{ $t->linha }}</p>
+                    @endif
+                    @if (!is_null($t->qtd_gramas))
+                        <p><strong>Gramas:</strong> {{ $t->qtd_gramas }}</p>
+                    @endif
+                    @if (!is_null($t->qtd_depositos_tratados))
+                        <p><strong>Depósitos Tratados:</strong> {{ $t->qtd_depositos_tratados }}</p>
+                    @endif
+                    @if (!is_null($t->qtd_cargas))
+                        <p><strong>Cargas:</strong> {{ $t->qtd_cargas }}</p>
+                    @endif
+                </div>
             @endforeach
         @else
             <p class="text-sm text-gray-600 dark:text-gray-300 italic">
                 Nenhum tratamento foi realizado durante esta visita.
             </p>
         @endif
-    </section>
-
-    {{-- Observações --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Observações</h2>
-        <p class="text-sm text-gray-900 dark:text-gray-100">{{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}</p>
     </section>
 </div>
 

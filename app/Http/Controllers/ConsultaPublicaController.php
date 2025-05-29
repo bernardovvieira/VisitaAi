@@ -26,7 +26,10 @@ class ConsultaPublicaController extends Controller
             return redirect()->back()->with('erro', 'código não encontrado.');
         }
 
-        $visitas = $local->visitas()->with('doencas')->get();
+        $visitas = $local->visitas()
+            ->with('doencas')
+            ->orderByDesc('vis_data')
+            ->get();
 
         return view('consulta.codigo', compact('local', 'visitas'));
     }

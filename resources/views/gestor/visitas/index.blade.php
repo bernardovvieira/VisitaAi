@@ -98,15 +98,14 @@
 
                                     @php
                                         $revisitaPosterior = $visita->local->visitas()
-                                            ->where('vis_pendencias', false)
                                             ->where('vis_data', '>', $visita->vis_data)
                                             ->orderBy('vis_data')
                                             ->first();
                                     @endphp
 
                                     @if($revisitaPosterior)
-                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                            Revisitado {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }} 
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
+                                            Revisitado em {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }}
                                         </div>
                                     @endif
                                 @else

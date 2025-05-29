@@ -21,6 +21,7 @@
     <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div class="space-y-2 text-sm text-gray-800 dark:text-gray-100">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Imóvel Consultado</h2>
+            <p><strong>Zona:</strong> {{ $local->loc_zona === 'U' ? 'Urbana' : ($local->loc_zona === 'R' ? 'Rural' : 'N/A') }}</p>
             <p><strong>Tipo de Imóvel:</strong> {{ $local->loc_tipo === 'R' ? 'Residencial' : ($local->loc_tipo === 'C' ? 'Comercial' : 'Terreno Baldio') }}</p>
             <p><strong>Quarteirão:</strong> {{ $local->loc_quarteirao ?? 'N/A' }}</p>
             <p><strong>Endereço:</strong> {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</p>
@@ -53,9 +54,28 @@
                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</td>
                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}</td>
                                 <td class="px-4 py-3">
-                                    <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded dark:bg-green-900 dark:text-green-300">
-                                        Visita registrada
-                                    </span>
+                                    @if ($visita->vis_pendencias)
+                                        @php
+                                            $revisitaPosterior = $visita->local->visitas()
+                                                ->where('vis_data', '>', $visita->vis_data)
+                                                ->orderBy('vis_data')
+                                                ->first();
+                                        @endphp
+
+                                        <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded dark:bg-red-900 dark:text-red-300">
+                                            Pendente
+                                        </span>
+
+                                        @if($revisitaPosterior)
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
+                                                Revisitado em {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }}
+                                            </div>
+                                        @endif
+                                    @else
+                                        <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded dark:bg-green-900 dark:text-green-300">
+                                            Concluída
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

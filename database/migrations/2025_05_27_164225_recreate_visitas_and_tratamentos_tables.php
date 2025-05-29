@@ -65,7 +65,6 @@ return new class extends Migration {
             $table->enum('trat_tipo', ['Larvicida', 'Adulticida']);
             $table->enum('trat_forma', ['Focal', 'Perifocal']);
             $table->integer('linha')->nullable(); // linha 1, 2, etc.
-            $table->string('produto')->nullable();
             $table->integer('qtd_gramas')->nullable();
             $table->integer('qtd_depositos_tratados')->nullable();
             $table->integer('qtd_cargas')->nullable();

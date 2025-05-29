@@ -106,7 +106,7 @@
                     <input type="hidden" name="fk_local_id" x-bind:value="selectedId"> 
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Se o local visitado não estiver na lista, entre em contato com algum Agente de Endemias para que ele possa ser cadastrado.
+                    Se o local visitado não estiver na lista, contate um Agente de Endemias para cadastrá-lo.
                 </p>
             </fieldset>
 
@@ -217,32 +217,90 @@
             <div x-data="{ exibirTratamentos: {{ old('tratamentos') ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', '[]') }} }" class="space-y-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tratamentos Realizados</label>
 
-                <template x-if="!exibirTratamentos">
-                    <div class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
-                        Nenhum tratamento foi informado. Caso tenha realizado algum, clique no botão abaixo.
-                        <div class="mt-2">
-                            <button type="button"
-                                    @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
-                                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded shadow">
-                                + Adicionar Tratamento
-                            </button>
-                        </div>
+                <div x-show="tratamentos.length === 0" class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
+                    Nenhum tratamento foi informado. Caso tenha realizado algum, clique no botão abaixo.
+                    <div class="mt-2">
+                        <button type="button"
+                                @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
+                                class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded shadow">
+                            + Adicionar Tratamento
+                        </button>
                     </div>
-                </template>
+                </div>
 
                 <template x-if="exibirTratamentos">
                     <div class="space-y-4">
                         <template x-for="(t, i) in tratamentos" :key="i">
-                            <!-- Aqui mantém todo o bloco do tratamento individual -->
                             <div class="p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 space-y-4">
-                                <!-- ... seu conteúdo de inputs ... -->
-                                <!-- Mantenha como está -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Forma</label>
+                                        <select :name="`tratamentos[${i}][trat_forma]`"
+                                                x-model="t.trat_forma"
+                                                @change="
+                                                    if (t.trat_forma === 'Focal') {
+                                                        t.trat_tipo = 'Larvicida';
+                                                        t.qtd_cargas = null;
+                                                    } else {
+                                                        t.trat_tipo = 'Adulticida';
+                                                        t.linha = '';
+                                                        t.qtd_gramas = null;
+                                                        t.qtd_depositos_tratados = null;
+                                                    }
+                                                "
+                                                class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                            <option value="Focal" selected>Focal</option>
+                                            <option value="Perifocal">Perifocal</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Tipo</label>
+                                        <input type="text" :name="`tratamentos[${i}][trat_tipo]`" x-model="t.trat_tipo" readonly
+                                            :value="t.trat_tipo.charAt(0).toUpperCase() + t.trat_tipo.slice(1)"
+                                            class="mt-1 block w-full rounded bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm cursor-not-allowed">
+                                    </div>
+                                    <div x-show="t.trat_forma === 'Focal'">
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Linha</label>
+                                        <select :name="`tratamentos[${i}][linha]`" x-model="t.linha"
+                                                class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="t.trat_forma === 'Focal'">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade (gramas)</label>
+                                        <input type="number" min="0" :name="`tratamentos[${i}][qtd_gramas]`" x-model="t.qtd_gramas"
+                                            class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Depósitos Tratados</label>
+                                        <input type="number" min="0" :name="`tratamentos[${i}][qtd_depositos_tratados]`" x-model="t.qtd_depositos_tratados"
+                                            class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="t.trat_forma === 'Perifocal'">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade de Cargas</label>
+                                        <input type="number" min="0" :name="`tratamentos[${i}][qtd_cargas]`" x-model="t.qtd_cargas"
+                                            class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                    </div>
+                                </div>
+                                <!-- Botão para remover o tratamento -->
+                                <div class="flex justify-end">
+                                    <button type="button" @click="tratamentos.splice(i, 1)"
+                                            class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded shadow">
+                                        - Remover Tratamento
+                                    </button>
+                                </div>
                             </div>
                         </template>
 
-                        <div class="flex justify-start">
+                        <div class="flex justify-start" x-show="tratamentos.length > 0">
                             <button type="button"
-                                    @click="tratamentos.push({trat_forma:'Focal', linha:'', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
+                                    @click="tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
                                     class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded shadow">
                                 + Adicionar Tratamento
                             </button>

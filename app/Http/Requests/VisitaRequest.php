@@ -57,14 +57,20 @@ class VisitaRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->has('tratamentos')) {
-            $this->merge([
-                'tratamentos' => collect($this->input('tratamentos'))->filter(function ($t) {
-                    return !empty($t['trat_forma']) || !empty($t['trat_tipo']) ||
-                        !empty($t['linha']) || !empty($t['qtd_gramas']) ||
-                        !empty($t['qtd_depositos_tratados']) || !empty($t['qtd_cargas']);
-                })->values()->toArray()
-            ]);
+        $tratamentos = $this->input('tratamentos');
+
+        if (is_string($tratamentos)) {
+            $tratamentos = json_decode($tratamentos, true);
+        }
+
+        if (is_array($tratamentos)) {
+            $tratamentos = collect($tratamentos)->filter(function ($t) {
+                return !empty($t['trat_forma']) || !empty($t['trat_tipo']) ||
+                    !empty($t['linha']) || !empty($t['qtd_gramas']) ||
+                    !empty($t['qtd_depositos_tratados']) || !empty($t['qtd_cargas']);
+            })->values()->toArray();
+
+            $this->merge(['tratamentos' => $tratamentos]);
         }
     }
 }
