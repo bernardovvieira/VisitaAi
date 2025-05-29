@@ -15,13 +15,12 @@ class Visita extends Model
 
     protected $fillable = [
         'vis_data',
-        'vis_tipo',
         'vis_ciclo',
         'vis_atividade',
         'vis_visita_tipo',
         'vis_pendencias',
-        'vis_insp_inicial',
-        'vis_insp_final',
+        'vis_amos_inicial',
+        'vis_amos_final',
         'vis_coleta_amostra',
         'vis_qtd_tubitos',
         'vis_imoveis_tratados',
@@ -36,7 +35,7 @@ class Visita extends Model
     ];
 
     protected $casts = [
-        'vis_pendencias' => 'array',
+        'vis_pendencias' => 'boolean', 
         'vis_coleta_amostra' => 'boolean',
         'vis_concluida' => 'boolean',
     ];

@@ -24,9 +24,10 @@ return new class extends Migration {
 
             // Informações de controle
             $table->date('vis_data');
+            $table->string('vis_ciclo', 10)->nullable();
             $table->enum('vis_atividade', ['1','2','3','4','5','6','7','8'])->nullable();
             $table->enum('vis_visita_tipo', ['N', 'R'])->nullable(); // Normal / Recuperação
-            $table->json('vis_pendencias')->nullable(); // A1, A2, B...
+            $table->boolean('vis_pendencias')->default(false);
 
             // Depósitos inspecionados
             $table->integer('insp_a1')->nullable();
@@ -40,8 +41,8 @@ return new class extends Migration {
             // Coleta de amostra
             $table->boolean('vis_coleta_amostra')->default(false);
             $table->integer('vis_qtd_tubitos')->nullable();
-            $table->integer('vis_insp_inicial')->nullable();
-            $table->integer('vis_insp_final')->nullable();
+            $table->integer('vis_amos_inicial')->nullable();
+            $table->integer('vis_amos_final')->nullable();
 
             // Tratamento e eliminação
             $table->integer('vis_depositos_eliminados')->nullable();
@@ -61,8 +62,8 @@ return new class extends Migration {
         Schema::create('tratamentos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('fk_visita_id');
-            $table->enum('trat_tipo', ['larvicida', 'adulticida']);
-            $table->enum('trat_forma', ['focal', 'perifocal']);
+            $table->enum('trat_tipo', ['Larvicida', 'Adulticida']);
+            $table->enum('trat_forma', ['Focal', 'Perifocal']);
             $table->integer('linha')->nullable(); // linha 1, 2, etc.
             $table->string('produto')->nullable();
             $table->integer('qtd_gramas')->nullable();

@@ -94,7 +94,7 @@
                                 );
                             })" :key="local.loc_id">
                                 <li>
-                                    <button type="button" @click="selectedId = local.loc_id; search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
+                                    <button type="button" @click="selectedId = Number(local.loc_id); search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
                                             class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                         <span x-text="'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado">
                                         </span>
@@ -103,11 +103,11 @@
                             </template>
                         </ul>
                     </div>
+                    <input type="hidden" name="fk_local_id" x-bind:value="selectedId"> 
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Se o local visitado não estiver na lista, você pode adicioná-lo na seção de <a href="{{ route('agente.locais.create') }}" class="text-gray-800 hover:underline">locais</a>.
                 </p>
-                <input type="hidden" name="fk_local_id" :value="selectedId">
             </fieldset>
 
             <fieldset class="space-y-3">
@@ -214,7 +214,7 @@
             </fieldset>
 
             {{-- Tratamentos --}}
-            <div x-data="{ tratamentos: {{ old('tratamentos') ? json_encode(old('tratamentos')) : '[{trat_forma: \'Focal\', linha: \'\', trat_tipo: \'Larvicida\', qtd_gramas: null, qtd_depositos_tratados: null, qtd_cargas: null}]' }} }" class="space-y-4">
+            <div x-data="{ tratamentos: {{ old('tratamentos', json_encode($visita->tratamentos ?? [['trat_forma' => 'Focal', 'linha' => '', 'trat_tipo' => 'Larvicida', 'qtd_gramas' => null, 'qtd_depositos_tratados' => null, 'qtd_cargas' => null]])) }} }" class="space-y-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tratamentos Realizados</label>
 
                 <template x-for="(t, i) in tratamentos" :key="i">
@@ -243,13 +243,14 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Tipo</label>
                                 <input type="text" :name="`tratamentos[${i}][trat_tipo]`" x-model="t.trat_tipo" readonly
+                                    :value="t.trat_tipo.charAt(0).toUpperCase() + t.trat_tipo.slice(1)"
                                     class="mt-1 block w-full rounded bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm cursor-not-allowed">
                             </div>
                             <div x-show="t.trat_forma === 'Focal'">
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Linha</label>
                                 <select :name="`tratamentos[${i}][linha]`" x-model="t.linha"
                                         class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
-                                    <option value="1" selected>1</option>
+                                    <option value="1">1</option>
                                     <option value="2">2</option>
                                 </select>
                             </div>

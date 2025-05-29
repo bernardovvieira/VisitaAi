@@ -22,14 +22,47 @@ class LocalController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $search = $request->input('search');
+        $search = strtolower(trim($request->input('search')));
 
         $query = Local::query();
+
         if ($search) {
-            $query->whereRaw("loc_endereco LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"]);
+            // Resolver tipo de imóvel por fragmento
+            $tipo = null;
+            if (str_starts_with($search, 'res')) {
+                $tipo = 'R';
+            } elseif (str_starts_with($search, 'com')) {
+                $tipo = 'C';
+            } elseif (str_starts_with($search, 'ter')) {
+                $tipo = 'T';
+            } elseif (in_array($search, ['r', 'c', 't'])) {
+                $tipo = strtoupper($search);
+            }
+
+            // Resolver zona por fragmento
+            $zona = null;
+            if (str_starts_with($search, 'urb')) {
+                $zona = 'U';
+            } elseif (str_starts_with($search, 'rur')) {
+                $zona = 'R';
+            }
+
+            $query->where(function ($q) use ($search, $tipo, $zona) {
+                $q->whereRaw("LOWER(loc_endereco) LIKE ?", ["%{$search}%"])
+                ->orWhereRaw("LOWER(loc_bairro) LIKE ?", ["%{$search}%"])
+                ->orWhere('loc_codigo_unico', $search);
+
+                if ($tipo) {
+                    $q->orWhere('loc_tipo', $tipo);
+                }
+
+                if ($zona) {
+                    $q->orWhere('loc_zona', $zona);
+                }
+            });
         }
 
-        $locais = $query->paginate(10)->appends(['search' => $search]);
+        $locais = $query->orderByDesc('loc_id')->paginate(10)->appends(['search' => $search]);
 
         $view = $user->isAgente()
             ? 'agente.locais.index'

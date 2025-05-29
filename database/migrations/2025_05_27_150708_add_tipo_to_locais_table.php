@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::table('locais', function (Blueprint $table) {
             $table->char('loc_tipo', 1)->default('R'); // R = Residencial
             $table->integer('loc_numero')->nullable()->change();
+            $table->string('loc_zona');
+            $table->string('loc_categoria')->nullable();
+            $table->integer('loc_sequencia')->nullable();
+            $table->integer('loc_lado')->nullable();
+            $table->string('loc_codigo')->nullable();
         });
     }
 

@@ -83,12 +83,20 @@ class VisitaController extends Controller
         $validated['fk_usuario_id'] = $user->use_id;
         $validated['vis_coleta_amostra'] = $request->boolean('vis_coleta_amostra');
         $validated['vis_concluida'] = $request->boolean('vis_concluida');
+        $validated['vis_pendencias'] = $request->boolean('vis_pendencias');
 
         $visita = Visita::create($validated);
         $visita->doencas()->sync($doencas);
 
         foreach ($tratamentos as $t) {
-            if (!empty($t['trat_tipo']) && !empty($t['trat_forma'])) {
+            if (
+                !empty($t['trat_tipo']) &&
+                !empty($t['trat_forma']) &&
+                (
+                    ($t['trat_forma'] === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
+                    ($t['trat_forma'] === 'perifocal' && !empty($t['qtd_cargas']))
+                )
+            ) {
                 $visita->tratamentos()->create([
                     'trat_tipo'               => $t['trat_tipo'],
                     'trat_forma'              => $t['trat_forma'],
@@ -141,13 +149,21 @@ class VisitaController extends Controller
 
         $validated['vis_coleta_amostra'] = $request->boolean('vis_coleta_amostra');
         $validated['vis_concluida'] = $request->boolean('vis_concluida');
+        $validated['vis_pendencias'] = $request->boolean('vis_pendencias');
 
         $visita->update($validated);
         $visita->doencas()->sync($doencas);
 
         $visita->tratamentos()->delete();
         foreach ($tratamentos as $t) {
-            if (!empty($t['trat_tipo']) && !empty($t['trat_forma'])) {
+            if (
+                !empty($t['trat_tipo']) &&
+                !empty($t['trat_forma']) &&
+                (
+                    ($t['trat_forma'] === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
+                    ($t['trat_forma'] === 'perifocal' && !empty($t['qtd_cargas']))
+                )
+            ) {
                 $visita->tratamentos()->create([
                     'trat_tipo'               => $t['trat_tipo'],
                     'trat_forma'              => $t['trat_forma'],
