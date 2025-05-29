@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/25" para janeiro de 2025.
+                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/25" para a primeira referência do ano de 2025.
                 </p>
             </fieldset>
 
