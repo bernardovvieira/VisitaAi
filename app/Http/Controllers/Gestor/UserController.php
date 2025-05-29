@@ -23,11 +23,27 @@ class UserController extends Controller
         $query = User::query();
 
         if (request()->filled('search')) {
-            $search = request('search');
+            $search = trim(request('search'));
+            $busca = strtolower($search);
 
-            $query->where(function ($q) use ($search) {
+            // Resolver tipo de perfil mesmo por fragmento parcial
+            $perfil = null;
+
+            if (str_contains($busca, 'gestor') || str_contains($busca, 'ges')) {
+                $perfil = 'gestor';
+            } elseif (str_contains($busca, 'endemias') || str_contains($busca, 'en') || str_contains($busca, 'agente')) {
+                $perfil = 'agente_endemias';
+            } elseif (str_contains($busca, 'saude') || str_contains($busca, 'saúde') || str_contains($busca, 'sa') || str_contains($busca, 'agente')) {
+                $perfil = 'agente_saude';
+            }
+
+            $query->where(function ($q) use ($search, $perfil) {
                 $q->where('use_nome', 'like', "%{$search}%")
                 ->orWhere('use_email', 'like', "%{$search}%");
+
+                if ($perfil) {
+                    $q->orWhere('use_perfil', $perfil);
+                }
             });
         }
 

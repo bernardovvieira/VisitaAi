@@ -29,7 +29,7 @@
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Usuário</label>
                 <input type="text" id="search" x-model="search" x-init="$el.focus()"
                     @input.debounce.500ms="window.location.href = '{{ route('gestor.users.index') }}' + '?search=' + encodeURIComponent(search)"
-                    placeholder="Digite o nome ou e-mail..."
+                    placeholder="Digite o nome, e-mail ou perfil..."
                     class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
             </div>
         </div>
