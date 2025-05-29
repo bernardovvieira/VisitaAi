@@ -306,6 +306,10 @@
                 <template x-if="exibirTratamentos">
                     <input type="hidden" name="tratamentos" :value="JSON.stringify(tratamentos)">
                 </template>
+
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Para um tratamento ser considerado válido e adicionado na base de dados, é necessário preencher todos os campos relacionados.
+                </p>
             </div>
 
             <div class="space-y-3">
