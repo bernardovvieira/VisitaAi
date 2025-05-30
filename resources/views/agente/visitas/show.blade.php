@@ -94,6 +94,14 @@
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Dados da Visita</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
+                <dt class="font-medium">Código da Visita</dt>
+                <dd class="mt-1">
+                    <span class="inline-block bg-green-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs font-semibold">
+                        #{{ $visita->vis_id }}
+                    </span>
+                </dd>
+            </div>
+            <div>
                 <dt class="font-medium">Data</dt>
                 <dd>{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</dd>
             </div>
@@ -151,16 +159,60 @@
     </section>
 
     {{-- Doenças --}}
-    @if ($visita->doencas->count())
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Doenças Identificadas</h2>
-        <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Doenças Monitoradas na Visita</h2>
+
+        @if ($visita->doencas->count())
             @foreach ($visita->doencas as $doenca)
-                <li>{{ $doenca->doe_nome }}</li>
+                <div class="border border-gray-300 dark:border-gray-600 rounded-md p-4 bg-gray-50 dark:bg-gray-800 space-y-2">
+                    <h3 class="text-md font-semibold text-gray-800 dark:text-gray-100">{{ $doenca->doe_nome }}</h3>
+
+                    @if (!empty($doenca->doe_sintomas))
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Sintomas:</p>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                @foreach ($doenca->doe_sintomas as $sintoma)
+                                    <span class="inline-block bg-blue-200 dark:bg-blue-700 text-blue-900 dark:text-blue-100 text-xs font-medium px-2 py-0.5 rounded">
+                                        {{ $sintoma }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (!empty($doenca->doe_transmissao))
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Modos de Transmissão:</p>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                @foreach ($doenca->doe_transmissao as $transmissao)
+                                    <span class="inline-block bg-yellow-200 dark:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-xs font-medium px-2 py-0.5 rounded">
+                                        {{ $transmissao }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (!empty($doenca->doe_medidas_controle))
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Medidas de Controle:</p>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                @foreach ($doenca->doe_medidas_controle as $medida)
+                                    <span class="inline-block bg-green-200 dark:bg-green-700 text-green-900 dark:text-green-100 text-xs font-medium px-2 py-0.5 rounded">
+                                        {{ $medida }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endforeach
-        </ul>
+        @else
+            <p class="italic text-gray-500 dark:text-gray-400 text-sm">
+                Nenhuma doença foi identificada ou registrada durante esta visita.
+            </p>
+        @endif
     </section>
-    @endif
 
     {{-- Depósitos Inspecionados --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">

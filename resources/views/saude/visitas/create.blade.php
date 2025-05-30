@@ -310,6 +310,31 @@
                 </p>
             </div>
 
+            {{-- Doenças Detectadas --}}
+            <fieldset class="space-y-3">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Doenças Detectadas</legend>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    @foreach ($doencas as $doenca)
+                        <div class="flex items-center">
+                            <input type="checkbox"
+                                id="doenca_{{ $doenca->doe_id }}"
+                                name="doencas[]"
+                                value="{{ $doenca->doe_id }}"
+                                {{ in_array($doenca->doe_id, old('doencas', [])) ? 'checked' : '' }}
+                                class="mr-2 text-blue-600 dark:text-blue-400">
+                            <label for="doenca_{{ $doenca->doe_id }}" class="text-sm text-gray-700 dark:text-gray-300">
+                                {{ $doenca->doe_nome }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Marque as doenças detectadas durante a visita, se houver. Por exemplo, se há algum morador no local com suspeita de dengue.
+                </p>
+            </fieldset>
+
             {{-- Pendências --}}
             <div class="space-y-3">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pendências</label>
