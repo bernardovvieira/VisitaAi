@@ -19,33 +19,101 @@
     @endif
 
     {{-- Filtros Avançados --}}
-    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+    <form method="GET" x-data="{ tipo: '{{ request('tipo_relatorio', 'semanal') }}' }"
+      class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+    
+        {{-- Tipo de Relatório --}}
         <div>
-            <label class="text-sm text-gray-700 dark:text-gray-300">Data Início</label>
-            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-        </div>
-        <div>
-            <label class="text-sm text-gray-700 dark:text-gray-300">Data Fim</label>
-            <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-        </div>
-        <div>
-            <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
-            <input type="text" name="bairro" value="{{ request('bairro') }}" placeholder="Ex: Centro" class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+            <label class="text-sm text-gray-700 dark:text-gray-300">Tipo de Relatório</label>
+            <select name="tipo_relatorio" x-model="tipo"
+                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                <option value="completo">Completo</option>
+                <option value="diario">Diário</option>
+                <option value="semanal">Semanal</option>
+                <option value="individual">Individual</option>
+            </select>
         </div>
 
+        {{-- Data para Diário --}}
+        <div x-show="tipo === 'diario'" x-cloak class="md:col-span-2">
+            <label class="text-sm text-gray-700 dark:text-gray-300">Data</label>
+            <input type="date" name="data_unica" value="{{ request('data_unica') }}"
+                class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+        </div>
+
+        {{-- Período para Semanal --}}
+        <template x-if="tipo === 'semanal'">
+            <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm text-gray-700 dark:text-gray-300">Início da Semana</label>
+                    <input type="date" name="data_inicio" value="{{ request('data_inicio') }}"
+                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+                </div>
+                <div>
+                    <label class="text-sm text-gray-700 dark:text-gray-300">Fim da Semana</label>
+                    <input type="date" name="data_fim" value="{{ request('data_fim') }}"
+                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+                </div>
+            </div>
+        </template>
+
+        {{-- Seleção individual --}}
+        <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3">
+            <label class="text-sm text-gray-700 dark:text-gray-300">Selecione a Visita</label>
+            <select name="visita_id"
+                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                @foreach($visitas as $v)
+                    <option value="{{ $v->vis_id }}" @selected(request('visita_id') == $v->vis_id)>
+                        @php
+                            $atividades = [
+                                '1' => 'LI',
+                                '2' => 'LI+T',
+                                '3' => 'PPE+T',
+                                '4' => 'T',
+                                '5' => 'DF',
+                                '6' => 'PVE',
+                                '7' => 'LIRAa',
+                                '8' => 'PE',
+                            ];
+                        @endphp
+                        #{{ $v->vis_id }} - {{ \Carbon\Carbon::parse($v->vis_data)->format('d/m/Y') }} - {{ $atividades[$v->vis_atividade] ?? 'Não informado' }} - {{ $v->local->loc_endereco }} @if($v->local->loc_numero), {{ $v->local->loc_numero }} @else N/A @endif
+                         - Bairro/Localidade: {{ $v->local->loc_bairro }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- Bairro (apenas para diário, semanal) --}}
+        <div x-show="tipo !== 'individual' && tipo !== 'completo'" x-cloak>
+            <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
+            <input type="text" name="bairro" value="{{ request('bairro') }}"
+                placeholder="Ex: Centro"
+                class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+        </div>
+
+        {{-- Bairro (apenas para completo) --}}
+        <div x-show="tipo === 'completo'" x-cloak class="md:col-span-3">
+            <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
+            <input type="text" name="bairro" value="{{ request('bairro') }}"
+                placeholder="Ex: Centro"
+                class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+        </div>
+
+        {{-- Botões --}}
         <div class="flex flex-col justify-end md:flex-row md:items-end gap-4 col-span-1">
             <div class="flex-1">
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
                     Filtrar
                 </button>
             </div>
             <div class="flex-1">
-                <a href="{{ route('gestor.relatorios.index') }}" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded text-center block">
-                    Limpar Filtros
+                <a href="{{ route('gestor.relatorios.index') }}"
+                class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded text-center block">
+                    Limpar
                 </a>
             </div>
         </div>
-    
     </form>
 
     {{-- Botão Gerar PDF --}}
@@ -59,23 +127,42 @@
     </section>
 
     {{-- Cards Indicadores --}}
-    <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Total de Visitas</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalVisitas }}</h2>
+    <section class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow space-y-4">
+    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Indicadores Gerais</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Locais Cadastrados</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalLocaisCadastrados }}</h2>
         </div>
-        <div class="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Locais com Foco</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $locaisComFoco }}</h2>
-        </div>
-        <div class="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Doença Mais Recorrente</p>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $doencaMaisRecorrente ?: 'N/A' }}</h2>
-        </div>
-        <div class="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
             <p class="text-gray-500 dark:text-gray-400 text-sm">Bairro com Mais Ocorrências</p>
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $bairroMaisFrequente ?: 'N/A' }}</h2>
         </div>
+        <div class="p-4 bg-gray-50 dark:bg-gray-900  shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Total de Visitas</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalVisitas }}</h2>
+        </div>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900  shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">% Visitas com Pendência</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $percentualPendencias }}%</h2>
+        </div>
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Coletas Realizadas</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalComColeta }}</h2>
+        </div>
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Visitas com Tratamento</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $visitasComTratamento }}</h2>
+        </div>
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Média de Tratamentos</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($mediaTratamentosPorVisita, 1, ',', '.') }}</h2>
+        </div>
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Depósitos Eliminados</p>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalDepEliminados }}</h2>
+        </div>
+    </div>
     </section>
 
     {{-- Gráficos Epidemiológicos --}}
@@ -95,6 +182,36 @@
                     O gráfico de pizza mostra a proporção de cada doença registrada nas visitas epidemiológicas.
                 </p>
                 <canvas id="graficoDoencas" class="w-full" style="height: 240px; max-height: 240px;"></canvas>
+            </div>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
+                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Visitas por Zona</h3>
+                <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
+                    Este gráfico de barras mostra a quantidade de visitas realizadas em cada zona (Urbana/Rural).
+                </p>
+                <canvas id="graficoZonas" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
+            </div>
+            <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
+                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Evolução de Visitas por Dia</h3>
+                <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
+                    Este gráfico de linha mostra a evolução do número de visitas realizadas ao longo dos dias.
+                </p>
+                <canvas id="graficoDias" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-2">
+                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
+                    <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Inspeções Realizadas</h3>
+                    <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
+                        Este gráfico radar mostra a quantidade de inspeções realizadas em diferentes tipos de depósitos.
+                    </p>
+                    <canvas id="graficoInsp" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
+                    <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Formas de Tratamento</h3>
+                    <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
+                        Este gráfico de pizza mostra a distribuição das diferentes formas de tratamento aplicadas nas visitas.
+                    </p>
+                    <canvas id="graficoTratamentos" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
+                </div>
             </div>
         </div>
     </section>
@@ -118,8 +235,9 @@
                 <tr>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Código</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Data</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Local</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Doenças</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Agente</th>
                     <th class="p-4 text-center font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                 </tr>
@@ -140,21 +258,54 @@
                                 {{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}
                             </div>
                         </td>
+                        <td class="p-4 text-gray-800 dark:text-gray-100">
+                            @if($visita->vis_pendencias)
+                                <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                    Pendente
+                                </span>
+
+                                @php
+                                    $revisitaPosterior = $visita->local->visitas()
+                                        ->where('vis_data', '>', $visita->vis_data)
+                                        ->orderBy('vis_data')
+                                        ->first();
+                                @endphp
+
+                                @if($revisitaPosterior)
+                                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
+                                        Revisitado em {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }}
+                                    </div>
+                                @endif
+                            @else
+                                <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                    Concluída
+                                </span>
+                            @endif
+                        </td>
+                        @php
+                            $atividades = [
+                                '1' => 'LI',
+                                '2' => 'LI+T',
+                                '3' => 'PPE+T',
+                                '4' => 'T',
+                                '5' => 'DF',
+                                '6' => 'PVE',
+                                '7' => 'LIRAa',
+                                '8' => 'PE',
+                            ];
+                        @endphp
+
+                        <td class="p-4 text-gray-800 dark:text-gray-100">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}
+                            </div>
+                        </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                             <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
                                 Bairro: {{ $visita->local->loc_bairro }}<br>
                                 Cód: {{ $visita->local->loc_codigo_unico }}
                             </div>
-                        </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100">
-                            @forelse ($visita->doencas as $doenca)
-                                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 mr-1 mb-1" title="{{ $doenca->doe_nome }}">
-                                    {{ \Str::limit($doenca->doe_nome, 18) }}
-                                </span>
-                            @empty
-                                <span class="text-xs text-gray-500 italic">Nenhuma</span>
-                            @endforelse
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
                             {{ $visita->usuario->use_nome ?? '—' }}
@@ -314,6 +465,10 @@
         const canvasBairros = document.getElementById('graficoBairros');
         const canvasDoencas = document.getElementById('graficoDoencas');
         const mapaDiv = document.getElementById('mapa-calor');
+        const canvasZonas = document.getElementById('graficoZonas');
+        const canvasDias = document.getElementById('graficoDias');
+        const canvasInsp = document.getElementById('graficoInsp');
+        const canvasTratamentos = document.getElementById('graficoTratamentos');
 
         const base64Bairros = canvasBairros.toDataURL('image/png');
         const base64Doencas = canvasDoencas.toDataURL('image/png');
@@ -359,6 +514,10 @@
         addField('graficoBairrosBase64', base64Bairros);
         addField('graficoDoencasBase64', base64Doencas);
         addField('mapaCalorBase64', base64Mapa);
+        addField('graficoZonasBase64', canvasZonas.toDataURL('image/png'));
+        addField('graficoDiasBase64', canvasDias.toDataURL('image/png'));
+        addField('graficoInspBase64', canvasInsp.toDataURL('image/png'));
+        addField('graficoTratamentosBase64', canvasTratamentos.toDataURL('image/png'));
 
         document.body.appendChild(form);
         form.submit();
@@ -369,5 +528,132 @@
             location.reload();
         }, 1000);
     }
+
+    // Gráficos de visitas por zona
+    const contagemPorZona = {};
+
+    visitas.forEach(v => {
+        let zona = v.local?.loc_zona ?? 'Indefinida';
+        if (zona === 'U') zona = 'Urbana';
+        else if (zona === 'R') zona = 'Rural';
+        contagemPorZona[zona] = (contagemPorZona[zona] || 0) + 1;
+    });    
+
+    new Chart(document.getElementById('graficoZonas'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(contagemPorZona),
+            datasets: [{
+                label: 'Visitas por Zona',
+                data: Object.values(contagemPorZona),
+                backgroundColor: ['#60a5fa', '#34d399'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Visitas por Zona' }
+            }
+        }
+    });
+
+    // Gráfico de evolução diária
+    const contagemPorData = {};
+
+    visitas.forEach(v => {
+        const data = v.vis_data;
+        contagemPorData[data] = (contagemPorData[data] || 0) + 1;
+    });
+
+    const datasOrdenadas = Object.keys(contagemPorData).sort();
+
+    new Chart(document.getElementById('graficoDias'), {
+        type: 'line',
+        data: {
+            labels: datasOrdenadas,
+            datasets: [{
+                label: 'Visitas por Dia',
+                data: datasOrdenadas.map(d => contagemPorData[d]),
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                tension: 0.3,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Visitas por Dia' }
+            },
+            scales: {
+                x: { ticks: { color: '#ccc' } },
+                y: { beginAtZero: true, ticks: { color: '#ccc' } }
+            }
+        }
+    });
+
+    // Gráfico de inspeções
+    const camposInsp = ['insp_a1', 'insp_a2', 'insp_b', 'insp_c', 'insp_d1', 'insp_d2', 'insp_e'];
+    const somatorioInsp = camposInsp.map(campo => visitas.reduce((total, v) => total + (v[campo] || 0), 0));
+
+    new Chart(document.getElementById('graficoInsp'), {
+        type: 'radar',
+        data: {
+            labels: camposInsp.map(c => c.toUpperCase()),
+            datasets: [{
+                label: 'Total Inspeções',
+                data: somatorioInsp,
+                fill: true,
+                backgroundColor: 'rgba(34,197,94,0.2)',
+                borderColor: '#22c55e',
+                pointBackgroundColor: '#22c55e'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Tipos de Depósitos Inspecionados' }
+            },
+            scales: {
+                r: {
+                    ticks: { color: '#ccc' },
+                    pointLabels: { color: '#ccc' }
+                }
+            }
+        }
+    });
+
+    // Gráfico de formas de tratamento
+    const contagemTratamentoForma = {};
+
+    visitas.forEach(v => {
+        (v.tratamentos || []).forEach(t => {
+            const forma = t.trat_forma ?? 'Indefinida';
+            contagemTratamentoForma[forma] = (contagemTratamentoForma[forma] || 0) + 1;
+        });
+    });
+
+    new Chart(document.getElementById('graficoTratamentos'), {
+        type: 'pie',
+        data: {
+            labels: Object.keys(contagemTratamentoForma),
+            datasets: [{
+                data: Object.values(contagemTratamentoForma),
+                backgroundColor: ['#3b82f6', '#10b981', '#facc15', '#f87171', '#a78bfa']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Distribuição de Formas de Tratamento' },
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#ddd' }
+                }
+            }
+        }
+    });
+
 </script>
 @endsection
