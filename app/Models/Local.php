@@ -19,6 +19,7 @@ class Local extends Model
         'loc_zona',
         'loc_quarteirao',
         'loc_sequencia',
+        'loc_complemento',
         'loc_lado',
         'loc_endereco',
         'loc_numero',

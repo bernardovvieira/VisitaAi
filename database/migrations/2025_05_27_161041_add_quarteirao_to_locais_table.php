@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('locais', function (Blueprint $table) {
             $table->string('loc_quarteirao', 10)->nullable()->after('loc_tipo');
+            $table->string('loc_complemento', 50)->nullable()->after('loc_quarteirao');
         });
     }
 

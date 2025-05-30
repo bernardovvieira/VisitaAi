@@ -131,6 +131,7 @@ class DatabaseSeeder extends Seeder
             'loc_codigo_unico' => '25164321',
             'loc_tipo'         => 'R', // Residencial
             'loc_zona'         => 'U',
+            'loc_complemento'   => 'Casa',
             'loc_quarteirao'   => 3,
             'loc_sequencia'    => 4,
             'loc_lado'         => 2,
@@ -150,6 +151,7 @@ class DatabaseSeeder extends Seeder
             'loc_codigo_unico' => '12345678',
             'loc_tipo'         => 'C', // Comercial
             'loc_zona'         => 'U',
+            'loc_complemento'   => 'Universidade de Passo Fundo',
             'loc_quarteirao'   => 2,
             'loc_sequencia'    => 2,
             'loc_lado'         => 4,
@@ -179,6 +181,7 @@ class DatabaseSeeder extends Seeder
             'vis_ciclo' => '05/25',
             'vis_atividade' => '2',
             'vis_pendencias' => true,
+            'insp_b' => 1,
             'vis_coleta_amostra' => false,
             'vis_concluida' => false,
             'vis_observacoes' => 'Inspeção de rotina com pendências a serem resolvidas.'
@@ -217,5 +220,7 @@ class DatabaseSeeder extends Seeder
                 'qtd_cargas' => 3,
             ],
         ]);
+
+        $visita2->doencas()->sync([1]);
     }
 }
