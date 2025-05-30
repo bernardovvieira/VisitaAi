@@ -4,9 +4,15 @@
         <div class="flex justify-between h-16">
             <!-- Logo + Dashboard -->
             <div class="flex">
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"/>
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+                <div class="shrink-0 flex items-center leading-none h-full">
+                    <a href="{{ route('dashboard') }}" class="flex flex-col items-center">
+                        <img src="{{ asset('images/visitaai_rembg.png') }}"
+                            alt="Visita Aí Logo"
+                            class="h-12 w-auto mb-[-9px] p-0 m-0 leading-none" />
+                        <span class="text-[10px] font-semibold text-gray-800 dark:text-gray-200 leading-tight m-0 p-0 mb-1" style="font-family: 'Poppins', sans-serif;">
+                            Visita Aí
+                        </span>
                     </a>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
