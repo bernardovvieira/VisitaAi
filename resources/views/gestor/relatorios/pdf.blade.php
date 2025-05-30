@@ -126,8 +126,13 @@
 
 <main>
   <p style="margin-bottom: 25px;">
-    Período selecionado: <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong> a
-    <strong>{{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}</strong><br>
+    @if ($data_inicio === $data_fim)
+      Data da visita: <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong>
+    @else
+      Período selecionado: <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong> a
+      <strong>{{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}</strong>
+    @endif
+    <br>
     Bairro filtrado: <strong>{{ $bairro ?: 'Todos os bairros' }}</strong>
   </p>
 
@@ -138,7 +143,18 @@
 
   <h2>2. Dados Gerais</h2>
   <p>
-    Foram registradas <strong>{{ $visitas->count() }}</strong> visitas únicas. A doença mais frequente foi <strong>{{ $doencaMaisFrequente['nome'] ?? '—' }}</strong>, com <strong>{{ $doencaMaisFrequente['quantidade'] ?? 0 }}</strong> ocorrência{{ ($doencaMaisFrequente['quantidade'] ?? 0) !== 1 ? 's' : '' }}.
+    @if ($titulo === 'Relatório de Visita Individual')
+      Esta seção descreve os dados detalhados de uma única visita epidemiológica realizada.
+    @else
+      @if ($visitas->count() === 1)
+        Foi registrada <strong>1</strong> visita no período selecionado.
+      @else
+        Foram registradas <strong>{{ $visitas->count() }}</strong> visitas únicas no período selecionado.
+      @endif
+    @endif
+    @if (!empty($doencaMaisFrequente['nome']))
+      A doença mais frequente foi <strong>{{ $doencaMaisFrequente['nome'] }}</strong>, com <strong>{{ $doencaMaisFrequente['quantidade'] }}</strong> ocorrência{{ $doencaMaisFrequente['quantidade'] !== 1 ? 's' : '' }}.
+    @endif
   </p>
 
   <h2>3. Doenças Monitoradas</h2>
@@ -152,7 +168,7 @@
       </tr>
     </thead>
     <tbody>
-      @foreach($doencasDetectadas as $doenca)
+      @foreach(\App\Models\Doenca::all() as $doenca)
         <tr>
           <td>{{ $doenca->doe_nome }}</td>
           <td>{{ is_array($doenca->doe_sintomas) ? implode(', ', $doenca->doe_sintomas) : $doenca->doe_sintomas }}</td>
@@ -171,7 +187,6 @@
         <th>Data</th>
         <th>Endereço</th>
         <th>Bairro</th>
-        <th>Doenças</th>
         <th>Agente</th>
       </tr>
     </thead>
@@ -182,11 +197,6 @@
           <td>{{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('d/m/Y (l)') }}</td>
           <td>{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</td>
           <td>{{ $visita->local->loc_bairro }}</td>
-          <td>
-            @foreach ($visita->doencas as $doenca)
-              {{ $doenca->doe_nome }}@if (!$loop->last), @endif
-            @endforeach
-          </td>
           <td>{{ $visita->usuario->use_nome ?? '—' }}</td>
         </tr>
       @endforeach
@@ -201,7 +211,7 @@
     'graficoDiasBase64' => 'Evolução do número de visitas ao longo dos dias.',
     'graficoInspBase64' => 'Total de inspeções por tipo de depósito.',
     'graficoTratamentosBase64' => 'Distribuição das formas de tratamento aplicadas.',
-    'mapaCalorBase64' => 'Mapa de calor das visitas realizadas.',
+    'mapaCalorBase64' => 'Mapa de calor dos locais com visitas registradas.'
   ] as $grafico => $descricao)
     @if(isset($$grafico) && $$grafico)
       <div class="img-container">

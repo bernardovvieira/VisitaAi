@@ -505,7 +505,11 @@
         const dataInicio = document.querySelector('[name="data_inicio"]')?.value || '';
         const dataFim = document.querySelector('[name="data_fim"]')?.value || '';
         const bairro = document.querySelector('[name="bairro"]')?.value || '';
-
+        const tipoRelatorio = document.querySelector('[name="tipo_relatorio"]')?.value || 'completo';
+        const dataUnica = document.querySelector('[name="data_unica"]')?.value || '';
+        
+        addField('data_unica', dataUnica);
+        addField('tipo_relatorio', tipoRelatorio);
         addField('data_inicio', dataInicio);
         addField('data_fim', dataFim);
         addField('bairro', bairro);

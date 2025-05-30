@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Visita;
 use App\Models\Local;
+use App\Models\Doenca;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
@@ -13,14 +14,28 @@ class RelatorioController extends Controller
 {
     public function index(Request $request)
     {
+        $tipo = $request->input('tipo_relatorio', 'completo');
+
         $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
 
-        if ($request->filled('data_inicio')) {
-            $query->whereDate('vis_data', '>=', $request->data_inicio);
-        }
-
-        if ($request->filled('data_fim')) {
-            $query->whereDate('vis_data', '<=', $request->data_fim);
+        if ($tipo === 'individual' && $request->filled('visita_id')) {
+            $query->where('vis_id', $request->visita_id);
+        } elseif ($tipo === 'diario' && $request->filled('data_unica')) {
+            $query->whereDate('vis_data', $request->data_unica);
+        } elseif ($tipo === 'semanal') {
+            if ($request->filled('data_inicio')) {
+                $query->whereDate('vis_data', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $query->whereDate('vis_data', '<=', $request->data_fim);
+            }
+        } elseif ($tipo === 'completo') {
+            if ($request->filled('data_inicio')) {
+                $query->whereDate('vis_data', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $query->whereDate('vis_data', '<=', $request->data_fim);
+            }
         }
 
         if ($request->filled('bairro')) {
@@ -31,13 +46,11 @@ class RelatorioController extends Controller
 
         $visitas = $query->get();
 
-        if ($request->hasAny(['data_inicio', 'data_fim', 'bairro']) && $visitas->isEmpty()) {
-            return redirect()
-                ->route('gestor.relatorios.index')
-                ->with([
-                    'error' => 'nenhuma visita encontrada para os filtros aplicados.',
-                    'limpar_filtros' => true,
-                ]);
+        if ($request->hasAny(['data_inicio', 'data_fim', 'bairro', 'visita_id', 'data_unica']) && $visitas->isEmpty()) {
+            return redirect()->route('gestor.relatorios.index')->with([
+                'error' => 'Nenhuma visita encontrada para os filtros aplicados.',
+                'limpar_filtros' => true,
+            ]);
         }
 
         $totalVisitas = $visitas->count();
@@ -93,31 +106,30 @@ class RelatorioController extends Controller
         $tipo = $request->input('tipo_relatorio', 'completo');
         $bairro = $request->input('bairro');
 
-        $data_inicio = $request->data_inicio ?? Visita::min('vis_data');
-        $data_fim = $request->data_fim ?? now()->format('Y-m-d');
-
         $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
 
         if ($tipo === 'individual' && $request->filled('visita_id')) {
             $query->where('vis_id', $request->visita_id);
-        } elseif ($tipo === 'diario' && $request->filled('data_unica')) {
-            $query->whereDate('vis_data', $request->data_unica);
-            $data_inicio = $data_fim = $request->data_unica;
-        } elseif ($tipo === 'semanal') {
-            $query->whereDate('vis_data', '>=', $data_inicio)
-                  ->whereDate('vis_data', '<=', $data_fim);
+            $visitas = $query->get();
+            $data_inicio = $data_fim = optional($visitas->first())->vis_data ?? now()->toDateString();
         } else {
-            $query->whereDate('vis_data', '>=', $data_inicio)
-                  ->whereDate('vis_data', '<=', $data_fim);
-        }
+            if ($tipo === 'diario' && $request->filled('data_unica')) {
+                $data_inicio = $data_fim = $request->data_unica;
+                $query->whereDate('vis_data', $data_inicio);
+            } else {
+                $data_inicio = $request->data_inicio ?? Visita::min('vis_data');
+                $data_fim = $request->data_fim ?? now()->toDateString();
+                $query->whereBetween('vis_data', [$data_inicio, $data_fim]);
+            }
 
-        if ($bairro) {
-            $query->whereHas('local', function ($q) use ($bairro) {
-                $q->where('loc_bairro', 'like', '%' . $bairro . '%');
-            });
-        }
+            if ($bairro) {
+                $query->whereHas('local', function ($q) use ($bairro) {
+                    $q->where('loc_bairro', 'like', '%' . $bairro . '%');
+                });
+            }
 
-        $visitas = $query->orderBy('vis_data', 'desc')->get();
+            $visitas = $query->orderBy('vis_data', 'desc')->get();
+        }
 
         $graficoBairrosBase64 = $request->input('graficoBairrosBase64');
         $graficoDoencasBase64 = $request->input('graficoDoencasBase64');
@@ -135,7 +147,7 @@ class RelatorioController extends Controller
             ->first();
 
         $totalLocaisVisitados = $visitas->pluck('local.loc_codigo_unico')->unique()->count();
-        $doencasDetectadas = $visitas->flatMap->doencas->unique('doe_id');
+        $doencasDetectadas = Doenca::all();
         $gestorNome = Auth::user()->use_nome ?? 'Gestor';
 
         $titulo = match ($tipo) {
@@ -146,7 +158,7 @@ class RelatorioController extends Controller
         };
 
         $descricao = $titulo . ' - Período: ' . $data_inicio . ' até ' . $data_fim;
-        if ($bairro) {
+        if ($bairro && $tipo !== 'individual') {
             $descricao .= ' - Bairro: ' . $bairro;
         }
 
