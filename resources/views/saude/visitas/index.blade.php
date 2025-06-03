@@ -142,8 +142,8 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                                 <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    Bairro: {{ $visita->local->loc_bairro }}<br>
-                                    Cód: {{ $visita->local->loc_codigo_unico }}
+                                    Bairro/Localidade: {{ $visita->local->loc_bairro }}<br>
+                                    Cód.: {{ $visita->local->loc_codigo_unico }}
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">

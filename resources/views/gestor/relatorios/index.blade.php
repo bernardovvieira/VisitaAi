@@ -18,52 +18,64 @@
         </div>
     @endif
 
-    {{-- Filtros Avançados --}}
-    <form method="GET" x-data="{ tipo: '{{ request('tipo_relatorio', 'semanal') }}' }"
-      class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-    
-        {{-- Tipo de Relatório --}}
-        <div>
-            <label class="text-sm text-gray-700 dark:text-gray-300">Tipo de Relatório</label>
-            <select name="tipo_relatorio" x-model="tipo"
-                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                <option value="completo">Completo</option>
-                <option value="diario">Diário</option>
-                <option value="semanal">Semanal</option>
-                <option value="individual">Individual</option>
-            </select>
-        </div>
+    {{-- Filtros --}}
+    <div
+    x-data="{
+        tipo: '{{ request('tipo_relatorio', 'completo') }}',
+        filtrosAplicados: new URLSearchParams(window.location.search).toString() !== '',
+        get botaoAtivo() {
+        return this.tipo === 'completo' || this.filtrosAplicados;
+        }
+    }"
+    x-init="$watch('tipo', () => filtrosAplicados = false)">
 
-        {{-- Data para Diário --}}
-        <div x-show="tipo === 'diario'" x-cloak class="md:col-span-2">
-            <label class="text-sm text-gray-700 dark:text-gray-300">Data</label>
-            <input type="date" name="data_unica" value="{{ request('data_unica') }}"
-                class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-        </div>
+        {{-- Filtros Avançados --}}
+        <form method="GET"
+            x-ref="formulario"
+            @submit.prevent="filtrosAplicado = true; $nextTick(() => $refs.formulario.submit())"
+            class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
 
-        {{-- Período para Semanal --}}
-        <template x-if="tipo === 'semanal'">
-            <div class="md:col-span-2 grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-sm text-gray-700 dark:text-gray-300">Início da Semana</label>
-                    <input type="date" name="data_inicio" value="{{ request('data_inicio') }}"
-                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-                </div>
-                <div>
-                    <label class="text-sm text-gray-700 dark:text-gray-300">Fim da Semana</label>
-                    <input type="date" name="data_fim" value="{{ request('data_fim') }}"
-                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-                </div>
+            {{-- Tipo de Relatório --}}
+            <div>
+                <label class="text-sm text-gray-700 dark:text-gray-300">Tipo de Relatório</label>
+                <select name="tipo_relatorio" x-model="tipo"
+                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                    <option value="completo">Completo</option>
+                    <option value="diario">Diário</option>
+                    <option value="semanal">Semanal</option>
+                    <option value="individual">Individual</option>
+                </select>
             </div>
-        </template>
 
-        {{-- Seleção individual --}}
-        <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3">
-            <label class="text-sm text-gray-700 dark:text-gray-300">Selecione a Visita</label>
-            <select name="visita_id"
-                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                @foreach($visitas as $v)
-                    <option value="{{ $v->vis_id }}" @selected(request('visita_id') == $v->vis_id)>
+            {{-- Data para Diário --}}
+            <div x-show="tipo === 'diario'" x-cloak class="md:col-span-2">
+                <label class="text-sm text-gray-700 dark:text-gray-300">Data</label>
+                <input type="date" name="data_unica" value="{{ request('data_unica') }}"
+                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+            </div>
+
+            {{-- Período para Semanal --}}
+            <template x-if="tipo === 'semanal'">
+                <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-gray-700 dark:text-gray-300">Início da Semana</label>
+                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}"
+                            class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-700 dark:text-gray-300">Fim da Semana</label>
+                        <input type="date" name="data_fim" value="{{ request('data_fim') }}"
+                            class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+                    </div>
+                </div>
+            </template>
+
+            {{-- Seleção individual --}}
+            <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3">
+                <label class="text-sm text-gray-700 dark:text-gray-300">Selecione a Visita</label>
+                <select name="visita_id" x-ref="visitaId"
+                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                    @foreach($visitas as $v)
                         @php
                             $atividades = [
                                 '1' => 'LI',
@@ -76,55 +88,68 @@
                                 '8' => 'PE',
                             ];
                         @endphp
-                        #{{ $v->vis_id }} - {{ \Carbon\Carbon::parse($v->vis_data)->format('d/m/Y') }} - {{ $atividades[$v->vis_atividade] ?? 'Não informado' }} - {{ $v->local->loc_endereco }} @if($v->local->loc_numero), {{ $v->local->loc_numero }} @else N/A @endif
-                         - Bairro/Localidade: {{ $v->local->loc_bairro }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Bairro (apenas para diário, semanal) --}}
-        <div x-show="tipo !== 'individual' && tipo !== 'completo'" x-cloak>
-            <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
-            <input type="text" name="bairro" value="{{ request('bairro') }}"
-                placeholder="Ex: Centro"
-                class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-        </div>
-
-        {{-- Bairro (apenas para completo) --}}
-        <div x-show="tipo === 'completo'" x-cloak class="md:col-span-3">
-            <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
-            <input type="text" name="bairro" value="{{ request('bairro') }}"
-                placeholder="Ex: Centro"
-                class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-        </div>
-
-        {{-- Botões --}}
-        <div class="flex flex-col justify-end md:flex-row md:items-end gap-4 col-span-1">
-            <div class="flex-1">
-                <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                    Filtrar
-                </button>
+                        <option value="{{ $v->vis_id }}" @selected(request('visita_id') == $v->vis_id)>
+                            #{{ $v->vis_id }} - {{ \Carbon\Carbon::parse($v->vis_data)->format('d/m/Y') }} - {{ $atividades[$v->vis_atividade] ?? 'Não informado' }} - {{ $v->local->loc_endereco }}{{ $v->local->loc_numero ? ', ' . $v->local->loc_numero : ' N/A' }} - Bairro/Localidade: {{ $v->local->loc_bairro }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            <div class="flex-1">
-                <a href="{{ route('gestor.relatorios.index') }}"
-                class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded text-center block">
-                    Limpar
-                </a>
-            </div>
-        </div>
-    </form>
 
-    {{-- Botão Gerar PDF --}}
-    <section class="w-full bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
-            Gere um relatório completo em PDF com gráficos, mapa de calor e tabela de visitas realizadas neste período.
-        </p>
-        <button onclick="gerarBase64Graficos()" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded shadow">
-            Gerar Relatório em PDF
-        </button>
-    </section>
+            {{-- Bairro (apenas para diário, semanal) --}}
+            <div x-show="tipo !== 'individual' && tipo !== 'completo'" x-cloak>
+                <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
+                <input type="text" name="bairro" value="{{ request('bairro') }}"
+                    placeholder="Ex: Centro"
+                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+            </div>
+
+            {{-- Bairro (apenas para completo) --}}
+            <div x-show="tipo === 'completo'" x-cloak class="md:col-span-3">
+                <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
+                <input type="text" name="bairro" value="{{ request('bairro') }}"
+                    placeholder="Ex: Centro"
+                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+            </div>
+
+            {{-- Botões --}}
+            <div class="flex flex-col justify-end md:flex-row md:items-end gap-4 col-span-1">
+                <div class="flex-1">
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                        Filtrar
+                    </button>
+                </div>
+                <div class="flex-1">
+                    <a href="{{ route('gestor.relatorios.index') }}"
+                    class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded text-center block">
+                        Limpar
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        {{-- Botão Gerar PDF --}}
+        <section class="w-full bg-white dark:bg-gray-800 shadow rounded-lg p-4 mt-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                Relatório de Visitas Epidemiológicas
+            </p>
+            <button
+                :disabled="!botaoAtivo"
+                @click.prevent="
+                    if (!botaoAtivo) {
+                        alert('Aplique os filtros antes de gerar o PDF.');
+                        return;
+                    }
+                    gerarBase64Graficos();
+                "
+                class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded shadow disabled:opacity-50 disabled:cursor-not-allowed">
+                Gerar Relatório em PDF
+            </button>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">
+                Para gerar o documento com filtros aplicados, selecione os filtros desejados e clique em "Filtrar". Em seguida, clique no botão acima.
+            </p>
+        </section>
+    </div>
 
     {{-- Cards Indicadores --}}
     <section class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow space-y-4">
@@ -303,8 +328,8 @@
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                             <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
-                                Bairro: {{ $visita->local->loc_bairro }}<br>
-                                Cód: {{ $visita->local->loc_codigo_unico }}
+                                Bairro/Localidade: {{ $visita->local->loc_bairro }}<br>
+                                Cód.: {{ $visita->local->loc_codigo_unico }}
                             </div>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
@@ -513,6 +538,11 @@
         addField('data_inicio', dataInicio);
         addField('data_fim', dataFim);
         addField('bairro', bairro);
+
+        if (tipoRelatorio === 'individual') {
+            const visitaId = document.querySelector('[name="visita_id"]')?.value || '';
+            addField('visita_id', visitaId);
+        }
 
         // Imagens em base64
         addField('graficoBairrosBase64', base64Bairros);

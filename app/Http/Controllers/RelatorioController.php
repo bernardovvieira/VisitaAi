@@ -103,6 +103,7 @@ class RelatorioController extends Controller
 
     public function gerarPdf(Request $request)
     {
+        
         $tipo = $request->input('tipo_relatorio', 'completo');
         $bairro = $request->input('bairro');
 
@@ -185,7 +186,8 @@ class RelatorioController extends Controller
             'data_inicio',
             'data_fim',
             'bairro',
-            'titulo'
+            'titulo',
+            'tipo'
         ))->stream('relatorio-visitas.pdf');
-    }
+    } 
 }
