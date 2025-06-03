@@ -152,13 +152,23 @@ class RelatorioController extends Controller
         $gestorNome = Auth::user()->use_nome ?? 'Gestor';
 
         $titulo = match ($tipo) {
-            'individual' => 'Relatório de Visita Individual',
+            'individual' => 'Relatório Individual',
             'diario'     => 'Relatório Diário',
             'semanal'    => 'Relatório Semanal',
             default      => 'Relatório Completo'
         };
 
-        $descricao = $titulo . ' - Período: ' . $data_inicio . ' até ' . $data_fim;
+        if ($tipo === 'individual') {
+            $periodo = 'Visita com código: #' . $request->filled('visita_id');
+        } elseif ($tipo === 'diario') {
+            $periodo = 'Data: ' . $data_inicio;
+        } elseif ($tipo === 'semanal') {
+            $periodo = 'Período: ' . $data_inicio . ' até ' . $data_fim;
+        } else {
+            $periodo = 'Período: ' . $data_inicio . ' até ' . $data_fim;
+        }
+
+        $descricao = $titulo . ' - ' . $periodo;
         if ($bairro && $tipo !== 'individual') {
             $descricao .= ' - Bairro: ' . $bairro;
         }
