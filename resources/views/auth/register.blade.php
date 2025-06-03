@@ -75,10 +75,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
-        // o código de máscara precisa rodar após o carregamento do input
         $(function(){
             $('#cpf').mask('000.000.000-00');
         });
+
+            function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g, '');
+
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+        let soma = 0;
+        for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+        let resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.charAt(9))) return false;
+
+        soma = 0;
+        for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        return resto === parseInt(cpf.charAt(10));
+    }
+
+    $('#cpf').on('blur', function () {
+        const input = this;
+        const cpf = input.value;
+
+        if (!cpf) return; // ignora se estiver vazio (deixa o required tratar)
+
+        if (!validarCPF(cpf)) {
+            input.setCustomValidity('CPF inválido.');
+            input.reportValidity();
+        } else {
+            input.setCustomValidity('');
+        }
+    });
     </script>
 
 </x-guest-layout>
