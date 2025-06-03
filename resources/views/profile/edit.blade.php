@@ -36,7 +36,7 @@
                 <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gary-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor Municipal') }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">O usuário está com o acesso ativo no sistema</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">O usuário está pendente de aprovação no sistema</span> @endif</dd></div>
+                <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente</span> @endif</dd></div>
             </dl>
         </div>
 

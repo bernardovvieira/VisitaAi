@@ -4,8 +4,15 @@
 @endsection
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-4 py-12">
+<div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12">
     <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+        {{-- Mobile only --}}
+        <div class="flex md:hidden justify-center mt-8" data-aos="fade-up">
+            <div class="w-64">
+                @include('components.welcome-illustration')
+            </div>
+        </div>
 
         {{-- Lado esquerdo: texto e ações --}}
         <div class="space-y-8 md:pl-4" data-aos="fade-left">
@@ -47,13 +54,10 @@
             </p>
         </div>
 
-        {{-- Lado direito: ilustração SVG --}}
+        {{-- Desktop only --}}
         <div class="hidden md:flex justify-center" data-aos="fade-left">
             <div class="w-full max-w-md">
-                <div class="w-full h-auto overflow-hidden">
-                    {{-- SVG aqui --}}
-                    @include('components.welcome-illustration')
-                </div>
+                @include('components.welcome-illustration')
             </div>
         </div>
 

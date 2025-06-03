@@ -70,7 +70,7 @@
         </div>
 
         {{-- Botões --}}
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
             <a href="{{ route('password.request') }}"
             class="text-sm underline  text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 Esqueceu a senha?
