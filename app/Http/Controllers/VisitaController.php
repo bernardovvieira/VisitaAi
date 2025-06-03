@@ -7,6 +7,7 @@ use App\Http\Requests\VisitaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class VisitaController extends Controller
 {
@@ -61,6 +62,8 @@ class VisitaController extends Controller
 
     public function show(Visita $visita)
     {
+        $this->authorize('view', $visita);
+
         /** @var \App\Models\User $user */
         $user = Auth::user();
 

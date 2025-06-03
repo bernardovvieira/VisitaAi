@@ -4,6 +4,13 @@
 <div class="container mx-auto p-6 space-y-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Meu Perfil</h1>
 
+    @if(session('success'))
+        <x-alert type="success" :message="session('success')" />
+    @endif
+    @if(session('error'))
+        <x-alert type="error" :message="session('error')" />
+    @endif
+
     <!-- Mensagem de Contexto -->
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Olá, {{ Auth::user()->use_nome }}!</h2>

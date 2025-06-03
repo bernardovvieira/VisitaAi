@@ -156,10 +156,16 @@ class LocalController extends Controller
 
     public function destroy(Local $local)
     {
-        $local->loc_numero = $local->loc_numero ?: 'N/A';
+        // Verifica se o local possui visitas cadastradas
+        if ($local->visitas()->exists()) {
+            return redirect()
+                ->route('agente.locais.index')
+                ->with('error', 'Erro: 2ste local possui visitas cadastradas e não pode ser excluído.');
+        }
 
+        $local->loc_numero = $local->loc_numero ?: 'N/A';
         $descricao = $local->loc_endereco . ', ' . $local->loc_numero;
-        
+
         $local->delete();
 
         LogHelper::registrar(

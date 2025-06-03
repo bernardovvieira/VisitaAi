@@ -36,7 +36,7 @@
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Minhas Visitas LIRAa</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    {{ \App\Models\Visita::where('fk_usuario_id', Auth::user()->use_id)->where('vis_tipo', 'LIRAa')->count() }}
+                    {{ \App\Models\Visita::where('fk_usuario_id', Auth::user()->use_id)->where('vis_atividade', '7')->count() }}
                 </p>
             </div>
 

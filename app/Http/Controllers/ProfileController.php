@@ -40,6 +40,6 @@ class ProfileController extends Controller
             'Usuário atualizou nome para: ' . $user->use_nome . ', email: ' . $user->use_email
         );
     
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
     }    
 }

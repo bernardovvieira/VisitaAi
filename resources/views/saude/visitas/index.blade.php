@@ -38,25 +38,27 @@
         </div>
     </section>
 
-    @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-        <section class="p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg shadow border border-yellow-300 dark:border-yellow-700">
-            <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                Locais em que há pendências e não foram revisitados
-            </h3>
-            <ul class="space-y-2 text-sm text-yellow-900 dark:text-yellow-100 list-disc list-inside">
-                @foreach ($locaisComPendenciasNaoRevisitadas as $local)
-                    @php
-                        $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
-                    @endphp
-                    <li>
-                        {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }} – {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}
-                        <span class="text-xs text-yellow-700 dark:text-yellow-300 ml-2 italic">
-                            Última pendência em {{ \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y') }}
-                        </span>
-                    </li>
-                @endforeach
-            </ul>
-        </section>
+    @if(Auth::user()->use_perfil !== 'agente_saude')
+        @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
+            <section class="p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg shadow border border-yellow-300 dark:border-yellow-700">
+                <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                    Locais em que há pendências e não foram revisitados
+                </h3>
+                <ul class="space-y-2 text-sm text-yellow-900 dark:text-yellow-100 list-disc list-inside">
+                    @foreach ($locaisComPendenciasNaoRevisitadas as $local)
+                        @php
+                            $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
+                        @endphp
+                        <li>
+                            {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }} – {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}
+                            <span class="text-xs text-yellow-700 dark:text-yellow-300 ml-2 italic">
+                                Última pendência em {{ \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y') }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            </section>
+        @endif
     @endif
 
     <!-- Contador de resultados -->

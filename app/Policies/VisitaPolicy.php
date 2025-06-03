@@ -20,7 +20,11 @@ class VisitaPolicy
      */
     public function view(User $user, Visita $visita): bool
     {
-        return $user->isAgente() || $user->isGestor();
+        if ($user->isAgenteSaude()) {
+            return $visita->fk_usuario_id === $user->use_id;
+        }
+
+        return $user->isGestor() || $user->isAgente(); // agentes epidemiológicos (não de saúde) podem ver tudo
     }
 
     /**
