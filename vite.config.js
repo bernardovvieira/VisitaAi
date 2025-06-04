@@ -6,7 +6,7 @@ export default defineConfig({
     //     host: true, // permite acesso externo
     //     cors: true, // habilita CORS
     //     hmr: {
-    //         host: '0.0.0.0', // ip
+    //         host: '10.205.203.27', // ip
     //     },
     // },
     plugins: [

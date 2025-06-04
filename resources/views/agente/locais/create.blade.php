@@ -36,7 +36,10 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6"
+            x-data="{ carregando: false }"
+            x-on:submit="carregando = true">
+
             @csrf
 
             <fieldset class="space-y-3">
@@ -186,7 +189,8 @@
 
             <div class="flex justify-end">
                 <button type="submit"
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                        x-bind:disabled="carregando"
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                     Cadastrar
                 </button>
             </div>

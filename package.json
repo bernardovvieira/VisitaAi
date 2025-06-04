@@ -5,7 +5,7 @@
         "build": "vite build",
         "dev": "vite",
         "dev-all": "start php artisan serve && npm run dev",
-        "dev-local": "start php artisan serve --host=0.0.0.0 --port=8000 && npm run dev" 
+        "dev-local": "start php artisan serve --host=10.205.203.27 --port=8000 && npm run dev" 
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

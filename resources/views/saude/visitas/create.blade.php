@@ -36,7 +36,10 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('saude.visitas.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('agente.visitas.store') }}" class="space-y-6"
+            x-data="{ carregando: false }"
+            x-on:submit="carregando = true">
+
             @csrf
 
             {{-- Dados básicos --}}
@@ -359,7 +362,8 @@
 
             <div class="flex justify-end">
                 <button type="submit"
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                        x-bind:disabled="carregando"
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                     Registrar Visita
                 </button>
             </div>
