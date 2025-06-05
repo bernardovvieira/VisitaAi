@@ -5,17 +5,17 @@
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12">
-    <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {{-- Mobile only --}}
-        <div class="flex md:hidden justify-center mt-8">
+        <div class="flex lg:hidden justify-center mt-8">
             <div class="w-64">
                 @include('components.welcome-illustration')
             </div>
         </div>
 
         {{-- Lado esquerdo: texto e ações --}}
-        <div class="space-y-8 md:pl-4" id="anim-texto">
+        <div class="space-y-8 md:pl-4 max-w-xl" id="anim-texto">
             <div class="space-y-4">
                 <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
                     Bem-vindo ao <span class="text-blue-400 dark:text-blue-400">Visita Aí</span>
@@ -55,7 +55,7 @@
         </div>
 
         {{-- Desktop only --}}
-        <div class="hidden md:flex justify-center" id="anim-ilustracao">
+        <div class="hidden lg:flex justify-center" id="anim-ilustracao">
             <div class="w-full max-w-md">
                 @include('components.welcome-illustration')
             </div>

@@ -22,13 +22,13 @@
 
                     @if(Auth::user()->isGestor())
                         <x-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">
-                            {{ __('Doenças Monitoradas') }}
+                            {{ __('Doenças') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.locais.index')" :active="request()->routeIs('gestor.locais.*')">
-                            {{ __('Locais Cadastrados') }}
+                            {{ __('Locais') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
-                            {{ __('Visitas Realizadas') }}
+                            {{ __('Visitas') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.relatorios.index')" :active="request()->routeIs('gestor.relatorios.*')">
                             {{ __('Relatórios') }}
@@ -41,17 +41,17 @@
                         </x-nav-link>
                     @elseif(Auth::user()->isAgenteEndemias())
                         <x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">
-                            {{ __('Doenças Monitoradas') }}
+                            {{ __('Doenças') }}
                         </x-nav-link>
                         <x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">
-                            {{ __('Locais Cadastrados') }}
+                            {{ __('Locais') }}
                         </x-nav-link>
                         <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
-                            {{ __('Visitas Realizadas') }}
+                            {{ __('Visitas') }}
                         </x-nav-link>
                     @elseif(Auth::user()->isAgenteSaude())
                         <x-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">
-                            {{ __('Doenças Monitoradas') }}
+                            {{ __('Doenças') }}
                         </x-nav-link>
                         <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
                             {{ __('Minhas Visitas') }}
@@ -125,13 +125,13 @@
 
             @if(Auth::user()->isGestor())
                 <x-responsive-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">
-                    {{ __('Doenças Monitoradas') }}
+                    {{ __('Doenças') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.locais.index')" :active="request()->routeIs('gestor.locais.*')">
-                    {{ __('Locais Cadastrados') }}
+                    {{ __('Locais') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
-                    {{ __('Visitas Realizadas') }}
+                    {{ __('Visitas') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.relatorios.index')" :active="request()->routeIs('gestor.relatorios.*')">
                     {{ __('Relatórios') }}
@@ -144,17 +144,17 @@
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgenteEndemias())
                 <x-responsive-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">
-                    {{ __('Doenças Monitoradas') }}
+                    {{ __('Doenças') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">
-                    {{ __('Locais Cadastrados') }}
+                    {{ __('Locais') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
-                    {{ __('Visitas Realizadas') }}
+                    {{ __('Visitas') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgenteSaude())
                 <x-responsive-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">
-                    {{ __('Doenças Monitoradas') }}
+                    {{ __('Doenças') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
                     {{ __('Minhas Visitas') }}
