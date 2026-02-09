@@ -9,8 +9,7 @@
 
 Sistema acadêmico desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
 
-> **Desenvolvedor:** Bernardo Vivian Vieira  
-> **Disciplina:** Laboratório de Engenharia de Software — UPF (2025/1)
+> **Desenvolvedor:** Bernardo Vivian Vieira 
 
 ---
 
@@ -34,8 +33,8 @@ Para rodar este projeto, você precisará de:
 Clone o repositório:
 
 ```bash
-git clone https://github.com/bernardovvieira/visita-ai.git
-cd visita-ai
+git clone https://github.com/bernardovvieira/VisitaAi.git
+cd VisitaAi
 ```
 
 Instale as dependências do projeto:
@@ -88,8 +87,8 @@ Abra o navegador e acesse: [http://localhost:8000](http://localhost:8000)
 ## 🔁 Instalação — Todos os Comandos Resumidos
 
 ```bash
-git clone https://github.com/bernardovvieira/visita-ai.git
-cd visita-ai
+git clone https://github.com/bernardovvieira/VisitaAi.git
+cd VisitaAi
 
 composer install
 npm install
@@ -118,9 +117,9 @@ Caso tenha interesse em contribuir, entre em contato diretamente com o autor.
 
 ## 📃 Licença
 
-Este projeto é **de uso acadêmico e restrito**.  
-**Não está autorizado para distribuição, modificação ou uso comercial.**  
-Todos os direitos reservados ao autor.
+Este projeto é de **uso restrito**.
+**Não é permitido distribuição, modificação ou uso comercial sem autorização do autor**.
+Todos os direitos reservados.
 
 ---
 
@@ -129,5 +128,5 @@ Todos os direitos reservados ao autor.
 Para mais informações:
 
 > Bernardo Vivian Vieira  
-> E-mail: 179835@upf.br  
+> E-mail: bernardo@bitwise.dev.br 
 > LinkedIn: [linkedin.com/in/bernardovivianvieira](https://www.linkedin.com/in/bernardovivianvieira)

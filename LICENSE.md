@@ -15,7 +15,7 @@ Este software é de titularidade exclusiva de **Bernardo Vivian Vieira**, sendo 
 
 O uso deste software é restrito aos seguintes fins:
 
-- **Finalidade acadêmica:** permitido exclusivamente para fins didáticos, de estudo e demonstração, no contexto de disciplinas da Universidade de Passo Fundo (UPF).
+- **Finalidade educacional, experimental ou de aprendizado:** permitido para estudo, teste, demonstração ou aprendizado.  
 - **Proprietário:** qualquer redistribuição, publicação ou uso fora do escopo acima só poderá ser realizada pelo autor, Bernardo Vivian Vieira, ou mediante sua autorização expressa e por escrito.
 
 ---
@@ -24,8 +24,8 @@ O uso deste software é restrito aos seguintes fins:
 
 É vedado ao usuário:
 
-- Copiar, modificar, sublicenciar, distribuir ou explorar comercialmente este software sem autorização prévia e formal do titular.
-- Realizar engenharia reversa, desmontagem ou qualquer forma de tentativa de acesso ao código-fonte, fora das permissões previstas nesta licença.
+- Copiar, modificar, sublicenciar, distribuir ou explorar comercialmente este software sem autorização prévia e formal do titular.  
+- Realizar engenharia reversa, desmontagem ou qualquer forma de tentativa de acesso ao código-fonte, fora das permissões previstas nesta licença.  
 - Utilizar este software em sistemas de produção, ambientes corporativos ou serviços públicos sem permissão específica.
 
 ---
@@ -43,4 +43,4 @@ O autor não será responsável por quaisquer danos diretos, indiretos, incident
 Dúvidas, permissões específicas ou solicitações devem ser encaminhadas para:
 
 **Bernardo Vivian Vieira**  
-📧 [179835@upf.br](mailto:179835@upf.br)
+📧 [bernardo@bitwise.dev.br](mailto:bernardo@bitwise.dev.br)
