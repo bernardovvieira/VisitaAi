@@ -7,7 +7,7 @@
 
 # Visita Aí - Controle de Visitas Epidemiológicas
 
-Sistema acadêmico desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
+Sistema desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
 
 > **Desenvolvedor:** Bernardo Vivian Vieira 
 
