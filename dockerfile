@@ -1,46 +1,36 @@
-FROM php:8.2-apache
+FROM php:8.3-fpm
 
-# Instala dependências sistema
+# Instalar dependências do sistema e extensões PHP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
+    curl \
+    libzip-dev \
     libonig-dev \
     libxml2-dev \
+    libicu-dev \
     zip \
-    curl \
-    nodejs \
-    npm
+    npm \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    && docker-php-ext-install pdo_mysql mbstring zip xml intl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Extensões PHP necessárias ao Laravel
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
 
-# Habilita mod_rewrite
-RUN a2enmod rewrite
-
-# Define diretório de trabalho
 WORKDIR /var/www/html
 
-# Copia o projeto
+# Copiar todo o código primeiro
 COPY . .
 
-# Instala Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Instala dependências PHP
+# Agora instalar dependências PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Instala dependências JS e builda assets
+# Instalar dependências Node
 RUN npm install && npm run build
 
-# Permissões
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
-
-# Porta usada pelo Render
-EXPOSE 10000
-
-# Start Apache
-CMD ["apache2-foreground"]
+EXPOSE 9000

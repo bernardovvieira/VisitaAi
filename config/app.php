@@ -166,7 +166,6 @@ return [
          * Package Service Providers...
          */
         Laravel\Fortify\FortifyServiceProvider::class,
-        Laravel\Breeze\BreezeServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -1,0 +1,43 @@
+services:
+  app:
+    build: .
+    container_name: visita-ai-app
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    networks:
+      - visitaai_network
+
+  db:
+    image: mysql:8.0
+    container_name: visita-ai-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: visita_ai
+      MYSQL_USER: visita
+      MYSQL_PASSWORD: Melancia@13?
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - visitaai_network
+
+  web:
+    image: nginx:latest
+    container_name: visitaai_web
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - visitaai_network
+
+networks:
+  visitaai_network:
+
+volumes:
+  dbdata:
