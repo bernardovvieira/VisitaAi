@@ -1,13 +1,14 @@
 # LICENÇA DE USO RESTRITO DE SOFTWARE
 
 Copyright (c) 2025  
-**Bernardo Vivian Vieira**
+**Bitwise Technologies**  
+CNPJ 49.973.865/0001-23
 
 ---
 
 ## 1. Titularidade
 
-Este software é de titularidade exclusiva de **Bernardo Vivian Vieira**, sendo protegido pelas leis brasileiras de propriedade intelectual e demais legislações aplicáveis.
+Este software é de titularidade exclusiva de **Bitwise Technologies** (CNPJ 49.973.865/0001-23), sendo protegido pelas leis brasileiras de propriedade intelectual e demais legislações aplicáveis.
 
 ---
 
@@ -16,7 +17,7 @@ Este software é de titularidade exclusiva de **Bernardo Vivian Vieira**, sendo 
 O uso deste software é restrito aos seguintes fins:
 
 - **Finalidade educacional, experimental ou de aprendizado:** permitido para estudo, teste, demonstração ou aprendizado.  
-- **Proprietário:** qualquer redistribuição, publicação ou uso fora do escopo acima só poderá ser realizada pelo autor, Bernardo Vivian Vieira, ou mediante sua autorização expressa e por escrito.
+- **Proprietário:** qualquer redistribuição, publicação ou uso fora do escopo acima só poderá ser realizada pela Bitwise Technologies ou mediante autorização expressa e por escrito.
 
 ---
 
@@ -34,7 +35,7 @@ O uso deste software é restrito aos seguintes fins:
 
 Este software é fornecido **"NO ESTADO EM QUE SE ENCONTRA"**, sem qualquer tipo de garantia, expressa ou implícita, incluindo, mas não se limitando a garantias de adequação para um propósito específico, ausência de erros ou funcionamento contínuo.
 
-O autor não será responsável por quaisquer danos diretos, indiretos, incidentais, consequenciais ou especiais decorrentes do uso ou da incapacidade de uso do software.
+A Bitwise Technologies não será responsável por quaisquer danos diretos, indiretos, incidentais, consequenciais ou especiais decorrentes do uso ou da incapacidade de uso do software.
 
 ---
 
@@ -42,5 +43,6 @@ O autor não será responsável por quaisquer danos diretos, indiretos, incident
 
 Dúvidas, permissões específicas ou solicitações devem ser encaminhadas para:
 
-**Bernardo Vivian Vieira**  
+**Bitwise Technologies**  
+🌐 [bitwise.dev.br](https://bitwise.dev.br)  
 📧 [bernardo@bitwise.dev.br](mailto:bernardo@bitwise.dev.br)
