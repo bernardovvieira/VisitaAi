@@ -16,20 +16,16 @@ Sistema desenvolvido para a gestão de visitas epidemiológicas, utilizando o fr
 
 ## ⚠️ Requisitos
 
-Para rodar este projeto, você precisará de:
+O projeto é executado com **Docker**. Você precisará de:
 
-- **PHP 8.2 ou superior**
-- **Composer** (gerenciador de pacotes PHP)
-- **Node.js 18 ou superior** (necessário para compilar os assets do frontend)
-- **NPM** (instalado automaticamente com o Node.js)
-- **MySQL ou equivalente** (banco de dados relacional)
-- **Servidor Web** (use o servidor embutido com `php artisan serve` ou configure Apache/Nginx)
+- **Docker**
+- **Docker Compose**
 
-> ⚡ Algumas extensões do PHP podem ser necessárias (`intl`, `pdo`, `mbstring`, `openssl`, `fileinfo`, entre outras).
+Não é necessário instalar PHP, Composer, Node ou MySQL na máquina local.
 
 ---
 
-## 🛠️ Instalação
+## 🛠️ Instalação (Docker)
 
 Clone o repositório:
 
@@ -38,74 +34,56 @@ git clone https://github.com/bernardovvieira/VisitaAi.git
 cd VisitaAi
 ```
 
-Instale as dependências do projeto:
-
-```bash
-composer install
-npm install
-npm run dev
-```
-
-Copie e edite o arquivo de ambiente:
+Crie o arquivo de ambiente a partir do exemplo:
 
 ```bash
 cp .env.example .env
 ```
 
-Gere a chave da aplicação:
+No `.env`, confira a conexão com o banco (já compatível com o Docker):
+
+- `DB_HOST=db`
+- `DB_PORT=3306`
+- `DB_DATABASE=visita_ai`
+- `DB_USERNAME=visita`
+- `DB_PASSWORD=` — use a mesma senha definida no `docker-compose.yaml` (ex.: `Melancia@13?` no exemplo do repositório; em produção, altere no compose e no `.env`).
+
+Suba os containers:
 
 ```bash
-php artisan key:generate
+docker compose up -d --build
 ```
 
-Configure o banco de dados no arquivo `.env`, então crie o banco manualmente (no MySQL):
-
-```sql
-CREATE DATABASE visita_ai CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Execute as migrações:
+Gere a chave da aplicação e rode as migrações **dentro** do container da aplicação:
 
 ```bash
-php artisan migrate
-php artisan db:seed  # (opcional, se houver dados iniciais)
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed   # opcional
 ```
 
-Inicie os servidores da aplicação:
-
-```bash
-php artisan serve
-```
-```bash
-npm run dev
-```
-> Deixe ambos os comandos rodando em terminais separados.
-
-Abra o navegador e acesse: [http://localhost:8000](http://localhost:8000)
+Acesse no navegador: [http://localhost](http://localhost) (porta 80, servida pelo Nginx).
 
 ---
 
-## 🔁 Instalação — Todos os Comandos Resumidos
+## 🔁 Comandos úteis (Docker)
 
 ```bash
-git clone https://github.com/bernardovvieira/VisitaAi.git
-cd VisitaAi
+# Subir os serviços
+docker compose up -d
 
-composer install
-npm install
+# Ver logs
+docker compose logs -f app
 
-cp .env.example .env
-php artisan key:generate
+# Executar artisan no container
+docker compose exec app php artisan migrate
+docker compose exec app php artisan tinker
 
-# Criar banco no MySQL com:
-# CREATE DATABASE visita_ai CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-php artisan migrate
-php artisan db:seed  # se necessário
-
-php artisan serve
-npm run dev
+# Parar tudo
+docker compose down
 ```
+
+**Serviços:** `app` (PHP-FPM), `db` (MySQL 8, porta 3307 no host), `web` (Nginx na porta 80).
 
 ---
 
