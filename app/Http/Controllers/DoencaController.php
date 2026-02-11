@@ -6,7 +6,6 @@ use App\Models\Doenca;
 use Illuminate\Http\Request;
 use App\Http\Requests\DoencaRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 use App\Helpers\LogHelper;
 
 class DoencaController extends Controller
@@ -24,11 +23,12 @@ class DoencaController extends Controller
     
         $query = Doenca::query();
         if ($search) {
-            $query->where(function($q) use ($search) {
-                $q->whereRaw("doe_nome LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"])
-                  ->orWhereRaw("doe_sintomas->> '$' LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"])
-                  ->orWhereRaw("doe_transmissao->> '$' LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"])
-                  ->orWhereRaw("doe_medidas_controle->> '$' LIKE ? COLLATE utf8mb4_unicode_ci", ["%{$search}%"]);
+            $term = '%' . $search . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('doe_nome', 'like', $term)
+                  ->orWhere('doe_sintomas', 'like', $term)
+                  ->orWhere('doe_transmissao', 'like', $term)
+                  ->orWhere('doe_medidas_controle', 'like', $term);
             });
         }
         $doencas = $query->paginate(10)->appends(['search' => $search]);

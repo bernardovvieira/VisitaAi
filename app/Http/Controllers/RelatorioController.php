@@ -14,6 +14,15 @@ class RelatorioController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
+            'visita_id'      => ['nullable', 'integer', 'exists:visitas,vis_id'],
+            'data_unica'     => ['nullable', 'date'],
+            'data_inicio'    => ['nullable', 'date'],
+            'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio'],
+            'bairro'         => ['nullable', 'string', 'max:255'],
+        ]);
+
         $tipo = $request->input('tipo_relatorio', 'completo');
 
         $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
@@ -103,7 +112,15 @@ class RelatorioController extends Controller
 
     public function gerarPdf(Request $request)
     {
-        
+        $request->validate([
+            'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
+            'visita_id'      => ['nullable', 'integer', 'exists:visitas,vis_id'],
+            'data_unica'     => ['nullable', 'date'],
+            'data_inicio'    => ['nullable', 'date'],
+            'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio'],
+            'bairro'         => ['nullable', 'string', 'max:255'],
+        ]);
+
         $tipo = $request->input('tipo_relatorio', 'completo');
         $bairro = $request->input('bairro');
 

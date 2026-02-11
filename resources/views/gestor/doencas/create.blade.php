@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl space-y-6">
+<div class="max-w-4xl space-y-6">
 
     <!-- Botão Voltar -->
     <div>

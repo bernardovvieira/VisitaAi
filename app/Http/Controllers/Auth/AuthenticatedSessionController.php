@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Laravel\Fortify\Features;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,8 +31,23 @@ class AuthenticatedSessionController extends Controller
         // Regenera a sessão para evitar fixation
         $request->session()->regenerate();
 
+        $user = $request->user();
+
+        // Se 2FA está ativo, redireciona para a tela do código em vez do dashboard
+        if (Features::enabled(Features::twoFactorAuthentication()) &&
+            method_exists($user, 'hasEnabledTwoFactorAuthentication') &&
+            $user->hasEnabledTwoFactorAuthentication()) {
+            $dashboard = $user->isGestor() ? route('gestor.dashboard') : ($user->isAgenteSaude() ? route('saude.dashboard') : route('agente.dashboard'));
+            Auth::guard('web')->logout();
+            $request->session()->put([
+                'login.id' => $user->getKey(),
+                'login.remember' => $request->boolean('remember'),
+                'url.intended' => $dashboard,
+            ]);
+            return redirect()->route('two-factor.login');
+        }
+
         // Redireciona conforme o perfil
-        $user     = $request->user();
         if ($user->isGestor()) {
             $redirect = route('gestor.dashboard', [], false);
         } elseif ($user->isAgenteSaude()) {

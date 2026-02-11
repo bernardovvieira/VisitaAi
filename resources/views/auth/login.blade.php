@@ -18,12 +18,12 @@
         </div>
 
         {{-- Senha --}}
-        <div x-data="{ show: false }" class="mb-5">
+        <div class="mb-5" id="password-toggle-wrap">
             <x-input-label for="password" :value="__('Senha')" />
 
             <div class="relative mt-1">
                 <input
-                    :type="show ? 'text' : 'password'"
+                    type="password"
                     id="password"
                     name="password"
                     required
@@ -33,35 +33,20 @@
 
                 <button
                     type="button"
-                    @click="show = !show"
-                    class="absolute inset-y-0 right-0 px-3 flex items-center"
+                    id="password-toggle-btn"
+                    aria-label="Mostrar senha"
+                    class="absolute inset-y-0 right-0 px-3 flex items-center focus:outline-none"
                     tabindex="-1"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        :class="show ? 'hidden' : 'block'"
-                        class="h-5 w-5 text-gray-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    {{-- Ícone: olho aberto (senha oculta) --}}
+                    <svg id="icon-password-show" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                     </svg>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        :class="show ? 'block' : 'hidden'"
-                        class="h-5 w-5 text-gray-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.27-2.944-9.543-7a10.05 10.05 0 012.166-3.823m1.43-1.43A9.966 9.966 0 0112 5c4.478 0 8.27 2.944 9.543 7a9.97 9.97 0 01-4.032 5.687M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 3l18 18"/>
+                    {{-- Ícone: olho riscado (senha visível) --}}
+                    <svg id="icon-password-hide" class="h-5 w-5 text-gray-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.27-2.944-9.543-7a10.05 10.05 0 012.166-3.823m1.43-1.43A9.966 9.966 0 0112 5c4.478 0 8.27 2.944 9.543 7a9.97 9.97 0 01-4.032 5.687M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>
                     </svg>
                 </button>
             </div>
@@ -81,12 +66,31 @@
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
         Não tem conta?
-        <a href="{{ route('register') }}" class="underline text-blue-600 hover:text-blue-800">
+        <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
             Registre‑se
         </a>
     </p>
 
-    {{-- carregar jQuery e Mask Plugin --}}
+    {{-- Toggle mostrar/ocultar senha (JS puro para evitar conflito com Alpine) --}}
+    <script>
+    (function(){
+        var btn = document.getElementById('password-toggle-btn');
+        var input = document.getElementById('password');
+        var iconShow = document.getElementById('icon-password-show');
+        var iconHide = document.getElementById('icon-password-hide');
+        if (btn && input && iconShow && iconHide) {
+            btn.addEventListener('click', function(){
+                var isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                iconShow.classList.toggle('hidden', isPassword);
+                iconHide.classList.toggle('hidden', !isPassword);
+                btn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+            });
+        }
+    })();
+    </script>
+
+    {{-- jQuery e Mask Plugin (CPF) --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>

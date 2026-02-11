@@ -50,7 +50,7 @@
             </div>
 
             <p class="text-xs text-gray-400 dark:text-gray-500 mt-6" id="anim-footer">
-                &copy; {{ date('Y') }} Visita Aí · Desenvolvido por <a href="https://www.linkedin.com/in/bernardovivianvieira" target="_blank" class="text-gray-600 hover:text-gray-700 dark:text-gray-400">Bernardo Vivian Vieira</a>
+                &copy; {{ date('Y') }} Visita Aí · Desenvolvido por <a href="https://bitwise.dev.br" target="_blank" rel="noopener" class="text-gray-600 hover:text-gray-700 dark:text-gray-400">Bitwise Technologies</a>
             </p>
         </div>
 

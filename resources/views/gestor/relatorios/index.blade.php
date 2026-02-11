@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div class="container mx-auto p-6 space-y-6 max-w-7xl">
+<div class="space-y-6">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Relatórios</h1>
 
     @if(session('error'))

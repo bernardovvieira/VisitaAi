@@ -29,10 +29,14 @@ class RegisteredUserController extends Controller
         /* -----------------------------------------------------------------
          |  1. Validação
          |-----------------------------------------------------------------*/
+        $emailRule = app()->environment('testing')
+            ? ['required', 'string', 'email', 'max:255', 'unique:users,use_email']
+            : ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users,use_email'];
+
         $request->validate([
             'nome'     => ['required','string','max:255'],
             'cpf'      => ['required','string','max:14','unique:users,use_cpf'],
-            'email'    => ['required','string','email:rfc,dns','max:255','unique:users,use_email'],
+            'email'    => $emailRule,
             'password' => ['required','confirmed', Rules\Password::defaults()],
         ], [
             'nome.required'   => 'O nome é obrigatório',

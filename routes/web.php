@@ -128,25 +128,29 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/profile/two-factor', [ProfileController::class, 'twoFactor'])->name('profile.two-factor')->middleware('password.confirm');
+        Route::get('/profile/two-factor-confirm', [ProfileController::class, 'twoFactorConfirm'])->name('profile.two-factor-confirm')->middleware('password.confirm');
     });
 });
 
-Route::get('/debug-session', function (\Illuminate\Http\Request $request) {
-    session(['test' => 'ok']);
+if (app()->environment('local')) {
+    Route::get('/debug-session', function (\Illuminate\Http\Request $request) {
+        session(['test' => 'ok']);
 
-    return [
-        'session'    => session()->all(),
-        'config'     => config('session'),
-        'middleware' => $request->route()->gatherMiddleware(),
-    ];
-});
+        return [
+            'session'    => session()->all(),
+            'config'     => config('session'),
+            'middleware' => $request->route()->gatherMiddleware(),
+        ];
+    });
 
-Route::get('/debug-cookie', function () {
-    $response = response('ok from laravel cookie');
-    $response->cookie('test_cookie', '123', 60);
+    Route::get('/debug-cookie', function () {
+        $response = response('ok from laravel cookie');
+        $response->cookie('test_cookie', '123', 60);
 
-    return $response;
-});
+        return $response;
+    });
+}
 
-    // Autenticação Breeze / Fortify
-    require __DIR__.'/auth.php';
+// Autenticação (Fortify/Breeze)
+require __DIR__.'/auth.php';

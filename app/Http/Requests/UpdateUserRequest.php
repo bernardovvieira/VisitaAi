@@ -8,7 +8,7 @@ class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Já estamos usando authorize manual no controller
+        return $this->user()->can('update', $this->route('user'));
     }
 
     public function rules(): array
@@ -18,7 +18,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'use_nome'   => ['required', 'string', 'max:255'],
             'use_email'  => ['required', 'email', 'max:255', 'unique:users,use_email,' . $userId . ',use_id'],
-            'use_perfil' => ['required', 'in:agente,gestor'],
+            'use_perfil' => ['required', 'in:gestor,agente_endemias,agente_saude'],
             'use_senha'  => ['nullable', 'string', 'min:8'], // senha agora é opcional
         ];
     }

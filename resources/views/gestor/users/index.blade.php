@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 space-y-6">
+<div class="space-y-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Gerenciar Usuários</h1>
 
     @if(session('status'))
@@ -52,6 +52,7 @@
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">CPF</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">E-mail</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Perfil</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">2FA</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data Cadastro</th>
                         <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                     </tr>
@@ -84,6 +85,13 @@
                                     }
                                 @endphp
                                 {{ $perfil }}
+                            </td>
+                            <td class="p-4">
+                                @if(method_exists($usuario, 'hasEnabledTwoFactorAuthentication') && $usuario->hasEnabledTwoFactorAuthentication())
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400">Ativo</span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-500 dark:text-gray-400">—</span>
+                                @endif
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_data_criacao->format('d/m/Y') }}</td>
                             <td class="p-4 text-center">
@@ -128,7 +136,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="p-6 text-center text-gray-600 dark:text-gray-400">Nenhum usuário cadastrado.</td>
+                            <td colspan="8" class="p-6 text-center text-gray-600 dark:text-gray-400">Nenhum usuário cadastrado.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -137,12 +145,15 @@
     </section>
 
     <!-- Card de Acesso a Pendentes -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-3">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Usuários Pendentes</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Visualize e aprove usuários que aguardam liberação para acessar o sistema.
-            <a href="{{ route('gestor.pendentes') }}" class="text-yellow-500 hover:underline">Clique aqui para acessar</a>.
         </p>
+        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            Ver usuários pendentes
+        </a>
     </section>
 
 

@@ -41,5 +41,45 @@ class ProfileController extends Controller
         );
     
         return Redirect::route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
-    }    
+    }
+
+    /**
+     * Página para ativar 2FA (requer senha confirmada via middleware).
+     */
+    public function twoFactor(Request $request): View|RedirectResponse
+    {
+        $user = $request->user();
+
+        if (method_exists($user, 'hasEnabledTwoFactorAuthentication') && $user->hasEnabledTwoFactorAuthentication()) {
+            return Redirect::route('profile.edit')->with('status', 'A autenticação em dois fatores já está ativa.');
+        }
+
+        return view('profile.two-factor');
+    }
+
+    /**
+     * Página para configurar o app autenticador: exibe QR code e formulário para confirmar com o código.
+     * Só acessível após clicar em "Ativar 2FA" (quando two_factor_secret já existe mas ainda não confirmado).
+     */
+    public function twoFactorConfirm(Request $request): View|RedirectResponse
+    {
+        $user = $request->user();
+
+        if (empty($user->two_factor_secret)) {
+            return Redirect::route('profile.two-factor')
+                ->with('error', 'Ative a autenticação em dois fatores primeiro.');
+        }
+
+        if (! is_null($user->two_factor_confirmed_at ?? null)) {
+            return Redirect::route('profile.edit')
+                ->with('success', 'Autenticação em dois fatores já está ativa.');
+        }
+
+        $qrCodeSvg = $user->twoFactorQrCodeSvg();
+        $secretKey = decrypt($user->two_factor_secret);
+        // Formato legível: grupos de 4 caracteres (ex: XXXX XXXX XXXX XXXX)
+        $secretKeyFormatted = trim(chunk_split($secretKey, 4, ' '));
+
+        return view('profile.two-factor-confirm', compact('qrCodeSvg', 'secretKey', 'secretKeyFormatted'));
+    }
 }

@@ -37,7 +37,7 @@
                             {{ __('Usuários') }}
                         </x-nav-link>
                         <x-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">
-                            {{ __('Logs') }}
+                            {{ __('Registro de atividades') }}
                         </x-nav-link>
                     @elseif(Auth::user()->isAgenteEndemias())
                         <x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">
@@ -140,7 +140,7 @@
                     {{ __('Usuários') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">
-                    {{ __('Logs') }}
+                    {{ __('Registro de atividades') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgenteEndemias())
                 <x-responsive-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">

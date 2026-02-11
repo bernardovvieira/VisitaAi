@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl space-y-10">
+<div class="max-w-4xl space-y-10">
 
     {{-- Cabeçalho --}}
     <div class="flex items-center justify-between" style="padding-top: 2rem;">
@@ -15,70 +15,95 @@
             </svg>
             Voltar para o início
         </a>
-    </div>  
+    </div>
 
     {{-- Busca por código --}}
     <form action="{{ route('consulta.codigo') }}" method="GET"
           class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Digite o <strong>código único do imóvel</strong> fornecido pelo agente
         </label>
         <div class="flex gap-4 flex-col md:flex-row">
-            <input type="text" name="codigo" placeholder="Ex: 12345678" required
-                   class="w-full rounded-md p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600">
+            <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                value="{{ old('codigo') }}"
+                placeholder="Ex: 12345678"
+                required
+                class="w-full rounded-md p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600">
             <button type="submit"
                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow transition">
                 Consultar
             </button>
         </div>
+        @error('codigo')
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+        @enderror
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
             O código único é um identificador exclusivo para cada imóvel, fornecido pelo agente durante a visita.
         </p>
     </form>
 
-    {{-- Alerta de erro --}}
+    {{-- Alerta de erro (código não encontrado ou inválido) --}}
     @if (session('erro'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <strong class="font-bold">Erro:</strong>
-            <span class="block sm:inline">{{ session('erro') }}</span>
+        <div class="bg-red-100 dark:bg-red-900/40 border border-red-400 dark:border-red-600 text-red-800 dark:text-red-100 px-4 py-3 rounded-lg flex items-start gap-3" role="alert">
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <div>
+                <strong class="font-semibold text-red-900 dark:text-red-50">Não foi possível consultar</strong>
+                <p class="mt-1 text-sm text-red-800 dark:text-red-100 opacity-100">{{ session('erro') }}</p>
+            </div>
         </div>
     @endif
 
-    {{-- Tabela de doenças --}}
+    {{-- Seção de doenças monitoradas --}}
     <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Doenças Monitoradas</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            Essas são as doenças cadastradas no sistema municipal, com seus sintomas, formas de transmissão e medidas de controle.
+            @if($doencas->isEmpty())
+                Lista de doenças do sistema municipal. Quando houver doenças cadastradas, elas aparecerão abaixo com sintomas, formas de transmissão e medidas de controle.
+            @else
+                Essas são as doenças cadastradas no sistema municipal, com seus sintomas, formas de transmissão e medidas de controle.
+            @endif
         </p>
 
-        <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-            <table class="min-w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold">
-                    <tr>
-                        <th class="px-4 py-3 text-left">Doença</th>
-                        <th class="px-4 py-3 text-left">Sintomas</th>
-                        <th class="px-4 py-3 text-left">Transmissão</th>
-                        <th class="px-4 py-3 text-left">Medidas de Controle</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-800 dark:text-gray-100">
-                    @foreach($doencas as $doenca)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 transition">
-                            <td class="px-4 py-3 font-medium">{{ $doenca->doe_nome }}</td>
-                            <td class="px-4 py-3">
-                                {{ is_array($doenca->doe_sintomas) ? implode(', ', $doenca->doe_sintomas) : $doenca->doe_sintomas }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ is_array($doenca->doe_transmissao) ? implode(', ', $doenca->doe_transmissao) : $doenca->doe_transmissao }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ is_array($doenca->doe_medidas_controle) ? implode(', ', $doenca->doe_medidas_controle) : $doenca->doe_medidas_controle }}
-                            </td>
+        @if($doencas->isEmpty())
+            <div class="my-6 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 px-8 py-12 text-center">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Nenhuma doença cadastrada no momento</p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">As informações serão exibidas aqui quando o gestor municipal cadastrar as doenças monitoradas.</p>
+            </div>
+        @else
+            <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                <table class="min-w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold">
+                        <tr>
+                            <th class="px-4 py-3 text-left">Doença</th>
+                            <th class="px-4 py-3 text-left">Sintomas</th>
+                            <th class="px-4 py-3 text-left">Transmissão</th>
+                            <th class="px-4 py-3 text-left">Medidas de Controle</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-800 dark:text-gray-100">
+                        @foreach($doencas as $doenca)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                                <td class="px-4 py-3 font-medium">{{ $doenca->doe_nome }}</td>
+                                <td class="px-4 py-3">
+                                    {{ is_array($doenca->doe_sintomas) ? implode(', ', $doenca->doe_sintomas) : $doenca->doe_sintomas }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ is_array($doenca->doe_transmissao) ? implode(', ', $doenca->doe_transmissao) : $doenca->doe_transmissao }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ is_array($doenca->doe_medidas_controle) ? implode(', ', $doenca->doe_medidas_controle) : $doenca->doe_medidas_controle }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </section>
 </div>
 @endsection

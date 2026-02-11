@@ -31,7 +31,7 @@ class StoreUserRequest extends FormRequest
             'use_cpf'       => ['required','string','max:255', Rule::unique('users','use_cpf')->ignore($id)],
             'use_email'     => ['required','email','max:255', Rule::unique('users','use_email')->ignore($id)],
             'use_senha'     => [$id ? 'nullable' : 'required','confirmed','min:8'],
-            'use_perfil'    => ['required', Rule::in(['agente','gestor'])],
+            'use_perfil'    => ['required', Rule::in(['gestor','agente_endemias','agente_saude'])],
             'use_aprovado'  => ['required','boolean'],
         ];
     }

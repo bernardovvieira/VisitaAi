@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl space-y-6">
+<div class="max-w-4xl space-y-6">
     <div>
         <a href="{{ route('saude.visitas.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">

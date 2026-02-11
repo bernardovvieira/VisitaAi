@@ -34,7 +34,7 @@ class CreateNewUser implements CreatesNewUsers
             'use_cpf'           => $input['cpf'],
             'use_email'         => $input['email'],
             'use_senha'         => Hash::make($input['password']),
-            'use_perfil'        => 'agente',
+            'use_perfil'        => 'agente_endemias',
             'use_data_criacao'  => now(),
         ]);
     }

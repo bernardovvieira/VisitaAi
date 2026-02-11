@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Local;
 use App\Models\Doenca;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class ConsultaPublicaController extends Controller
 {
@@ -18,12 +17,22 @@ class ConsultaPublicaController extends Controller
 
     public function consultaPorCodigo(Request $request)
     {
-        $codigo = $request->input('codigo');
+        $validated = $request->validate([
+            'codigo' => ['required', 'digits:8'],
+        ], [
+            'codigo.required' => 'Informe o código do imóvel.',
+            'codigo.digits'   => 'O código deve ter exatamente 8 dígitos numéricos.',
+        ]);
+
+        $codigo = $validated['codigo'];
 
         $local = Local::where('loc_codigo_unico', $codigo)->first();
 
-        if (!$local) {
-            return redirect()->back()->with('erro', 'código não encontrado.');
+        if (! $local) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('erro', 'Código não encontrado. Verifique o número informado (8 dígitos) e tente novamente. Se o problema persistir, entre em contato com o agente que realizou a visita.');
         }
 
         $visitas = $local->visitas()

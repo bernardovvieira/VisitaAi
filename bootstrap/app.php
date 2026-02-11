@@ -10,6 +10,8 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrustProxies;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,8 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Define explicitamente o grupo "web" com sessão + CSRF
+        // Define explicitamente o grupo "web" (proxy, headers, sessão, CSRF)
         $middleware->group('web', [
+            TrustProxies::class,
+            SecurityHeaders::class,
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,

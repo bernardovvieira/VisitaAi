@@ -21,8 +21,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login'    => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'login'    => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -90,7 +90,7 @@ class LoginRequest extends FormRequest
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 3)) {
             return;
         }
 

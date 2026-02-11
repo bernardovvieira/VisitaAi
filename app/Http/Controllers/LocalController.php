@@ -160,7 +160,7 @@ class LocalController extends Controller
         if ($local->visitas()->exists()) {
             return redirect()
                 ->route('agente.locais.index')
-                ->with('error', 'Erro: 2ste local possui visitas cadastradas e não pode ser excluído.');
+                ->with('error', 'Erro: este local possui visitas cadastradas e não pode ser excluído.');
         }
 
         $local->loc_numero = $local->loc_numero ?: 'N/A';

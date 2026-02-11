@@ -17,7 +17,7 @@ class CheckApproved
         }
 
         if (! $user->isAprovado()) {
-            return redirect()->route('pending');
+            return redirect()->route('pendente');
         }
 
         return $next($request);

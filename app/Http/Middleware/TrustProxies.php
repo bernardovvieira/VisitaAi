@@ -7,7 +7,11 @@ use Illuminate\Http\Middleware\TrustProxies as Middleware;
 
 class TrustProxies extends Middleware
 {
-    protected $proxies = '*';
+    /**
+     * Proxies confiáveis (vem de config/trustedproxy.php e APP_TRUSTED_PROXIES).
+     * null = usa config; '*' = confia no IP que conecta (útil atrás de nginx/load balancer).
+     */
+    protected $proxies = null;
 
     protected $headers =
         Request::HEADER_X_FORWARDED_FOR |

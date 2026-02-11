@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl space-y-10">
+<div class="max-w-4xl space-y-10">
 
     {{-- Cabeçalho --}}
     <div class="flex items-center justify-between" style="padding-top: 2rem;">
@@ -99,8 +99,9 @@
     {{-- Nova consulta --}}
     <div class="text-center">
         <a href="{{ route('consulta.index') }}"
-           class="inline-block mt-6 px-6 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow transition">
-            Nova Consulta
+           class="inline-flex items-center justify-center gap-2 mt-6 px-6 py-2.5 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            Fazer nova consulta
         </a>
     </div>
 
@@ -108,6 +109,9 @@
 
 {{-- Mapa --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }
+</style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 @php
@@ -116,19 +120,37 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const lat = parseFloat("{{ $local->loc_latitude }}");
-        const lng = parseFloat("{{ $local->loc_longitude }}");
-
-        if (!isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
-            const mapa = L.map('mapa-local').setView([lat, lng], 16);
+        var el = document.getElementById('mapa-local');
+        var msg = function(html) { el.innerHTML = '<div class="flex items-center justify-center h-full text-center text-sm text-gray-500 dark:text-gray-400 px-4">' + html + '</div>'; };
+        try {
+            if (typeof L === 'undefined') {
+                msg('Mapa indisponível (recarregue a página ou verifique sua conexão).');
+                return;
+            }
+            var lat = parseFloat("{{ $local->loc_latitude ?? '' }}");
+            var lng = parseFloat("{{ $local->loc_longitude ?? '' }}");
+            if (isNaN(lat) || isNaN(lng) || lat === 0 && lng === 0) {
+                msg('Coordenadas indisponíveis para este local.');
+                return;
+            }
+            var mapa = L.map('mapa-local').setView([lat, lng], 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(mapa);
-            L.marker([lat, lng]).addTo(mapa)
-                .bindPopup("{{ $local->loc_endereco }}, {{ $numero }}")
+            var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
+            var pinIcon = L.divIcon({
+                className: 'custom-pin',
+                html: pinSvg,
+                iconSize: [28, 40],
+                iconAnchor: [14, 40],
+                popupAnchor: [0, -40]
+            });
+            L.marker([lat, lng], { icon: pinIcon }).addTo(mapa)
+                .bindPopup("{{ addslashes($local->loc_endereco) }}, {{ addslashes($numero) }}")
                 .openPopup();
-        } else {
-            document.getElementById('mapa-local').innerHTML = '<div class="text-center text-sm text-gray-500 pt-16">Coordenadas indisponíveis para este local.</div>';
+            setTimeout(function() { mapa.invalidateSize(); }, 100);
+        } catch (e) {
+            msg('Não foi possível carregar o mapa.');
         }
     });
 </script>

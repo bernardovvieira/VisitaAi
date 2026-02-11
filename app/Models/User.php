@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory, MustVerifyEmailTrait, Notifiable, TwoFactorAuthenticatable;
 
     // Tabela e PK com prefixo
     protected $table        = 'users';
@@ -22,10 +24,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * Atributos em massa.
      */
     protected $fillable = [
-        'use_nome',           
+        'use_nome',
         'use_cpf',
         'use_email',
         'use_senha',
+        'email_verified_at',
         'use_perfil',
         'use_aprovado',
         'use_data_criacao',
@@ -47,10 +50,35 @@ class User extends Authenticatable implements MustVerifyEmail
      * Casts de tipo.
      */
     protected $casts = [
+        'email_verified_at'     => 'datetime',
         'use_aprovado'          => 'boolean',
         'use_data_criacao'      => 'datetime',
         'use_data_anonimizacao' => 'date',
     ];
+
+    /**
+     * Acesso ao id para compatibilidade com rotas/verificação (PK real: use_id).
+     */
+    public function getIdAttribute()
+    {
+        return $this->attributes['use_id'] ?? null;
+    }
+
+    /**
+     * Valor usado como "login" pelo Fortify (2FA, etc.). Coincide com o campo do formulário.
+     */
+    public function getLoginAttribute(): string
+    {
+        return $this->use_email ?? '';
+    }
+
+    /**
+     * Acesso ao e-mail para compatibilidade com testes e notificações (campo real: use_email).
+     */
+    public function getEmailAttribute(): string
+    {
+        return $this->use_email;
+    }
 
     /**
      * Coluna que contém o hash da senha.

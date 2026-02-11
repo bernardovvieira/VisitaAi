@@ -9,7 +9,8 @@
 
 Sistema desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
 
-> **Desenvolvedor:** Bernardo Vivian Vieira 
+> **Desenvolvido por:** Bitwise Technologies  
+> **CNPJ:** 49.973.865/0001-23
 
 ---
 
@@ -111,22 +112,23 @@ npm run dev
 ## 🫱🏽‍🫲🏼 Contribuição
 
 Este repositório possui **licença restrita** e a colaboração é limitada.  
-Caso tenha interesse em contribuir, entre em contato diretamente com o autor.
+Caso tenha interesse em contribuir, entre em contato com a Bitwise Technologies.
 
 ---
 
 ## 📃 Licença
 
 Este projeto é de **uso restrito**.
-**Não é permitido distribuição, modificação ou uso comercial sem autorização do autor**.
+**Não é permitido distribuição, modificação ou uso comercial sem autorização da Bitwise Technologies**.
 Todos os direitos reservados.
 
 ---
 
-## 📱 Contato
+## 📱 Contato e Suporte
 
-Para mais informações:
+**Bitwise Technologies** · [bitwise.dev.br](https://bitwise.dev.br)  
+Suporte técnico do Visita Aí:
 
-> Bernardo Vivian Vieira  
-> E-mail: bernardo@bitwise.dev.br 
-> LinkedIn: [linkedin.com/in/bernardovivianvieira](https://www.linkedin.com/in/bernardovivianvieira)
+- **Site:** [bitwise.dev.br](https://bitwise.dev.br)
+- **E-mail:** bernardo@bitwise.dev.br
+- **LinkedIn:** [linkedin.com/in/bernardovivianvieira](https://www.linkedin.com/in/bernardovivianvieira)

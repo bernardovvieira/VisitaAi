@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl space-y-6">
+<div class="space-y-6">
 
     <!-- Botão Voltar -->
     <div>
@@ -25,7 +25,7 @@
     </section>
 
     <!-- Formulário de Edição -->
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6 max-w-2xl mx-auto">
         @if(session('status'))
             <x-alert type="success" :message="session('status')" />
         @endif
@@ -42,13 +42,16 @@
                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
             </div>
 
-            <!-- CPF -->
+            <!-- CPF (somente leitura) -->
             <div>
-                <label for="" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CPF <span class="text-red-500">*</span></label>
-                <input type="text" id="" name="" value="{{ old('use_cpf', preg_replace('/\d(?=(?:.*\d){2})/', '*', $user->use_cpf)) }}" 
+                <label for="cpf_mascarado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CPF <span class="text-red-500">*</span></label>
+                <input type="text"
+                       id="cpf_mascarado"
+                       name="cpf_mascarado"
+                       value="{{ old('cpf_mascarado', preg_replace('/\d(?=(?:.*\d){2})/', '*', $user->use_cpf)) }}" 
                        readonly
                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Não é possível alterar o CPF. Caso precise, entre em contato com o suporte.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Não é possível alterar o CPF. Caso precise, entre em contato com a Bitwise Technologies (suporte).</p>
             </div>
 
             <!-- Email -->
@@ -65,8 +68,8 @@
                 <select id="use_perfil" name="use_perfil"
                         class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm" required>
                     <option value="gestor" {{ $user->use_perfil == 'gestor' ? 'selected' : '' }}>Gestor Municipal</option>
-                    <option value="agente_endemias" {{ $user->use_perfil == 'agente' ? 'selected' : '' }}>Agente de Endemias</option>
-                    <option value="agente_saude" {{ $user->use_perfil == 'tecnico' ? 'selected' : '' }}>Agente de Saúde</option>
+                    <option value="agente_endemias" {{ $user->use_perfil == 'agente_endemias' ? 'selected' : '' }}>Agente de Endemias</option>
+                    <option value="agente_saude" {{ $user->use_perfil == 'agente_saude' ? 'selected' : '' }}>Agente de Saúde</option>
                 </select>
             </div>
 

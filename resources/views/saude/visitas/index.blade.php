@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 space-y-6">
+<div class="space-y-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas Realizadas</h1>
 
     @if(session('success'))

@@ -1,11 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 space-y-6">
+<div class="space-y-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Meu Perfil</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
+    @endif
+    @if(session('status') === 'two-factor-authentication-enabled')
+        <x-alert type="success" message="Autenticação em dois fatores (2FA) ativada com sucesso. Na próxima sessão você precisará informar o código do aplicativo autenticador." />
+    @elseif(session('status'))
+        <x-alert type="success" :message="session('status')" />
     @endif
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />
@@ -15,7 +20,7 @@
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Olá, {{ Auth::user()->use_nome }}!</h2>
         <p class="text-gray-600 dark:text-gray-400">
-            Aqui você pode atualizar seus dados pessoais, como nome e e-mail. Algumas informações, como CPF e perfil, são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se precisar de ajuda, entre em contato com o suporte técnico.
+            Aqui você pode atualizar seus dados pessoais, como nome e e-mail. Algumas informações, como CPF e perfil, são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se precisar de ajuda, entre em contato com a Bitwise Technologies (suporte técnico).
         </p>
     </section>
 
@@ -33,7 +38,7 @@
                 <div class="flex justify-between"><dt class="font-medium">ID</dt><dd>{{ Auth::id() }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">CPF</dt><dd>{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', Auth::user()->use_cpf) }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gary-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
+                <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor Municipal') }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
                 <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente</span> @endif</dd></div>
@@ -79,11 +84,43 @@
         </div>
     </div>
 
+    {{-- Card: Autenticação em dois fatores (2FA) --}}
+    <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+        <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Autenticação em dois fatores (2FA)
+        </h3>
+        <p class="text-gray-600 dark:text-gray-400">
+            A 2FA exige um código do seu celular (app como Google Authenticator ou similar) além da senha ao entrar, aumentando a segurança da conta.
+        </p>
+        @if(Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
+            @php $user = Auth::user(); @endphp
+            @if(method_exists($user, 'hasEnabledTwoFactorAuthentication') && $user->hasEnabledTwoFactorAuthentication())
+                <p class="text-sm text-green-600 dark:text-green-400 font-medium">2FA ativado para esta conta.</p>
+                <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
+                   onclick="return confirm('Desativar autenticação em dois fatores?');"
+                   class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg shadow transition">
+                    Desativar autenticação em dois fatores
+                </a>
+            @else
+                <a href="{{ route('profile.two-factor') }}"
+                   class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    Ativar autenticação em dois fatores 
+                </a>
+            @endif
+        @else
+            <p class="text-sm text-gray-500 dark:text-gray-400">2FA não está disponível neste ambiente.</p>
+        @endif
+    </div>
+
     <!-- Texto de Informação -->
     <div class="p-6 mb-6 text-sm bg-blue-100 text-blue-800 rounded-lg dark:bg-blue-200 dark:text-blue-900" role="alert">
         <h4 class="text-base font-semibold mb-2">Informações Importantes</h4>
         <ul class="list-disc list-inside space-y-2">
-            <li>Algumas informações são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se necessário, entre em contato com o suporte técnico.</li>
+            <li>Algumas informações são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se necessário, entre em contato com a Bitwise Technologies (suporte).</li>
             <li>Para alterar sua senha, utilize a opção <strong>"Esqueci minha senha"</strong> na tela de login.</li>
             <li>A gestão de permissões de acesso é realizada apenas por <strong>gestores</strong> no menu "Usuários".</li>
         </ul>
@@ -107,8 +144,8 @@
             @elseif(auth()->user()->isGestor())
                 <!-- Link para gestores -->
                 <a href="{{ route('gestor.users.index') }}"
-                class="text-sm text-red-600 hover:underline font-semibold mr-2">
-                    Acessar a página de usuários
+                   class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg shadow transition">
+                    Ir para Usuários
                 </a>
             @endif
         </div>

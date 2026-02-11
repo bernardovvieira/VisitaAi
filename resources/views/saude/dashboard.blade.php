@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6">
+<div class="space-y-6">
     <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Painel do Agente de Saúde</h1>
 
     <!-- Mensagem de boas-vindas -->
@@ -88,10 +88,10 @@
             <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Ajuda e Suporte</h2>
         </header>
         <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Encontrou algum problema? Contate:</p>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Encontrou algum problema? Contate a <em>Bitwise Technologies</em>:</p>
             <ul class="mt-2 space-y-1 text-gray-600 dark:text-gray-400">
+                <li><b>Site:</b> <a href="https://bitwise.dev.br" target="_blank" rel="noopener" class="underline text-gray-800 dark:text-gray-100 hover:text-black dark:hover:text-gray-200 transition-colors">bitwise.dev.br</a></li>
                 <li><b>E-mail:</b> <a href="mailto:bernardo@bitwise.dev.br" class="underline text-gray-800 dark:text-gray-100 hover:text-black dark:hover:text-gray-200 transition-colors">bernardo@bitwise.dev.br</a></li>
-                <li><b>WhatsApp:</b> <a href="https://wa.me/5554996605584" class="underline text-gray-800 dark:text-gray-100">+55 54 9 9660-5584</a></li>
             </ul>
         </div>
     </section>

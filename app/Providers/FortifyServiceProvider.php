@@ -8,6 +8,9 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\RegisterResponse;
+use App\Http\Responses\TwoFactorConfirmedResponse;
+use App\Http\Responses\TwoFactorDisabledResponse;
+use App\Http\Responses\TwoFactorEnabledResponse;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +20,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
+use Laravel\Fortify\Contracts\TwoFactorConfirmedResponse as TwoFactorConfirmedResponseContract;
+use Laravel\Fortify\Contracts\TwoFactorDisabledResponse as TwoFactorDisabledResponseContract;
+use Laravel\Fortify\Contracts\TwoFactorEnabledResponse as TwoFactorEnabledResponseContract;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -27,6 +33,12 @@ class FortifyServiceProvider extends ServiceProvider
     {
         // Sobrescreve o response padrão de registro para adicionar flash de sucesso
         $this->app->singleton(RegisterResponseContract::class, RegisterResponse::class);
+        // Redireciona para a página de configuração (QR + código) após clicar em Ativar 2FA
+        $this->app->singleton(TwoFactorEnabledResponseContract::class, TwoFactorEnabledResponse::class);
+        // Redireciona para o perfil com sucesso após confirmar o código do autenticador
+        $this->app->singleton(TwoFactorConfirmedResponseContract::class, TwoFactorConfirmedResponse::class);
+        // Mensagem amigável ao desativar 2FA
+        $this->app->singleton(TwoFactorDisabledResponseContract::class, TwoFactorDisabledResponse::class);
     }
 
     /**
@@ -42,6 +54,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetPasswordView(fn($request) => view('auth.reset-password', ['request' => $request]));
         Fortify::verifyEmailView(fn() => view('auth.verify-email'));
         Fortify::confirmPasswordView(fn() => view('auth.confirm-password'));
+        Fortify::twoFactorChallengeView('auth.two-factor-challenge');
 
         //
         // 1) Usa 'login' em vez de 'email'

@@ -126,7 +126,6 @@ class UserController extends Controller
             'use_cpf'        => 'Anonimizado (ref. ' . $user->use_id . ')',
             'use_senha'      => Hash::make('senha_anonima_' . $user->use_id),
             'use_aprovado'   => false,
-            'use_status'     => 'inativo',
             'fk_gestor_id'   => null, 
             'use_data_anonimizacao' => now(),
         ]);
