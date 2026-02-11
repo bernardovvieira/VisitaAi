@@ -1,10 +1,3 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Laravel-^12.x-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel Version">
-  <img src="https://img.shields.io/badge/Licença-Restrita-red?style=for-the-badge" alt="License">
-</p>
-
-<br>
-
 # Visita Aí - Controle de Visitas Epidemiológicas
 
 Sistema desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
@@ -40,13 +33,13 @@ Crie o arquivo de ambiente a partir do exemplo:
 cp .env.example .env
 ```
 
-No `.env`, confira a conexão com o banco (já compatível com o Docker):
+No `.env`, defina a senha do banco (usada pela aplicação e pelo MySQL no Docker). A conexão já vem compatível com o Docker:
 
 - `DB_HOST=db`
 - `DB_PORT=3306`
 - `DB_DATABASE=visita_ai`
 - `DB_USERNAME=visita`
-- `DB_PASSWORD=` — use a mesma senha definida no `docker-compose.yaml` (ex.: `Melancia@13?` no exemplo do repositório; em produção, altere no compose e no `.env`).
+- `DB_PASSWORD=` — **obrigatório:** defina uma senha forte; o `docker-compose` usa esse valor para o MySQL. Nunca commite o `.env`.
 
 Suba os containers:
 

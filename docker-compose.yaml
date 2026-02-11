@@ -12,10 +12,10 @@ services:
     image: mysql:8.0
     container_name: visita-ai-db
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
       MYSQL_DATABASE: visita_ai
       MYSQL_USER: visita
-      MYSQL_PASSWORD: Melancia@13?
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
