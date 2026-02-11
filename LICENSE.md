@@ -1,6 +1,6 @@
 # LICENÇA DE USO RESTRITO DE SOFTWARE
 
-Copyright (c) 2025  
+Copyright (c) Visita Aí 2025–2025  
 **Bitwise Technologies**  
 CNPJ 49.973.865/0001-23
 
