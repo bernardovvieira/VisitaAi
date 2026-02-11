@@ -9,12 +9,13 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libicu-dev \
+    libpng-dev \
     zip \
     npm \
     gnupg2 \
     lsb-release \
     ca-certificates \
-    && docker-php-ext-install pdo_mysql mbstring zip xml intl \
+    && docker-php-ext-install pdo_mysql mbstring zip xml intl gd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

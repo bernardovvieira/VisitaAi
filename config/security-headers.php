@@ -23,11 +23,11 @@ return [
 
     'csp_directives' => [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com",
-        "style-src 'self' 'unsafe-inline' https://fonts.bunny.net https://unpkg.com",
-        "font-src 'self' https://fonts.bunny.net",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://viacep.com.br",
+        "style-src 'self' 'unsafe-inline' https://fonts.bunny.net https://fonts.googleapis.com https://unpkg.com",
+        "font-src 'self' data: https://fonts.bunny.net https://fonts.gstatic.com https://use.typekit.net",
         "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
-        "connect-src 'self'",
+        "connect-src 'self' https://viacep.com.br https://nominatim.openstreetmap.org https://cdn.jsdelivr.net https://unpkg.com",
         "base-uri 'self'",
         "form-action 'self'",
         "frame-ancestors 'self'",

@@ -2,326 +2,226 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Visita Aí - Relatório Epidemiológico</title>
+  <title>PNCD — Registro do Serviço Antivetorial</title>
   <style>
-    @page {
-      margin: 120px 50px 100px 50px;
-    }
-
-    body {
-      font-family: 'Arial', sans-serif;
-      font-size: 12px;
-      color: #222;
-      line-height: 1.6;
-      position: relative;
-    }
-
+    @page { size: A4 landscape; margin: 88px 30px 58px 30px; }
+    body { font-family: Arial, sans-serif; font-size: 10px; color: #222; line-height: 1.35; }
     header {
       position: fixed;
-      top: -100px;
+      top: -78px;
       left: 0;
       right: 0;
       text-align: center;
-      padding-bottom: 8px;
+      padding: 4px 0 8px 0;
       border-bottom: 2px solid #0e4a76;
     }
-
-    header h1 {
-      font-size: 18px;
-      margin: 0;
-      color: #0e4a76;
-      text-transform: uppercase;
-    }
-
-    header h2 {
-      font-size: 13px;
-      margin-top: 4px;
-      font-weight: normal;
-    }
-
+    header h1 { font-size: 14px; margin: 0; color: #0e4a76; text-transform: uppercase; line-height: 1.2; }
+    header h2 { font-size: 11px; margin: 2px 0 0 0; font-weight: normal; color: #333; }
     footer {
       position: fixed;
-      bottom: -60px;
+      bottom: -48px;
       left: 0;
       right: 0;
       text-align: center;
-      font-size: 10px;
+      font-size: 9px;
       color: #555;
       border-top: 1px solid #ccc;
-      padding-top: 6px;
+      padding-top: 4px;
     }
-
-    .page-number:after {
-      content: "Página " counter(page);
-    }
-
-    h2 {
-      font-size: 14px;
-      text-transform: uppercase;
-      border-left: 5px solid #0e4a76;
-      padding-left: 10px;
-      margin-top: 40px;
-      margin-bottom: 10px;
-      color: #0e4a76;
-    }
-
-    h3 {
-      font-size: 12.5px;
-      margin-top: 30px;
-      color: #333;
-    }
-
-    p {
-      text-align: justify;
-      margin: 10px 0;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      font-size: 11.5px;
-    }
-
-    th, td {
+    .page-number:after { content: "Página " counter(page); }
+    main { padding-top: 5px; }
+    .bloco-ident {
       border: 1px solid #999;
-      padding: 6px 8px;
+      padding: 8px 10px;
+      margin-bottom: 12px;
+      background: #f8fafc;
     }
-
-    th {
-      background-color: #e9f2fa;
+    .bloco-ident table { width: 100%; border: none; margin: 0; font-size: 10px; }
+    .bloco-ident td { border: none; padding: 2px 8px 2px 0; vertical-align: top; }
+    .bloco-ident .label { font-weight: bold; color: #0e4a76; }
+    .tabela-principal {
+      width: 100%;
+      max-width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 7.5px;
+      table-layout: fixed;
+    }
+    .tabela-principal th, .tabela-principal td {
+      border: 1px solid #666;
+      padding: 2px 3px;
       text-align: center;
-      font-weight: bold;
+      vertical-align: middle;
+      overflow: hidden;
     }
-
-    .img-container {
-      text-align: center;
-      margin: 40px 0 10px;
-    }
-
-    .img-container img {
-      max-width: 65%;
+    .tabela-principal td.text-left { word-wrap: break-word; }
+    .tabela-principal th { background: #0e4a76; color: #fff; font-weight: bold; }
+    .tabela-principal td.text-left { text-align: left; }
+    .tabela-principal tr:nth-child(even) { background: #f9fafb; }
+    .legenda {
+      margin-top: 14px;
+      padding: 8px 10px;
       border: 1px solid #ccc;
+      font-size: 9px;
+      background: #fafafa;
     }
-
-    .descricao {
-      font-size: 10px;
-      text-align: center;
-      color: #666;
-      margin-top: 6px;
-    }
+    .legenda strong { color: #0e4a76; }
+    .titulo-secao { font-size: 11px; font-weight: bold; color: #0e4a76; margin: 12px 0 6px 0; }
   </style>
 </head>
 <body>
 
-<!-- Tipos: individual, diario, semanal, completo -->
+@php
+  $primeiroLocal = $visitas->first()?->local;
+  $mun = $primeiroLocal?->loc_cidade ?? 'Município';
+  $uf = $primeiroLocal?->loc_estado ?? 'UF';
+  $atividades = [
+    '1' => '1-LI',
+    '2' => '2-LI+T',
+    '3' => '3-PPE+T',
+    '4' => '4-T',
+    '5' => '5-DF',
+    '6' => '6-PVE',
+    '7' => '7-LIRAa',
+    '8' => '8-PE',
+  ];
+  $tipoImovel = ['R' => 'R', 'C' => 'C', 'T' => 'TB'];
+@endphp
 
 <header>
-  <h1>{{ $titulo }}</h1>
-  <h2 style="border-left: none">Município de {{ $visitas->first()->local->loc_cidade ?? 'Município' }} - {{ $visitas->first()->local->loc_estado ?? 'UF' }}</h2>
+  <h1>PNCD — Programa Nacional de Controle</h1>
+  <h2>Registro do Serviço Antivetorial — Município de {{ $mun }} / {{ $uf }}</h2>
 </header>
 
 <footer>
   <div class="page-number"></div>
-  Gerado automaticamente em {{ now()->format('d/m/Y H:i') }} pelo Sistema Visita Aí.
+  Documento gerado pelo Sistema Visita Aí · Bitwise Technologies em {{ now()->format('d/m/Y H:i') }}.
 </footer>
 
 <main>
-  <p style="margin-bottom: 25px;">
-    @if ($tipo === 'individual')
-      Data da visita: <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong>
-    @elseif ($tipo === 'diario')
-      Data do relatório: <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong>
-    @else
-      Período selecionado: <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong> a
-      <strong>{{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}</strong>
-    @endif
-    <br>
-    @if ($tipo !== 'individual')
-      Bairro filtrado: <strong>{{ $bairro ?: 'Todos os bairros' }}</strong>
-    @endif
-  </p>
-
-  <h2>1. Introdução</h2>
-  <p>
-    Este relatório tem por finalidade apresentar um panorama consolidado das informações epidemiológicas referentes ao município de <strong>{{ $visitas->first()->local->loc_cidade ?? 'Município' }}</strong>, com base nos dados coletados em campo por agentes de endemias e agentes comunitários de saúde. As informações aqui contidas abrangem registros de visitas domiciliares, inspeções em potenciais focos, tratamentos realizados e ocorrências relacionadas a doenças monitoradas no território.
-  </p>
-  <p>
-    A sistematização desses dados tem como objetivo subsidiar a gestão pública na definição de estratégias de intervenção, no direcionamento de recursos e na implementação de medidas preventivas e corretivas. Além disso, visa promover maior transparência das ações desenvolvidas, fortalecendo a vigilância epidemiológica e contribuindo para a melhoria contínua da saúde coletiva no município.
-  </p>
-
-  <h2>2. Dados Gerais</h2>
-  <p>
-    @if ($tipo === 'individual')
-      Esta seção apresenta as informações detalhadas de uma visita epidemiológica específica, realizada em <strong>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}</strong>. Os dados contemplam o local inspecionado, o tipo de atividade executada, os depósitos observados e, quando aplicável, os tratamentos realizados.
-    @else
-      @if ($visitas->count() === 1)
-        No período selecionado, foi registrada <strong>1</strong> visita epidemiológica. Essa visita representa uma amostra pontual das ações desenvolvidas no território.
-      @else
-        No período em análise, foram registradas <strong>{{ $visitas->count() }}</strong> visitas epidemiológicas, abrangendo diferentes bairros e localidades do município. Esses registros fornecem subsídios relevantes para a compreensão do cenário atual e para o direcionamento de políticas públicas de saúde.
+  <div class="bloco-ident">
+    <table>
+      <tr>
+        <td class="label">Município:</td>
+        <td>{{ $mun }} / {{ $uf }}</td>
+        <td class="label">Data do relatório:</td>
+        <td>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}@if($data_inicio != $data_fim) a {{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}@endif</td>
+      </tr>
+      @if($bairro)
+      <tr>
+        <td class="label">Bairro filtrado:</td>
+        <td colspan="3">{{ $bairro }}</td>
+      </tr>
       @endif
-    @endif
-  </p>
+      <tr>
+        <td class="label">Total de visitas no período:</td>
+        <td>{{ $visitas->count() }}</td>
+        <td class="label">Tipo de relatório:</td>
+        <td>{{ $titulo }}</td>
+      </tr>
+    </table>
+  </div>
 
-  <h2>3. Doenças Monitoradas</h2>
-  <table>
+  <div class="titulo-secao">Pesquisa Entomológica / Tratamento</div>
+  <table class="tabela-principal">
     <thead>
       <tr>
-        <th>Doença</th>
-        <th>Sintomas</th>
-        <th>Transmissão</th>
-        <th>Medidas de Controle</th>
+        <th style="width:2%">#</th>
+        <th style="width:3%">Data</th>
+        <th style="width:3%">Ciclo</th>
+        <th style="width:4%">Atividade</th>
+        <th style="width:2%">N/R</th>
+        <th style="width:2%">Conc.</th>
+        <th style="width:2%">Quart.</th>
+        <th style="width:2%">Seq.</th>
+        <th style="width:2%">Lado</th>
+        <th style="width:5%" class="text-left">Bairro</th>
+        <th style="width:12%" class="text-left">Logradouro</th>
+        <th style="width:3%">Nº</th>
+        <th style="width:2%">Compl.</th>
+        <th style="width:3%">Cód.</th>
+        <th style="width:2%">Tipo</th>
+        <th style="width:2%">Zona</th>
+        <th style="width:2%">Pend.</th>
+        <th style="width:1.5%">A1</th>
+        <th style="width:1.5%">A2</th>
+        <th style="width:1.5%">B</th>
+        <th style="width:1.5%">C</th>
+        <th style="width:1.5%">D1</th>
+        <th style="width:1.5%">D2</th>
+        <th style="width:1.5%">E</th>
+        <th style="width:2%">Amostra</th>
+        <th style="width:2%">Tub.</th>
+        <th style="width:2%">Dep.Elim.</th>
+        <th style="width:2%">Coleta</th>
+        <th style="width:10%" class="text-left">Tratamento</th>
+        <th style="width:7%" class="text-left">Agente</th>
       </tr>
     </thead>
     <tbody>
-      @foreach(\App\Models\Doenca::all() as $doenca)
-        <tr>
-          <td>{{ $doenca->doe_nome }}</td>
-          <td>{{ is_array($doenca->doe_sintomas) ? implode(', ', $doenca->doe_sintomas) : $doenca->doe_sintomas }}</td>
-          <td>{{ is_array($doenca->doe_transmissao) ? implode(', ', $doenca->doe_transmissao) : $doenca->doe_transmissao }}</td>
-          <td>{{ is_array($doenca->doe_medidas_controle) ? implode(', ', $doenca->doe_medidas_controle) : $doenca->doe_medidas_controle }}</td>
-        </tr>
+      @foreach($visitas as $visita)
+      @php
+        $loc = $visita->local;
+        $tratText = $visita->tratamentos->map(function($t) {
+          $p = [];
+          if (!empty($t->trat_forma)) $p[] = $t->trat_forma;
+          if (!empty($t->trat_tipo)) $p[] = '(' . $t->trat_tipo . ')';
+          if (isset($t->qtd_gramas) && $t->qtd_gramas > 0) $p[] = $t->qtd_gramas . 'g';
+          if (isset($t->qtd_depositos_tratados) && $t->qtd_depositos_tratados > 0) $p[] = $t->qtd_depositos_tratados . ' dep';
+          if (isset($t->qtd_cargas) && $t->qtd_cargas > 0) $p[] = $t->qtd_cargas . ' carg';
+          return implode(' ', $p);
+        })->filter()->implode('; ');
+        $amostra = trim(($visita->vis_amos_inicial ?? '') . '-' . ($visita->vis_amos_final ?? ''));
+        if ($amostra === '-') $amostra = '—';
+      @endphp
+      <tr>
+        <td>{{ $visita->vis_id }}</td>
+        <td>{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</td>
+        <td>{{ $visita->vis_ciclo ?? '—' }}</td>
+        <td>{{ $atividades[$visita->vis_atividade ?? ''] ?? '—' }}</td>
+        <td>{{ $visita->vis_visita_tipo === 'R' ? 'R' : ($visita->vis_visita_tipo === 'N' ? 'N' : '—') }}</td>
+        <td>{{ (($visita->vis_pendencias ?? false) ? ($visita->vis_concluida ?? false) : true) ? 'S' : 'N' }}</td>
+        <td>{{ $loc?->loc_quarteirao ?? '—' }}</td>
+        <td>{{ $loc?->loc_sequencia ?? '—' }}</td>
+        <td>{{ $loc?->loc_lado ?? '—' }}</td>
+        <td class="text-left">{{ $loc?->loc_bairro ?? '—' }}</td>
+        <td class="text-left">{{ $loc?->loc_endereco ?? '—' }}</td>
+        <td>{{ $loc?->loc_numero ?? 'S/N' }}</td>
+        <td>{{ \Str::limit($loc?->loc_complemento ?? '—', 8) }}</td>
+        <td>{{ $loc?->loc_codigo_unico ?? '—' }}</td>
+        <td>{{ $loc ? ($tipoImovel[$loc->loc_tipo ?? ''] ?? $loc->loc_tipo ?? '—') : '—' }}</td>
+        <td>{{ $loc && $loc->loc_zona === 'U' ? 'Urb' : ($loc && $loc->loc_zona === 'R' ? 'Rur' : '—') }}</td>
+        <td>{{ ($visita->vis_pendencias ?? false) ? 'Sim' : 'Não' }}</td>
+        <td>{{ $visita->insp_a1 ?? 0 }}</td>
+        <td>{{ $visita->insp_a2 ?? 0 }}</td>
+        <td>{{ $visita->insp_b ?? 0 }}</td>
+        <td>{{ $visita->insp_c ?? 0 }}</td>
+        <td>{{ $visita->insp_d1 ?? 0 }}</td>
+        <td>{{ $visita->insp_d2 ?? 0 }}</td>
+        <td>{{ $visita->insp_e ?? 0 }}</td>
+        <td>{{ $amostra }}</td>
+        <td>{{ $visita->vis_qtd_tubitos ?? '—' }}</td>
+        <td>{{ $visita->vis_depositos_eliminados ?? 0 }}</td>
+        <td>{{ ($visita->vis_coleta_amostra ?? false) ? 'Sim' : 'Não' }}</td>
+        <td class="text-left">{{ $tratText ?: '—' }}</td>
+        <td class="text-left">{{ $visita->usuario?->use_nome ?? '—' }}</td>
+      </tr>
       @endforeach
     </tbody>
   </table>
 
-  <h2>4. Visitas Realizadas</h2>
-  <table>
-  <thead>
-    <tr>
-      <th>Código</th>
-      <th>Data</th>
-      <th>Pendência</th>
-      <th>Atividade</th>
-      <th>Local</th>
-      <th>Agente</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach($visitas as $visita)
-      <tr>
-        <td>
-          <span style="display: inline-block; background-color: #e5e7eb; color: #374151; font-size: 12px; font-weight: 600; padding: 2px 6px; border-radius: 4px; vertical-align: middle;">
-            #{{ $visita->vis_id }}
-          </span>
-        </td>
-        <td>
-          {{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}<br>
-          <i style="text-transform: lowercase;">{{ ucfirst(\Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l')) }}</i>
-        </td>
-        <td>
-          @if($visita->vis_pendencias)
-            <span style="display: inline-block; background-color: #fee2e2; color: #991b1b; font-size: 12px; font-weight: 600; padding: 2px 6px; border-radius: 4px; vertical-align: middle;">
-              Pendente
-            </span>
-          @else
-            <span style="display: inline-block; background-color: #d1fae5; color: #065f46; font-size: 12px; font-weight: 600; padding: 2px 6px; border-radius: 4px; vertical-align: middle;">
-              Concluída
-            </span>
-          @endif
-        </td>
-      @php
-          $atividades = [
-              '1' => 'LI (Levantamento de Índice)',
-              '2' => 'LI+T (Levantamento + Tratamento)',
-              '3' => 'PPE+T (Ponto Estratégico + Tratamento)',
-              '4' => 'T (Tratamento)',
-              '5' => 'DF (Delimitação de Foco)',
-              '6' => 'PVE (Pesquisa Vetorial Especial)',
-              '7' => 'LIRAa (Levantamento de Índice Rápido)',
-              '8' => 'PE (Ponto Estratégico)',
-          ];
-        @endphp
-        <td>{{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}</td>
-        <td>
-          <strong>{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero ?: 'S/N' }}</strong><br>
-          Bairro: {{ $visita->local->loc_bairro }}<br>
-          {{ $visita->local->loc_cidade }}/{{ $visita->local->loc_estado }} - {{ $visita->local->loc_pais }}<br>
-          CEP: {{ $visita->local->loc_cep }}<br>
-          Complemento: {{ $visita->local->loc_complemento ?: 'N/A' }}<br>
-          Código: {{ $visita->local->loc_codigo_unico }} |
-          Cod. Localidade: {{ $visita->local->loc_codigo ?? 'N/A' }}<br>
-          Categoria: {{ $visita->local->loc_categoria ?? 'N/A' }} |
-          Tipo: {{ ['R' => 'Residencial', 'C' => 'Comercial', 'T' => 'Terreno Baldio'][$visita->local->loc_tipo] ?? 'N/A' }}<br>
-          Zona: {{ ['U' => 'Urbana', 'R' => 'Rural'][$visita->local->loc_zona] ?? 'N/A' }} |
-          Quarteirão: {{ $visita->local->loc_quarteirao ?? 'N/A' }} |
-          Seq.: {{ $visita->local->loc_sequencia ?? 'N/A' }} |
-          Lado: {{ $visita->local->loc_lado ?? 'N/A' }}
-        </td>
-        <td>{{ $visita->usuario->use_nome ?? '—' }}</td>
-      </tr>
-
-      {{-- Linha adicional: Inspeções e Total de Tratamentos --}}
-      <tr>
-        <td colspan="6" style="padding: 10px 6px; font-size: 12px; color: #374151; background-color: #f9fafb;">
-          <strong>Inspecionados:</strong>
-          A1: {{ $visita->insp_a1 ?? 0 }},
-          A2: {{ $visita->insp_a2 ?? 0 }},
-          B: {{ $visita->insp_b ?? 0 }},
-          C: {{ $visita->insp_c ?? 0 }},
-          D1: {{ $visita->insp_d1 ?? 0 }},
-          D2: {{ $visita->insp_d2 ?? 0 }},
-          E: {{ $visita->insp_e ?? 0 }},
-          <strong>Total:</strong>
-          {{
-            ($visita->insp_a1 ?? 0) + ($visita->insp_a2 ?? 0) + ($visita->insp_b ?? 0) +
-            ($visita->insp_c ?? 0) + ($visita->insp_d1 ?? 0) + ($visita->insp_d2 ?? 0) + ($visita->insp_e ?? 0)
-          }}.
-          <strong>Houve algum tratamento?</strong>
-          @if(count($visita->tratamentos) > 0)
-            Sim
-          @else
-            Não
-          @endif
-        </td>
-      </tr>
-
-      {{-- Linha adicional: Detalhes dos Tratamentos --}}
-      @if (!empty($visita->tratamentos) && count($visita->tratamentos))
-        <tr>
-          <td colspan="6" style="padding: 10px 6px; font-size: 12px; color: #374151; background-color: #f3f4f6;">
-            <strong>Detalhes dos Tratamentos:</strong><br>
-            @foreach ($visita->tratamentos as $t)
-              • Forma: {{ $t->trat_forma ?? '—' }},
-              Tipo: {{ $t->trat_tipo ?? '—' }},
-              Depósitos Tratados: {{ $t->qtd_depositos_tratados ?? 0 }},
-              Gramas: {{ $t->qtd_gramas ?? 0 }},
-              Cargas: {{ $t->qtd_cargas ?? 0 }}<br>
-            @endforeach
-          </td>
-        </tr>
-      @endif
-    @endforeach
-  </tbody>
-</table>
-
-
-  <!-- <h2>5. Análises Visuais</h2>
-  @foreach([
-    'graficoDoencasBase64' => 'Distribuição das doenças registradas.',
-    'graficoBairrosBase64' => 'Número de visitas por bairro.',
-    'graficoZonasBase64' => 'Quantidade de visitas por zona (Urbana/Rural).',
-    'graficoDiasBase64' => 'Evolução do número de visitas ao longo dos dias.',
-    'graficoInspBase64' => 'Total de inspeções por tipo de depósito.',
-    'graficoTratamentosBase64' => 'Distribuição das formas de tratamento aplicadas.',
-    'mapaCalorBase64' => 'Mapa de calor dos locais com visitas registradas.'
-  ] as $grafico => $descricao)
-    @if(isset($$grafico) && $$grafico)
-      <div class="img-container">
-        <img src="{{ $$grafico }}" alt="Gráfico">
-        <p class="descricao">{{ $descricao }}</p>
-      </div>
-    @endif
-  @endforeach -->
-
- <h2>6. Conclusão</h2>
-  <p>
-    Os dados consolidados neste relatório evidenciam a relevância da vigilância epidemiológica como ferramenta estratégica para o controle e a prevenção de agravos à saúde pública. As informações levantadas durante as visitas permitem identificar áreas críticas, avaliar a efetividade das ações realizadas e orientar a alocação de recursos de forma mais eficiente.
-  </p>
-  <p>
-    Reforça-se, portanto, a necessidade de manutenção de um monitoramento constante, especialmente em regiões com maior recorrência de focos, bem como a promoção de campanhas educativas voltadas à conscientização da população. A integração entre agentes de saúde, gestores e comunidade é fundamental para o fortalecimento das ações de enfrentamento e para a construção de um ambiente mais saudável e resiliente.
-  </p>
-
+  <div class="legenda">
+    <strong>Atividade:</strong> 1-LI, 2-LI+T, 3-PPE+T, 4-T, 5-DF, 6-PVE, 7-LIRAa, 8-PE &nbsp;|&nbsp;
+    <strong>N/R:</strong> N-Normal, R-Recuperação &nbsp;|&nbsp;
+    <strong>Conc.:</strong> Concluída S/N (sem pendência = S) &nbsp;|&nbsp;
+    <strong>Cód.:</strong> Código único do imóvel &nbsp;|&nbsp;
+    <strong>Tipo:</strong> R-Residencial, C-Comércio, TB-Terreno Baldio, PE-Ponto Estratégico &nbsp;|&nbsp;
+    <strong>Pend.:</strong> Pendência (recusado, fechado ou retorno) &nbsp;|&nbsp;
+    <strong>Amostra:</strong> Inicial-Final &nbsp;|&nbsp;
+    <strong>Dep.Elim.:</strong> Depósitos eliminados &nbsp;|&nbsp;
+    <strong>Tub.:</strong> Tubitos &nbsp;|&nbsp;
+    <strong>Coleta:</strong> Coleta de amostra Sim/Não
+  </div>
 </main>
 </body>
 </html>

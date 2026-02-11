@@ -10,248 +10,202 @@
 </div>
 
 <div class="space-y-6">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Relatórios</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Relatórios e Indicadores</h1>
 
     @if(session('error'))
         <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded relative mb-4">
             <strong>Erro:</strong> {{ session('error') }}
         </div>
     @endif
+    @if(session('info'))
+        <div class="bg-blue-100 border border-blue-400 text-blue-800 px-4 py-3 rounded relative mb-4">
+            {{ session('info') }}
+        </div>
+    @endif
 
-    {{-- Filtros --}}
-    <div
-    x-data="{
-        tipo: '{{ request('tipo_relatorio', 'completo') }}',
-        filtrosAplicados: new URLSearchParams(window.location.search).toString() !== '',
-        get botaoAtivo() {
-        return this.tipo === 'completo' || this.filtrosAplicados;
-        }
-    }"
-    x-init="$watch('tipo', () => filtrosAplicados = false)">
-
-        {{-- Filtros Avançados --}}
-        <form method="GET"
-            x-ref="formulario"
-            @submit.prevent="filtrosAplicado = true; $nextTick(() => $refs.formulario.submit())"
-            class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-
-            {{-- Tipo de Relatório --}}
-            <div>
-                <label class="text-sm text-gray-700 dark:text-gray-300">Tipo de Relatório</label>
-                <select name="tipo_relatorio" x-model="tipo"
-                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                    <option value="completo">Completo</option>
-                    <option value="diario">Diário</option>
-                    <option value="semanal">Semanal</option>
-                    <option value="individual">Individual</option>
-                </select>
+    @if($sem_visitas ?? false)
+        {{-- Estado vazio: nenhuma visita no sistema — sem ações disponíveis --}}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow px-8 py-12 text-center">
+            <div class="max-w-md mx-auto pt-12 pb-12">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Nenhuma visita cadastrada</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">
+                    Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos agentes.
+                </p>
+                <a href="{{ route('gestor.visitas.index') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7-3.732 7-9.542 7-8.268-2.943-9.542-7z"/></svg>
+                    Ir para Visitas
+                </a>
             </div>
-
-            {{-- Data para Diário --}}
-            <div x-show="tipo === 'diario'" x-cloak class="md:col-span-2">
-                <label class="text-sm text-gray-700 dark:text-gray-300">Data</label>
-                <input type="date" name="data_unica" value="{{ request('data_unica') }}"
-                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-            </div>
-
-            {{-- Período para Semanal --}}
-            <template x-if="tipo === 'semanal'">
-                <div class="md:col-span-2 grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-sm text-gray-700 dark:text-gray-300">Início da Semana</label>
-                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}"
-                            class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
+        </div>
+    @else
+    {{-- Filtros e PDF --}}
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
+        <div
+            x-data="{
+                tipo: '{{ request('tipo_relatorio', 'completo') }}',
+                filtrosAplicados: new URLSearchParams(window.location.search).toString() !== '',
+                get botaoAtivo() { return this.tipo === 'completo' || this.filtrosAplicados; }
+            }"
+            x-init="$watch('tipo', () => filtrosAplicados = false)">
+            <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
+                  class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                    <select name="tipo_relatorio" x-model="tipo" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2">
+                        <option value="completo">Completo</option>
+                        <option value="diario">Diário</option>
+                        <option value="semanal">Semanal</option>
+                        <option value="individual">Individual</option>
+                    </select>
+                </div>
+                <div x-show="tipo === 'diario'" x-cloak>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data</label>
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                </div>
+                <template x-if="tipo === 'semanal'">
+                    <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início</label>
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim</label>
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                        </div>
                     </div>
-                    <div>
-                        <label class="text-sm text-gray-700 dark:text-gray-300">Fim da Semana</label>
-                        <input type="date" name="data_fim" value="{{ request('data_fim') }}"
-                            class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-                    </div>
+                </template>
+                <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Visita</label>
+                    <select name="visita_id" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2">
+                        @foreach($visitas as $v)
+                            @php $atividades = ['1'=>'LI','2'=>'LI+T','3'=>'PPE+T','4'=>'T','5'=>'DF','6'=>'PVE','7'=>'LIRAa','8'=>'PE']; @endphp
+                            <option value="{{ $v->vis_id }}" @selected(request('visita_id') == $v->vis_id)>#{{ $v->vis_id }} — {{ \Carbon\Carbon::parse($v->vis_data)->format('d/m/Y') }} — {{ $atividades[$v->vis_atividade] ?? 'N/I' }} — {{ $v->local?->loc_bairro ?? '—' }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            </template>
-
-            {{-- Seleção individual --}}
-            <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3">
-                <label class="text-sm text-gray-700 dark:text-gray-300">Selecione a Visita</label>
-                <select name="visita_id" x-ref="visitaId"
-                        class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                    @foreach($visitas as $v)
-                        @php
-                            $atividades = [
-                                '1' => 'LI',
-                                '2' => 'LI+T',
-                                '3' => 'PPE+T',
-                                '4' => 'T',
-                                '5' => 'DF',
-                                '6' => 'PVE',
-                                '7' => 'LIRAa',
-                                '8' => 'PE',
-                            ];
-                        @endphp
-                        <option value="{{ $v->vis_id }}" @selected(request('visita_id') == $v->vis_id)>
-                            #{{ $v->vis_id }} - {{ \Carbon\Carbon::parse($v->vis_data)->format('d/m/Y') }} - {{ $atividades[$v->vis_atividade] ?? 'Não informado' }} - {{ $v->local->loc_endereco }}{{ $v->local->loc_numero ? ', ' . $v->local->loc_numero : ' N/A' }} - Bairro/Localidade: {{ $v->local->loc_bairro }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- Bairro (apenas para diário, semanal) --}}
-            <div x-show="tipo !== 'individual' && tipo !== 'completo'" x-cloak>
-                <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
-                <input type="text" name="bairro" value="{{ request('bairro') }}"
-                    placeholder="Ex: Centro"
-                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-            </div>
-
-            {{-- Bairro (apenas para completo) --}}
-            <div x-show="tipo === 'completo'" x-cloak class="md:col-span-3">
-                <label class="text-sm text-gray-700 dark:text-gray-300">Bairro</label>
-                <input type="text" name="bairro" value="{{ request('bairro') }}"
-                    placeholder="Ex: Centro"
-                    class="w-full rounded p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-            </div>
-
-            {{-- Botões --}}
-            <div class="flex flex-col justify-end md:flex-row md:items-end gap-4 col-span-1">
-                <div class="flex-1">
-                    <button type="submit"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                        Filtrar
-                    </button>
+                <div x-show="tipo !== 'individual'" x-cloak :class="tipo === 'completo' ? 'md:col-span-3' : ''">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bairro</label>
+                    <input type="text" name="bairro" value="{{ request('bairro') }}" placeholder="Ex: Centro" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
                 </div>
-                <div class="flex-1">
-                    <a href="{{ route('gestor.relatorios.index') }}"
-                    class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded text-center block">
-                        Limpar
-                    </a>
+                <div class="flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center">
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow-sm transition h-10">Filtrar</button>
+                    <a href="{{ route('gestor.relatorios.index') }}" class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-medium rounded-md transition hover:bg-gray-300 dark:hover:bg-gray-500 h-10">Limpar</a>
                 </div>
+            </form>
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
+                <button type="button" :disabled="!botaoAtivo"
+                    @click.prevent="if (!botaoAtivo) { alert('Aplique os filtros antes de gerar o PDF.'); return; } gerarBase64Graficos();"
+                    class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Gerar relatório em PDF
+                </button>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Filtre os dados e clique no botão para gerar o documento.</p>
             </div>
-        </form>
-
-        {{-- Botão Gerar PDF --}}
-        <section class="w-full bg-white dark:bg-gray-800 shadow rounded-lg p-4 mt-4">
-            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                Relatório de Visitas Epidemiológicas
-            </p>
-            <button
-                :disabled="!botaoAtivo"
-                @click.prevent="
-                    if (!botaoAtivo) {
-                        alert('Aplique os filtros antes de gerar o PDF.');
-                        return;
-                    }
-                    gerarBase64Graficos();
-                "
-                class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded shadow disabled:opacity-50 disabled:cursor-not-allowed">
-                Gerar Relatório em PDF
-            </button>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">
-                Para gerar o documento com filtros aplicados, selecione os filtros desejados e clique em "Filtrar". Em seguida, clique no botão acima.
-            </p>
-        </section>
-    </div>
-
-    {{-- Cards Indicadores --}}
-    <section class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow space-y-4">
-    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Indicadores Gerais</h2>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Locais Cadastrados</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalLocaisCadastrados }}</h2>
         </div>
-        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Bairro com Mais Ocorrências</p>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $bairroMaisFrequente ?: 'N/A' }}</h2>
-        </div>
-        <div class="p-4 bg-gray-50 dark:bg-gray-900  shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Total de Visitas</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalVisitas }}</h2>
-        </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-900  shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">% Visitas com Pendência</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $percentualPendencias }}%</h2>
-        </div>
-        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Coletas Realizadas</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalComColeta }}</h2>
-        </div>
-        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Visitas com Tratamento</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $visitasComTratamento }}</h2>
-        </div>
-        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Média de Tratamentos</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($mediaTratamentosPorVisita, 1, ',', '.') }}</h2>
-        </div>
-        <div class="p-4 bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Depósitos Eliminados</p>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalDepEliminados }}</h2>
-        </div>
-    </div>
     </section>
 
-    {{-- Gráficos Epidemiológicos --}}
-    <section class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-6">Gráficos Epidemiológicos</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
-                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Visitas por Bairro</h3>
-                <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    Este gráfico mostra a distribuição de visitas realizadas pelos agentes epidemiológicos em cada bairro.
-                </p>
-                <canvas id="graficoBairros" class="w-full" style="height: 240px; max-height: 240px;"></canvas>
-            </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
-                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Distribuição de Doenças</h3>
-                <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    O gráfico de pizza mostra a proporção de cada doença registrada nas visitas epidemiológicas.
-                </p>
-                <canvas id="graficoDoencas" class="w-full" style="height: 240px; max-height: 240px;"></canvas>
-            </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
-                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Visitas por Zona</h3>
-                <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    Este gráfico de barras mostra a quantidade de visitas realizadas em cada zona (Urbana/Rural).
-                </p>
-                <canvas id="graficoZonas" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
-            </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
-                <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Evolução de Visitas por Dia</h3>
-                <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    Este gráfico de linha mostra a evolução do número de visitas realizadas ao longo dos dias.
-                </p>
-                <canvas id="graficoDias" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-2">
-                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
-                    <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Inspeções Realizadas</h3>
-                    <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                        Este gráfico radar mostra a quantidade de inspeções realizadas em diferentes tipos de depósitos.
-                    </p>
-                    <canvas id="graficoInsp" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
+    {{-- Indicadores (estilo dashboard) --}}
+    <section class="space-y-4">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Indicadores do período</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Total de visitas</h3>
                 </div>
-                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg shadow">
-                    <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-2">Formas de Tratamento</h3>
-                    <p class="mt-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
-                        Este gráfico de pizza mostra a distribuição das diferentes formas de tratamento aplicadas nas visitas.
-                    </p>
-                    <canvas id="graficoTratamentos" class="w-full h-60" style="height: 240px; max-height: 240px;"></canvas>
+                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalVisitas }}</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-amber-500 dark:text-amber-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
+                </div>
+                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $percentualPendencias }}% <span class="text-sm text-gray-500">({{ $totalComPendencia }})</span></p>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-emerald-500 dark:text-emerald-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Depósitos eliminados</h3>
+                </div>
+                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalDepEliminados }}</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-teal-500 dark:text-teal-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com tratamento</h3>
+                </div>
+                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $visitasComTratamento }}</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Coletas realizadas</h3>
+                </div>
+                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalComColeta }}</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="h-6 w-6 text-gray-500 dark:text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bairro com mais ocorrências</h3>
+                </div>
+                <p class="mt-2 text-lg font-normal text-gray-900 dark:text-gray-100">{{ $bairroMaisFrequente ?: '—' }}</p>
+            </div>
+        </div>
+    </section>
+
+    {{-- Gráficos: apenas os 4 mais relevantes para o relatório --}}
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Análise visual</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:grid-rows-2 sm:auto-rows-fr">
+            <div class="flex flex-col min-h-[13rem]">
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Visitas por bairro</h3>
+                <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
+                    <canvas id="graficoBairros" width="400" height="168" class="max-w-full"></canvas>
+                    <p id="graficoBairrosVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Sem dados no período.</p>
+                </div>
+            </div>
+            <div class="flex flex-col min-h-[13rem]">
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Doenças registradas</h3>
+                <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
+                    <canvas id="graficoDoencas" width="400" height="168" class="max-w-full"></canvas>
+                    <p id="graficoDoencasVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Nenhuma doença registrada.</p>
+                </div>
+            </div>
+            <div class="flex flex-col min-h-[13rem]">
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Visitas por dia</h3>
+                <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
+                    <canvas id="graficoDias" width="400" height="168" class="max-w-full"></canvas>
+                    <p id="graficoDiasVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Sem dados no período.</p>
+                </div>
+            </div>
+            <div class="flex flex-col min-h-[13rem]">
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Formas de tratamento</h3>
+                <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
+                    <canvas id="graficoTratamentos" width="400" height="168" class="max-w-full"></canvas>
+                    <p id="graficoTratamentosVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Nenhum tratamento registrado.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- Mapa de Calor por Local --}}
-    <section class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-        <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Mapa de Calor por Local</h2>
-        <div id="mapa-calor" class="w-full h-96 rounded-lg border"></div>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            O mapa de calor indica a concentração de visitas realizadas, com cores mais quentes representando maior número de ocorrências em determinadas regiões.
-        </p>
+    {{-- Mapa de calor --}}
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Mapa de calor</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Concentração de visitas no território.</p>
+        <div class="relative w-full h-64 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div id="mapa-calor" class="w-full h-full rounded-lg"></div>
+            <p id="mapa-calor-vazio" class="hidden absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/80 rounded-lg m-0">Nenhuma visita com localização no período.</p>
+        </div>
     </section>
 
-    {{-- Tabela de Visitas --}}
-<section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    {{-- Tabela de visitas --}}
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
     <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Visitas Registradas</h2>
 
     <div class="overflow-x-auto">
@@ -319,18 +273,14 @@
                                 '8' => 'PE',
                             ];
                         @endphp
-
-                        <td class="p-4 text-gray-800 dark:text-gray-100">
-                            <div class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}
-                            </div>
-                        </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                             <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
-                                Bairro/Localidade: {{ $visita->local->loc_bairro }}<br>
-                                Cód.: {{ $visita->local->loc_codigo_unico }}
+                                Bairro/Localidade: {{ $visita->local->loc_bairro }} — Cód.: {{ $visita->local->loc_codigo_unico }}
                             </div>
+                        </td>
+                        <td class="p-4 text-gray-800 dark:text-gray-100">
+                            <span class="text-sm">{{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}</span>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
                             {{ $visita->usuario->use_nome ?? '—' }}
@@ -349,7 +299,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="p-6 text-center text-gray-600 dark:text-gray-400 italic">Nenhuma visita encontrada.</td>
+                        <td colspan="7" class="p-6 text-center text-gray-600 dark:text-gray-400 italic">Nenhuma visita encontrada.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -358,8 +308,10 @@
 </section>
 
 </div>
+    @endif
 
-{{-- Scripts --}}
+{{-- Scripts (apenas quando há visitas; estado vazio não carrega gráficos/mapa) --}}
+@if(!($sem_visitas ?? false))
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -369,81 +321,68 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <script>
-    const visitas = JSON.parse('{!! addslashes(json_encode($visitas)) !!}');
+document.addEventListener('DOMContentLoaded', function() {
+    const visitas = @json($visitasParaGraficos ?? []);
 
     const contagemPorBairro = {};
     const contagemPorDoenca = {};
 
-    visitas.forEach(v => {
-        const bairro = v.local?.loc_bairro ?? 'Desconhecido';
+    (Array.isArray(visitas) ? visitas : []).forEach(v => {
+        const bairro = (v.local && v.local.loc_bairro) ? String(v.local.loc_bairro) : 'Desconhecido';
         contagemPorBairro[bairro] = (contagemPorBairro[bairro] || 0) + 1;
-
         (v.doencas || []).forEach(d => {
-            contagemPorDoenca[d.doe_nome] = (contagemPorDoenca[d.doe_nome] || 0) + 1;
+            const nome = (d && d.doe_nome) ? String(d.doe_nome) : 'N/I';
+            contagemPorDoenca[nome] = (contagemPorDoenca[nome] || 0) + 1;
         });
     });
 
-    new Chart(document.getElementById('graficoBairros'), {
-        type: 'bar',
-        data: {
-            labels: Object.keys(contagemPorBairro),
-            datasets: [{
-                label: 'Visitas por Bairro',
-                data: Object.values(contagemPorBairro),
-                backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                borderColor: 'rgba(59, 130, 246, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: { display: true, text: 'Visitas por Bairro' }
-            }
-        }
-    });
+    const labelsBairro = Object.keys(contagemPorBairro);
+    const dataBairro = Object.values(contagemPorBairro);
+    const elBairros = document.getElementById('graficoBairros');
+    const elBairrosVazio = document.getElementById('graficoBairrosVazio');
+    if (labelsBairro.length > 0 && elBairros) {
+        new Chart(elBairros, {
+            type: 'bar',
+            data: {
+                labels: labelsBairro,
+                datasets: [{ label: 'Visitas', data: dataBairro, backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+    } else {
+        if (elBairros) elBairros.classList.add('hidden');
+        if (elBairrosVazio) elBairrosVazio.classList.remove('hidden');
+    }
 
-    new Chart(document.getElementById('graficoDoencas'), {
-    type: 'pie',
-    data: {
-        labels: Object.keys(contagemPorDoenca),
-        datasets: [{
-            data: Object.values(contagemPorDoenca),
-            backgroundColor: ['#60a5fa', '#f87171', '#34d399', '#fbbf24', '#a78bfa', '#fb7185', '#38bdf8', '#facc15', '#4ade80', '#f472b6']
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Distribuição de Doenças'
+    const labelsDoenca = Object.keys(contagemPorDoenca);
+    const dataDoenca = Object.values(contagemPorDoenca);
+    const elDoencas = document.getElementById('graficoDoencas');
+    const elDoencasVazio = document.getElementById('graficoDoencasVazio');
+    if (labelsDoenca.length > 0 && elDoencas) {
+        new Chart(elDoencas, {
+            type: 'pie',
+            data: {
+                labels: labelsDoenca,
+                datasets: [{ data: dataDoenca, backgroundColor: ['#60a5fa', '#f87171', '#34d399', '#fbbf24', '#a78bfa', '#fb7185', '#38bdf8', '#facc15', '#4ade80', '#f472b6'] }]
             },
-            legend: {
-                position: 'bottom',
-                labels: {
-                    color: '#ddd' // adapta à cor do tema dark
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: false },
+                    legend: { position: 'bottom', labels: { color: '#9ca3af' } },
+                    datalabels: { formatter: (val, ctx) => { const t = ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0); return t ? ((val/t)*100).toFixed(0)+'%' : ''; }, color: '#fff', font: { weight: 'bold' } }
                 }
             },
-            datalabels: {
-                formatter: (value, context) => {
-                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                    const percentage = ((value / total) * 100).toFixed(1);
-                    return `${percentage}%`;
-                },
-                color: '#fff',
-                font: {
-                    weight: 'bold'
-                }
-            }
-        }
-    },
-    plugins: [ChartDataLabels]
-    });
+            plugins: [ChartDataLabels]
+        });
+    } else {
+        if (elDoencas) elDoencas.classList.add('hidden');
+        if (elDoencasVazio) elDoencasVazio.classList.remove('hidden');
+    }
 
     // Mapa de calor
-    const pontos = visitas
+    const pontos = (Array.isArray(visitas) ? visitas : [])
         .map(v => {
             const lat = parseFloat(v?.local?.loc_latitude || 0);
             const lng = parseFloat(v?.local?.loc_longitude || 0);
@@ -467,21 +406,19 @@
         maxZoom: 18,
     }).addTo(mapa);
 
-    L.heatLayer(pontos, {
-        radius: 25,
-        blur: 15,
-        maxZoom: 17,
-        gradient: {
-            0.2: 'blue',
-            0.4: 'lime',
-            0.6: 'yellow',
-            0.8: 'orange',
-            1.0: 'red'
-        }
-    }).addTo(mapa);
+    if (pontos.length > 0) {
+        L.heatLayer(pontos, {
+            radius: 25,
+            blur: 15,
+            maxZoom: 17,
+            gradient: { 0.2: 'blue', 0.4: 'lime', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red' }
+        }).addTo(mapa);
+    } else {
+        document.getElementById('mapa-calor-vazio').classList.remove('hidden');
+    }
 
-    // Função para gerar o PDF
-    async function gerarBase64Graficos(callback) {
+    // Função para gerar o PDF (exposta globalmente para o botão)
+    window.gerarBase64Graficos = async function gerarBase64Graficos() {
         // Mostrar overlay
         document.getElementById('overlayCarregando').classList.remove('hidden');
 
@@ -489,14 +426,11 @@
 
         const canvasBairros = document.getElementById('graficoBairros');
         const canvasDoencas = document.getElementById('graficoDoencas');
-        const mapaDiv = document.getElementById('mapa-calor');
-        const canvasZonas = document.getElementById('graficoZonas');
         const canvasDias = document.getElementById('graficoDias');
-        const canvasInsp = document.getElementById('graficoInsp');
         const canvasTratamentos = document.getElementById('graficoTratamentos');
 
-        const base64Bairros = canvasBairros.toDataURL('image/png');
-        const base64Doencas = canvasDoencas.toDataURL('image/png');
+        const base64Bairros = canvasBairros && !canvasBairros.classList.contains('hidden') ? canvasBairros.toDataURL('image/png') : '';
+        const base64Doencas = canvasDoencas && !canvasDoencas.classList.contains('hidden') ? canvasDoencas.toDataURL('image/png') : '';
         const base64Mapa = await new Promise(resolve => {
             leafletImage(mapa, function(err, canvas) {
                 if (err || !canvas) {
@@ -548,10 +482,10 @@
         addField('graficoBairrosBase64', base64Bairros);
         addField('graficoDoencasBase64', base64Doencas);
         addField('mapaCalorBase64', base64Mapa);
-        addField('graficoZonasBase64', canvasZonas.toDataURL('image/png'));
-        addField('graficoDiasBase64', canvasDias.toDataURL('image/png'));
-        addField('graficoInspBase64', canvasInsp.toDataURL('image/png'));
-        addField('graficoTratamentosBase64', canvasTratamentos.toDataURL('image/png'));
+        addField('graficoZonasBase64', '');
+        addField('graficoDiasBase64', canvasDias && !canvasDias.classList.contains('hidden') ? canvasDias.toDataURL('image/png') : '');
+        addField('graficoInspBase64', '');
+        addField('graficoTratamentosBase64', canvasTratamentos && !canvasTratamentos.classList.contains('hidden') ? canvasTratamentos.toDataURL('image/png') : '');
 
         document.body.appendChild(form);
         form.submit();
@@ -563,131 +497,62 @@
         }, 1000);
     }
 
-    // Gráficos de visitas por zona
-    const contagemPorZona = {};
-
-    visitas.forEach(v => {
-        let zona = v.local?.loc_zona ?? 'Indefinida';
-        if (zona === 'U') zona = 'Urbana';
-        else if (zona === 'R') zona = 'Rural';
-        contagemPorZona[zona] = (contagemPorZona[zona] || 0) + 1;
-    });    
-
-    new Chart(document.getElementById('graficoZonas'), {
-        type: 'bar',
-        data: {
-            labels: Object.keys(contagemPorZona),
-            datasets: [{
-                label: 'Visitas por Zona',
-                data: Object.values(contagemPorZona),
-                backgroundColor: ['#60a5fa', '#34d399'],
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: { display: true, text: 'Visitas por Zona' }
-            }
-        }
-    });
-
     // Gráfico de evolução diária
     const contagemPorData = {};
-
-    visitas.forEach(v => {
-        const data = v.vis_data;
-        contagemPorData[data] = (contagemPorData[data] || 0) + 1;
-    });
-
+    (Array.isArray(visitas) ? visitas : []).forEach(v => { contagemPorData[v.vis_data] = (contagemPorData[v.vis_data] || 0) + 1; });
     const datasOrdenadas = Object.keys(contagemPorData).sort();
-
-    new Chart(document.getElementById('graficoDias'), {
-        type: 'line',
-        data: {
-            labels: datasOrdenadas,
-            datasets: [{
-                label: 'Visitas por Dia',
-                data: datasOrdenadas.map(d => contagemPorData[d]),
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                tension: 0.3,
-                fill: true,
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: { display: true, text: 'Visitas por Dia' }
+    const elDias = document.getElementById('graficoDias');
+    const elDiasVazio = document.getElementById('graficoDiasVazio');
+    if (datasOrdenadas.length > 0 && elDias) {
+        new Chart(elDias, {
+            type: 'line',
+            data: {
+                labels: datasOrdenadas,
+                datasets: [{ label: 'Visitas', data: datasOrdenadas.map(d => contagemPorData[d]), borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.2)', tension: 0.3, fill: true }]
             },
-            scales: {
-                x: { ticks: { color: '#ccc' } },
-                y: { beginAtZero: true, ticks: { color: '#ccc' } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, title: { display: false } },
+                scales: { x: { ticks: { color: '#9ca3af', maxTicksLimit: 8 } }, y: { beginAtZero: true, ticks: { color: '#9ca3af' } } }
             }
-        }
-    });
-
-    // Gráfico de inspeções
-    const camposInsp = ['insp_a1', 'insp_a2', 'insp_b', 'insp_c', 'insp_d1', 'insp_d2', 'insp_e'];
-    const somatorioInsp = camposInsp.map(campo => visitas.reduce((total, v) => total + (v[campo] || 0), 0));
-
-    new Chart(document.getElementById('graficoInsp'), {
-        type: 'radar',
-        data: {
-            labels: camposInsp.map(c => c.toUpperCase()),
-            datasets: [{
-                label: 'Total Inspeções',
-                data: somatorioInsp,
-                fill: true,
-                backgroundColor: 'rgba(34,197,94,0.2)',
-                borderColor: '#22c55e',
-                pointBackgroundColor: '#22c55e'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: { display: true, text: 'Tipos de Depósitos Inspecionados' }
-            },
-            scales: {
-                r: {
-                    ticks: { color: '#ccc' },
-                    pointLabels: { color: '#ccc' }
-                }
-            }
-        }
-    });
+        });
+    } else {
+        if (elDias) elDias.classList.add('hidden');
+        if (elDiasVazio) elDiasVazio.classList.remove('hidden');
+    }
 
     // Gráfico de formas de tratamento
     const contagemTratamentoForma = {};
-
-    visitas.forEach(v => {
+    (Array.isArray(visitas) ? visitas : []).forEach(v => {
         (v.tratamentos || []).forEach(t => {
             const forma = t.trat_forma ?? 'Indefinida';
             contagemTratamentoForma[forma] = (contagemTratamentoForma[forma] || 0) + 1;
         });
     });
-
-    new Chart(document.getElementById('graficoTratamentos'), {
-        type: 'pie',
-        data: {
-            labels: Object.keys(contagemTratamentoForma),
-            datasets: [{
-                data: Object.values(contagemTratamentoForma),
-                backgroundColor: ['#3b82f6', '#10b981', '#facc15', '#f87171', '#a78bfa']
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: { display: true, text: 'Distribuição de Formas de Tratamento' },
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#ddd' }
-                }
+    const labelsTrat = Object.keys(contagemTratamentoForma);
+    const dataTrat = Object.values(contagemTratamentoForma);
+    const elTrat = document.getElementById('graficoTratamentos');
+    const elTratVazio = document.getElementById('graficoTratamentosVazio');
+    if (labelsTrat.length > 0 && elTrat) {
+        new Chart(elTrat, {
+            type: 'pie',
+            data: {
+                labels: labelsTrat,
+                datasets: [{ data: dataTrat, backgroundColor: ['#3b82f6', '#10b981', '#facc15', '#f87171', '#a78bfa'] }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { title: { display: false }, legend: { position: 'bottom', labels: { color: '#9ca3af' } } }
             }
-        }
-    });
+        });
+    } else {
+        if (elTrat) elTrat.classList.add('hidden');
+        if (elTratVazio) elTratVazio.classList.remove('hidden');
+    }
 
+}); // DOMContentLoaded
 </script>
+@endif
 @endsection

@@ -10,6 +10,7 @@ use App\Helpers\LogHelper;
 
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\RoundBlockSizeMode;
@@ -87,15 +88,23 @@ class LocalController extends Controller
             backgroundColor: new Color(255, 255, 255)
         );
 
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-        $qrCodeBase64 = base64_encode($result->getString());
+        try {
+            $writer = new PngWriter();
+            $result = $writer->write($qrCode);
+            $qrCodeBase64 = base64_encode($result->getString());
+            $qrCodeMime = 'image/png';
+        } catch (\Throwable $e) {
+            $writer = new SvgWriter();
+            $result = $writer->write($qrCode);
+            $qrCodeBase64 = base64_encode($result->getString());
+            $qrCodeMime = 'image/svg+xml';
+        }
 
         $view = $user->isAgente()
             ? 'agente.locais.show'
             : 'gestor.locais.show';
 
-        return view($view, compact('local', 'qrCodeBase64'));
+        return view($view, compact('local', 'qrCodeBase64', 'qrCodeMime'));
     }
 
     public function create()

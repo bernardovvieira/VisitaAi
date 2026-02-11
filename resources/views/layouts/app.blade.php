@@ -41,5 +41,22 @@
                 </div>
             </main>
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[data-live-url]').forEach(function(input) {
+                var url = input.getAttribute('data-live-url');
+                var param = input.getAttribute('data-live-param') || 'search';
+                var timer;
+                input.addEventListener('input', function() {
+                    clearTimeout(timer);
+                    timer = setTimeout(function() {
+                        var val = (input.value || '').trim();
+                        var target = val ? url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val) : url;
+                        if (target !== (window.location.pathname + window.location.search)) window.location.href = target;
+                    }, 380);
+                });
+            });
+        });
+        </script>
     </body>
 </html>

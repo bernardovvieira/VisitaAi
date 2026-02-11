@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
     <div>
         <a href="{{ route('gestor.locais.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
@@ -104,7 +104,7 @@
                     {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
                     {{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}
                 </p>
-                <img src="data:image/png;base64,{{ $qrCodeBase64 }}" alt="QR Code" class="mx-auto w-40 h-40 my-2">
+                <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="mx-auto w-40 h-40 my-2">
                 <p class="text-xs break-all text-center">
                     {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
                 </p>
@@ -129,19 +129,28 @@
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }</style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+@php $numero = $local->loc_numero !== null && $local->loc_numero !== '' ? $local->loc_numero : 'S/N'; @endphp
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const lat = parseFloat("{{ $local->loc_latitude }}") || -28.7;
-    const lng = parseFloat("{{ $local->loc_longitude }}") || -52.3;
-    const map = L.map('map').setView([lat, lng], 16);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
-    L.marker([lat, lng]).addTo(map);
+    const el = document.getElementById('map');
+    const msg = (html) => { el.innerHTML = '<div class="flex items-center justify-center h-full text-center text-sm text-gray-500 dark:text-gray-400 px-4">' + html + '</div>'; };
+    try {
+        if (typeof L === 'undefined') { msg('Mapa indisponível (recarregue a página ou verifique sua conexão).'); return; }
+        const lat = parseFloat("{{ $local->loc_latitude ?? '' }}");
+        const lng = parseFloat("{{ $local->loc_longitude ?? '' }}");
+        if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) { msg('Coordenadas indisponíveis para este local.'); return; }
+        const map = L.map('map').setView([lat, lng], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+        const pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
+        const pinIcon = L.divIcon({ className: 'custom-pin', html: pinSvg, iconSize: [28, 40], iconAnchor: [14, 40], popupAnchor: [0, -40] });
+        L.marker([lat, lng], { icon: pinIcon }).addTo(map)
+            .bindPopup("{{ addslashes($local->loc_endereco) }}, {{ addslashes($numero) }}")
+            .openPopup();
+        setTimeout(() => map.invalidateSize(), 100);
+    } catch (e) { msg('Não foi possível carregar o mapa.'); }
 });
 
 function baixarAdesivo() {

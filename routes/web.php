@@ -117,6 +117,7 @@ Route::middleware('auth')->group(function () {
             Route::get('visitas/{visita}', [VisitaController::class, 'show'])->name('visitas.show');
 
             Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
+            Route::get('relatorios/pdf', fn () => redirect()->route('gestor.relatorios.index')->with('info', 'Use os filtros na página de relatórios e clique em "Gerar relatório em PDF" para gerar o documento.'));
             Route::post('relatorios/pdf', [RelatorioController::class, 'gerarPdf'])->name('relatorios.pdf');
 
             Route::get('logs', [LogController::class, 'index'])->name('logs.index');

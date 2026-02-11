@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
     <div>
         <a href="{{ route('agente.locais.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
@@ -161,7 +161,7 @@
                             class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" onclick="obterMinhaLocalizacao()"
+                        <button type="button" id="btn-minha-localizacao" onclick="obterMinhaLocalizacao()"
                                 class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow transition">
                             Minha Localização
                         </button>
@@ -170,7 +170,7 @@
                 <div>
                     <div id="map" class="h-72 rounded-md shadow border border-gray-300"></div>
                     <p class="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
-                        Você pode ajustar manualmente a posição do marcador no mapa para maior precisão.
+                        Você pode ajustar a posição arrastando o marcador no mapa ou preenchendo latitude e longitude manualmente.
                     </p>
                 </div>
             </fieldset>
@@ -199,22 +199,23 @@
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }</style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
+
+document.addEventListener('DOMContentLoaded', function() {
     $('#loc_cep').mask('00000-000');
 
     const lat = parseFloat("{{ $local->loc_latitude }}") || -28.7;
     const lng = parseFloat("{{ $local->loc_longitude }}") || -52.3;
     const map = L.map('map').setView([lat, lng], 16);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-    const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+    var marker = L.marker([lat, lng], { draggable: true, icon: L.divIcon({ className: 'custom-pin', html: pinSvg, iconSize: [28, 40], iconAnchor: [14, 40], popupAnchor: [0, -40] }) }).addTo(map);
     marker.on('dragend', function (e) {
         const pos = e.target.getLatLng();
         document.getElementById('loc_latitude').value = pos.lat.toFixed(7);
@@ -223,48 +224,92 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.setMapPosition = function(lat, lng) {
-        marker.setLatLng([lat, lng]);
-        map.setView([lat, lng], 16);
-        document.getElementById('loc_latitude').value = lat;
-        document.getElementById('loc_longitude').value = lng;
-    }
+        var latN = parseFloat(lat), lngN = parseFloat(lng);
+        if (isNaN(latN) || isNaN(lngN)) return;
+        marker.setLatLng([latN, lngN]);
+        map.setView([latN, lngN], 16);
+        document.getElementById('loc_latitude').value = latN.toFixed(7);
+        document.getElementById('loc_longitude').value = lngN.toFixed(7);
+        setTimeout(function() { map.invalidateSize(); }, 100);
+    };
 
-    document.getElementById('loc_cep').addEventListener('blur', () => {
-        let cep = document.getElementById('loc_cep').value.replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('loc_endereco').value = data.logradouro || '';
-                        document.getElementById('loc_bairro').value = data.bairro || '';
-                        document.getElementById('loc_cidade').value = data.localidade || '';
-                        document.getElementById('loc_estado').value = data.uf || '';
-                        document.getElementById('loc_pais').value = 'Brasil';
-                    } else {
-                        alert('CEP não encontrado.');
-                    }
-                });
-        }
-    });
+    window.geocodeEndereco = function(callback) {
+        var endereco = (document.getElementById('loc_endereco') && document.getElementById('loc_endereco').value) || '';
+        var bairro = (document.getElementById('loc_bairro') && document.getElementById('loc_bairro').value) || '';
+        var cidade = (document.getElementById('loc_cidade') && document.getElementById('loc_cidade').value) || '';
+        var estado = (document.getElementById('loc_estado') && document.getElementById('loc_estado').value) || '';
+        var pais = (document.getElementById('loc_pais') && document.getElementById('loc_pais').value) || '';
+        if (!cidade || !estado) { if (callback) callback(false); return; }
+        var q = [endereco, bairro, cidade, estado, pais || 'Brasil'].filter(Boolean).join(', ');
+        if (!q) { if (callback) callback(false); return; }
+        fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(q) + '&format=json&limit=1', {
+            headers: { 'Accept': 'application/json', 'User-Agent': 'VisitaAi/1.0 (contato@bitwise.dev.br)' }
+        }).then(function(r) { return r.json(); }).then(function(arr) {
+            if (arr && arr[0] && typeof window.setMapPosition === 'function') {
+                window.setMapPosition(parseFloat(arr[0].lat), parseFloat(arr[0].lon));
+                if (callback) callback(true);
+            } else { if (callback) callback(false); }
+        }).catch(function() { if (callback) callback(false); });
+    };
+
+    var cepInput = document.getElementById('loc_cep');
+    if (cepInput) {
+        cepInput.addEventListener('blur', function() {
+            var cep = cepInput.value.replace(/\D/g, '');
+            if (cep.length !== 8) return;
+            var prev = window._viacepCallback;
+            window._viacepCallback = function(data) {
+                window._viacepCallback = prev;
+                if (data && !data.erro) {
+                    var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
+                    el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
+                    el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
+                    el = document.getElementById('loc_estado'); if (el) el.value = data.uf || '';
+                    el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
+                    window.geocodeEndereco(function(ok) {});
+                } else {
+                    alert('CEP não encontrado.');
+                }
+            };
+            var script = document.createElement('script');
+            script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=_viacepCallback';
+            script.onerror = function() {
+                window._viacepCallback = prev;
+                alert('Erro ao buscar CEP. Verifique sua conexão com a internet e tente novamente.');
+            };
+            document.body.appendChild(script);
+        });
+    }
 });
 
 function obterMinhaLocalizacao() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            const lat = pos.coords.latitude.toFixed(7);
-            const lng = pos.coords.longitude.toFixed(7);
-            setMapPosition(lat, lng);
-        }, function(error) {
-            alert('Erro ao obter localização: ' + error.message);
-        }, {
-            enableHighAccuracy: true,
-            timeout: 20000,
-            maximumAge: 0
-        });
-    } else {
-        alert('Geolocalização não suportada.');
+    var btn = document.getElementById('btn-minha-localizacao');
+    if (btn) { btn.disabled = true; btn.textContent = 'Obtendo...'; }
+    if (!navigator.geolocation) {
+        alert('Geolocalização não é suportada por este navegador. Arraste o marcador no mapa ou preencha latitude e longitude manualmente.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Minha Localização'; }
+        return;
     }
+    function onOk(pos) {
+        if (typeof window.setMapPosition === 'function') window.setMapPosition(pos.coords.latitude, pos.coords.longitude);
+        if (btn) { btn.disabled = false; btn.textContent = 'Minha Localização'; }
+    }
+    function onErr(err, tentarSemPrecisao) {
+        if (err.code === 1 && tentarSemPrecisao) {
+            navigator.geolocation.getCurrentPosition(onOk, function(e2) { onErr(e2, false); }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+            return;
+        }
+        if (btn) { btn.disabled = false; btn.textContent = 'Minha Localização'; }
+        if (typeof window.geocodeEndereco === 'function') {
+            window.geocodeEndereco(function(ok) {
+                if (ok) alert('Não foi possível usar sua localização. O marcador foi posicionado no endereço informado (CEP).');
+                else alert('Não foi possível usar a localização do dispositivo. Informe um CEP (para preencher endereço) ou arraste o marcador no mapa / digite latitude e longitude manualmente.');
+            });
+        } else {
+            alert('Não foi possível usar a localização do dispositivo. Arraste o marcador no mapa ou digite latitude e longitude manualmente.');
+        }
+    }
+    navigator.geolocation.getCurrentPosition(onOk, function(err) { onErr(err, true); }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
 }
 </script>
 @endsection

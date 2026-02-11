@@ -117,8 +117,9 @@ class VisitaController extends Controller
 
         $validated['fk_usuario_id'] = $user->use_id;
         $validated['vis_coleta_amostra'] = $request->boolean('vis_coleta_amostra');
-        $validated['vis_concluida'] = $request->boolean('vis_concluida');
         $validated['vis_pendencias'] = $request->boolean('vis_pendencias');
+        // Sem pendência ⇒ visita concluída (regra PNCD)
+        $validated['vis_concluida'] = $request->boolean('vis_pendencias') ? $request->boolean('vis_concluida') : true;
 
         $visita = Visita::create($validated);
         $visita->doencas()->sync($doencas);
@@ -182,8 +183,9 @@ class VisitaController extends Controller
         unset($validated['tratamentos']);
 
         $validated['vis_coleta_amostra'] = $request->boolean('vis_coleta_amostra');
-        $validated['vis_concluida'] = $request->boolean('vis_concluida');
         $validated['vis_pendencias'] = $request->boolean('vis_pendencias');
+        // Sem pendência ⇒ visita concluída (regra PNCD)
+        $validated['vis_concluida'] = $request->boolean('vis_pendencias') ? $request->boolean('vis_concluida') : true;
 
         $visita->update($validated);
         $visita->doencas()->sync($doencas);

@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-<div class="max-w-4xl space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
     <div>
         <a href="{{ route('saude.visitas.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
@@ -87,19 +87,21 @@
                         <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="Buscar local..." required
                                 class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
 
-                        <ul x-show="open" @click.away="open = false" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto">
+                        <ul x-show="open" @click.away="open = false" x-cloak class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto"
+                            x-transition>
                             <template x-for="local in locais.filter(l => {
-                                const query = search.toLowerCase();
-                                return (
-                                    l.loc_endereco.toLowerCase().includes(query) ||
-                                    l.loc_bairro.toLowerCase().includes(query) ||
-                                    l.loc_codigo_unico.toString().includes(query)
-                                );
+                                const q = (search || '').toLowerCase();
+                                if (!q) return true;
+                                const end = (l.loc_endereco || '').toLowerCase();
+                                const bairro = (l.loc_bairro || '').toLowerCase();
+                                const cidade = (l.loc_cidade || '').toLowerCase();
+                                const cod = String(l.loc_codigo_unico || '');
+                                return end.includes(q) || bairro.includes(q) || cidade.includes(q) || cod.includes(q);
                             })" :key="local.loc_id">
                                 <li>
-                                    <button type="button" @click="selectedId = Number(local.loc_id); search = 'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado; open = false"
+                                    <button type="button" @click="selectedId = Number(local.loc_id); search = 'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || ''); open = false"
                                             class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <span x-text="'Cód. ' + local.loc_codigo_unico + ' - ' + local.loc_endereco + ', ' + local.loc_numero + ' - ' + local.loc_bairro + ', ' + local.loc_cidade + '/' + local.loc_estado">
+                                        <span x-text="'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || '')">
                                         </span>
                                     </button>
                                 </li>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-7xl mx-auto space-y-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas Realizadas</h1>
 
     @if(session('success'))
@@ -25,14 +25,14 @@
         </a>
     </section>
 
-    <!-- Campo de Busca -->
-    <section x-data="{ search: '{{ request('busca') }}' }" class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+    <!-- Busca (atualiza ao digitar) -->
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Visita</label>
-                <input type="text" id="search" name="busca" x-model="search" x-init="$el.focus()"
-                       @input.debounce.500ms="window.location.href = '{{ route('saude.visitas.index') }}' + '?busca=' + encodeURIComponent(search)"
-                       placeholder="Filtrar por local, agente ou doença..."
+                <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
+                       data-live-url="{{ route('saude.visitas.index') }}" data-live-param="busca"
+                       placeholder="Digite para filtrar por local, agente ou doença..."
                        class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
             </div>
         </div>

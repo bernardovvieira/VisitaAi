@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\Visita;
 use App\Models\Local;
 use App\Models\Doenca;
@@ -54,13 +55,29 @@ class RelatorioController extends Controller
         }
 
         $visitas = $query->get();
+        $filtrosAplicados = $request->hasAny(['data_inicio', 'data_fim', 'bairro', 'visita_id', 'data_unica']);
 
-        if ($request->hasAny(['data_inicio', 'data_fim', 'bairro', 'visita_id', 'data_unica']) && $visitas->isEmpty()) {
+        if ($visitas->isEmpty() && $filtrosAplicados) {
             return redirect()->route('gestor.relatorios.index')->with([
                 'error' => 'Nenhuma visita encontrada para os filtros aplicados.',
                 'limpar_filtros' => true,
             ]);
         }
+
+        $sem_visitas = $visitas->isEmpty();
+
+        $visitasParaGraficos = $visitas->map(function ($v) {
+            return [
+                'vis_data' => $v->vis_data,
+                'local' => $v->local ? [
+                    'loc_bairro' => $v->local->loc_bairro,
+                    'loc_latitude' => $v->local->loc_latitude,
+                    'loc_longitude' => $v->local->loc_longitude,
+                ] : null,
+                'doencas' => $v->doencas->map(fn ($d) => ['doe_nome' => $d->doe_nome])->values()->toArray(),
+                'tratamentos' => $v->tratamentos->map(fn ($t) => ['trat_forma' => $t->trat_forma])->values()->toArray(),
+            ];
+        })->values()->toArray();
 
         $totalVisitas = $visitas->count();
         $locaisComFoco = $visitas->filter(function ($visita) {
@@ -95,6 +112,8 @@ class RelatorioController extends Controller
 
         return view('gestor.relatorios.index', compact(
             'visitas',
+            'visitasParaGraficos',
+            'sem_visitas',
             'totalVisitas',
             'locaisComFoco',
             'doencaMaisRecorrente',
@@ -112,16 +131,28 @@ class RelatorioController extends Controller
 
     public function gerarPdf(Request $request)
     {
+        $tipo = $request->input('tipo_relatorio', 'completo');
+
         $request->validate([
             'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
-            'visita_id'      => ['nullable', 'integer', 'exists:visitas,vis_id'],
-            'data_unica'     => ['nullable', 'date'],
+            'visita_id'      => [
+                'nullable',
+                'integer',
+                'exists:visitas,vis_id',
+                Rule::requiredIf($tipo === 'individual'),
+            ],
+            'data_unica'     => ['nullable', 'date', Rule::requiredIf($tipo === 'diario')],
             'data_inicio'    => ['nullable', 'date'],
             'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio'],
             'bairro'         => ['nullable', 'string', 'max:255'],
+        ], [
+            'visita_id.required_if' => 'Selecione uma visita para o relatório individual.',
+            'data_unica.required_if' => 'Informe a data para o relatório diário.',
         ]);
 
-        $tipo = $request->input('tipo_relatorio', 'completo');
+        if (Visita::count() === 0) {
+            return redirect()->route('gestor.relatorios.index')->with('error', 'Não há visitas cadastradas no sistema. Cadastre visitas para gerar relatórios.');
+        }
         $bairro = $request->input('bairro');
 
         $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
@@ -147,6 +178,10 @@ class RelatorioController extends Controller
             }
 
             $visitas = $query->orderBy('vis_data', 'desc')->get();
+        }
+
+        if ($visitas->isEmpty()) {
+            return redirect()->route('gestor.relatorios.index')->with('error', 'Nenhuma visita encontrada para os critérios selecionados. Não foi possível gerar o PDF.');
         }
 
         $graficoBairrosBase64 = $request->input('graficoBairrosBase64');
@@ -176,7 +211,7 @@ class RelatorioController extends Controller
         };
 
         if ($tipo === 'individual') {
-            $periodo = 'Visita com código: #' . $request->filled('visita_id');
+            $periodo = 'Visita #' . $request->input('visita_id');
         } elseif ($tipo === 'diario') {
             $periodo = 'Data: ' . $data_inicio;
         } elseif ($tipo === 'semanal') {
@@ -215,6 +250,6 @@ class RelatorioController extends Controller
             'bairro',
             'titulo',
             'tipo'
-        ))->stream('relatorio-visitas.pdf');
+        ))->setPaper('a4', 'landscape')->stream('relatorio-visitas.pdf');
     } 
 }

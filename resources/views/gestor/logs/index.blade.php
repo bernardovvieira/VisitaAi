@@ -15,13 +15,13 @@
         </p>
     </section>
 
-    <section x-data="{ search: '{{ request('search') }}' }" class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Filtrar registros</label>
-                <input type="text" id="search" name="search" x-model="search" x-init="$el.focus()"
-                       @input.debounce.500ms="window.location.href = '{{ route('gestor.logs.index') }}' + '?search=' + encodeURIComponent(search)"
-                       placeholder="Nome do usuário, tipo de ação ou entidade..."
+                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                       data-live-url="{{ route('gestor.logs.index') }}" data-live-param="search"
+                       placeholder="Digite para filtrar por usuário, ação ou entidade..."
                        class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
             </div>
         </div>

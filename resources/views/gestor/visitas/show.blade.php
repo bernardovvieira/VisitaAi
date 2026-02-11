@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl space-y-10">
+<div class="max-w-4xl mx-auto space-y-10">
 
     {{-- Botão Voltar --}}
     <div>
@@ -287,6 +287,7 @@
 
 {{-- Mapa --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }</style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -298,7 +299,10 @@ document.addEventListener('DOMContentLoaded', () => {
         attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    L.marker([lat, lng]).addTo(map);
+    const pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
+    const pinIcon = L.divIcon({ className: 'custom-pin', html: pinSvg, iconSize: [28, 40], iconAnchor: [14, 40], popupAnchor: [0, -40] });
+    L.marker([lat, lng], { icon: pinIcon }).addTo(map);
+    setTimeout(() => map.invalidateSize(), 100);
 });
 </script>
 @endsection

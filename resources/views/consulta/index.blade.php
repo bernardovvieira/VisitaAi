@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-<div class="max-w-4xl space-y-10">
+<div class="max-w-4xl mx-auto space-y-10">
 
     {{-- Cabeçalho --}}
     <div class="flex items-center justify-between" style="padding-top: 2rem;">
