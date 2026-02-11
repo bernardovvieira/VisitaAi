@@ -9,7 +9,9 @@ class CheckPerfil
 {
     public function handle(Request $request, Closure $next, ...$perfis)
     {
-        if (!in_array($request->user()->use_perfil, $perfis)) {
+        $user = $request->user();
+
+        if (! $user || ! in_array($user->use_perfil, $perfis)) {
             abort(403);
         }
 

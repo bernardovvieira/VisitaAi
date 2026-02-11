@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Middleware/CheckApproved.php
 namespace App\Http\Middleware;
 
 use Closure;
@@ -13,12 +12,14 @@ class CheckApproved
     {
         $user = $request->user();
 
-        // se não estiver aprovado, mostra página de pendência
-        if ($user && ! $user->isAprovado()) {
-            return response()->view('auth.pending');
+        if (! $user) {
+            return redirect()->route('login');
+        }
+
+        if (! $user->isAprovado()) {
+            return redirect()->route('pending');
         }
 
         return $next($request);
     }
 }
-
