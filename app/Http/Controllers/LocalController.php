@@ -109,7 +109,8 @@ class LocalController extends Controller
 
     public function create()
     {
-        return view('agente.locais.create');
+        $cepPermitido = Local::first()?->loc_cep;
+        return view('agente.locais.create', compact('cepPermitido'));
     }
 
     public function store(LocalRequest $request)
@@ -142,7 +143,8 @@ class LocalController extends Controller
 
     public function edit(Local $local)
     {
-        return view('agente.locais.edit', compact('local'));
+        $cepPermitido = Local::where('loc_id', '!=', $local->loc_id)->first()?->loc_cep;
+        return view('agente.locais.edit', compact('local', 'cepPermitido'));
     }
 
     public function update(LocalRequest $request, Local $local)

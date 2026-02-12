@@ -57,44 +57,168 @@
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
-                    <select name="tipo_relatorio" x-model="tipo" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2">
-                        <option value="completo">Completo</option>
+                    <select name="tipo_relatorio" x-model="tipo" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600">
+                        <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>Completo</option>
                         <option value="diario">Diário</option>
-                        <option value="semanal">Semanal</option>
+                        <option value="semanal">Por período</option>
                         <option value="individual">Individual</option>
                     </select>
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data</label>
-                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início</label>
-                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim</label>
-                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                         </div>
                     </div>
                 </template>
-                <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Visita</label>
-                    <select name="visita_id" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2">
-                        @foreach($visitas as $v)
-                            @php $atividades = ['1'=>'LI','2'=>'LI+T','3'=>'PPE+T','4'=>'T','5'=>'DF','6'=>'PVE','7'=>'LIRAa','8'=>'PE']; @endphp
-                            <option value="{{ $v->vis_id }}" @selected(request('visita_id') == $v->vis_id)>#{{ $v->vis_id }} — {{ \Carbon\Carbon::parse($v->vis_data)->format('d/m/Y') }} — {{ $atividades[$v->vis_atividade] ?? 'N/I' }} — {{ $v->local?->loc_bairro ?? '—' }}</option>
-                        @endforeach
-                    </select>
+                <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3"
+                    x-data="{
+                        open: false,
+                        search: '',
+                        options: [],
+                        selected: [],
+                        get filtered() {
+                            const q = (this.search || '').toLowerCase();
+                            return this.options.filter(o => (o.label || '').toLowerCase().includes(q));
+                        },
+                        toggle(opt) {
+                            if (this.selected.some(s => s.id === opt.id)) {
+                                this.selected = this.selected.filter(s => s.id !== opt.id);
+                            } else {
+                                this.selected = [...this.selected, opt];
+                            }
+                        },
+                        isSelected(id) { return this.selected.some(s => s.id === id); }
+                    }"
+                    x-init="
+                        (function(){
+                            var decode = function(s) {
+                                if (!s || !s.includes('&')) return s || '[]';
+                                var d = document.createElement('div');
+                                d.innerHTML = s;
+                                return d.textContent || d.innerText || s;
+                            };
+                            options = JSON.parse(decode($el.getAttribute('data-local-options')) || '[]');
+                            var sel = JSON.parse(decode($el.getAttribute('data-local-selected')) || '[]');
+                            selected = Array.isArray(sel) ? sel : [];
+                        })();
+                    "
+                    data-local-options="{{ e(json_encode($locaisParaSelectArray ?? [])) }}"
+                    data-local-selected="{{ e(json_encode(
+                        array_values(array_map(function($id) use ($locaisParaSelectArray) {
+                            $id = (int) $id;
+                            $arr = $locaisParaSelectArray ?? [];
+                            $item = collect($arr)->firstWhere('id', $id);
+                            return ['id' => $id, 'label' => $item ? ($item['label'] ?? 'Local #'.$id) : 'Local #'.$id];
+                        }, (array) request('local_id', [])))
+                    )) }}"
+                    @click.outside="open = false">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Local(is)</label>
+                    <div class="relative">
+                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-1.5 cursor-pointer">
+                            <template x-for="item in selected" :key="item.id">
+                                <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded px-2 py-0.5 text-sm">
+                                    <span x-text="item.label" class="truncate max-w-[200px]"></span>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id)" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
+                                </span>
+                            </template>
+                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar local..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                   @keydown.escape="open = false">
+                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">Selecione um Local</span>
+                        </div>
+                        <div x-show="open" x-transition
+                             class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
+                            <template x-for="opt in filtered" :key="opt.id">
+                                <div @click="toggle(opt)" role="option"
+                                     class="flex items-center justify-between w-full px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                     :class="{ 'bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200': isSelected(opt.id) }">
+                                    <span x-text="opt.label" class="truncate flex-1"></span>
+                                    <span x-show="isSelected(opt.id)" class="text-blue-600 dark:text-blue-400 ml-2">✓</span>
+                                </div>
+                            </template>
+                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Nenhum local encontrado</div>
+                        </div>
+                    </div>
+                    <template x-for="item in selected" :key="item.id">
+                        <input type="hidden" :name="'local_id[]'" :value="item.id">
+                    </template>
                 </div>
-                <div x-show="tipo !== 'individual'" x-cloak :class="tipo === 'completo' ? 'md:col-span-3' : ''">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bairro</label>
-                    <input type="text" name="bairro" value="{{ request('bairro') }}" placeholder="Ex: Centro" class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-sm px-3 py-2" />
+                <div x-show="tipo !== 'individual'" x-cloak :class="tipo === 'completo' ? 'md:col-span-3' : ''"
+                    x-data="{
+                        open: false,
+                        search: '',
+                        options: [],
+                        selected: [],
+                        get filtered() {
+                            const q = this.search.toLowerCase();
+                            return this.options.filter(o => o.toLowerCase().includes(q));
+                        },
+                        toggle(opt) {
+                            if (this.selected.includes(opt)) {
+                                this.selected = this.selected.filter(s => s !== opt);
+                            } else {
+                                this.selected = [...this.selected, opt];
+                            }
+                        }
+                    }"
+                    x-init="
+                        (function(){
+                            var decode = function(s) {
+                                if (!s || !s.includes('&')) return s || '[]';
+                                var d = document.createElement('div');
+                                d.innerHTML = s;
+                                return d.textContent || d.innerText || s;
+                            };
+                            var rawOpts = $el.getAttribute('data-options');
+                            var rawSel = $el.getAttribute('data-selected');
+                            options = JSON.parse(decode(rawOpts) || '[]');
+                            selected = JSON.parse(decode(rawSel) || '[]');
+                        })();
+                    "
+                    data-options="{{ e(json_encode($bairros ?? [])) }}"
+                    data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
+                    @click.outside="open = false">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bairro(s)</label>
+                    <div class="relative">
+                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-1.5 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-0">
+                            <template x-for="val in selected" :key="val">
+                                <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded px-2 py-0.5 text-sm">
+                                    <span x-text="val"></span>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val)" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
+                                </span>
+                            </template>
+                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar bairro..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                   @keydown.escape="open = false">
+                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">Selecione um ou mais bairros...</span>
+                        </div>
+                        <div x-show="open" x-transition
+                             class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
+                            <template x-for="opt in filtered" :key="opt">
+                                <div @click="toggle(opt)" role="option" :aria-selected="selected.includes(opt)"
+                                     class="px-3 py-2 cursor-pointer text-sm flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700"
+                                     :class="{ 'bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200': selected.includes(opt) }">
+                                    <span x-text="opt"></span>
+                                    <span x-show="selected.includes(opt)" class="text-blue-600 dark:text-blue-400">✓</span>
+                                </div>
+                            </template>
+                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" x-text="options.length === 0 ? 'Nenhum bairro cadastrado nos locais.' : 'Nenhum bairro encontrado para a busca.'"></div>
+                        </div>
+                    </div>
+                    <template x-for="val in selected" :key="val">
+                        <input type="hidden" :name="'bairro[]'" :value="val">
+                    </template>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center">
-                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow-sm transition h-10">Filtrar</button>
+                    <button type="submit" class="btn-acesso-principal inline-flex items-center justify-center px-4 py-2 text-white font-medium rounded-md shadow-sm transition h-10">Filtrar</button>
                     <a href="{{ route('gestor.relatorios.index') }}" class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-medium rounded-md transition hover:bg-gray-300 dark:hover:bg-gray-500 h-10">Limpar</a>
                 </div>
             </form>
@@ -463,7 +587,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Filtros do formulário
         const dataInicio = document.querySelector('[name="data_inicio"]')?.value || '';
         const dataFim = document.querySelector('[name="data_fim"]')?.value || '';
-        const bairro = document.querySelector('[name="bairro"]')?.value || '';
+        const bairroInputs = document.querySelectorAll('input[name="bairro[]"]');
+        const bairros = Array.from(bairroInputs).map(inp => inp.value);
         const tipoRelatorio = document.querySelector('[name="tipo_relatorio"]')?.value || 'completo';
         const dataUnica = document.querySelector('[name="data_unica"]')?.value || '';
         
@@ -471,11 +596,12 @@ document.addEventListener('DOMContentLoaded', function() {
         addField('tipo_relatorio', tipoRelatorio);
         addField('data_inicio', dataInicio);
         addField('data_fim', dataFim);
-        addField('bairro', bairro);
+        bairros.forEach(function(b) { addField('bairro[]', b); });
 
         if (tipoRelatorio === 'individual') {
-            const visitaId = document.querySelector('[name="visita_id"]')?.value || '';
-            addField('visita_id', visitaId);
+            document.querySelectorAll('input[name="local_id[]"]').forEach(function(inp) {
+                addField('local_id[]', inp.value);
+            });
         }
 
         // Imagens em base64

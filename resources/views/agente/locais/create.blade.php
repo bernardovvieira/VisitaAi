@@ -36,7 +36,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6"
+        <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6" id="form_local"
             x-data="{ carregando: false }"
             x-on:submit="carregando = true">
 
@@ -72,10 +72,12 @@
             <fieldset class="space-y-3">
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Endereço Completo</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
+                    <div id="wrap_loc_cep">
                         <label for="cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP <span class="text-red-500">*</span></label>
                         <input id="loc_cep" name="loc_cep" type="text" maxlength="9" placeholder="00000-000" required
-                            class="cep mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="cep mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                            data-cep-permitido="{{ $cepPermitido ?? '' }}">
+                        <p id="loc_cep_erro" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></p>
                     </div>
                     <div>
                         <label for="loc_endereco" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Logradouro <span class="text-red-500">*</span></label>
@@ -207,6 +209,33 @@
 var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
 
 document.addEventListener('DOMContentLoaded', function() {
+    var cepPermitido = document.getElementById('loc_cep') && document.getElementById('loc_cep').getAttribute('data-cep-permitido');
+    cepPermitido = (cepPermitido || '').trim();
+    var cepPermitidoNorm = cepPermitido ? cepPermitido.replace(/\D/g, '') : '';
+
+    function normCep(v) { return (v || '').replace(/\D/g, ''); }
+    function checkCepLive() {
+        var inp = document.getElementById('loc_cep');
+        var msg = document.getElementById('loc_cep_erro');
+        if (!inp || !msg) return true;
+        var val = normCep(inp.value);
+        if (!cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (val.length !== 8) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (val !== cepPermitidoNorm) {
+            msg.textContent = 'O sistema está vinculado a um único município. O CEP deve ser ' + (cepPermitido || '') + '.';
+            msg.classList.remove('hidden');
+            inp.classList.add('border-red-500', 'dark:border-red-400');
+            return false;
+        }
+        msg.classList.add('hidden');
+        inp.classList.remove('border-red-500', 'dark:border-red-400');
+        return true;
+    }
+    var formEl = document.getElementById('form_local');
+    if (formEl) formEl.addEventListener('submit', function(e) {
+        if (!checkCepLive()) { e.preventDefault(); return false; }
+    });
+
     $('#loc_cep').mask('00000-000');
 
     var map = L.map('map').setView([-28.7, -52.3], 13);
@@ -250,6 +279,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var cepInput = document.getElementById('loc_cep');
     if (cepInput) {
+        cepInput.addEventListener('input', function() { checkCepLive(); });
+        cepInput.addEventListener('blur', function() {
+            var ok = checkCepLive();
+            if (cepPermitidoNorm && normCep(cepInput.value).length === 8 && !ok) {
+                setTimeout(function() { cepInput.focus(); }, 0);
+            }
+        });
         cepInput.addEventListener('blur', function() {
             var cep = cepInput.value.replace(/\D/g, '');
             if (cep.length !== 8) return;
