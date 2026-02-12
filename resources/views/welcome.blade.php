@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12">
+<div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12 min-w-full">
     <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {{-- Mobile only --}}
@@ -18,7 +18,7 @@
         <div class="space-y-8 md:pl-4 max-w-xl" id="anim-texto">
             <div class="space-y-4">
                 <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                    Bem-vindo ao <span class="text-blue-400 dark:text-blue-400">Visita Aí</span>
+                    Bem-vindo ao <span class="text-blue-500 dark:text-blue-400">Visita Aí</span>
                 </h1>
                 @if ($local)
                     <p class="text-blue-600 dark:text-blue-400 text-lg font-medium">
@@ -33,7 +33,7 @@
 
             <div class="flex flex-col sm:flex-row gap-4" id="anim-botoes">
                 <a href="{{ route('login') }}"
-                   class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition group">
+                   class="btn-acesso-principal inline-flex items-center justify-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow transition group">
                     <svg class="h-5 w-5 transform transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>

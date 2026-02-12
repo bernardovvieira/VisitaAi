@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'use_perfil',
         'use_aprovado',
+        'use_tema',
         'use_data_criacao',
         'use_data_anonimizacao',
         'fk_gestor_id',

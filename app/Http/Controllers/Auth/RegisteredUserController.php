@@ -48,6 +48,10 @@ class RegisteredUserController extends Controller
             'password.confirmed' => 'A confirmação de senha não confere',
             'password.required'  => 'Por favor, digite uma senha',
             'password.min'       => 'A senha deve ter no mínimo 8 caracteres',
+            'password.letters'   => 'A senha deve conter pelo menos uma letra.',
+            'password.mixed'     => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
+            'password.numbers'   => 'A senha deve conter pelo menos um número.',
+            'password.symbols'   => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
         ]);
 
         /* -----------------------------------------------------------------
@@ -60,6 +64,7 @@ class RegisteredUserController extends Controller
             'use_senha'        => Hash::make($request->input('password')),
             'use_perfil'       => 'agente_endemias',   // padrão
             'use_aprovado'     => false,      // aguardando aprovação do gestor
+            'use_tema'         => 'light',    // padrão modo claro ao criar conta
             'use_data_criacao' => now(),
         ]);
 

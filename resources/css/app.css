@@ -18,3 +18,11 @@
     transform: scale(1);
 }
 
+/* Botão principal (azul padrão do sistema) – valores explícitos para não ser sobrescrito */
+.btn-acesso-principal {
+    background-color: #3b82f6 !important; /* rgb(59, 130, 246) */
+}
+.btn-acesso-principal:hover {
+    background-color: #2563eb !important;  /* rgb(37, 99, 235) */
+}
+

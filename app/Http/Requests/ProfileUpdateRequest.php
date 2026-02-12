@@ -26,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'tema' => ['required', 'string', 'in:light,dark'],
             'email' => [
                 'required',
                 'string',
@@ -44,6 +45,7 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => 'nome',
+            'tema' => 'preferência de tema',
             'email' => 'e-mail',
         ];
     }

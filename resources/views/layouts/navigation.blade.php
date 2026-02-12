@@ -66,8 +66,16 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium
                             rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800
-                            hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition">
-                            <div>{{ Auth::user()->use_nome }}</div>
+                            hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition min-w-0 max-w-[200px] sm:max-w-[240px]">
+                            <div class="text-left min-w-0 truncate">
+                                <div class="truncate" title="{{ Auth::user()->use_nome }}">{{ Auth::user()->use_nome }}</div>
+                                <div class="text-xs font-normal text-gray-400 dark:text-gray-500 truncate">
+                                    @if(Auth::user()->use_perfil === 'gestor') Gestor Municipal
+                                    @elseif(Auth::user()->use_perfil === 'agente_endemias') Agente de Endemias
+                                    @else Agente de Saúde
+                                    @endif
+                                </div>
+                            </div>
                             <div class="ml-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 20 20">
@@ -83,7 +91,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <x-dropdown-link :href="route('profile.edit')" :class="request()->routeIs('profile.*') ? 'dropdown-link-active' : ''">
                             {{ __('Meu Perfil') }}
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
@@ -166,10 +174,16 @@
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->use_nome }}</div>
-                <div class="font-medium text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->use_email }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    @if(Auth::user()->use_perfil === 'gestor') Gestor Municipal
+                    @elseif(Auth::user()->use_perfil === 'agente_endemias') Agente de Endemias
+                    @else Agente de Saúde
+                    @endif
+                </div>
+                <div class="font-medium text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Auth::user()->use_email }}</div>
             </div>
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">{{ __('Meu Perfil') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">{{ __('Meu Perfil') }}</x-responsive-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"

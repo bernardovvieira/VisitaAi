@@ -23,10 +23,14 @@ class UpdateUserPassword implements UpdatesUserPasswords
             'password' => $this->passwordRules(),
         ], [
             'current_password.current_password' => __('The provided password does not match your current password.'),
+            'password.letters' => 'A senha deve conter pelo menos uma letra.',
+            'password.mixed'   => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
+            'password.numbers' => 'A senha deve conter pelo menos um número.',
+            'password.symbols' => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
         ])->validateWithBag('updatePassword');
 
         $user->forceFill([
-            'password' => Hash::make($input['password']),
+            'use_senha' => Hash::make($input['password']),
         ])->save();
     }
 }

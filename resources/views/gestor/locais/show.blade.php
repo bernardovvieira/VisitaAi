@@ -98,7 +98,7 @@
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center" style="padding-top: 2rem;">
-            <div id="adesivo" class="bg-white text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px]">
+            <div id="adesivo" class="bg-white text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px] relative">
                 <h3 class="text-lg font-bold mb-1 text-center">VISITA AÍ – CONSULTA PÚBLICA</h3>
                 <p class="text-sm mb-2 leading-tight text-center">
                     {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
@@ -108,6 +108,7 @@
                 <p class="text-xs break-all text-center">
                     {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
                 </p>
+                <p class="text-[10px] text-gray-400 text-center mt-3 pt-2 border-t border-gray-200">Desenvolvido por Bitwise Technologies</p>
             </div>
         </div>
 

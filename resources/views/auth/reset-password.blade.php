@@ -43,6 +43,7 @@
                     autofocus
                     autocomplete="new-password"
                 />
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).</p>
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 

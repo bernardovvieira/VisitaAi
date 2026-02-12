@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -30,7 +31,8 @@ class ProfileController extends Controller
     
         $user->use_nome = $request->validated()['name'];
         $user->use_email = $request->validated()['email'];
-    
+        $user->use_tema = $request->validated()['tema'];
+
         $user->save();
 
         LogHelper::registrar(
@@ -41,6 +43,20 @@ class ProfileController extends Controller
         );
     
         return Redirect::route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
+    }
+
+    /**
+     * Atualiza apenas a preferência de tema (chamado pelo toggle no front).
+     */
+    public function updateTema(Request $request): JsonResponse
+    {
+        $request->validate(['tema' => ['required', 'string', 'in:light,dark']]);
+
+        $user = $request->user();
+        $user->use_tema = $request->input('tema');
+        $user->save();
+
+        return response()->json(['ok' => true]);
     }
 
     /**

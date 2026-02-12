@@ -66,6 +66,7 @@ class UserController extends Controller
         $dados = $request->validated();
         $dados['use_senha'] = Hash::make($dados['use_senha']);
         $dados['use_data_criacao'] = now();
+        $dados['use_tema'] = $dados['use_tema'] ?? 'light';
 
         User::create($dados);
 

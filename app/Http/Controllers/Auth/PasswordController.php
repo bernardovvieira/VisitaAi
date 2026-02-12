@@ -25,6 +25,10 @@ class PasswordController extends Controller
             'password.required' => 'A nova senha é obrigatória',
             'password.confirmed' => 'A confirmação de senha não confere',
             'password.min' => 'A nova senha deve ter no mínimo 8 caracteres',
+            'password.letters' => 'A senha deve conter pelo menos uma letra.',
+            'password.mixed'   => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
+            'password.numbers' => 'A senha deve conter pelo menos um número.',
+            'password.symbols' => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
         ]);
 
         // 2) Atualiza o campo use_senha na tabela users

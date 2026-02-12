@@ -217,7 +217,7 @@
                         <div class="mt-2">
                             <button type="button"
                                     @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
-                                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded shadow">
+                                    class="btn-acesso-principal px-3 py-1 text-white text-sm font-semibold rounded shadow">
                                 + Adicionar Tratamento
                             </button>
                         </div>
@@ -297,7 +297,7 @@
                         <div class="flex justify-start" x-show="tratamentos.length > 0">
                             <button type="button"
                                     @click="tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
-                                    class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded shadow">
+                                    class="btn-acesso-principal px-2 py-1 text-white font-semibold text-xs rounded shadow">
                                 + Adicionar Tratamento
                             </button>
                         </div>
@@ -362,7 +362,7 @@
 
             <div class="flex justify-end">
                 <button type="submit"
-                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                        class="btn-acesso-principal px-6 py-2 text-white font-semibold text-sm rounded-lg shadow-md transition">
                     Atualizar Visita
                 </button>
             </div>

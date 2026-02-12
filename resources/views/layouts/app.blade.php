@@ -11,16 +11,55 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Tema claro -->
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-        <!-- Tema escuro -->
-        <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+        <!-- Páginas públicas (home, consulta): padrão sempre modo claro quando não há preferência salva -->
+        @if(View::hasSection('public'))
+        <script>window.VisitaPublicPage = true;</script>
+        @endif
+        <!-- Preferência de tema do usuário (quando logado); ao criar conta o padrão é modo claro -->
+        @auth
+        <script>
+            window.VisitaThemePreference = @json(auth()->user()->use_tema ?? 'light');
+            window.VisitaThemeSyncUrl = @json(route('profile.tema.update'));
+        </script>
+        @endauth
+        <!-- Tema claro/escuro: aplicado antes da pintura para evitar flash -->
+        <script>
+            (function(){
+                var t;
+                if (window.VisitaPublicPage) {
+                    t = 'light';
+                } else if (typeof window.VisitaThemePreference !== 'undefined' && window.VisitaThemePreference) {
+                    t = window.VisitaThemePreference;
+                    try { localStorage.setItem('theme', t); } catch (e) {}
+                } else {
+                    t = localStorage.getItem('theme');
+                    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                document.documentElement.classList.toggle('dark', t === 'dark');
+            })();
+        </script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>
+            /* Botão principal azul – inline para garantir que sempre aplique (#3b82f6 / rgb(59,130,246)) */
+            .btn-acesso-principal {
+                background-color: #3b82f6 !important;
+                color: #ffffff !important;
+            }
+            .btn-acesso-principal:hover {
+                background-color: #2563eb !important;
+                color: #ffffff !important;
+            }
+            .nav-link-active { border-color: #3b82f6 !important; }
+            .dropdown-link-active { background-color: rgba(59, 130, 246, 0.1) !important; color: #1d4ed8 !important; border-left: 3px solid #3b82f6; font-weight: 600; }
+            .dark .dropdown-link-active { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
+            .responsive-nav-link-active { border-color: #3b82f6 !important; color: #1d4ed8 !important; background-color: rgba(59, 130, 246, 0.1) !important; }
+            .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
+        </style>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <body class="font-sans antialiased {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
+        <div class="min-h-screen {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
             @if (! View::hasSection('public'))
                 @include('layouts.navigation')
             @endif
@@ -41,6 +80,14 @@
                 </div>
             </main>
         </div>
+        {{-- Toggle flutuante apenas em páginas públicas (home, consulta); nas restritas fica só no navbar --}}
+        @if(View::hasSection('public'))
+        <x-theme-toggle :floating="true" />
+        @endif
+        {{-- Aviso de cookies: apenas em páginas públicas (home, consulta) --}}
+        @if(View::hasSection('public'))
+            <x-cookie-banner />
+        @endif
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('input[data-live-url]').forEach(function(input) {

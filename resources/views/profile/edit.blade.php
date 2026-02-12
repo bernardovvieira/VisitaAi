@@ -24,28 +24,43 @@
         </p>
     </section>
 
-    <!-- Grid de Cards -->
+    <!-- Grid: coluna esquerda = 2 cards empilhados; coluna direita = Atualizar Dados -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {{-- Card: Suas Informações --}}
-        <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
-            <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
-            </svg>
-                Suas Informações
-            </h3>
-            <dl class="text-gray-700 dark:text-gray-300 space-y-2">
-                <div class="flex justify-between"><dt class="font-medium">ID</dt><dd>{{ Auth::id() }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">CPF</dt><dd>{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', Auth::user()->use_cpf) }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor Municipal') }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
-                <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente</span> @endif</dd></div>
-            </dl>
+        {{-- Coluna esquerda: Informações pessoais + Acesso e status --}}
+        <div class="space-y-6">
+            {{-- Card: Informações pessoais --}}
+            <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+                <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    Informações pessoais
+                </h3>
+                <dl class="text-gray-700 dark:text-gray-300 space-y-2">
+                    <div class="flex justify-between"><dt class="font-medium">ID</dt><dd>{{ Auth::id() }}</dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">CPF</dt><dd>{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', Auth::user()->use_cpf) }}</dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
+                </dl>
+            </div>
+
+            {{-- Card: Acesso e status --}}
+            <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+                <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Acesso e status
+                </h3>
+                <dl class="text-gray-700 dark:text-gray-300 space-y-2">
+                    <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ Auth::user()->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : (Auth::user()->use_perfil == 'agente_saude' ? 'Agente de Saúde' : 'Gestor Municipal') }}</dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-green-600 dark:text-green-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente</span> @endif</dd></div>
+                </dl>
+            </div>
         </div>
 
-        {{-- Card: Atualizar Dados --}}
+        {{-- Coluna direita: Atualizar Dados --}}
         <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
             <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,6 +88,16 @@
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500"
                         required>
                     @error('email')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label for="tema" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferência de tema</label>
+                    <select id="tema" name="tema" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500">
+                        <option value="light" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'light' ? 'selected' : '' }}>Modo claro</option>
+                        <option value="dark" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'dark' ? 'selected' : '' }}>Modo escuro</option>
+                    </select>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Define o tema ao fazer login. Ao criar a conta, o padrão é modo claro.</p>
+                    @error('tema')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <div class="flex justify-end">

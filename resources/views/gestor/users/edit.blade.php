@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
 
     <!-- Botão Voltar -->
     <div>
@@ -19,13 +19,12 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Editar Usuário</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Atualize as informações do usuário conforme necessário. 
-            Se não desejar alterar a senha, deixe o campo de senha em branco.
+            Atualize as informações do usuário conforme necessário. Se não desejar alterar a senha, deixe o campo de senha em branco.
         </p>
     </section>
 
     <!-- Formulário de Edição -->
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6 max-w-2xl mx-auto">
+    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
         @if(session('status'))
             <x-alert type="success" :message="session('status')" />
         @endif
@@ -75,10 +74,10 @@
 
             <!-- Data Cadastro -->
             <div>
-                <label for="" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de Cadastro <span class="text-red-500">*</span></label>
-                <input type="text" id="" name="" value="{{ $user->use_data_criacao->format('d/m/Y') }}" 
+                <label for="data_cadastro_display" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de Cadastro</label>
+                <input type="text" id="data_cadastro_display" value="{{ $user->use_data_criacao->format('d/m/Y') }}" 
                        readonly
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border-0">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Data em que o usuário foi cadastrado no sistema.</p>
             </div>
 
@@ -87,13 +86,20 @@
                 <label for="use_senha" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nova Senha</label>
                 <input type="password" id="use_senha" name="use_senha" autocomplete="new-password"
                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Deixe em branco se não quiser alterar a senha atual.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !). Deixe em branco se não quiser alterar a senha atual.</p>
+                @error('use_senha')<p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ $message }}</p>@enderror
             </div>
 
-            <!-- Botão Salvar -->
+            <!-- Confirmar Nova Senha -->
+            <div>
+                <label for="use_senha_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmar Nova Senha</label>
+                <input type="password" id="use_senha_confirmation" name="use_senha_confirmation" autocomplete="new-password"
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+            </div>
+
             <div class="flex justify-end">
-                <button type="submit" 
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                <button type="submit"
+                        class="btn-acesso-principal px-6 py-2 text-white font-semibold text-sm rounded-lg shadow-md transition">
                     Salvar Alterações
                 </button>
             </div>

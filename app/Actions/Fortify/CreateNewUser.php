@@ -28,6 +28,10 @@ class CreateNewUser implements CreatesNewUsers
             'email.unique'      => 'Este e‑mail já está cadastrado.',
             'password.required' => 'A senha é obrigatória.',
             'password.confirmed'=> 'A confirmação de senha não confere.',
+            'password.letters'  => 'A senha deve conter pelo menos uma letra.',
+            'password.mixed'    => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
+            'password.numbers'  => 'A senha deve conter pelo menos um número.',
+            'password.symbols'  => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
         ])->validate();
 
         return User::create([
@@ -35,6 +39,7 @@ class CreateNewUser implements CreatesNewUsers
             'use_email'         => $input['email'],
             'use_senha'         => Hash::make($input['password']),
             'use_perfil'        => 'agente_endemias',
+            'use_tema'          => 'light',
             'use_data_criacao'  => now(),
         ]);
     }

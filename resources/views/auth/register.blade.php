@@ -1,6 +1,12 @@
 <x-guest-layout>
     <x-alert type="success" :message="session('status')" />
 
+    @if ($errors->any())
+        <div class="max-w-md mx-auto mt-4 px-4 py-3 rounded-lg bg-red-600 dark:bg-red-700 text-white text-sm" role="alert">
+            <p class="font-medium">Corrija os erros nos campos indicados abaixo.</p>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-8">
         @csrf
 
@@ -8,7 +14,7 @@
         <div class="mb-4">
             <x-input-label for="nome" :value="__('Nome')" />
             <x-text-input id="nome"
-                        class="block mt-1 w-full @error('cpf') border-red-500 @enderror"
+                        class="block mt-1 w-full @error('nome') border-red-500 dark:border-red-400 @enderror"
                         type="text"
                         name="nome"
                         :value="old('nome')"
@@ -20,7 +26,7 @@
         <div class="mb-4">
             <x-input-label for="cpf" :value="__('CPF')" />
             <x-text-input id="cpf"
-                        class="block mt-1 w-full @error('use_cpf') border-red-500 @enderror"
+                        class="block mt-1 w-full @error('cpf') border-red-500 dark:border-red-400 @enderror"
                         type="text"
                         name="cpf"
                         :value="old('cpf')"
@@ -37,7 +43,7 @@
             <x-text-input id="email" name="email" type="email"
                           :value="old('email')" required autocapitalize="off"
                           class="block w-full mt-1
-                                 @error('email') border-red-500 @enderror" />
+                                 @error('email') border-red-500 dark:border-red-400 @enderror" />
             <x-input-error :messages="$errors->get('email')" />
         </div>
 
@@ -47,7 +53,8 @@
             <x-text-input id="password" name="password" type="password"
                           required autocomplete="new-password"
                           class="block w-full mt-1
-                                 @error('password') border-red-500 @enderror" />
+                                 @error('password') border-red-500 dark:border-red-400 @enderror" />
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).</p>
             <x-input-error :messages="$errors->get('password')" />
         </div>
 
@@ -57,7 +64,7 @@
             <x-text-input id="password_confirmation" name="password_confirmation"
                           type="password" required autocomplete="new-password"
                           class="block w-full mt-1
-                                 @error('password_confirmation') border-red-500 @enderror" />
+                                 @error('password_confirmation') border-red-500 dark:border-red-400 @enderror" />
             <x-input-error :messages="$errors->get('password_confirmation')" />
         </div>
 

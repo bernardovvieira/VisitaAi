@@ -43,6 +43,10 @@ class NewPasswordController extends Controller
             'password.required'         => 'A senha é obrigatória',
             'password.confirmed'        => 'A confirmação de senha não confere',
             'password.min'              => 'A senha deve ter no mínimo 8 caracteres',
+            'password.letters'           => 'A senha deve conter pelo menos uma letra.',
+            'password.mixed'             => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
+            'password.numbers'          => 'A senha deve conter pelo menos um número.',
+            'password.symbols'          => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
         ]);
 
         // 2) Tenta redefinir usando a coluna use_email
