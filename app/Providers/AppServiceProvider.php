@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\ConfirmPassword as ConfirmPasswordAction;
-use App\Http\Controllers\User\ConfirmPasswordController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\ConfirmPasswordControllerOverride;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Fortify\Actions\ConfirmPassword as FortifyConfirmPassword;
+use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController as FortifyConfirmablePasswordControllerBase;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Confirma senha sem coluna 'login' (antes do Fortify; evita query quebrada em 2FA)
+        // Confirma senha sem coluna 'login' (evita query quebrada em 2FA)
         $this->app->singleton(FortifyConfirmPassword::class, ConfirmPasswordAction::class);
+        // Controller de confirmar senha: usa use_senha em vez de guard->validate (coluna 'login')
+        $this->app->bind(FortifyConfirmablePasswordControllerBase::class, ConfirmPasswordControllerOverride::class);
     }
 
     /**
@@ -25,14 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Rota própria para confirmar senha (2FA); registrada após todos os providers (sobrescreve a do Fortify)
-        $this->app->booted(function () {
-            Route::middleware(['web', 'auth'])->group(function () {
-                Route::post('user/confirm-password', [ConfirmPasswordController::class, 'store'])
-                    ->name('password.confirm.store');
-            });
-        });
-
         // Evita travamento longo se MySQL estiver inacessível (ex.: atrás do Coolify)
         ini_set('default_socket_timeout', (string) 10);
 
