@@ -50,10 +50,15 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
-    // confirmar senha
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
+    // confirmar senha: /confirm-password (local/testes) e /user/confirm-password (Fortify/2FA no demo)
+    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show']);
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::prefix('user')->group(function () {
+        Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+            ->name('password.confirm');
+        Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])
+            ->name('password.confirm.store');
+    });
 
     // trocar senha enquanto autenticado
     Route::put('password', [PasswordController::class, 'update'])

@@ -3,12 +3,10 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Actions\Fortify\ConfirmPassword as ConfirmPasswordAction;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use Laravel\Fortify\Actions\ConfirmPassword as FortifyConfirmPassword;
 use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\TwoFactorConfirmedResponse;
 use App\Http\Responses\TwoFactorDisabledResponse;
@@ -41,8 +39,6 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(TwoFactorConfirmedResponseContract::class, TwoFactorConfirmedResponse::class);
         // Mensagem amigável ao desativar 2FA
         $this->app->singleton(TwoFactorDisabledResponseContract::class, TwoFactorDisabledResponse::class);
-        // Confirma senha sem guard->validate (evita query por coluna 'login')
-        $this->app->singleton(FortifyConfirmPassword::class, ConfirmPasswordAction::class);
     }
 
     /**
