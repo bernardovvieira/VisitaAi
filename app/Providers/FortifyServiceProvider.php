@@ -57,8 +57,8 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::twoFactorChallengeView('auth.two-factor-challenge');
 
         //
-        // 1) Usa 'login' em vez de 'email'
-        Fortify::username('login');
+        // 1) Coluna do banco é use_email; formulário envia use_email (Fortify usa para 2FA/confirm-password)
+        Fortify::username('use_email');
 
         //
         // 2) Ações padrão de criação/atualização de usuários
@@ -70,26 +70,24 @@ class FortifyServiceProvider extends ServiceProvider
         //
         // 3) Autenticação customizada por CPF ou e‑mail
         Fortify::authenticateUsing(function (Request $request) {
-            // validação de presença dos campos
             $request->validate([
-                'login'    => 'required|string',
-                'password' => 'required|string',
+                'use_email' => 'required|string',
+                'password'  => 'required|string',
             ], [
-                'login.required'    => 'O campo CPF ou e‑mail é obrigatório.',
+                'use_email.required' => 'O campo CPF ou e‑mail é obrigatório.',
                 'password.required' => 'O campo senha é obrigatório.',
             ]);
 
-            $login    = (string) $request->input('login');
+            $login    = (string) $request->input('use_email');
             $password = (string) $request->input('password');
 
-            // busca usuário por email ou CPF
             $user = User::where('use_email', $login)
                         ->orWhere('use_cpf',   $login)
                         ->first();
 
             if (! $user) {
                 throw ValidationException::withMessages([
-                    'login' => 'Usuário não encontrado.',
+                    'use_email' => 'Usuário não encontrado.',
                 ]);
             }
 
@@ -106,7 +104,7 @@ class FortifyServiceProvider extends ServiceProvider
         // 4) Throttle: 3 tentativas de login por minuto
         RateLimiter::for('login', function (Request $request) {
             $key = Str::transliterate(
-                Str::lower($request->input('login')).'|'.$request->ip()
+                Str::lower($request->input('use_email')).'|'.$request->ip()
             );
             return Limit::perMinute(3)->by($key);
         });

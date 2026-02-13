@@ -66,7 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Valor usado como "login" pelo Fortify (2FA, etc.). Coincide com o campo do formulário.
+     * Alias para use_email (compatibilidade; Fortify usa use_email como username).
      */
     public function getLoginAttribute(): string
     {

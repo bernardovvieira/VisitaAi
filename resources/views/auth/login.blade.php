@@ -7,14 +7,14 @@
 
         {{-- CPF ou E-mail --}}
         <div class="mb-5">
-            <x-input-label for="login" :value="__('CPF ou E-mail')" />
-            <x-text-input id="login"
-                        name="login"
+            <x-input-label for="use_email" :value="__('CPF ou E-mail')" />
+            <x-text-input id="use_email"
+                        name="use_email"
                         type="text"
-                        :value="old('login')"
+                        :value="old('use_email')"
                         required autofocus
-                        class="block w-full mt-1 @error('login') border-red-500 @enderror" />
-            <x-input-error :messages="$errors->get('login')" />
+                        class="block w-full mt-1 @error('use_email') border-red-500 @enderror" />
+            <x-input-error :messages="$errors->get('use_email')" />
         </div>
 
         {{-- Senha --}}
