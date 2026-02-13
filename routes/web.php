@@ -130,8 +130,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::patch('/profile/tema', [ProfileController::class, 'updateTema'])->name('profile.tema.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::get('/profile/two-factor', [ProfileController::class, 'twoFactor'])->name('profile.two-factor')->middleware('password.confirm');
-        Route::get('/profile/two-factor-confirm', [ProfileController::class, 'twoFactorConfirm'])->name('profile.two-factor-confirm')->middleware('password.confirm');
+        Route::get('/profile/two-factor', [ProfileController::class, 'twoFactor'])->name('profile.two-factor');
+        Route::get('/profile/two-factor-confirm', [ProfileController::class, 'twoFactorConfirm'])->name('profile.two-factor-confirm');
     });
 });
 

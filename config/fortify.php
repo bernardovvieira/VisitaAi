@@ -151,7 +151,7 @@ return [
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
+            'confirmPassword' => false, // senha só ao desativar 2FA (link já leva a password.confirm)
             // 'window' => 0,
         ]),
     ],
