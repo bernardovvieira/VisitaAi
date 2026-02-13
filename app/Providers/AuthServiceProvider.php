@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Auth\UseEmailUserProvider;
 use App\Models\User;
 use App\Policies\UserPolicy;
 use App\Models\Doenca;
@@ -15,6 +16,7 @@ use App\Policies\MonitoradaPolicy;
 use App\Models\Log;
 use App\Policies\LogPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -38,6 +40,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Provider que traduz credencial 'login' -> 'use_email' (evita coluna inexistente no confirm-password)
+        Auth::provider('use_email_eloquent', function ($app, array $config) {
+            return new UseEmailUserProvider($app['hash'], $config['model']);
+        });
+
         // Registra automaticamente as policies acima
         $this->registerPolicies();
 
