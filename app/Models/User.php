@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Database\Eloquent\UserBuilder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -160,6 +162,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAprovado(): bool
     {
         return (bool) $this->use_aprovado;
+    }
+
+    /**
+     * Builder que traduz where('login', ...) para where('use_email', ...).
+     * Evita "Unknown column 'login'" no demo quando Fortify/guard usam a chave 'login'.
+     */
+    public function newEloquentBuilder(QueryBuilder $query): UserBuilder
+    {
+        return new UserBuilder($query);
     }
 
     protected static function booted()

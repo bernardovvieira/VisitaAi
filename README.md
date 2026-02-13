@@ -80,6 +80,26 @@ docker compose down
 
 ---
 
+## 🚀 Deploy em produção (push → VPS)
+
+Existe um ambiente de **demo** instanciado para testes.
+
+**Com Docker (Coolify, etc.):** não precisa mudar nada. O `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe. Só dar push e o deploy faz o resto.
+
+**Sem Docker (ex.: Hostinger com git pull):** após cada `git pull`, rode na VPS:
+```bash
+chmod +x deploy.sh   # só na primeira vez
+./deploy.sh
+```
+Ou manualmente: `php artisan migrate --force`, `php artisan route:clear`, `php artisan config:clear`.
+
+**Se der erro "Unknown column 'login'"** e não puder rodar migrations, execute no MySQL:
+```sql
+ALTER TABLE users ADD COLUMN login VARCHAR(255) GENERATED ALWAYS AS (use_email) STORED NOT NULL;
+```
+
+---
+
 ## 🫱🏽‍🫲🏼 Contribuição
 
 Este repositório possui **licença restrita** e a colaboração é limitada.  
