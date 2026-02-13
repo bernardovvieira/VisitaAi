@@ -23,7 +23,7 @@ services:
       MYSQL_USER: visita
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3307:3306"
+      - "${MYSQL_HOST_PORT:-3307}:3306"
     volumes:
       - dbdata:/var/lib/mysql
     networks:
