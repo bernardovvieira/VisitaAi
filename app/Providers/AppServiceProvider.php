@@ -25,10 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Rota própria para confirmar senha (2FA); evita Fortify usar coluna 'login'
-        Route::middleware(['web', 'auth'])->group(function () {
-            Route::post('user/confirm-password', [ConfirmPasswordController::class, 'store'])
-                ->name('password.confirm.store');
+        // Rota própria para confirmar senha (2FA); registrada após todos os providers (sobrescreve a do Fortify)
+        $this->app->booted(function () {
+            Route::middleware(['web', 'auth'])->group(function () {
+                Route::post('user/confirm-password', [ConfirmPasswordController::class, 'store'])
+                    ->name('password.confirm.store');
+            });
         });
 
         // Evita travamento longo se MySQL estiver inacessível (ex.: atrás do Coolify)
