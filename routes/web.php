@@ -14,6 +14,11 @@ use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\ConsultaPublicaController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Fortify\Http\Controllers\ConfirmedTwoFactorAuthenticationController;
+use Laravel\Fortify\Http\Controllers\RecoveryCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
+use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +137,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::get('/profile/two-factor', [ProfileController::class, 'twoFactor'])->name('profile.two-factor');
         Route::get('/profile/two-factor-confirm', [ProfileController::class, 'twoFactorConfirm'])->name('profile.two-factor-confirm');
+
+        // 2FA: ativar sem pedir senha (estas rotas têm prioridade sobre as do Fortify)
+        Route::prefix('user')->group(function () {
+            Route::post('two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])->name('two-factor.enable');
+            Route::post('confirmed-two-factor-authentication', [ConfirmedTwoFactorAuthenticationController::class, 'store'])->name('two-factor.confirm');
+            Route::get('two-factor-qr-code', [TwoFactorQrCodeController::class, 'show'])->name('two-factor.qr-code');
+            Route::get('two-factor-secret-key', [TwoFactorSecretKeyController::class, 'show'])->name('two-factor.secret-key');
+            Route::get('two-factor-recovery-codes', [RecoveryCodeController::class, 'index'])->name('two-factor.recovery-codes');
+            Route::post('two-factor-recovery-codes', [RecoveryCodeController::class, 'store'])->name('two-factor.regenerate-recovery-codes');
+        });
     });
 });
 
