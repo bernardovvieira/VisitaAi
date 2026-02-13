@@ -45,3 +45,4 @@ ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
 
 EXPOSE 9000
+
