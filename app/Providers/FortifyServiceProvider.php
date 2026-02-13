@@ -13,6 +13,7 @@ use App\Http\Responses\TwoFactorDisabledResponse;
 use App\Http\Responses\TwoFactorEnabledResponse;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -46,6 +47,9 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Garante que Fortify use use_email (não 'login'), mesmo com config em cache no servidor
+        Config::set('fortify.username', 'use_email');
+
         //
         // 0) Define quais views o Fortify deve usar
         Fortify::loginView(fn() => view('auth.login'));
@@ -57,8 +61,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::twoFactorChallengeView('auth.two-factor-challenge');
 
         //
-        // 1) Coluna do banco é use_email; formulário envia use_email (Fortify usa para 2FA/confirm-password)
-        Fortify::username('use_email');
+        // 1) Coluna do banco é use_email (já forçado em Config no início do boot).
 
         //
         // 2) Ações padrão de criação/atualização de usuários

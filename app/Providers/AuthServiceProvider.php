@@ -17,6 +17,7 @@ use App\Models\Log;
 use App\Policies\LogPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -40,6 +41,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Garante uso do provider que traduz 'login' -> 'use_email', mesmo com config em cache
+        Config::set('auth.providers.users.driver', 'use_email_eloquent');
+
         // Provider que traduz credencial 'login' -> 'use_email' (evita coluna inexistente no confirm-password)
         Auth::provider('use_email_eloquent', function ($app, array $config) {
             return new UseEmailUserProvider($app['hash'], $config['model']);
