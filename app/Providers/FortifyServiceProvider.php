@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Actions\Fortify\ConfirmPassword as ConfirmPasswordAction;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use Laravel\Fortify\Actions\ConfirmPassword as FortifyConfirmPassword;
 use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\TwoFactorConfirmedResponse;
 use App\Http\Responses\TwoFactorDisabledResponse;
@@ -39,6 +41,8 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(TwoFactorConfirmedResponseContract::class, TwoFactorConfirmedResponse::class);
         // Mensagem amigável ao desativar 2FA
         $this->app->singleton(TwoFactorDisabledResponseContract::class, TwoFactorDisabledResponse::class);
+        // Confirma senha sem guard->validate (evita query por coluna 'login')
+        $this->app->singleton(FortifyConfirmPassword::class, ConfirmPasswordAction::class);
     }
 
     /**
@@ -61,20 +65,14 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::username('use_email');
 
         //
-        // 2) Confirmar senha (2FA etc.) sem usar guard->validate, que usa config e pode estar em cache com coluna errada
-        Fortify::confirmPasswordsUsing(function ($user, ?string $password = null) {
-            return $password && Hash::check($password, $user->use_senha);
-        });
-
-        //
-        // 3) Ações padrão de criação/atualização de usuários
+        // 2) Ações padrão de criação/atualização de usuários
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         //
-        // 4) Autenticação customizada por CPF ou e‑mail
+        // 3) Autenticação customizada por CPF ou e‑mail
         Fortify::authenticateUsing(function (Request $request) {
             $request->validate([
                 'use_email' => 'required|string',
@@ -107,7 +105,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         //
-        // 5) Throttle: 3 tentativas de login por minuto
+        // 4) Throttle: 3 tentativas de login por minuto
         RateLimiter::for('login', function (Request $request) {
             $key = Str::transliterate(
                 Str::lower($request->input('use_email')).'|'.$request->ip()
@@ -116,7 +114,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         //
-        // 6) Throttle para two‑factor (caso use)
+        // 5) Throttle para two‑factor (caso use)
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)
                         ->by($request->session()->get('login.id'));
