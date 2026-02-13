@@ -8,7 +8,7 @@ COPY resources ./resources
 RUN mkdir -p public && npm run build
 
 # ---- Stage 2: app PHP ----
-FROM php:8.3-fpm
+FROM php:8.3-fpm AS app
 
 # Menos pacotes e --no-install-recommends para reduzir tempo e uso de memória no build
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -46,3 +46,6 @@ CMD ["php-fpm"]
 
 EXPOSE 9000
 
+# ---- Stage 3: web nginx (mesmo Dockerfile para Coolify não concatenar dois arquivos) ----
+FROM nginx:latest AS web
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
