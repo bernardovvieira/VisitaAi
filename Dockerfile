@@ -36,12 +36,13 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 WORKDIR /var/www/html
 
-COPY . .
-
-# Trazer assets já compilados do stage frontend (não precisa de npm no container PHP)
-COPY --from=frontend /app/public/build ./public/build
-
+# Copiar só dependências primeiro para não usar cache antigo quando composer.lock mudar
+COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
+
+# Resto do app e assets
+COPY . .
+COPY --from=frontend /app/public/build ./public/build
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
