@@ -36,13 +36,14 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 WORKDIR /var/www/html
 
-# Copiar só dependências primeiro para não usar cache antigo quando composer.lock mudar
+# Copiar só dependências primeiro (--no-scripts: artisan ainda não existe)
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --no-scripts --optimize-autoloader
 
-# Resto do app e assets
+# Resto do app e assets; regenerar autoload e discovery
 COPY . .
 COPY --from=frontend /app/public/build ./public/build
+RUN composer dump-autoload --optimize
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
