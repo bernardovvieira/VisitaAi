@@ -28,8 +28,7 @@ services:
       context: .
       dockerfile: nginx/Dockerfile
     container_name: visitaai_web
-    ports:
-      - "80:80"
+    # Sem ports: Coolify acessa por rede interna. Para teste local, use: docker compose run --rm -p 8080:80 web (ou crie docker-compose.override.yml com ports: - "8080:80")
     volumes:
       - .:/var/www/html
     depends_on:
