@@ -6,6 +6,9 @@ services:
       target: app
     container_name: visita-ai-app
     working_dir: /var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - .:/var/www/html
     networks:
@@ -25,6 +28,12 @@ services:
       - dbdata:/var/lib/mysql
     networks:
       - visitaai_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   web:
     build:
