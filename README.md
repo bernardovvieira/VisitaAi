@@ -78,6 +78,8 @@ docker compose down
 
 **Serviços:** `app` (PHP-FPM), `db` (MySQL 8, porta 3307 no host), `web` (Nginx na porta 80).
 
+Detalhes de **login (use_email/use_cpf)** e **2FA** (ativar sem senha, desativar com senha): ver `docs/AUTH.md`.
+
 ---
 
 ## 🚀 Deploy em produção (push → VPS)
@@ -92,11 +94,6 @@ chmod +x deploy.sh   # só na primeira vez
 ./deploy.sh
 ```
 Ou manualmente: `php artisan migrate --force`, `php artisan route:clear`, `php artisan config:clear`.
-
-**Se der erro "Unknown column 'login'"** e não puder rodar migrations, execute no MySQL:
-```sql
-ALTER TABLE users ADD COLUMN login VARCHAR(255) GENERATED ALWAYS AS (use_email) STORED NOT NULL;
-```
 
 ---
 

@@ -64,17 +64,14 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::twoFactorChallengeView('auth.two-factor-challenge');
 
         //
-        // 1) Coluna do banco é use_email (já forçado em Config no início do boot).
-
-        //
-        // 2) Ações padrão de criação/atualização de usuários
+        // 1) Ações padrão de criação/atualização de usuários
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         //
-        // 3) Autenticação customizada por CPF ou e‑mail
+        // 2) Autenticação por CPF ou e‑mail
         Fortify::authenticateUsing(function (Request $request) {
             $request->validate([
                 'use_email' => 'required|string',
@@ -107,7 +104,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         //
-        // 4) Throttle: 3 tentativas de login por minuto
+        // 3) Throttle login (3/min)
         RateLimiter::for('login', function (Request $request) {
             $key = Str::transliterate(
                 Str::lower($request->input('use_email')).'|'.$request->ip()
@@ -116,7 +113,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         //
-        // 5) Throttle para two‑factor (caso use)
+        // 4) Throttle two‑factor
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)
                         ->by($request->session()->get('login.id'));

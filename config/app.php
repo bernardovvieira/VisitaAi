@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\TwoFactorRoutesServiceProvider::class, // 2FA sem senha (antes do Fortify)
         Laravel\Fortify\FortifyServiceProvider::class,
 
         /*
