@@ -32,6 +32,9 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Senha só ao desativar 2FA (antes do Fortify registrar rotas)
+        Config::set('fortify-options.two-factor-authentication.confirmPassword', false);
+
         // Sobrescreve o response padrão de registro para adicionar flash de sucesso
         $this->app->singleton(RegisterResponseContract::class, RegisterResponse::class);
         // Redireciona para a página de configuração (QR + código) após clicar em Ativar 2FA
