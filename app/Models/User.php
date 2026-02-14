@@ -167,7 +167,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * Builder que traduz where('login', ...) para where('use_email', ...).
      * Evita "Unknown column 'login'" no demo quando Fortify/guard usam a chave 'login'.
      */
-    public function newEloquentBuilder($query): UserBuilder
+    public function newEloquentBuilder($query)
     {
         return new UserBuilder($query);
     }
