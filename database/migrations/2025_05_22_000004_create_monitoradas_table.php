@@ -6,14 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        if (Schema::hasTable('monitoradas')) {
-            return;
-        }
         Schema::create('monitoradas', function (Blueprint $table) {
             $table->bigIncrements('mon_id');
             $table->unsignedBigInteger('fk_visita_id');
@@ -25,9 +19,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('monitoradas');
