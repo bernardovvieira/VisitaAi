@@ -2,7 +2,7 @@
     {{-- BANNER DE STATUS (logout ou link de reset enviado) --}}
     <x-alert type="success" :message="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="max-w-md mx-auto mt-8">
+    <form method="POST" action="{{ route('login') }}" class="max-w-md mx-auto mt-8" id="login-form">
         @csrf
 
         {{-- CPF ou E-mail --}}
@@ -15,6 +15,7 @@
                         required autofocus
                         class="block w-full mt-1 @error('use_email') border-red-500 @enderror" />
             <x-input-error :messages="$errors->get('use_email')" />
+            <div id="use_email_format_error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></div>
         </div>
 
         {{-- Senha --}}
@@ -95,36 +96,69 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
     $(function(){
-    var $login = $('#login');
+        var $input = $('#use_email');
 
-    function toggleCpfMask(){
-        // extrai apenas dígitos
-        var digits = $login.val().replace(/\D/g, '');
+        function toggleCpfMask(){
+            var val = $input.val();
+            var hasAt = val.indexOf('@') !== -1;
+            var digits = val.replace(/\D/g, '');
+            var startsWithDigit = /^\d/.test(val) || (digits.length > 0 && !hasAt);
 
-        if (digits.length === 11) {
-        if (!$login.data('mask-applied')) {
-            // aplica máscara de CPF (reverse: true para facilitar a digitação)
-            $login.mask('000.000.000-00', { reverse: true });
-            $login.data('mask-applied', true);
+            // Se contém @, é e-mail: remove máscara
+            if (hasAt) {
+                if ($input.data('mask-applied')) {
+                    $input.unmask();
+                    $input.data('mask-applied', false);
+                }
+                return;
+            }
+            // Se começa com número ou tem dígitos (CPF): aplica máscara desde o início
+            if (startsWithDigit || digits.length > 0) {
+                if (!$input.data('mask-applied')) {
+                    $input.mask('000.000.000-00', { reverse: true });
+                    $input.data('mask-applied', true);
+                }
+                // Se tem 11 dígitos sem formato (ex: colou), formata na hora
+                if (digits.length === 11 && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(val)) {
+                    var fmt = digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                    $input.val(fmt);
+                }
+            } else {
+                if ($input.data('mask-applied')) {
+                    $input.unmask();
+                    $input.data('mask-applied', false);
+                }
+            }
         }
-        } else {
-        if ($login.data('mask-applied')) {
-            // remove máscara sempre que não tiver 11 dígitos
-            $login.unmask();
-            $login.data('mask-applied', false);
-        }
-        }
-    }
 
-    $login
-        .on('input', toggleCpfMask)
-        .on('paste', function(){
-        // aguarda o paste ser inserido no campo
-        setTimeout(toggleCpfMask, 0);
+        $input
+            .on('input', function(){
+                toggleCpfMask();
+                $('#use_email_format_error').addClass('hidden');
+                $input.removeClass('border-red-500');
+            })
+            .on('paste', function(){
+                setTimeout(toggleCpfMask, 0);
+            })
+            .on('focus', toggleCpfMask);
+
+        toggleCpfMask();
+
+        // Validação ao enviar: CPF com apenas números deve seguir o padrão
+        $('#login-form').on('submit', function(e){
+            var val = $input.val().trim();
+            var digits = val.replace(/\D/g, '');
+            var isEmail = val.indexOf('@') !== -1;
+            var $err = $('#use_email_format_error');
+
+            $err.addClass('hidden').text('');
+            if (!isEmail && digits.length === 11 && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(val)) {
+                e.preventDefault();
+                $err.text('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).').removeClass('hidden');
+                $input.focus().addClass('border-red-500');
+                return false;
+            }
         });
-
-    // dispara ao carregar a página, caso já venha com valor
-    toggleCpfMask();
     });
     </script>
     

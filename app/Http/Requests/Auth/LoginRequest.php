@@ -43,6 +43,16 @@ class LoginRequest extends FormRequest
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'use_email' : 'use_cpf';
 
         /* -----------------------------------------------------------------
+         | 1.1 Se for CPF (11 dígitos) sem formato, exige padrão XXX.XXX.XXX-XX
+         |-----------------------------------------------------------------*/
+        $digitsOnly = preg_replace('/\D/', '', $login);
+        if ($field === 'use_cpf' && strlen($digitsOnly) === 11 && ! preg_match('/^\d{3}\.\d{3}\.\d{3}-\d{2}$/', $login)) {
+            throw ValidationException::withMessages([
+                'use_email' => 'O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).',
+            ]);
+        }
+
+        /* -----------------------------------------------------------------
          | 2. Procura usuário
          |-----------------------------------------------------------------*/
         $user = User::where($field, $login)->first();
