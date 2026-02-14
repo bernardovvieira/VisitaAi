@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Registro de atividades</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Auditoria</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
