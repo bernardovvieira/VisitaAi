@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Auth\ConfirmPasswordOverride;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController as FortifyController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // POST /user/confirm-password: confirma com use_senha, sem query por coluna 'login'
+        $this->app->bind(FortifyController::class, ConfirmPasswordOverride::class);
     }
 
     /**
