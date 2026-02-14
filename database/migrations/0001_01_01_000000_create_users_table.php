@@ -26,14 +26,12 @@ return new class extends Migration
             $table->timestamp('use_data_criacao')->useCurrent();
             $table->date('use_data_anonimizacao')->nullable();
             $table->unsignedBigInteger('fk_gestor_id')->nullable();
-
+            // login = use_email (Fortify/guard usam WHERE login = ?)
+            $table->string('login')->storedAs(DB::raw('use_email'));
             $table->foreign('fk_gestor_id')
                 ->references('use_id')->on('users')
                 ->onDelete('set null');
         });
-
-        // Coluna login = use_email (Fortify/guard usam WHERE login = ?)
-        DB::statement('ALTER TABLE users ADD COLUMN login VARCHAR(255) GENERATED ALWAYS AS (use_email) STORED NOT NULL');
     }
 
     public function down(): void
