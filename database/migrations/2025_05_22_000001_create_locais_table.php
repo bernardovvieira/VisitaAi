@@ -8,6 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('locais')) {
+            return;
+        }
         Schema::create('locais', function (Blueprint $table) {
             $table->bigIncrements('loc_id');
             $table->string('loc_cep', 9);
