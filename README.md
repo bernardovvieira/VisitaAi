@@ -86,7 +86,7 @@ Detalhes de **login (use_email/use_cpf)** e **2FA** (ativar sem senha, desativar
 
 Existe um ambiente de **demo** instanciado para testes.
 
-**Com Docker (Coolify, etc.):** não precisa mudar nada. O `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe. Só dar push e o deploy faz o resto.
+**Com Docker (Coolify, etc.):** o `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe. Push e o deploy faz o resto.
 
 **Sem Docker (ex.: Hostinger com git pull):** após cada `git pull`, rode na VPS:
 ```bash
