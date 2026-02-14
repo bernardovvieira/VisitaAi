@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -27,6 +28,9 @@ return new class extends Migration
                   ->references('use_id')->on('users')
                   ->onDelete('set null');
         });
+
+        // Coluna login = use_email (Fortify/guard usam WHERE login = ?)
+        DB::statement('ALTER TABLE users ADD COLUMN login VARCHAR(255) GENERATED ALWAYS AS (use_email) STORED NOT NULL');
     }
 
     public function down(): void
