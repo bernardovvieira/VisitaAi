@@ -88,6 +88,36 @@ Existe um ambiente de **demo** instanciado para testes.
 
 **Com Docker (Coolify, etc.):** o `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe. Push e o deploy faz o resto.
 
+#### Post-deploy: migrations e seeds
+
+**Importante:** não use `migrate:fresh` no post-deploy de produção — toda subida de build apagaria o banco. Use apenas migrações incrementais.
+
+| Instância | URL | Post-deploy (a cada build) |
+|-----------|-----|----------------------------|
+| **Base / Municípios** | visitaai.cloud, ibirapuita.visitaai.cloud | `php artisan migrate --force` |
+| **Demo** | demo.visitaai.cloud | `php artisan migrate --force` (ou `migrate:fresh` + seed se quiser resetar a demo a cada deploy) |
+
+**Primeira vez (nova instância):** rode uma vez manualmente, antes de ir para produção:
+```bash
+php artisan migrate:fresh --force && php artisan db:seed --class=AdminBaseSeeder --force   # base/municípios
+php artisan migrate:fresh --force && php artisan db:seed --force                           # demo
+```
+
+Senha inicial do admin (instância base): use `ADMIN_INITIAL_PASSWORD` no `.env` ou padrão `Senha123!`.
+
+#### Nome da aplicação
+
+Formato: `Visita Aí - {prefixo} - Sistema de Apoio à Vigilância Epidemiológica Municipal`
+
+| Instância | APP_INSTANCE_TYPE | Prefixo exibido |
+|-----------|-------------------|-----------------|
+| Base | `base` | Base |
+| Demo | `demo` | Demo |
+| Local (com cidade cadastrada) | omitir | Nome da cidade do 1º Local |
+| Local (sem cidade) | omitir | Local |
+
+Alternativa: use `APP_NAME=Base`, `APP_NAME=Demo` ou `APP_NAME=Soledade` (ex.).
+
 **Sem Docker (ex.: Hostinger com git pull):** após cada `git pull`, rode na VPS:
 ```bash
 chmod +x deploy.sh   # só na primeira vez

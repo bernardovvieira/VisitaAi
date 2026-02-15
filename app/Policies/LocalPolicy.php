@@ -24,26 +24,35 @@ class LocalPolicy
     }
 
     /**
-     * Apenas agentes podem criar locais.
+     * Gestor pode criar o primeiro local (primário). Demais locais: apenas agentes.
      */
     public function create(User $user): bool
     {
+        if (Local::count() === 0) {
+            return $user->isGestor();
+        }
         return $user->isAgente();
     }
 
     /**
-     * Apenas agentes podem editar locais.
+     * Apenas agentes podem editar. O local primário nunca pode ser editado pela UI.
      */
     public function update(User $user, Local $local): bool
     {
+        if ($local->isPrimary()) {
+            return false;
+        }
         return $user->isAgente();
     }
 
     /**
-     * Apenas agentes podem excluir locais (se aplicável).
+     * Apenas agentes podem excluir. O local primário nunca pode ser excluído pela UI.
      */
     public function delete(User $user, Local $local): bool
     {
+        if ($local->isPrimary()) {
+            return false;
+        }
         return $user->isAgente();
     }
 

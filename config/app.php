@@ -15,7 +15,13 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Visita Aí - Sistema de Visitas Epidemiológicas'),
+    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade} - Sistema de Apoio à Vigilância Epidemiológica Municipal
+    // Sobrescrito pelo middleware SetAppDisplayName em requests web (usa cidade do 1º Local quando aplicável)
+    'name' => env('APP_DISPLAY_NAME') ?: match (strtolower(trim((string) (env('APP_INSTANCE_TYPE') ?? '')))) {
+        'base' => 'Visita Aí - Base - Sistema de Apoio à Vigilância Epidemiológica Municipal',
+        'demo' => 'Visita Aí - Demo - Sistema de Apoio à Vigilância Epidemiológica Municipal',
+        default => 'Visita Aí - ' . (env('APP_NAME') ?: 'Local') . ' - Sistema de Apoio à Vigilância Epidemiológica Municipal',
+    },
 
     /*
     |--------------------------------------------------------------------------

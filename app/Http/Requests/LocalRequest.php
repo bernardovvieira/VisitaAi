@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Local;
+use Illuminate\Support\Facades\Http;
 
 class LocalRequest extends FormRequest
 {
@@ -23,12 +24,33 @@ class LocalRequest extends FormRequest
                 'size:9',
                 function ($attribute, $value, $fail) use ($localId) {
                     $cepNormalizado = preg_replace('/\D/', '', $value);
-                    $outroLocal = Local::when($localId, fn ($q) => $q->where('loc_id', '!=', $localId))->first();
-                    if ($outroLocal) {
-                        $cepPermitido = preg_replace('/\D/', '', $outroLocal->loc_cep);
-                        if ($cepNormalizado !== $cepPermitido) {
-                            $fail('O sistema está vinculado a um único município. Todos os locais devem ter o mesmo CEP já cadastrado (' . $outroLocal->loc_cep . ').');
-                        }
+                    $primario = Local::orderBy('loc_id')->first();
+
+                    if (!$primario) {
+                        return;
+                    }
+                    if ($localId && (int) $localId === (int) $primario->loc_id) {
+                        return;
+                    }
+
+                    $response = Http::timeout(5)->get("https://viacep.com.br/ws/{$cepNormalizado}/json/");
+                    if (!$response->successful()) {
+                        $fail('Não foi possível validar o CEP. Tente novamente.');
+                        return;
+                    }
+                    $data = $response->json();
+                    if (isset($data['erro']) && $data['erro']) {
+                        $fail('CEP inválido.');
+                        return;
+                    }
+
+                    $localidade = trim($data['localidade'] ?? '');
+                    $uf = strtoupper(trim($data['uf'] ?? ''));
+                    $cidadePrimario = $this->normalizeStr($primario->loc_cidade);
+                    $estadoPrimario = strtoupper(trim($primario->loc_estado ?? ''));
+
+                    if ($this->normalizeStr($localidade) !== $cidadePrimario || $uf !== $estadoPrimario) {
+                        $fail('O CEP informado não pertence ao município do local primário (' . $primario->loc_cidade . '/' . $primario->loc_estado . ').');
                     }
                 },
             ],
@@ -50,5 +72,13 @@ class LocalRequest extends FormRequest
             'loc_codigo'         => ['required', 'string'],
             'loc_codigo_unico'   => ['nullable', 'string', 'max:255', "unique:locais,loc_codigo_unico,{$localId},loc_id"],
         ];
+    }
+
+    private function normalizeStr(string $s): string
+    {
+        $s = mb_strtolower(trim($s), 'UTF-8');
+        $s = preg_replace('/\s+/u', ' ', $s);
+        $map = ['á' => 'a', 'à' => 'a', 'ã' => 'a', 'â' => 'a', 'é' => 'e', 'ê' => 'e', 'í' => 'i', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ú' => 'u', 'ç' => 'c'];
+        return strtr($s, $map);
     }
 }

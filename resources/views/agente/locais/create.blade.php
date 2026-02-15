@@ -4,17 +4,36 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
     <div>
-        <a href="{{ route('agente.locais.index') }}"
+        @if(!($isPrimario ?? false))
+        <a href="{{ route($indexRoute ?? 'agente.locais.index') }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
             Voltar
         </a>
+        @else
+        <span class="text-sm text-amber-600 dark:text-amber-400">Cadastre o local primário para iniciar.</span>
+        @endif
     </div>
 
+    @if($isPrimario ?? false)
+    <section class="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-amber-800 dark:text-amber-200 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            Cadastro do local primário
+        </h2>
+        <p class="mt-2 text-amber-700 dark:text-amber-300">
+            Cadastre o <strong>local primário</strong> do município — sugerimos a prefeitura ou a secretaria de saúde. Este local define a cidade/estado do sistema e <strong>não poderá ser editado nem excluído</strong> pela interface posteriormente.
+        </p>
+        <p class="mt-2 text-sm text-amber-600 dark:text-amber-400">
+            Para alterações ou exclusão do local primário, entre em contato com o suporte técnico.
+        </p>
+    </section>
+    @endif
+
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Cadastrar Local</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ ($isPrimario ?? false) ? 'Cadastrar Local Primário' : 'Cadastrar Local' }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Preencha os dados do local. Preencha o CEP para preencher automaticamente os campos de endereço, bairro, cidade e estado.
             Utilize o botão "Minha Localização" para obter as coordenadas do dispositivo.
@@ -36,7 +55,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('agente.locais.store') }}" class="space-y-6" id="form_local"
+        <form method="POST" action="{{ route($storeRoute ?? 'agente.locais.store') }}" class="space-y-6" id="form_local"
             x-data="{ carregando: false }"
             x-on:submit="carregando = true">
 
@@ -76,7 +95,8 @@
                         <label for="cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP <span class="text-red-500">*</span></label>
                         <input id="loc_cep" name="loc_cep" type="text" maxlength="9" placeholder="00000-000" required
                             class="cep mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
-                            data-cep-permitido="{{ $cepPermitido ?? '' }}">
+                            data-cep-permitido="{{ $cepPermitido ?? '' }}"
+                            data-cidade-estado="{{ isset($cidadeEstado) ? json_encode($cidadeEstado) : '' }}">
                         <p id="loc_cep_erro" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></p>
                     </div>
                     <div>
@@ -209,28 +229,31 @@
 var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
 
 document.addEventListener('DOMContentLoaded', function() {
-    var cepPermitido = document.getElementById('loc_cep') && document.getElementById('loc_cep').getAttribute('data-cep-permitido');
+    var cepInput = document.getElementById('loc_cep');
+    var cepPermitido = (cepInput && cepInput.getAttribute('data-cep-permitido')) || '';
     cepPermitido = (cepPermitido || '').trim();
     var cepPermitidoNorm = cepPermitido ? cepPermitido.replace(/\D/g, '') : '';
+    var cidadeEstadoRaw = (cepInput && cepInput.getAttribute('data-cidade-estado')) || '';
+    var cidadeEstado = cidadeEstadoRaw ? (function() { try { return JSON.parse(cidadeEstadoRaw); } catch(e) { return null; } })() : null;
+    var cepValidouMunicipio = false;
 
+    function normStr(s) { if (!s || typeof s !== 'string') return ''; return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim(); }
     function normCep(v) { return (v || '').replace(/\D/g, ''); }
     function checkCepLive() {
         var inp = document.getElementById('loc_cep');
         var msg = document.getElementById('loc_cep_erro');
         if (!inp || !msg) return true;
         var val = normCep(inp.value);
-        if (!cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
-        if (val.length !== 8) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
-        if (val !== cepPermitidoNorm) {
-            msg.textContent = 'O sistema está vinculado a um único município. O CEP deve ser ' + (cepPermitido || '') + '.';
-            msg.classList.remove('hidden');
-            inp.classList.add('border-red-500', 'dark:border-red-400');
-            return false;
-        }
-        msg.classList.add('hidden');
-        inp.classList.remove('border-red-500', 'dark:border-red-400');
+        if (val.length !== 8) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); cepValidouMunicipio = false; return !cidadeEstado; }
+        if (!cidadeEstado && !cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (cepPermitidoNorm && val === cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (cidadeEstado && cepValidouMunicipio) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (cidadeEstado) { msg.textContent = 'O CEP deve pertencer ao município ' + (cidadeEstado.cidade || '') + '/' + (cidadeEstado.estado || '') + '. Preencha o CEP e aguarde a validação.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); return false; }
+        if (cepPermitidoNorm) { msg.textContent = 'O sistema está vinculado a um único município. O CEP deve ser ' + (cepPermitido || '') + '.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); return false; }
         return true;
     }
+    window._cepValidouMunicipio = function() { return cepValidouMunicipio; };
+    window._setCepValidouMunicipio = function(v) { cepValidouMunicipio = v; };
     var formEl = document.getElementById('form_local');
     if (formEl) formEl.addEventListener('submit', function(e) {
         if (!checkCepLive()) { e.preventDefault(); return false; }
@@ -277,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function() { if (callback) callback(false); });
     };
 
-    var cepInput = document.getElementById('loc_cep');
     if (cepInput) {
         cepInput.addEventListener('input', function() { checkCepLive(); });
         cepInput.addEventListener('blur', function() {
@@ -293,6 +315,14 @@ document.addEventListener('DOMContentLoaded', function() {
             window._viacepCallback = function(data) {
                 window._viacepCallback = prev;
                 if (data && !data.erro) {
+                    var inp = document.getElementById('loc_cep');
+                    var msg = document.getElementById('loc_cep_erro');
+                    if (cidadeEstado) {
+                        var ok = normStr((data.localidade||'')) === normStr(cidadeEstado.cidade||'') && (data.uf||'').toUpperCase() === (cidadeEstado.estado||'').toUpperCase();
+                        window._setCepValidouMunicipio && window._setCepValidouMunicipio(ok);
+                        if (ok) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); }
+                        else { msg.textContent = 'O CEP informado não pertence ao município ' + (cidadeEstado.cidade||'') + '/' + (cidadeEstado.estado||'') + '.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); }
+                    }
                     var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
                     el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
                     el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
@@ -300,6 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
                     window.geocodeEndereco(function(ok) { if (ok) {} });
                 } else {
+                    if (window._setCepValidouMunicipio) window._setCepValidouMunicipio(false);
                     alert('CEP não encontrado.');
                 }
             };

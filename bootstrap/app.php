@@ -12,6 +12,7 @@ use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\SetAppDisplayName;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->group('web', [
             TrustProxies::class,
             SecurityHeaders::class,
+            SetAppDisplayName::class,
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,

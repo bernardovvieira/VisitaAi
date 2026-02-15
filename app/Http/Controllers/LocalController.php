@@ -109,16 +109,22 @@ class LocalController extends Controller
 
     public function create()
     {
-        $cepPermitido = Local::first()?->loc_cep;
-        return view('agente.locais.create', compact('cepPermitido'));
+        $primario = Local::orderBy('loc_id')->first();
+        $isPrimario = $primario === null;
+        $cepPermitido = null;
+        $cidadeEstado = null;
+        if ($primario) {
+            $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
+        }
+        $storeRoute = Auth::user()->isGestor() ? 'gestor.locais.store' : 'agente.locais.store';
+        $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
+        return view('agente.locais.create', compact('cepPermitido', 'cidadeEstado', 'isPrimario', 'storeRoute', 'indexRoute'));
     }
 
     public function store(LocalRequest $request)
     {
-
         $data = $request->validated();
 
-        // Gera um código único aleatório de 8 dígitos, garantindo que não exista no banco
         do {
             $codigo = mt_rand(10000000, 99999999);
         } while (Local::where('loc_codigo_unico', $codigo)->exists());
@@ -128,7 +134,7 @@ class LocalController extends Controller
         $local = Local::create($data);
 
         $local->loc_numero = $local->loc_numero ?: 'N/A';
-        
+
         LogHelper::registrar(
             'Cadastro de local',
             'Local',
@@ -136,19 +142,39 @@ class LocalController extends Controller
             'Local cadastrado: ' . $local->loc_endereco . ', ' . $local->loc_numero
         );
 
+        $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
+        $redirectRoute = (Auth::user()->isGestor() && Local::count() === 1)
+            ? 'gestor.dashboard'
+            : $indexRoute;
+
         return redirect()
-            ->route('agente.locais.index')
+            ->route($redirectRoute)
             ->with('success', 'Local cadastrado com sucesso.');
     }
 
     public function edit(Local $local)
     {
-        $cepPermitido = Local::where('loc_id', '!=', $local->loc_id)->first()?->loc_cep;
-        return view('agente.locais.edit', compact('local', 'cepPermitido'));
+        if ($local->isPrimary()) {
+            return redirect()
+                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->with('error', 'O local primário (primeiro cadastrado) não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.');
+        }
+        $primario = Local::orderBy('loc_id')->first();
+        $cepPermitido = null;
+        $cidadeEstado = null;
+        if ($primario) {
+            $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
+        }
+        return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado'));
     }
 
     public function update(LocalRequest $request, Local $local)
     {
+        if ($local->isPrimary()) {
+            return redirect()
+                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->with('error', 'O local primário não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.');
+        }
         $local->update($request->validated());
 
         $local->loc_numero = $local->loc_numero ?: 'N/A';
@@ -167,7 +193,11 @@ class LocalController extends Controller
 
     public function destroy(Local $local)
     {
-        // Verifica se o local possui visitas cadastradas
+        if ($local->isPrimary()) {
+            return redirect()
+                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->with('error', 'O local primário (primeiro cadastrado) não pode ser excluído pela interface. Para exclusão ou alterações, entre em contato com o suporte técnico.');
+        }
         if ($local->visitas()->exists()) {
             return redirect()
                 ->route('agente.locais.index')

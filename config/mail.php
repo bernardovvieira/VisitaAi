@@ -70,7 +70,7 @@ return [
     */
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'bitwiseoficial@gmail.com'),
-        'name'    => env('MAIL_FROM_NAME', 'Visita Aí - Sistema de Visitas Epidemiológicas'),
+        'name'    => env('MAIL_FROM_NAME', config('app.name')),
     ],
 
 ];

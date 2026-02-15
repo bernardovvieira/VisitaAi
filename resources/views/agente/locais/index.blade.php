@@ -102,6 +102,9 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="p-4 text-center">
                                 <div class="flex justify-center gap-3">
+                                    @if($local->isPrimary())
+                                        <span class="text-xs text-amber-600 dark:text-amber-400 font-medium" title="Local primário: não pode ser editado nem excluído">Primário</span>
+                                    @endif
                                     <a href="{{ route('agente.locais.show', $local) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition">
                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,7 +114,8 @@
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                         Visualizar
-                                    </a>                                    
+                                    </a>
+                                    @if(!$local->isPrimary())
                                     <a href="{{ route('agente.locais.edit', $local) }}"
                                         class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition">
                                         <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,19 +123,20 @@
                                                 d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
                                         </svg>
                                         Editar
-                                    </a> 
+                                    </a>
                                     <form method="POST" action="{{ route('agente.locais.destroy', $local) }}">
-                                        @csrf 
+                                        @csrf
                                         @method('DELETE')
                                         <button type="submit" onclick="return confirm('Excluir este local?')"
                                                 class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition">
                                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M4 6H20 M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2 M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6 M10 11v6 M14 11v6" />
                                                 </svg>
-                                            Excluir
-                                        </button>
+                                                Excluir
+                                            </button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

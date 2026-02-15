@@ -68,7 +68,8 @@
                         <label for="loc_cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP <span class="text-red-500">*</span></label>
                         <input id="loc_cep" name="loc_cep" type="text" maxlength="9" required value="{{ old('loc_cep', $local->loc_cep ?? '') }}"
                             class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm cep"
-                            data-cep-permitido="{{ $cepPermitido ?? '' }}">
+                            data-cep-permitido="{{ $cepPermitido ?? '' }}"
+                            data-cidade-estado="{{ isset($cidadeEstado) ? json_encode($cidadeEstado) : '' }}">
                         <p id="loc_cep_erro" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></p>
                     </div>
                     <div>
@@ -209,28 +210,34 @@
 var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
 
 document.addEventListener('DOMContentLoaded', function() {
-    var cepPermitido = document.getElementById('loc_cep') && document.getElementById('loc_cep').getAttribute('data-cep-permitido');
+    var cepInput = document.getElementById('loc_cep');
+    var cepPermitido = (cepInput && cepInput.getAttribute('data-cep-permitido')) || '';
     cepPermitido = (cepPermitido || '').trim();
     var cepPermitidoNorm = cepPermitido ? cepPermitido.replace(/\D/g, '') : '';
-
+    var cidadeEstadoRaw = (cepInput && cepInput.getAttribute('data-cidade-estado')) || '';
+    var cidadeEstado = cidadeEstadoRaw ? (function() { try { return JSON.parse(cidadeEstadoRaw); } catch(e) { return null; } })() : null;
+    function normStr(s) { if (!s || typeof s !== 'string') return ''; return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim(); }
+    var cepValidouMunicipio = false;
+    if (cidadeEstado && document.getElementById('loc_cidade') && document.getElementById('loc_estado')) {
+        var curCidade = (document.getElementById('loc_cidade').value || '').trim();
+        var curEstado = (document.getElementById('loc_estado').value || '').trim();
+        if (normStr(curCidade) === normStr(cidadeEstado.cidade||'') && curEstado.toUpperCase() === (cidadeEstado.estado||'').toUpperCase()) cepValidouMunicipio = true;
+    }
     function normCep(v) { return (v || '').replace(/\D/g, ''); }
     function checkCepLive() {
         var inp = document.getElementById('loc_cep');
         var msg = document.getElementById('loc_cep_erro');
         if (!inp || !msg) return true;
         var val = normCep(inp.value);
-        if (!cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
-        if (val.length !== 8) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
-        if (val !== cepPermitidoNorm) {
-            msg.textContent = 'O sistema está vinculado a um único município. O CEP deve ser ' + (cepPermitido || '') + '.';
-            msg.classList.remove('hidden');
-            inp.classList.add('border-red-500', 'dark:border-red-400');
-            return false;
-        }
-        msg.classList.add('hidden');
-        inp.classList.remove('border-red-500', 'dark:border-red-400');
+        if (val.length !== 8) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); cepValidouMunicipio = false; return !cidadeEstado; }
+        if (!cidadeEstado && !cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (cepPermitidoNorm && val === cepPermitidoNorm) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (cidadeEstado && cepValidouMunicipio) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); return true; }
+        if (cidadeEstado) { msg.textContent = 'O CEP deve pertencer ao município ' + (cidadeEstado.cidade || '') + '/' + (cidadeEstado.estado || '') + '. Preencha o CEP e aguarde a validação.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); return false; }
+        if (cepPermitidoNorm) { msg.textContent = 'O sistema está vinculado a um único município. O CEP deve ser ' + (cepPermitido || '') + '.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); return false; }
         return true;
     }
+    window._setCepValidouMunicipio = function(v) { cepValidouMunicipio = v; };
     var formEl = document.getElementById('form_local');
     if (formEl) formEl.addEventListener('submit', function(e) {
         if (!checkCepLive()) { e.preventDefault(); return false; }
@@ -281,7 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function() { if (callback) callback(false); });
     };
 
-    var cepInput = document.getElementById('loc_cep');
     if (cepInput) {
         cepInput.addEventListener('input', function() { checkCepLive(); });
         cepInput.addEventListener('blur', function() {
@@ -297,6 +303,14 @@ document.addEventListener('DOMContentLoaded', function() {
             window._viacepCallback = function(data) {
                 window._viacepCallback = prev;
                 if (data && !data.erro) {
+                    var inp = document.getElementById('loc_cep');
+                    var msg = document.getElementById('loc_cep_erro');
+                    if (cidadeEstado) {
+                        var ok = normStr((data.localidade||'')) === normStr(cidadeEstado.cidade||'') && (data.uf||'').toUpperCase() === (cidadeEstado.estado||'').toUpperCase();
+                        window._setCepValidouMunicipio && window._setCepValidouMunicipio(ok);
+                        if (ok) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); }
+                        else { msg.textContent = 'O CEP informado não pertence ao município ' + (cidadeEstado.cidade||'') + '/' + (cidadeEstado.estado||'') + '.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); }
+                    }
                     var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
                     el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
                     el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
@@ -304,6 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
                     window.geocodeEndereco(function(ok) {});
                 } else {
+                    if (window._setCepValidouMunicipio) window._setCepValidouMunicipio(false);
                     alert('CEP não encontrado.');
                 }
             };

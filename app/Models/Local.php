@@ -38,4 +38,14 @@ class Local extends Model
     {
         return $this->hasMany(Visita::class, 'fk_local_id');
     }
+
+    /**
+     * Indica se este é o local primário (primeiro cadastrado).
+     * Não pode ser editado nem excluído pela UI — apenas por suporte técnico.
+     */
+    public function isPrimary(): bool
+    {
+        $minId = static::min('loc_id');
+        return $minId !== null && (int) $this->loc_id === (int) $minId;
+    }
 }
