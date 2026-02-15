@@ -12,38 +12,33 @@
     {{-- Cabeçalho --}}
     <div style="padding-top: 2rem;">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Resultado da Consulta</h1>
-        <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-6">
-            <button type="button" id="btn-baixar-card" aria-label="Baixar card com QR Code"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg shadow transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-                </svg>
-                Baixar card QR Code
-            </button>
-            <button type="button" id="btn-compartilhar" aria-label="Compartilhar link"
-                    data-url="{{ url()->current() }}"
-                    data-title="{{ config('app.name') }} — Resultado da Consulta"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-                <span id="btn-copiar-texto">Compartilhar link</span>
-            </button>
-        </div>
+        <button type="button" id="btn-baixar-card" aria-label="Baixar card com QR Code"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg shadow transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+            </svg>
+            Baixar card QR Code
+        </button>
     </div>
 
     {{-- Card QR Code (oculto, usado para download) --}}
-    <div id="adesivo" class="fixed left-[-9999px] top-0 bg-white text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px]">
-        <h3 class="text-lg font-bold mb-1 text-center">VISITA AÍ – CONSULTA PÚBLICA</h3>
-        <p class="text-sm mb-2 leading-tight text-center">
-            {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
-            {{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}
-        </p>
-        <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="mx-auto w-40 h-40 my-2 block">
-        <p class="text-xs break-all text-center">
-            {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
-        </p>
-        <p class="text-[10px] text-gray-400 text-center mt-3 pt-2 border-t border-gray-200">Desenvolvido por Bitwise Technologies</p>
+    <div id="adesivo" class="fixed left-[-9999px] top-0 w-[340px] overflow-hidden rounded-xl shadow-xl border-2 border-blue-600">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 text-center">
+            <h3 class="text-base font-bold text-white tracking-wide">VISITA AÍ – CONSULTA PÚBLICA</h3>
+        </div>
+        <div class="bg-white p-5 text-gray-800">
+            <p class="text-sm font-medium text-gray-700 text-center leading-snug mb-4">
+                {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
+                <span class="text-gray-600">{{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
+            </p>
+            <div class="flex justify-center p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-36 h-36 block rounded-lg">
+            </div>
+            <p class="text-[11px] text-gray-500 break-all text-center mt-4 font-mono">
+                {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
+            </p>
+        </div>
+        <div class="text-[10px] text-gray-400 text-center py-2 bg-gray-50 border-t border-gray-200">Desenvolvido por Bitwise Technologies</div>
     </div>
 
     {{-- Endereço e mapa --}}
@@ -146,18 +141,19 @@
         </p>
     </section>
 
-    {{-- Rodapé: botões de ação --}}
-    <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 pt-6">
+    {{-- Rodapé --}}
+    <div class="flex flex-col items-center gap-4 pt-6">
         <a href="{{ route('consulta.index') }}"
            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             Fazer nova consulta
         </a>
-        <a href="{{ route('consulta.index') }}"
-           class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            Voltar à Consulta
-        </a>
+        <button type="button" id="btn-compartilhar" aria-label="Compartilhar link"
+                data-url="{{ url()->current() }}"
+                data-title="{{ config('app.name') }} — Resultado da Consulta"
+                class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+            <span id="btn-copiar-texto">Compartilhar link</span>
+        </button>
     </div>
 
 </div>
