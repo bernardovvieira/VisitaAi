@@ -99,23 +99,23 @@
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center pt-4">
-            <div id="adesivo" class="w-[340px] overflow-hidden rounded-xl shadow-xl border-2 border-blue-600">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 text-center">
-                    <h3 class="text-base font-bold text-white tracking-wide">VISITA AÍ – CONSULTA PÚBLICA</h3>
+            <div id="adesivo" class="w-[320px] overflow-hidden shadow-lg border border-gray-300 dark:border-gray-600">
+                <div class="bg-gray-900 px-4 py-3 text-center">
+                    <h3 class="text-sm font-bold text-white tracking-wide">VISITA AÍ – CONSULTA PÚBLICA</h3>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-5 text-gray-800 dark:text-gray-200">
-                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center leading-snug mb-4">
+                <div class="bg-white dark:bg-gray-800 p-4 text-gray-800 dark:text-gray-200">
+                    <p class="text-sm text-gray-800 dark:text-gray-200 text-center leading-snug mb-4">
                         {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
                         <span class="text-gray-600 dark:text-gray-400">{{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
                     </p>
-                    <div class="flex justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
-                        <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-36 h-36 block rounded-lg">
+                    <div class="flex justify-center p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+                        <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-36 h-36 block">
                     </div>
-                    <p class="text-[11px] text-gray-500 dark:text-gray-400 break-all text-center mt-4 font-mono">
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400 break-all text-center mt-3 font-mono">
                         {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
                     </p>
                 </div>
-                <div class="text-[10px] text-gray-400 text-center py-2 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">Desenvolvido por Bitwise Technologies</div>
+                <div class="text-[10px] text-gray-500 dark:text-gray-400 text-center py-2 bg-gray-100 dark:bg-gray-700 border-t border-gray-300 dark:border-gray-600">Desenvolvido por Bitwise Technologies</div>
             </div>
         </div>
 
