@@ -13,6 +13,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\SetAppDisplayName;
+use App\Http\Middleware\RequirePrimaryLocal;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -37,7 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Alias de middleware personalizados
         $middleware->alias([
             'approved' => CheckApproved::class,
-            // 'perfil' => CheckPerfil::class (se existir)
+            'require.primary.local' => RequirePrimaryLocal::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

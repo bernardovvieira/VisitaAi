@@ -100,14 +100,8 @@ Route::middleware('auth')->group(function () {
         /**
          * GESTOR
          */
-        Route::middleware('can:isGestor')->prefix('gestor')->name('gestor.')->group(function () {
-            Route::get('/dashboard', function () {
-                if (Local::count() === 0) {
-                    return redirect()->route('gestor.locais.create')
-                        ->with('info', 'Cadastre o local primário do município (ex.: prefeitura ou secretaria de saúde) para iniciar o uso do sistema.');
-                }
-                return view('gestor.dashboard');
-            })->name('dashboard');
+        Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->name('gestor.')->group(function () {
+            Route::get('/dashboard', fn () => view('gestor.dashboard'))->name('dashboard');
 
             Route::get('/pendentes', [UserApprovalController::class, 'index'])->name('pendentes');
             Route::post('/approve/{user}', [UserApprovalController::class, 'approve'])->name('approve');
