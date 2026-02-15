@@ -33,15 +33,36 @@
 
     {{-- Endereço e mapa --}}
     <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div class="space-y-2 text-sm text-gray-800 dark:text-gray-100">
+        <div class="space-y-3 text-sm text-gray-800 dark:text-gray-100">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Imóvel Consultado</h2>
-            <p><strong>Zona:</strong> {{ $local->loc_zona === 'U' ? 'Urbana' : ($local->loc_zona === 'R' ? 'Rural' : 'N/A') }}</p>
-            <p><strong>Tipo de Imóvel:</strong> {{ $local->loc_tipo === 'R' ? 'Residencial' : ($local->loc_tipo === 'C' ? 'Comercial' : 'Terreno Baldio') }}</p>
-            <p><strong>Quarteirão:</strong> {{ $local->loc_quarteirao ?? 'N/A' }}</p>
+            <p>
+                <strong>Zona:</strong>
+                @if ($local->loc_zona === 'U')
+                    <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-0.5 rounded text-xs font-semibold">Urbana</span>
+                @elseif ($local->loc_zona === 'R')
+                    <span class="inline-block bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-200 px-2 py-0.5 rounded text-xs font-semibold">Rural</span>
+                @else
+                    N/A
+                @endif
+            </p>
+            <p>
+                <strong>Tipo de Imóvel:</strong>
+                @if ($local->loc_tipo === 'R')
+                    <span class="inline-block bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded text-xs font-semibold">Residencial</span>
+                @elseif ($local->loc_tipo === 'C')
+                    <span class="inline-block bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-200 px-2 py-0.5 rounded text-xs font-semibold">Comercial</span>
+                @else
+                    <span class="inline-block bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-2 py-0.5 rounded text-xs font-semibold">Terreno Baldio</span>
+                @endif
+            </p>
+            <p><strong>Quarteirão:</strong> <span class="inline-block bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200 px-2 py-0.5 rounded text-xs font-medium">{{ $local->loc_quarteirao ?? 'N/A' }}</span></p>
             <p><strong>Endereço:</strong> {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</p>
-            <p><strong>Bairro:</strong> {{ $local->loc_bairro }}</p>
-            <p><strong>Cidade:</strong> {{ $local->loc_cidade }}/{{ $local->loc_estado }}</p>
-            <p><strong>Código de Identificação:</strong> {{ $local->loc_codigo_unico }}</p>
+            <p><strong>Bairro:</strong> <span class="inline-block bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200 px-2 py-0.5 rounded text-xs font-medium">{{ $local->loc_bairro }}</span></p>
+            <p><strong>Cidade:</strong> <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-0.5 rounded text-xs font-semibold">{{ $local->loc_cidade }}/{{ $local->loc_estado }}</span></p>
+            <p>
+                <strong>Código de Identificação:</strong>
+                <span class="inline-block bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-semibold">{{ $local->loc_codigo_unico }}</span>
+            </p>
         </div>
         <div class="w-full h-64 rounded-lg overflow-hidden border" id="mapa-local"></div>
     </section>
