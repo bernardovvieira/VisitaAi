@@ -25,9 +25,11 @@ use Illuminate\Support\Facades\Auth;
 // Página pública
 Route::get('/', [PublicController::class, 'welcome']);
 
-// Consulta pública
+// Consulta pública (throttle: 10 consultas por minuto por IP)
 Route::get('/consulta-publica', [ConsultaPublicaController::class, 'index'])->name('consulta.index');
-Route::get('/consulta-publica/codigo', [ConsultaPublicaController::class, 'consultaPorCodigo'])->name('consulta.codigo');
+Route::get('/consulta-publica/codigo', [ConsultaPublicaController::class, 'consultaPorCodigo'])
+    ->middleware('throttle:10,1')
+    ->name('consulta.codigo');
 
 // Conta pendente
 Route::view('/pendente', 'auth.pending')->name('pendente');

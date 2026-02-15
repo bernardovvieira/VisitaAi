@@ -206,13 +206,33 @@ class RelatorioController extends Controller
             return redirect()->route('gestor.relatorios.index')->with('error', 'Nenhuma visita encontrada para os critérios selecionados. Não foi possível gerar o PDF.');
         }
 
-        $graficoBairrosBase64 = $request->input('graficoBairrosBase64');
-        $graficoDoencasBase64 = $request->input('graficoDoencasBase64');
-        $mapaCalorBase64 = $request->input('mapaCalorBase64');
-        $graficoZonasBase64 = $request->input('graficoZonasBase64');
-        $graficoDiasBase64 = $request->input('graficoDiasBase64');
-        $graficoInspBase64 = $request->input('graficoInspBase64');
-        $graficoTratamentosBase64 = $request->input('graficoTratamentosBase64');
+        $base64Keys = [
+            'graficoBairrosBase64', 'graficoDoencasBase64', 'mapaCalorBase64',
+            'graficoZonasBase64', 'graficoDiasBase64', 'graficoInspBase64', 'graficoTratamentosBase64',
+        ];
+        $maxBase64Len = 2800000; // ~2MB em base64
+        $sanitizedBase64 = [];
+        foreach ($base64Keys as $key) {
+            $val = $request->input($key);
+            if ($val === null || $val === '') {
+                $sanitizedBase64[$key] = null;
+                continue;
+            }
+            $val = (string) $val;
+            if (strlen($val) > $maxBase64Len || !preg_match('/^[A-Za-z0-9+\/=]+$/', $val)) {
+                $sanitizedBase64[$key] = null;
+                continue;
+            }
+            $sanitizedBase64[$key] = $val;
+        }
+
+        $graficoBairrosBase64 = $sanitizedBase64['graficoBairrosBase64'];
+        $graficoDoencasBase64 = $sanitizedBase64['graficoDoencasBase64'];
+        $mapaCalorBase64 = $sanitizedBase64['mapaCalorBase64'];
+        $graficoZonasBase64 = $sanitizedBase64['graficoZonasBase64'];
+        $graficoDiasBase64 = $sanitizedBase64['graficoDiasBase64'];
+        $graficoInspBase64 = $sanitizedBase64['graficoInspBase64'];
+        $graficoTratamentosBase64 = $sanitizedBase64['graficoTratamentosBase64'];
 
         $doencaMaisFrequente = $visitas->flatMap->doencas
             ->countBy('doe_nome')

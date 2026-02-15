@@ -26,10 +26,11 @@ Route::middleware('guest')->group(function () {
         ->middleware('throttle:3,1')
         ->name('login');
 
-    // esqueceu senha
+    // esqueceu senha (throttle: 5 tentativas por minuto)
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->middleware('throttle:5,1')
         ->name('password.email');
 
     // formulário de reset

@@ -38,11 +38,11 @@ class PasswordResetLinkController extends Controller
             'use_email' => $request->input('email'),
         ]);
 
-        // 3) Responde de volta para a view
-        return $status === Password::RESET_LINK_SENT
-                    ? back()->with('status', 'Link de recuperação enviado com sucesso!')
-                    : back()
-                        ->withInput($request->only('email'))
-                        ->withErrors(['email' => 'Não encontramos esse e‑mail cadastrado.']);
+        // 3) Responde de volta para a view (mensagem neutra para não revelar se e-mail existe)
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('status', 'Se o e‑mail estiver cadastrado, você receberá um link de recuperação de senha.');
+        }
+        return back()->withInput($request->only('email'))
+            ->withErrors(['email' => 'Se o e‑mail estiver cadastrado, você receberá um link de recuperação. Verifique sua caixa de entrada e spam.']);
     }
 }
