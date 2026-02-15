@@ -32,6 +32,11 @@ class SetAppDisplayName
         $tipo = strtolower(trim((string) env('APP_INSTANCE_TYPE', '')));
         $appName = trim((string) env('APP_NAME', ''));
 
+        // Ignora APP_NAME no formato antigo (ex.: "Visita Aí - Sistema de Visitas Epidemiológicas")
+        if ($appName !== '' && stripos($appName, 'Visita Aí') === 0) {
+            $appName = '';
+        }
+
         if ($tipo === 'base') {
             return 'Base';
         }
