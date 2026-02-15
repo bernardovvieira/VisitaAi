@@ -99,17 +99,17 @@
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
-            <div id="adesivo" class="w-[300px] bg-white dark:bg-gray-800 p-6 text-center shadow-sm">
-                <p class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Visita Aí — Consulta Pública</p>
-                <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug mb-4">
+            <div id="adesivo" class="w-[300px] bg-white p-6 text-center shadow-sm text-gray-800">
+                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3">Visita Aí — Consulta Pública</p>
+                <p class="text-sm leading-snug mb-4">
                     {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
-                    <span class="text-gray-600 dark:text-gray-400">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
+                    <span class="text-gray-600">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
                 </p>
                 <div class="flex justify-center">
                     <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-32 h-32 block">
                 </div>
-                <p class="text-[10px] text-gray-500 dark:text-gray-400 break-all mt-4 font-mono leading-tight px-1 text-center">{{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}</p>
-                <p class="text-[9px] text-gray-400 dark:text-gray-500 mt-5">Bitwise Technologies</p>
+                <p class="text-[10px] text-gray-500 break-all mt-4 font-mono leading-tight px-1 text-center">{{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}</p>
+                <p class="text-[9px] text-gray-400 mt-5">Bitwise Technologies</p>
             </div>
         </div>
 
