@@ -97,25 +97,25 @@
     {{-- Adesivo --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
-        <div class="flex justify-center pt-4">
-            <div id="adesivo" class="w-[320px] overflow-hidden shadow-lg border border-gray-300 dark:border-gray-600">
-                <div class="bg-gray-900 px-4 py-3 text-center">
-                    <h3 class="text-sm font-bold text-white tracking-wide">VISITA AÍ – CONSULTA PÚBLICA</h3>
+        <div id="adesivo" class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
+            <div class="w-[320px] overflow-hidden bg-white dark:bg-gray-700 shadow-sm border border-gray-200 dark:border-gray-600">
+                <div class="flex items-center justify-center min-h-[56px] px-5 bg-gray-200 dark:bg-gray-600">
+                    <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 tracking-wide text-center leading-tight">VISITA AÍ – CONSULTA PÚBLICA</h3>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 text-gray-800 dark:text-gray-200">
+                <div class="bg-white dark:bg-gray-700 p-5 text-gray-800 dark:text-gray-200">
                     <p class="text-sm text-gray-800 dark:text-gray-200 text-center leading-snug mb-4">
                         {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
                         <span class="text-gray-600 dark:text-gray-400">{{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
                     </p>
-                    <div class="flex justify-center p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+                    <div class="flex justify-center p-3 bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-500">
                         <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-36 h-36 block">
                     </div>
-                    <p class="text-[11px] text-gray-600 dark:text-gray-400 break-all text-center mt-3 font-mono">
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400 break-all text-center mt-4 font-mono">
                         {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
                     </p>
                 </div>
-                <div class="flex items-center justify-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 border-t border-gray-300 dark:border-gray-600">
-                    <span class="text-[10px] text-gray-500 dark:text-gray-400">Desenvolvido por Bitwise Technologies</span>
+                <div class="flex items-center justify-center min-h-[44px] px-5 bg-gray-200 dark:bg-gray-600 border-t border-gray-200 dark:border-gray-500">
+                    <span class="text-[10px] text-gray-600 dark:text-gray-300 text-center">Desenvolvido por Bitwise Technologies</span>
                 </div>
             </div>
         </div>

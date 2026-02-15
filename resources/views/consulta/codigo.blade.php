@@ -22,24 +22,26 @@
     </div>
 
     {{-- Card QR Code (oculto, usado para download) --}}
-    <div id="adesivo" class="fixed left-[-9999px] top-0 w-[320px] overflow-hidden shadow-lg border border-gray-300">
-        <div class="bg-gray-900 px-4 py-3 text-center">
-            <h3 class="text-sm font-bold text-white tracking-wide">VISITA AÍ – CONSULTA PÚBLICA</h3>
-        </div>
-        <div class="bg-white p-4 text-gray-800">
-            <p class="text-sm text-gray-800 text-center leading-snug mb-4">
-                {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
-                <span class="text-gray-600">{{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
-            </p>
-            <div class="flex justify-center p-3 bg-gray-100 border border-gray-300">
-                <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-36 h-36 block">
+    <div id="adesivo" class="fixed left-[-9999px] top-0 p-8 bg-gray-100">
+        <div class="w-[320px] overflow-hidden bg-white shadow-sm border border-gray-200">
+            <div class="flex items-center justify-center min-h-[56px] px-5 bg-gray-200">
+                <h3 class="text-sm font-bold text-gray-800 tracking-wide text-center leading-tight">VISITA AÍ – CONSULTA PÚBLICA</h3>
             </div>
-            <p class="text-[11px] text-gray-600 break-all text-center mt-3 font-mono">
-                {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
-            </p>
-        </div>
-        <div class="flex items-center justify-center px-4 py-2.5 bg-gray-100 border-t border-gray-300">
-            <span class="text-[10px] text-gray-500">Desenvolvido por Bitwise Technologies</span>
+            <div class="bg-white p-5 text-gray-800">
+                <p class="text-sm text-gray-800 text-center leading-snug mb-4">
+                    {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
+                    <span class="text-gray-600">{{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
+                </p>
+                <div class="flex justify-center p-3 bg-gray-50 border border-gray-200">
+                    <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="w-36 h-36 block">
+                </div>
+                <p class="text-[11px] text-gray-600 break-all text-center mt-4 font-mono">
+                    {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
+                </p>
+            </div>
+            <div class="flex items-center justify-center min-h-[44px] px-5 bg-gray-200 border-t border-gray-200">
+                <span class="text-[10px] text-gray-600 text-center">Desenvolvido por Bitwise Technologies</span>
+            </div>
         </div>
     </div>
 
