@@ -97,7 +97,7 @@
     {{-- Adesivo --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
-        <div class="flex justify-center">
+        <div class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
             <div id="adesivo" class="w-[300px] bg-white dark:bg-gray-800 p-6 text-center shadow-sm">
                 <p class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Visita Aí — Consulta Pública</p>
                 <p class="text-sm text-gray-800 dark:text-gray-200 leading-snug mb-4">
