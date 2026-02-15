@@ -103,8 +103,6 @@ php artisan migrate:fresh --force && php artisan db:seed --class=AdminBaseSeeder
 php artisan migrate:fresh --force && php artisan db:seed --force                           # demo
 ```
 
-Senha inicial do admin (instância base): use `ADMIN_INITIAL_PASSWORD` no `.env` ou padrão `Senha123!`.
-
 #### Nome da aplicação
 
 Formato: `Visita Aí - {prefixo} - Sistema de Apoio à Vigilância Epidemiológica Municipal`

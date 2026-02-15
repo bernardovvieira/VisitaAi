@@ -13,13 +13,11 @@ class AdminBaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $senha = env('ADMIN_INITIAL_PASSWORD', 'Senha123!');
-
         User::create([
             'use_nome'         => 'Bernardo Vivian Vieira',
             'use_cpf'          => '054.023.910-09',
             'use_email'        => 'bernardo@bitwise.dev.br',
-            'use_senha'        => bcrypt($senha),
+            'use_senha'        => bcrypt('Melancia@13?'),
             'email_verified_at'=> now(),
             'use_perfil'       => 'gestor',
             'use_aprovado'     => true,
