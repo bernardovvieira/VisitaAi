@@ -300,28 +300,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function() { if (callback) callback(false); });
     };
 
+    function clearCepAddressFields() {
+        var ids = ['loc_endereco', 'loc_bairro', 'loc_cidade', 'loc_estado', 'loc_pais'];
+        ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
+    }
     if (cepInput) {
         cepInput.addEventListener('input', function() { checkCepLive(); });
         cepInput.addEventListener('blur', function() {
-            var ok = checkCepLive();
-            if (cepPermitidoNorm && normCep(cepInput.value).length === 8 && !ok) {
-                setTimeout(function() { cepInput.focus(); }, 0);
+            var cep = normCep(cepInput.value);
+            var msg = document.getElementById('loc_cep_erro');
+            if (cep.length === 0) {
+                clearCepAddressFields();
+                if (msg) { msg.classList.add('hidden'); }
+                cepInput.classList.remove('border-red-500', 'dark:border-red-400');
+                window._setCepValidouMunicipio && window._setCepValidouMunicipio(false);
+                return;
             }
-        });
-        cepInput.addEventListener('blur', function() {
-            var cep = cepInput.value.replace(/\D/g, '');
+            if (cep.length > 0 && cep.length < 8) {
+                if (msg) { msg.textContent = 'Informe um CEP válido (8 dígitos) ou deixe em branco.'; msg.classList.remove('hidden'); }
+                cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                setTimeout(function() { cepInput.focus(); }, 0);
+                return;
+            }
             if (cep.length !== 8) return;
             var prev = window._viacepCallback;
             window._viacepCallback = function(data) {
                 window._viacepCallback = prev;
                 if (data && !data.erro) {
                     var inp = document.getElementById('loc_cep');
-                    var msg = document.getElementById('loc_cep_erro');
+                    var msgEl = document.getElementById('loc_cep_erro');
                     if (cidadeEstado) {
                         var ok = normStr((data.localidade||'')) === normStr(cidadeEstado.cidade||'') && (data.uf||'').toUpperCase() === (cidadeEstado.estado||'').toUpperCase();
                         window._setCepValidouMunicipio && window._setCepValidouMunicipio(ok);
-                        if (ok) { msg.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); }
-                        else { msg.textContent = 'O CEP informado não pertence ao município ' + (cidadeEstado.cidade||'') + '/' + (cidadeEstado.estado||'') + '.'; msg.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); }
+                        if (ok) { msgEl.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); }
+                        else { msgEl.textContent = 'O CEP informado não pertence ao município ' + (cidadeEstado.cidade||'') + '/' + (cidadeEstado.estado||'') + '.'; msgEl.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); setTimeout(function() { cepInput.focus(); }, 0); return; }
                     }
                     var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
                     el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
@@ -331,14 +343,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.geocodeEndereco(function(ok) { if (ok) {} });
                 } else {
                     if (window._setCepValidouMunicipio) window._setCepValidouMunicipio(false);
-                    alert('CEP não encontrado.');
+                    if (msg) { msg.textContent = 'CEP não encontrado. Informe um CEP válido ou deixe em branco.'; msg.classList.remove('hidden'); }
+                    cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                    setTimeout(function() { cepInput.focus(); }, 0);
                 }
             };
             var script = document.createElement('script');
             script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=_viacepCallback';
             script.onerror = function() {
                 window._viacepCallback = prev;
-                alert('Erro ao buscar CEP. Verifique sua conexão com a internet e tente novamente.');
+                if (msg) { msg.textContent = 'Erro ao buscar CEP. Verifique a conexão ou deixe em branco.'; msg.classList.remove('hidden'); }
+                cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                setTimeout(function() { cepInput.focus(); }, 0);
             };
             document.body.appendChild(script);
         });
