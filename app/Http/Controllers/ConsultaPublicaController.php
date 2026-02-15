@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Local;
 use App\Models\Doenca;
 use Illuminate\Http\Request;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Color\Color;
 
 class ConsultaPublicaController extends Controller
 {
@@ -40,6 +47,29 @@ class ConsultaPublicaController extends Controller
             ->orderByDesc('vis_data')
             ->get();
 
-        return view('consulta.codigo', compact('local', 'visitas'));
+        $qrCode = new QrCode(
+            data: route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]),
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 250,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+
+        try {
+            $writer = new PngWriter();
+            $result = $writer->write($qrCode);
+            $qrCodeBase64 = base64_encode($result->getString());
+            $qrCodeMime = 'image/png';
+        } catch (\Throwable $e) {
+            $writer = new SvgWriter();
+            $result = $writer->write($qrCode);
+            $qrCodeBase64 = base64_encode($result->getString());
+            $qrCodeMime = 'image/svg+xml';
+        }
+
+        return view('consulta.codigo', compact('local', 'visitas', 'qrCodeBase64', 'qrCodeMime'));
     }
 }

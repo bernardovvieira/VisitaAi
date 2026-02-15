@@ -10,25 +10,40 @@
 <div class="max-w-4xl mx-auto space-y-10">
 
     {{-- Cabeçalho --}}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" style="padding-top: 2rem;">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Resultado da Consulta</h1>
+    <div style="padding-top: 2rem;">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Resultado da Consulta</h1>
         <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-6">
-            <a href="{{ route('consulta.index') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+            <button type="button" id="btn-baixar-card" aria-label="Baixar card com QR Code"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg shadow transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                 </svg>
-                Voltar à Consulta
-            </a>
+                Baixar card QR Code
+            </button>
             <button type="button" id="btn-compartilhar" aria-label="Compartilhar link"
                     data-url="{{ url()->current() }}"
                     data-title="{{ config('app.name') }} — Resultado da Consulta"
-                    class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                 </svg>
                 <span id="btn-copiar-texto">Compartilhar link</span>
             </button>
         </div>
+    </div>
+
+    {{-- Card QR Code (oculto, usado para download) --}}
+    <div id="adesivo" class="fixed left-[-9999px] top-0 bg-white text-gray-800 p-6 rounded-lg shadow-lg border border-gray-300 w-[320px]">
+        <h3 class="text-lg font-bold mb-1 text-center">VISITA AÍ – CONSULTA PÚBLICA</h3>
+        <p class="text-sm mb-2 leading-tight text-center">
+            {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
+            {{ $local->loc_bairro }} – {{ $local->loc_cidade }}/{{ $local->loc_estado }}
+        </p>
+        <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="QR Code" class="mx-auto w-40 h-40 my-2 block">
+        <p class="text-xs break-all text-center">
+            {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
+        </p>
+        <p class="text-[10px] text-gray-400 text-center mt-3 pt-2 border-t border-gray-200">Desenvolvido por Bitwise Technologies</p>
     </div>
 
     {{-- Endereço e mapa --}}
@@ -131,19 +146,25 @@
         </p>
     </section>
 
-    {{-- Nova consulta --}}
-    <div class="text-center">
+    {{-- Rodapé: botões de ação --}}
+    <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 pt-6">
         <a href="{{ route('consulta.index') }}"
-           class="inline-flex items-center justify-center gap-2 mt-6 px-6 py-2.5 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow transition">
+           class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             Fazer nova consulta
+        </a>
+        <a href="{{ route('consulta.index') }}"
+           class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Voltar à Consulta
         </a>
     </div>
 
 </div>
 
-{{-- Mapa --}}
+{{-- Mapa + html2canvas para download do card --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 .leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }
 </style>
@@ -187,6 +208,18 @@
         } catch (e) {
             msg('Não foi possível carregar o mapa.');
         }
+    });
+
+    // Baixar card QR Code
+    document.getElementById('btn-baixar-card')?.addEventListener('click', function () {
+        var adesivo = document.getElementById('adesivo');
+        if (!adesivo || typeof html2canvas === 'undefined') return;
+        html2canvas(adesivo).then(function (canvas) {
+            var link = document.createElement('a');
+            link.download = 'adesivo_qrcode_visita_ai_{{ $local->loc_codigo_unico }}.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
     });
 
     // Compartilhar link: tenta share nativo, senão copia
