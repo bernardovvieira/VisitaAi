@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Minhas Visitas')
+@section('og_description', 'Minhas visitas realizadas. Visualize, busque, edite ou remova suas visitas registradas.')
+
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas Realizadas</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Minhas Visitas</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -12,9 +15,9 @@
     @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Minhas visitas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Aqui você pode visualizar, buscar, editar ou remover visitas epidemiológicas registradas.
+            Visualize, busque, edite ou remova suas visitas registradas.
         </p>
         <a href="{{ route('saude.visitas.create') }}"
            class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">

@@ -3,6 +3,9 @@
 @section('public')
 @endsection
 
+@section('og_title', config('app.name'))
+@section('og_description', 'Sistema de apoio à vigilância epidemiológica municipal. Acompanhe, consulte e controle visitas de forma ágil e segura. Acesso para agentes, gestores e consulta pública.')
+
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12 min-w-full">
     <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -18,7 +21,7 @@
         <div class="space-y-8 md:pl-4 max-w-xl" id="anim-texto">
             <div class="space-y-4">
                 <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                    Bem-vindo ao <span class="text-blue-500 dark:text-blue-400">Visita Aí</span>
+                    Bem-vindo(a) ao <span class="text-blue-500 dark:text-blue-400">Visita Aí</span>
                 </h1>
                 @if ($local)
                     <p class="text-blue-600 dark:text-blue-400 text-lg font-medium">

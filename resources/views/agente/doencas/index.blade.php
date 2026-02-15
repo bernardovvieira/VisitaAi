@@ -1,15 +1,18 @@
 <!-- resources/views/agente/doencas/index.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Doenças')
+@section('og_description', 'Doenças monitoradas. Consulte as doenças que você pode registrar nas visitas epidemiológicas.')
+
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
 
-  <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Doenças Monitoradas</h1>
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Doenças</h1>
 
   <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</h2>
     <p class="mt-2 text-gray-600 dark:text-gray-400">
-      Abaixo estão as doenças que você está autorizado a visualizar. Para detalhes, clique em “Ver detalhes”.
+      Consulte as doenças que você pode registrar nas visitas. Clique em Ver detalhes para mais informações.
     </p> 
   </section>
 

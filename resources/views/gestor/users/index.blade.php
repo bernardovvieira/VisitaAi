@@ -1,9 +1,12 @@
 <!-- resources/views/gestor/users/index.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Usuários')
+@section('og_description', 'Usuários cadastrados no sistema. Visualize, edite e gerencie permissões.')
+
 @section('content')
 <div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Gerenciar Usuários</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Usuários</h1>
 
     @if(session('status'))
         <x-alert type="success" :message="session('status')" />
@@ -15,10 +18,9 @@
 
     <!-- Card introdutório -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Usuários do sistema</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Nesta seção você pode visualizar, editar e excluir usuários cadastrados no sistema.
-            Para adicionar novos usuários, é necessário que eles se registrem diretamente pela tela de login.
+            Visualize, edite e exclua usuários cadastrados. Novos usuários devem se registrar pela tela de login.
         </p>
     </section>
 

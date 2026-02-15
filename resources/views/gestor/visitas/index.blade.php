@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Visitas')
+@section('og_description', 'Visitas epidemiológicas registradas. Visualize e busque visitas realizadas pelos agentes.')
+
 @section('content')
 <div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas Realizadas</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -12,9 +15,9 @@
     @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas epidemiológicas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Aqui você pode visualizar e buscar visitas epidemiológicas registradas.
+            Visualize e busque visitas registradas pelos agentes.
         </p>
     </section>
 

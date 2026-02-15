@@ -1,18 +1,21 @@
 <!-- resources/views/gestor/locais/index.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Locais')
+@section('og_description', 'Locais cadastrados pelos agentes. Visualize os detalhes de cada endereço de visitação epidemiológica.')
+
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Locais Cadastrados</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Locais</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
     @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais cadastrados</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Abaixo estão os locais registrados pelos agentes. Você pode visualizar os detalhes de cada local.
+            Locais registrados pelos agentes. Visualize os detalhes de cada endereço.
         </p>
     </section>
 

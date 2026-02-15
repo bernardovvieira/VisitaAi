@@ -7,6 +7,33 @@
 
         <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Epidemiológica Municipal') }}</title>
 
+        @php
+            $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));
+            $ogTitle = $ogTitle ?: config('app.name');
+            $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
+            $ogDescription = $ogDescription ?: 'Sistema de apoio à vigilância epidemiológica municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.';
+            $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
+            $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
+            $ogUrl = url()->current();
+        @endphp
+        <!-- Open Graph (Facebook, WhatsApp, etc.) - URLs absolutas obrigatórias -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ $ogUrl }}">
+        <meta property="og:title" content="{{ $ogTitle }}">
+        <meta property="og:description" content="{{ $ogDescription }}">
+        <meta property="og:image" content="{{ $ogImage }}">
+        <meta property="og:image:width" content="512">
+        <meta property="og:image:height" content="512">
+        <meta property="og:site_name" content="Visita Aí">
+        <meta property="og:locale" content="pt_BR">
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:url" content="{{ $ogUrl }}">
+        <meta name="twitter:title" content="{{ $ogTitle }}">
+        <meta name="twitter:description" content="{{ $ogDescription }}">
+        <meta name="twitter:image" content="{{ $ogImage }}">
+        <meta name="twitter:image:alt" content="{{ $ogTitle }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

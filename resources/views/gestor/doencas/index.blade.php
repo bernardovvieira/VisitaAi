@@ -1,9 +1,12 @@
 <!-- resources/views/gestor/doencas/index.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Doenças')
+@section('og_description', 'Doenças monitoradas no município. Visualize, edite e cadastre doenças para as visitas epidemiológicas.')
+
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Gerenciar Doenças</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Doenças</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -14,10 +17,9 @@
 
     <!-- Card introdutório -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Nesta seção você pode visualizar, editar e excluir doenças monitoradas no sistema.
-            Para adicionar novas doenças, clique no botão abaixo.
+            Visualize, edite e exclua doenças do sistema. Para adicionar novas, clique no botão abaixo.
         </p>
         <a href="{{ route('gestor.doencas.create') }}"
            class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">

@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Locais')
+@section('og_description', 'Locais de visitação. Visualize, cadastre e edite locais para realização de visitas epidemiológicas.')
+
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Gerenciar Locais</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Locais</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -13,9 +16,9 @@
 
     <!-- Card introdutório -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Informações</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais de visitação</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Aqui você pode visualizar, cadastrar ou editar locais de visitação epidemiológica.
+            Visualize, cadastre e edite locais para realização de visitas epidemiológicas.
         </p>
         <a href="{{ route('agente.locais.create') }}"
            class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">

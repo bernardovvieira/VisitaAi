@@ -7,6 +7,32 @@
 
         <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Epidemiológica Municipal') }}</title>
 
+        @php
+            $authMeta = match (request()->route()?->getName()) {
+                'login' => ['title' => config('app.name') . ' — Login', 'desc' => 'Acesse o sistema Visita Aí com CPF ou e-mail. Área de agentes e gestores.'],
+                'register' => ['title' => config('app.name') . ' — Cadastro', 'desc' => 'Cadastre-se no Visita Aí para atuar como agente de endemias ou agente de saúde.'],
+                'password.request' => ['title' => config('app.name') . ' — Esqueci a Senha', 'desc' => 'Recupere o acesso ao sistema Visita Aí pelo e-mail.'],
+                'password.reset' => ['title' => config('app.name') . ' — Redefinir Senha', 'desc' => 'Defina uma nova senha para sua conta no Visita Aí.'],
+                'verification.notice' => ['title' => config('app.name') . ' — Verificar E-mail', 'desc' => 'Confirme seu e-mail para ativar sua conta no Visita Aí.'],
+                'pendente' => ['title' => config('app.name') . ' — Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
+                default => ['title' => config('app.name') . ' — Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância epidemiológica municipal.'],
+            };
+            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
+            $ogUrl = url()->current();
+        @endphp
+        <!-- Open Graph (Facebook, WhatsApp) -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ $ogUrl }}">
+        <meta property="og:title" content="{{ $authMeta['title'] }}">
+        <meta property="og:description" content="{{ $authMeta['desc'] }}">
+        <meta property="og:image" content="{{ $ogImage }}">
+        <meta property="og:site_name" content="Visita Aí">
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ $authMeta['title'] }}">
+        <meta name="twitter:description" content="{{ $authMeta['desc'] }}">
+        <meta name="twitter:image" content="{{ $ogImage }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

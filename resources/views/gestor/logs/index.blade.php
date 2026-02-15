@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Auditoria')
+@section('og_description', 'Registros de auditoria. Histórico de ações realizadas pelos usuários no sistema.')
+
 @section('content')
 <div class="space-y-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Auditoria</h1>
@@ -9,9 +12,9 @@
     @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Histórico de ações no sistema</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Registros de auditoria</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Listagem das ações realizadas pelos usuários. Use o campo abaixo para filtrar por nome do usuário, tipo de ação ou entidade.
+            Histórico de ações realizadas pelos usuários. Use o filtro para buscar por usuário, ação ou entidade.
         </p>
     </section>
 

@@ -3,6 +3,9 @@
 @section('public')
 @endsection
 
+@section('og_title', config('app.name') . ' — Resultado da Consulta')
+@section('og_description', isset($local) ? 'Histórico de visitas do imóvel em ' . $local->loc_cidade . '/' . $local->loc_estado . '.' : 'Consulte o resultado da sua busca pelo código do imóvel.')
+
 @section('content')
 <div class="max-w-4xl mx-auto space-y-10">
 

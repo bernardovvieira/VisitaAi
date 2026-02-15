@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Relatórios')
+@section('og_description', 'Relatórios e indicadores epidemiológicos. Gere PDF e visualize indicadores do período selecionado.')
+
 @section('content')
 <!-- Overlay de carregamento -->
 <div id="overlayCarregando" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
@@ -10,7 +13,7 @@
 </div>
 
 <div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Relatórios e Indicadores</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Relatórios</h1>
 
     @if(session('error'))
         <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded relative mb-4">
@@ -43,6 +46,12 @@
             </div>
         </div>
     @else
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Relatórios e indicadores</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">
+            Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
+        </p>
+    </section>
     {{-- Filtros e PDF --}}
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>

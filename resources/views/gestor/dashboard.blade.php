@@ -1,13 +1,16 @@
 <!-- resources/views/gestor/dashboard.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' — Painel do Gestor')
+@section('og_description', 'Painel do gestor municipal. Acompanhe estatísticas e gerencie doenças, locais, visitas, usuários e relatórios.')
+
 @section('content')
 <div class="space-y-6">
     <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Painel do Gestor</h1>
 
     <!-- Mensagem de boas-vindas -->
     <section class="mb-8 p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bem-vindo, {{ Auth::user()->use_nome }}</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a), {{ Auth::user()->use_nome }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">O sistema Visita Aí organiza e facilita o gerenciamento de Agentes de Epidemiologia e suas visitas. Acompanhe abaixo as principais estatísticas e acesse rapidamente as funcionalidades.</p>
         <br>
         <!-- Relógio -->
