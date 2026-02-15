@@ -10,14 +10,24 @@
 <div class="max-w-4xl mx-auto space-y-10">
 
     {{-- Cabeçalho --}}
-    <div class="flex items-center justify-between" style="padding-top: 2rem;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" style="padding-top: 2rem;">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Resultado da Consulta</h1>
-        <a href="{{ route('consulta.index') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-            Voltar à Consulta
-        </a>
+        <div class="flex flex-wrap gap-3">
+            <button type="button" id="btn-compartilhar" aria-label="Copiar link para compartilhar"
+                    data-url="{{ url()->current() }}"
+                    class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                <span id="btn-copiar-texto">Compartilhar link</span>
+            </button>
+            <a href="{{ route('consulta.index') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Voltar à Consulta
+            </a>
+        </div>
     </div>
 
     {{-- Endereço e mapa --}}
@@ -155,6 +165,25 @@
         } catch (e) {
             msg('Não foi possível carregar o mapa.');
         }
+    });
+
+    // Compartilhar link
+    document.getElementById('btn-compartilhar')?.addEventListener('click', function () {
+        var url = this.getAttribute('data-url') || window.location.href;
+        var span = document.getElementById('btn-copiar-texto');
+        var original = span ? span.textContent : 'Compartilhar link';
+        navigator.clipboard.writeText(url).then(function () {
+            if (span) {
+                span.textContent = 'Link copiado!';
+                span.classList.add('text-green-600', 'dark:text-green-400');
+                setTimeout(function () {
+                    span.textContent = original;
+                    span.classList.remove('text-green-600', 'dark:text-green-400');
+                }, 2000);
+            }
+        }).catch(function () {
+            if (span) span.textContent = 'Erro ao copiar';
+        });
     });
 </script>
 

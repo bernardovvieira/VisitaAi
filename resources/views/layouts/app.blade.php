@@ -13,8 +13,9 @@
             $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
             $ogDescription = $ogDescription ?: 'Sistema de apoio à vigilância epidemiológica municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.';
             $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
-            $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
+            $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai.png';
             $ogUrl = url()->current();
+            $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp
         <!-- Open Graph (Facebook, WhatsApp, etc.) - URLs absolutas obrigatórias -->
         <meta property="og:type" content="website">
@@ -22,8 +23,12 @@
         <meta property="og:title" content="{{ $ogTitle }}">
         <meta property="og:description" content="{{ $ogDescription }}">
         <meta property="og:image" content="{{ $ogImage }}">
-        <meta property="og:image:width" content="512">
-        <meta property="og:image:height" content="512">
+        @if($isHttps)
+        <meta property="og:image:secure_url" content="{{ $ogImage }}">
+        @endif
+        <meta property="og:image:width" content="1145">
+        <meta property="og:image:height" content="722">
+        <meta property="og:image:type" content="image/png">
         <meta property="og:site_name" content="Visita Aí">
         <meta property="og:locale" content="pt_BR">
         <!-- Twitter Card -->

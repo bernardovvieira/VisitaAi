@@ -17,8 +17,9 @@
                 'pendente' => ['title' => config('app.name') . ' — Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
                 default => ['title' => config('app.name') . ' — Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância epidemiológica municipal.'],
             };
-            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
+            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai.png';
             $ogUrl = url()->current();
+            $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp
         <!-- Open Graph (Facebook, WhatsApp) -->
         <meta property="og:type" content="website">
@@ -26,6 +27,12 @@
         <meta property="og:title" content="{{ $authMeta['title'] }}">
         <meta property="og:description" content="{{ $authMeta['desc'] }}">
         <meta property="og:image" content="{{ $ogImage }}">
+        @if($isHttps)
+        <meta property="og:image:secure_url" content="{{ $ogImage }}">
+        @endif
+        <meta property="og:image:width" content="1145">
+        <meta property="og:image:height" content="722">
+        <meta property="og:image:type" content="image/png">
         <meta property="og:site_name" content="Visita Aí">
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
