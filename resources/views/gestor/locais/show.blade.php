@@ -114,7 +114,9 @@
                         {{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}
                     </p>
                 </div>
-                <div class="text-[10px] text-gray-500 dark:text-gray-400 text-center py-2 bg-gray-100 dark:bg-gray-700 border-t border-gray-300 dark:border-gray-600">Desenvolvido por Bitwise Technologies</div>
+                <div class="flex items-center justify-center px-4 py-2.5 bg-gray-100 dark:bg-gray-700 border-t border-gray-300 dark:border-gray-600">
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400">Desenvolvido por Bitwise Technologies</span>
+                </div>
             </div>
         </div>
 
