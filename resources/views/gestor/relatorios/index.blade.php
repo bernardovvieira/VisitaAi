@@ -56,9 +56,9 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
         @php
-            $appliedDataUnica = request('data_unica', '');
-            $appliedDataInicio = request('data_inicio', '');
-            $appliedDataFim = request('data_fim', '');
+            $appliedDataUnica = request('data_unica') ?? '';
+            $appliedDataInicio = request('data_inicio') ?? '';
+            $appliedDataFim = request('data_fim') ?? '';
             $appliedLocalIds = array_values((array) request('local_id', []));
         @endphp
         <div

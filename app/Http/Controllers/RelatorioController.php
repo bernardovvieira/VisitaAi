@@ -64,8 +64,8 @@ class RelatorioController extends Controller
             });
         }
 
-        $visitas = $query->get();
         $visitasPaginated = (clone $query)->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->paginate(15)->withQueryString();
+        $visitas = $query->get();
         $filtrosAplicados = $request->hasAny(['data_inicio', 'data_fim', 'data_unica']) || !empty($bairroInput) || !empty($localIds);
 
         if ($visitas->isEmpty() && $filtrosAplicados) {
