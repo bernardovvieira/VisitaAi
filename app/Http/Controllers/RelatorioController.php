@@ -13,6 +13,9 @@ use App\Helpers\LogHelper;
 
 class RelatorioController extends Controller
 {
+    /**
+     * @param \Illuminate\Http\Request $request
+     */
     public function index(Request $request)
     {
         $request->validate([
@@ -152,6 +155,9 @@ class RelatorioController extends Controller
         ));
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     */
     public function gerarPdf(Request $request)
     {
         $tipo = $request->input('tipo_relatorio', 'completo');

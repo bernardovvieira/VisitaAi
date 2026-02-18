@@ -466,9 +466,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+<script type="application/json" id="visitas-graficos-data">{{ json_encode($visitasParaGraficos ?? []) }}</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const visitas = @json($visitasParaGraficos ?? []);
+    const visitas = JSON.parse(document.getElementById('visitas-graficos-data').textContent || '[]');
 
     const contagemPorBairro = {};
     const contagemPorDoenca = {};
