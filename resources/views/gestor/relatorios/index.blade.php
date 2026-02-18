@@ -55,33 +55,32 @@
     {{-- Filtros e PDF --}}
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
-        @php
-            $appliedDataUnica = request('data_unica') ?? '';
-            $appliedDataInicio = request('data_inicio') ?? '';
-            $appliedDataFim = request('data_fim') ?? '';
-            $appliedLocalIds = array_values((array) request('local_id', []));
-        @endphp
         <div
             x-data="{
                 tipo: '{{ request('tipo_relatorio', 'completo') }}',
-                filtrosAplicados: new URLSearchParams(window.location.search).toString() !== '',
+                filtrosAplicados: false,
                 filtrosAlterados: false,
-                appliedParams: @json([
-                    'data_unica' => $appliedDataUnica,
-                    'data_inicio' => $appliedDataInicio,
-                    'data_fim' => $appliedDataFim,
-                    'local_ids' => $appliedLocalIds,
-                ]),
+                appliedParams: { data_unica: '', data_inicio: '', data_fim: '', local_ids: [] },
                 get botaoAtivo() {
                     if (this.filtrosAlterados) return false;
                     if (this.tipo === 'completo') return true;
-                    if (this.tipo === 'diario') return this.appliedParams.data_unica !== '';
-                    if (this.tipo === 'semanal') return this.appliedParams.data_inicio !== '' && this.appliedParams.data_fim !== '';
+                    if (this.tipo === 'diario') return (this.appliedParams.data_unica || '') !== '';
+                    if (this.tipo === 'semanal') return (this.appliedParams.data_inicio || '') !== '' && (this.appliedParams.data_fim || '') !== '';
                     if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
                     return false;
                 }
             }"
-            x-init="$watch('tipo', () => { filtrosAplicados = false; filtrosAlterados = true; })"
+            x-init="
+                var p = new URLSearchParams(window.location.search);
+                appliedParams = {
+                    data_unica: p.get('data_unica') || '',
+                    data_inicio: p.get('data_inicio') || '',
+                    data_fim: p.get('data_fim') || '',
+                    local_ids: p.getAll('local_id[]') || []
+                };
+                filtrosAplicados = p.toString() !== '';
+                $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
+            "
             @filtro-alterado.window="filtrosAlterados = true">
             <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
