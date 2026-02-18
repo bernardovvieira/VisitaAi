@@ -355,7 +355,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                @forelse ($visitas as $visita)
+                @forelse ($visitasPaginated as $visita)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="p-4">
                             <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
@@ -438,6 +438,19 @@
             </tbody>
         </table>
     </div>
+
+    @if(isset($visitasPaginated))
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                @if($visitasPaginated->total() > 0)
+                    Mostrando {{ $visitasPaginated->firstItem() }} a {{ $visitasPaginated->lastItem() }} de {{ $visitasPaginated->total() }} visitas.
+                @else
+                    Nenhuma visita no período.
+                @endif
+            </p>
+            {{ $visitasPaginated->links() }}
+        </div>
+    @endif
 </section>
 
 </div>

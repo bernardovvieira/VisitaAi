@@ -62,6 +62,7 @@ class RelatorioController extends Controller
         }
 
         $visitas = $query->get();
+        $visitasPaginated = (clone $query)->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->paginate(15)->withQueryString();
         $filtrosAplicados = $request->hasAny(['data_inicio', 'data_fim', 'data_unica']) || !empty($bairroInput) || !empty($localIds);
 
         if ($visitas->isEmpty() && $filtrosAplicados) {
@@ -130,6 +131,7 @@ class RelatorioController extends Controller
 
         return view('gestor.relatorios.index', compact(
             'visitas',
+            'visitasPaginated',
             'locaisParaSelect',
             'locaisParaSelectArray',
             'bairros',
