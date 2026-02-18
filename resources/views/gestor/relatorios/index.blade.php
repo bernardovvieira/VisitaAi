@@ -55,6 +55,9 @@
     {{-- Filtros e PDF --}}
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <span class="text-red-500">*</span> Para o filtro funcionar, todos os campos marcados com <span class="text-red-500 font-medium">*</span> devem ser preenchidos ou selecionados.
+        </p>
         <div
             x-data="{
                 tipo: '{{ request('tipo_relatorio', 'completo') }}',
@@ -85,7 +88,7 @@
             <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo <span class="text-red-500">*</span></label>
                     <select name="tipo_relatorio" x-model="tipo" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600">
                         <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>Completo</option>
                         <option value="diario">Diário</option>
