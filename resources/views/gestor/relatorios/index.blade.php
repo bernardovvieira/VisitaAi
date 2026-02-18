@@ -55,12 +55,31 @@
     {{-- Filtros e PDF --}}
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
+        @php
+            $appliedDataUnica = request('data_unica', '');
+            $appliedDataInicio = request('data_inicio', '');
+            $appliedDataFim = request('data_fim', '');
+            $appliedLocalIds = array_values((array) request('local_id', []));
+        @endphp
         <div
             x-data="{
                 tipo: '{{ request('tipo_relatorio', 'completo') }}',
                 filtrosAplicados: new URLSearchParams(window.location.search).toString() !== '',
                 filtrosAlterados: false,
-                get botaoAtivo() { return (this.tipo === 'completo' || this.filtrosAplicados) && !this.filtrosAlterados; }
+                appliedParams: @json([
+                    'data_unica' => $appliedDataUnica,
+                    'data_inicio' => $appliedDataInicio,
+                    'data_fim' => $appliedDataFim,
+                    'local_ids' => $appliedLocalIds,
+                ]),
+                get botaoAtivo() {
+                    if (this.filtrosAlterados) return false;
+                    if (this.tipo === 'completo') return true;
+                    if (this.tipo === 'diario') return this.appliedParams.data_unica !== '';
+                    if (this.tipo === 'semanal') return this.appliedParams.data_inicio !== '' && this.appliedParams.data_fim !== '';
+                    if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
+                    return false;
+                }
             }"
             x-init="$watch('tipo', () => { filtrosAplicados = false; filtrosAlterados = true; })"
             @filtro-alterado.window="filtrosAlterados = true">
@@ -76,17 +95,17 @@
                     </select>
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data <span class="text-red-500">*</span></label>
                     <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início <span class="text-red-500">*</span></label>
                             <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim <span class="text-red-500">*</span></label>
                             <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                         </div>
                     </div>
@@ -134,7 +153,7 @@
                         }, (array) request('local_id', [])))
                     )) }}"
                     @click.outside="open = false">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Local(is)</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Local(is) <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-1.5 cursor-pointer">
                             <template x-for="item in selected" :key="item.id">
@@ -240,7 +259,15 @@
                     Você alterou os filtros. Clique em <strong>Filtrar</strong> antes de gerar o PDF para que o relatório use os dados corretos.
                 </p>
                 <button type="button" :disabled="!botaoAtivo"
-                    @click.prevent="if (!botaoAtivo) { alert(filtrosAlterados ? 'Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.' : 'Aplique os filtros antes de gerar o PDF.'); return; } gerarBase64Graficos();"
+                    @click.prevent="if (!botaoAtivo) {
+                        let msg = filtrosAlterados ? 'Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.' : '';
+                        if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = 'Selecione a data para o relatório diário e clique em Filtrar.';
+                        if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = 'Selecione as datas de início e fim e clique em Filtrar.';
+                        if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = 'Selecione ao menos um local e clique em Filtrar.';
+                        if (!msg) msg = 'Aplique os filtros antes de gerar o PDF.';
+                        alert(msg);
+                        return;
+                    } gerarBase64Graficos();"
                     class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     Gerar relatório em PDF

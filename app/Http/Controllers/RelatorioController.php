@@ -167,11 +167,13 @@ class RelatorioController extends Controller
             'local_id'       => ['nullable'],
             'local_id.*'   => ['integer', 'exists:locais,loc_id'],
             'data_unica'     => ['nullable', 'date', Rule::requiredIf($tipo === 'diario')],
-            'data_inicio'    => ['nullable', 'date'],
-            'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio'],
+            'data_inicio'    => ['nullable', 'date', Rule::requiredIf($tipo === 'semanal')],
+            'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio', Rule::requiredIf($tipo === 'semanal')],
             'bairro'         => ['nullable'],
         ], [
             'data_unica.required_if' => 'Informe a data para o relatório diário.',
+            'data_inicio.required_if' => 'Informe a data de início para o relatório por período.',
+            'data_fim.required_if' => 'Informe a data de fim para o relatório por período.',
         ]);
 
         if (Visita::count() === 0) {
