@@ -59,9 +59,11 @@
             x-data="{
                 tipo: '{{ request('tipo_relatorio', 'completo') }}',
                 filtrosAplicados: new URLSearchParams(window.location.search).toString() !== '',
-                get botaoAtivo() { return this.tipo === 'completo' || this.filtrosAplicados; }
+                filtrosAlterados: false,
+                get botaoAtivo() { return (this.tipo === 'completo' || this.filtrosAplicados) && !this.filtrosAlterados; }
             }"
-            x-init="$watch('tipo', () => filtrosAplicados = false)">
+            x-init="$watch('tipo', () => { filtrosAplicados = false; filtrosAlterados = true; })"
+            @filtro-alterado.window="filtrosAlterados = true">
             <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
@@ -75,17 +77,17 @@
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data</label>
-                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início</label>
-                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim</label>
-                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
                         </div>
                     </div>
                 </template>
@@ -105,6 +107,7 @@
                             } else {
                                 this.selected = [...this.selected, opt];
                             }
+                            this.$dispatch('filtro-alterado');
                         },
                         isSelected(id) { return this.selected.some(s => s.id === id); }
                     }"
@@ -137,7 +140,7 @@
                             <template x-for="item in selected" :key="item.id">
                                 <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded px-2 py-0.5 text-sm">
                                     <span x-text="item.label" class="truncate max-w-[200px]"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id)" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
                                 </span>
                             </template>
                             <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar local..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
@@ -177,6 +180,7 @@
                             } else {
                                 this.selected = [...this.selected, opt];
                             }
+                            this.$dispatch('filtro-alterado');
                         }
                     }"
                     x-init="
@@ -202,7 +206,7 @@
                             <template x-for="val in selected" :key="val">
                                 <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded px-2 py-0.5 text-sm">
                                     <span x-text="val"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val)" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
                                 </span>
                             </template>
                             <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar bairro..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
@@ -232,8 +236,11 @@
                 </div>
             </form>
             <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
+                <p x-show="filtrosAlterados" x-cloak class="text-sm text-amber-600 dark:text-amber-400 mb-2 font-medium">
+                    Você alterou os filtros. Clique em <strong>Filtrar</strong> antes de gerar o PDF para que o relatório use os dados corretos.
+                </p>
                 <button type="button" :disabled="!botaoAtivo"
-                    @click.prevent="if (!botaoAtivo) { alert('Aplique os filtros antes de gerar o PDF.'); return; } gerarBase64Graficos();"
+                    @click.prevent="if (!botaoAtivo) { alert(filtrosAlterados ? 'Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.' : 'Aplique os filtros antes de gerar o PDF.'); return; } gerarBase64Graficos();"
                     class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     Gerar relatório em PDF
@@ -637,24 +644,22 @@ document.addEventListener('DOMContentLoaded', function() {
             form.appendChild(input);
         }
 
-        // Filtros do formulário
-        const dataInicio = document.querySelector('[name="data_inicio"]')?.value || '';
-        const dataFim = document.querySelector('[name="data_fim"]')?.value || '';
-        const bairroInputs = document.querySelectorAll('input[name="bairro[]"]');
-        const bairros = Array.from(bairroInputs).map(inp => inp.value);
-        const tipoRelatorio = document.querySelector('[name="tipo_relatorio"]')?.value || 'completo';
-        const dataUnica = document.querySelector('[name="data_unica"]')?.value || '';
-        
+        // Usar filtros aplicados na página (URL), não o estado atual do formulário
+        const params = new URLSearchParams(window.location.search);
+        const tipoRelatorio = params.get('tipo_relatorio') || 'completo';
+        const dataUnica = params.get('data_unica') || '';
+        const dataInicio = params.get('data_inicio') || '';
+        const dataFim = params.get('data_fim') || '';
+        const bairros = params.getAll('bairro[]').filter(Boolean);
+        const localIds = params.getAll('local_id[]').filter(Boolean);
+
         addField('data_unica', dataUnica);
         addField('tipo_relatorio', tipoRelatorio);
         addField('data_inicio', dataInicio);
         addField('data_fim', dataFim);
         bairros.forEach(function(b) { addField('bairro[]', b); });
-
         if (tipoRelatorio === 'individual') {
-            document.querySelectorAll('input[name="local_id[]"]').forEach(function(inp) {
-                addField('local_id[]', inp.value);
-            });
+            localIds.forEach(function(id) { addField('local_id[]', id); });
         }
 
         // Imagens em base64
