@@ -54,9 +54,9 @@
                           required autocomplete="new-password"
                           class="block w-full mt-1
                                  @error('password') border-red-500 dark:border-red-400 @enderror" />
-            {{-- Barra que fica verde conforme os requisitos da senha são atingidos --}}
+            {{-- Barra: vermelha ao digitar, amarela no meio, verde quando todos os requisitos ok --}}
             <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
-                <div id="password-strength-bar" class="h-full rounded-full bg-emerald-500 transition-all duration-300 ease-out" style="width: 0%"></div>
+                <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
             </div>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).</p>
             <x-input-error :messages="$errors->get('password')" />
@@ -89,7 +89,7 @@
         $(function(){
             $('#cpf').mask('000.000.000-00');
 
-            // Barra de força da senha: fica verde conforme atinge cada requisito (mesmas regras do backend)
+            // Barra de força da senha: vermelha → amarela → verde (mesmas regras do backend)
             var $bar = document.getElementById('password-strength-bar');
             var $pwd = document.getElementById('password');
             if ($bar && $pwd) {
@@ -102,6 +102,9 @@
                     var hasSymbol = /[^a-zA-Z0-9]/.test(pwd);
                     var n = [minLen, hasLetter, hasMixed, hasNumber, hasSymbol].filter(Boolean).length;
                     $bar.style.width = (n * 20) + '%';
+                    // 0–2 requisitos: vermelho; 3–4: amarelo; 5: verde
+                    $bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-emerald-500');
+                    $bar.classList.add(n >= 5 ? 'bg-emerald-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
                 }
                 $pwd.addEventListener('input', updatePasswordStrength);
                 $pwd.addEventListener('change', updatePasswordStrength);
