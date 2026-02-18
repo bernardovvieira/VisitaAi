@@ -21,7 +21,7 @@
                 <input type="hidden" name="return_action" value="{{ request('return_action') }}">
             @endif
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha <span class="text-red-500">*</span></label>
                 <input id="password"
                        type="password"
                        name="password"

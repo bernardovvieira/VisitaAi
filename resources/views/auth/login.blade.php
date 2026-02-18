@@ -7,7 +7,7 @@
 
         {{-- CPF ou E-mail --}}
         <div class="mb-5">
-            <x-input-label for="use_email" :value="__('CPF ou E-mail')" />
+            <x-input-label for="use_email">{{ __('CPF ou E-mail') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="use_email"
                         name="use_email"
                         type="text"
@@ -20,7 +20,7 @@
 
         {{-- Senha --}}
         <div class="mb-5" id="password-toggle-wrap">
-            <x-input-label for="password" :value="__('Senha')" />
+            <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
 
             <div class="relative mt-1">
                 <input

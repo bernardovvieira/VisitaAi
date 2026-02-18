@@ -16,7 +16,7 @@
 
             <!-- E‑mail -->
             <div class="mb-4">
-                <x-input-label for="email" :value="__('E‑mail')" />
+                <x-input-label for="email">{{ __('E‑mail') }} <span class="text-red-500">*</span></x-input-label>
                 <x-text-input
                     id="email"
                     class="block mt-1 w-full"
@@ -33,7 +33,7 @@
 
             <!-- Senha Nova -->
             <div class="mb-4">
-                <x-input-label for="password" :value="__('Senha')" />
+                <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
                 <x-text-input
                     id="password"
                     class="block mt-1 w-full"
@@ -49,7 +49,7 @@
 
             <!-- Confirmar Senha -->
             <div class="mb-6">
-                <x-input-label for="password_confirmation" :value="__('Confirmar Senha')" />
+                <x-input-label for="password_confirmation">{{ __('Confirmar Senha') }} <span class="text-red-500">*</span></x-input-label>
                 <x-text-input
                     id="password_confirmation"
                     class="block mt-1 w-full"

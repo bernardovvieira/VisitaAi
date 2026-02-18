@@ -91,7 +91,7 @@
                 </div>
 
                 <div>
-                    <label for="tema" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferência de tema</label>
+                    <label for="tema" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferência de tema <span class="text-red-500">*</span></label>
                     <select id="tema" name="tema" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500">
                         <option value="light" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'light' ? 'selected' : '' }}>Modo claro</option>
                         <option value="dark" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'dark' ? 'selected' : '' }}>Modo escuro</option>

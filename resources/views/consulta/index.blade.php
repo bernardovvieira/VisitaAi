@@ -24,7 +24,7 @@
     <form action="{{ route('consulta.codigo') }}" method="GET"
           class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
         <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Digite o <strong>código único do imóvel</strong> fornecido pelo agente
+            Digite o <strong>código único do imóvel</strong> fornecido pelo agente <span class="text-red-500">*</span>
         </label>
         <div class="flex gap-4 flex-col md:flex-row">
             <input

@@ -15,7 +15,7 @@
             <form method="POST" action="{{ route('two-factor.login.store') }}">
                 @csrf
                 <div class="mb-4">
-                    <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código</label>
+                    <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código <span class="text-red-500">*</span></label>
                     <input type="text"
                            id="code"
                            name="code"

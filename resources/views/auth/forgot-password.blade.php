@@ -11,7 +11,7 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('E‑mail')" />
+            <x-input-label for="email">{{ __('E‑mail') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input
                 id="email"
                 class="block mt-1 w-full"

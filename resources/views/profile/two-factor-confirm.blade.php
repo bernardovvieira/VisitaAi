@@ -52,7 +52,7 @@
         <form method="POST" action="{{ url(route('two-factor.confirm')) }}" class="space-y-4">
             @csrf
             <div>
-                <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código do autenticador</label>
+                <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código do autenticador <span class="text-red-500">*</span></label>
                 <input type="text"
                        id="code"
                        name="code"

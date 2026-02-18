@@ -12,7 +12,7 @@
 
         {{-- Nome --}}
         <div class="mb-4">
-            <x-input-label for="nome" :value="__('Nome')" />
+            <x-input-label for="nome">{{ __('Nome') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="nome"
                         class="block mt-1 w-full @error('nome') border-red-500 dark:border-red-400 @enderror"
                         type="text"
@@ -24,7 +24,7 @@
 
         {{-- CPF --}}
         <div class="mb-4">
-            <x-input-label for="cpf" :value="__('CPF')" />
+            <x-input-label for="cpf">{{ __('CPF') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="cpf"
                         class="block mt-1 w-full @error('cpf') border-red-500 dark:border-red-400 @enderror"
                         type="text"
@@ -39,7 +39,7 @@
 
         {{-- E‑mail --}}
         <div class="mb-4">
-            <x-input-label for="email" :value="__('E‑mail')" />
+            <x-input-label for="email">{{ __('E‑mail') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="email" name="email" type="email"
                           :value="old('email')" required autocapitalize="off"
                           class="block w-full mt-1
@@ -49,18 +49,22 @@
 
         {{-- Senha --}}
         <div class="mb-4">
-            <x-input-label for="password" :value="__('Senha')" />
+            <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="password" name="password" type="password"
                           required autocomplete="new-password"
                           class="block w-full mt-1
                                  @error('password') border-red-500 dark:border-red-400 @enderror" />
+            {{-- Barra que fica verde conforme os requisitos da senha são atingidos --}}
+            <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
+                <div id="password-strength-bar" class="h-full rounded-full bg-emerald-500 transition-all duration-300 ease-out" style="width: 0%"></div>
+            </div>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).</p>
             <x-input-error :messages="$errors->get('password')" />
         </div>
 
         {{-- Confirmar Senha --}}
         <div class="mb-6">
-            <x-input-label for="password_confirmation" :value="__('Confirmar Senha')" />
+            <x-input-label for="password_confirmation">{{ __('Confirmar Senha') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="password_confirmation" name="password_confirmation"
                           type="password" required autocomplete="new-password"
                           class="block w-full mt-1
@@ -84,6 +88,24 @@
     <script>
         $(function(){
             $('#cpf').mask('000.000.000-00');
+
+            // Barra de força da senha: fica verde conforme atinge cada requisito (mesmas regras do backend)
+            var $bar = document.getElementById('password-strength-bar');
+            var $pwd = document.getElementById('password');
+            if ($bar && $pwd) {
+                function updatePasswordStrength() {
+                    var pwd = ($pwd.value || '');
+                    var minLen = pwd.length >= 8;
+                    var hasLetter = /[a-zA-Z]/.test(pwd);
+                    var hasMixed = /[a-z]/.test(pwd) && /[A-Z]/.test(pwd);
+                    var hasNumber = /\d/.test(pwd);
+                    var hasSymbol = /[^a-zA-Z0-9]/.test(pwd);
+                    var n = [minLen, hasLetter, hasMixed, hasNumber, hasSymbol].filter(Boolean).length;
+                    $bar.style.width = (n * 20) + '%';
+                }
+                $pwd.addEventListener('input', updatePasswordStrength);
+                $pwd.addEventListener('change', updatePasswordStrength);
+            }
         });
 
             function validarCPF(cpf) {
