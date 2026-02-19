@@ -324,6 +324,48 @@
                 </p>
             </div>
 
+            {{-- Sugestões com base nos dados do sistema --}}
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3"
+                 x-data="{
+                     sugestoes: [],
+                     carregandoSugestoes: false,
+                     urlSugestoes: '{{ route('agente.sugestoes-doencas') }}',
+                     carregarSugestoes() {
+                         this.carregandoSugestoes = true;
+                         this.sugestoes = [];
+                         var localId = document.querySelector('input[name=\"fk_local_id\"]')?.value || '';
+                         var obs = document.querySelector('#vis_observacoes')?.value || '';
+                         fetch(this.urlSugestoes + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs))
+                             .then(r => r.json())
+                             .then(data => { this.sugestoes = data.sugestoes || []; })
+                             .catch(() => {})
+                             .finally(() => { this.carregandoSugestoes = false; });
+                     },
+                     marcarSugestao(doeId) {
+                         var cb = document.getElementById('doenca_' + doeId);
+                         if (cb && !cb.checked) { cb.checked = true; }
+                     }
+                 }">
+                <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados do sistema</p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">
+                    As sugestões são geradas apenas com os dados já registrados no sistema (histórico do imóvel, frequência no município e palavras das observações). Nenhum serviço externo ou cota de IA é utilizado.
+                </p>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <button type="button" @click="carregarSugestoes()" :disabled="carregandoSugestoes"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-500 disabled:opacity-50">
+                        <template x-if="carregandoSugestoes"><span>Carregando…</span></template>
+                        <template x-if="!carregandoSugestoes"><span>Carregar sugestões</span></template>
+                    </button>
+                    <template x-for="s in sugestoes" :key="s.doe_id">
+                        <button type="button" @click="marcarSugestao(s.doe_id)"
+                                class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
+                                :title="s.motivo">
+                            <span x-text="s.nome"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
             {{-- Doenças Detectadas --}}
             <fieldset class="space-y-3">
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Doenças Detectadas</legend>

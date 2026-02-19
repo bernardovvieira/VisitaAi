@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Local;
 use App\Models\Doenca;
+use App\Services\ResumoVisitaCidadaoService;
 use Illuminate\Http\Request;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
@@ -47,6 +48,13 @@ class ConsultaPublicaController extends Controller
             ->orderByDesc('vis_data')
             ->get();
 
+        $enderecoCompleto = $local->loc_endereco . ', ' . ($local->loc_numero ?? 'S/N') . ' - ' . $local->loc_bairro . ', ' . $local->loc_cidade . '/' . $local->loc_estado;
+        $resumoService = app(ResumoVisitaCidadaoService::class);
+        $resumos = [];
+        foreach ($visitas as $v) {
+            $resumos[$v->vis_id] = $resumoService->resumir($v, $enderecoCompleto);
+        }
+
         $qrCode = new QrCode(
             data: route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]),
             encoding: new Encoding('UTF-8'),
@@ -70,6 +78,6 @@ class ConsultaPublicaController extends Controller
             $qrCodeMime = 'image/svg+xml';
         }
 
-        return view('consulta.codigo', compact('local', 'visitas', 'qrCodeBase64', 'qrCodeMime'));
+        return view('consulta.codigo', compact('local', 'visitas', 'resumos', 'qrCodeBase64', 'qrCodeMime'));
     }
 }

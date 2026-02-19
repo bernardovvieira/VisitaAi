@@ -124,14 +124,41 @@
         @endif
     </section>
 
+    {{-- Resumos para o cidadão (texto neutro, sem dados sensíveis) --}}
+    @if (!empty($resumos) && count($resumos) > 0)
+    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Resumo das visitas</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            O texto abaixo é apenas informativo e não expõe dados sensíveis nem informações que identifiquem situações específicas do imóvel, para preservar a privacidade e evitar conflitos. Em caso de dúvidas, procure a Secretaria Municipal de Saúde.
+        </p>
+        <div class="space-y-4">
+            @foreach ($visitas as $visita)
+                @if (isset($resumos[$visita->vis_id]))
+                <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Visita de {{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}
+                        @if ($visita->vis_pendencias)
+                            <span class="ml-2 text-amber-600 dark:text-amber-400">Pendente</span>
+                        @else
+                            <span class="ml-2 text-green-600 dark:text-green-400">Concluída</span>
+                        @endif
+                    </p>
+                    <p class="text-sm text-gray-800 dark:text-gray-100 leading-relaxed">{{ $resumos[$visita->vis_id] }}</p>
+                </div>
+                @endif
+            @endforeach
+        </div>
+    </section>
+    @endif
+
     {{-- Informativo institucional --}}
     <section class="bg-yellow-50 dark:bg-yellow-900 border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-100 p-6 rounded-lg shadow space-y-2 text-sm">
         <h2 class="text-base font-semibold">Precisa de mais informações?</h2>
         <p>
-            Esta consulta pública tem caráter informativo e exibe apenas o histórico de visitas realizadas pelos agentes no endereço informado.
+            Esta consulta pública tem caráter informativo e <strong>não exibe dados sensíveis</strong>: apenas datas e status das visitas, sem informações que possam identificar situações específicas ou causar conflitos entre moradores.
         </p>
         <p>
-            Para esclarecimentos adicionais sobre a situação epidemiológica do imóvel, entre em contato diretamente com a <strong>Secretaria Municipal de Saúde</strong>.
+            Para esclarecimentos sobre o imóvel, entre em contato diretamente com a <strong>Secretaria Municipal de Saúde</strong>.
         </p>
     </section>
 

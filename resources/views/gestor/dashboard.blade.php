@@ -95,6 +95,46 @@
         </div>
     </section>
 
+    <!-- Insights do período (com base nos dados do sistema) -->
+    @php
+        $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
+        $bairrosComPendencia = (int) \App\Models\Local::whereHas('visitas', fn ($q) => $q->where('vis_pendencias', true))->selectRaw('COUNT(DISTINCT loc_bairro) as total')->value('total');
+        $inicioMes = now()->startOfMonth();
+        $doencaMaisMes = \Illuminate\Support\Facades\DB::table('monitoradas')
+            ->join('visitas', 'visitas.vis_id', '=', 'monitoradas.fk_visita_id')
+            ->join('doencas', 'doencas.doe_id', '=', 'monitoradas.fk_doenca_id')
+            ->where('visitas.vis_data', '>=', $inicioMes)
+            ->select('doencas.doe_nome', \Illuminate\Support\Facades\DB::raw('COUNT(*) as total'))
+            ->groupBy('doencas.doe_id', 'doencas.doe_nome')
+            ->orderByDesc('total')
+            ->first();
+        $visitasEsteMes = \App\Models\Visita::where('vis_data', '>=', $inicioMes)->count();
+    @endphp
+    <section class="mt-8 space-y-4">
+        <header>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Insights do período</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Visão geral com base nos dados registrados no sistema. Atualizado em tempo real.</p>
+        </header>
+        <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-3">
+            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li class="flex items-start gap-2">
+                    <span class="text-gray-500 dark:text-gray-400 shrink-0">•</span>
+                    <span><strong>{{ $visitasComPendencia }}</strong> visita(s) com pendência{{ $bairrosComPendencia > 0 ? ', em <strong>' . $bairrosComPendencia . '</strong> bairro(s)' : '' }}.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-gray-500 dark:text-gray-400 shrink-0">•</span>
+                    <span>No mês atual: <strong>{{ $visitasEsteMes }}</strong> visita(s) realizada(s).</span>
+                </li>
+                @if ($doencaMaisMes && $doencaMaisMes->total > 0)
+                <li class="flex items-start gap-2">
+                    <span class="text-gray-500 dark:text-gray-400 shrink-0">•</span>
+                    <span>Doença ou situação mais registrada este mês: <strong>{{ $doencaMaisMes->doe_nome }}</strong> ({{ $doencaMaisMes->total }} registro(s)).</span>
+                </li>
+                @endif
+            </ul>
+        </div>
+    </section>
+
     <!-- Ações Rápidas -->
     <section class="mt-8 space-y-4">
         <header><h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Ações Rápidas</h2></header>
