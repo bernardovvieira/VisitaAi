@@ -132,18 +132,36 @@
                 var loadingId = input.getAttribute('data-live-loading-id');
                 var loadingEl = loadingId ? document.getElementById(loadingId) : null;
                 var timer;
+                var debounceMs = 600;
+                function doSearch() {
+                    var val = (input.value || '').trim();
+                    if (!val) return;
+                    if (loadingEl) loadingEl.classList.remove('hidden');
+                    var target = url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val);
+                    if (target !== (window.location.pathname + window.location.search)) window.location.href = target;
+                }
                 input.addEventListener('input', function() {
                     clearTimeout(timer);
                     if (loadingEl) loadingEl.classList.add('hidden');
                     var val = (input.value || '').trim();
-                    if (val) {
-                        timer = setTimeout(function() {
-                            if (loadingEl) loadingEl.classList.remove('hidden');
-                            var target = url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val);
-                            if (target !== (window.location.pathname + window.location.search)) window.location.href = target;
-                        }, 380);
+                    if (val) timer = setTimeout(doSearch, debounceMs);
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        clearTimeout(timer);
+                        doSearch();
                     }
                 });
+            });
+            // Restaurar foco no campo de busca após recarregar a página (busca dinâmica)
+            var searchParams = new URLSearchParams(window.location.search);
+            document.querySelectorAll('input[data-live-url]').forEach(function(input) {
+                var param = input.getAttribute('data-live-param') || 'search';
+                if (searchParams.has(param)) {
+                    input.focus();
+                    return;
+                }
             });
         });
         </script>
