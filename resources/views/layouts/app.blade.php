@@ -92,7 +92,16 @@
     </head>
     <body class="font-sans antialiased {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
         <div class="min-h-screen {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
-            @if (! View::hasSection('public'))
+            @if (View::hasSection('public'))
+                <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                        <a href="{{ url('/') }}" class="inline-flex items-center gap-3 hover:opacity-90 transition">
+                            <img src="{{ asset('images/visitaai_rembg.png') }}" alt="{{ config('app.name') }}" class="h-10 w-auto" />
+                            <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ config('app.name') }}</span>
+                        </a>
+                    </div>
+                </header>
+            @else
                 @include('layouts.navigation')
             @endif
 

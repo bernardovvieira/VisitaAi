@@ -13,7 +13,8 @@
                         type="text"
                         :value="old('use_email')"
                         required autofocus
-                        class="block w-full mt-1 @error('use_email') border-red-500 @enderror" />
+                        class="block w-full mt-1 @error('use_email') border-red-500 @enderror"
+                        autocomplete="username" />
             <x-input-error :messages="$errors->get('use_email')" />
             <div id="use_email_format_error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></div>
         </div>
@@ -172,6 +173,17 @@
             var firstError = form.querySelector('.border-red-500');
             if (firstError && typeof firstError.focus === 'function') firstError.focus();
         }
+
+        // Enter em qualquer campo: se CPF/e-mail e senha preenchidos, envia o formulário
+        form.addEventListener('keydown', function(e) {
+            if (e.key !== 'Enter') return;
+            var emailVal = (document.getElementById('use_email') || {}).value || '';
+            var passVal = (document.getElementById('password') || {}).value || '';
+            if (emailVal.trim() && passVal) {
+                e.preventDefault();
+                form.requestSubmit();
+            }
+        });
     });
     </script>
     

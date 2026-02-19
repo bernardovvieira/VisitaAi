@@ -95,7 +95,7 @@
         </div>
     </section>
 
-    <!-- Insights do período (com base nos dados do sistema) -->
+    <!-- Insights do período -->
     @php
         $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
         $bairrosComPendencia = (int) \App\Models\Local::whereHas('visitas', fn ($q) => $q->where('vis_pendencias', true))->selectRaw('COUNT(DISTINCT loc_bairro) as total')->value('total');
@@ -111,45 +111,42 @@
         $visitasEsteMes = \App\Models\Visita::where('vis_data', '>=', $inicioMes)->count();
     @endphp
     <section class="mt-8 space-y-4">
-        <header>
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Insights do período</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Visão geral com base nos dados registrados no sistema.</p>
-        </header>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow flex items-center gap-3 {{ $visitasComPendencia > 0 ? 'ring-2 ring-amber-400 dark:ring-amber-500' : '' }}">
-                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Insights do período</h2></header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Visitas com pendência -->
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow {{ $visitasComPendencia > 0 ? 'ring-2 ring-amber-400 dark:ring-amber-500 border-2 border-amber-400 dark:border-amber-500' : '' }}">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 dark:text-amber-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
                 </div>
-                <div>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Visita(s) com pendência @if($bairrosComPendencia > 0)<span class="font-medium text-gray-700 dark:text-gray-300">em {{ $bairrosComPendencia }} bairro(s)</span>@endif</p>
-                </div>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
+                @if($bairrosComPendencia > 0)
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">em {{ $bairrosComPendencia }} bairro(s)</p>
+                @endif
             </div>
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow flex items-center gap-3">
-                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- Visitas neste mês -->
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500 dark:text-emerald-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas neste mês</h3>
                 </div>
-                <div>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $visitasEsteMes }}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Visita(s) neste mês</p>
-                </div>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasEsteMes }}</p>
             </div>
             @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow flex items-center gap-3 sm:col-span-2 lg:col-span-1">
-                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- Destaque do mês -->
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 truncate" title="{{ $doencaMaisMes->doe_nome }}">Destaque do mês</h3>
                 </div>
-                <div class="min-w-0">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400 truncate" title="{{ $doencaMaisMes->doe_nome }}">Destaque do mês</p>
-                    <p class="text-lg font-bold text-gray-900 dark:text-gray-100 truncate" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $doencaMaisMes->total }} registro(s)</p>
-                </div>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100 truncate" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ $doencaMaisMes->total }} registro(s)</p>
             </div>
             @endif
         </div>
@@ -157,7 +154,7 @@
 
     <!-- Ações Rápidas -->
     <section class="mt-8 space-y-4">
-        <header><h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Ações Rápidas</h2></header>
+        <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Ações Rápidas</h2></header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <a href="{{ route('gestor.pendentes') }}" class="flex items-center justify-center px-4 py-2 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg {{ $pendentesCount > 0 ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 border-2 border-amber-400 dark:border-amber-500' : 'bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 dark:hover:bg-gray-500' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 {{ $pendentesCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-300' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
