@@ -88,11 +88,7 @@
                 </tbody>
             </table>
         </div>
-        @if($pendentes->hasPages())
-        <nav class="mt-4" aria-label="Navegação de páginas">
-            {{ $pendentes->links() }}
-        </nav>
-        @endif
+        <x-pagination-relatorio :paginator="$pendentes" item-label="usuários pendentes" />
     </section>
 
 </div>

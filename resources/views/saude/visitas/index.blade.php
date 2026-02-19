@@ -187,9 +187,7 @@
                 </tbody>
             </table>
         </div>
-        <nav class="mt-4" aria-label="Navegação de páginas">
-            {{ $visitas->appends(request()->query())->links() }}
-        </nav>
+        <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
     </section>
 </div>
 @endsection

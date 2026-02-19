@@ -90,8 +90,6 @@
     </div>
   </section>
 
-  <nav class="mt-4" aria-label="Navegação de páginas">
-    {{ $doencas->links() }}
-  </nav>
+  <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
 </div>
 @endsection

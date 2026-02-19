@@ -132,9 +132,7 @@
             </table>
         </div>
 
-        <nav class="mt-4" aria-label="Navegação de páginas">
-            {{ $locais->links() }}
-        </nav>
+        <x-pagination-relatorio :paginator="$locais" item-label="locais" />
 
         <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600">
             <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>

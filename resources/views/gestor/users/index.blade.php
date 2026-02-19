@@ -161,9 +161,7 @@
                 </tbody>
             </table>
         </div>
-        <nav class="mt-4" aria-label="Navegação de páginas">
-            {{ $usuarios->links() }}
-        </nav>
+        <x-pagination-relatorio :paginator="$usuarios" item-label="usuários" />
     </section>
 
     <!-- Card de Acesso a Pendentes -->

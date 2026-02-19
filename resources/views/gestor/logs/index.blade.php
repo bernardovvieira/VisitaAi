@@ -67,9 +67,7 @@
             </table>
         </div>
 
-        <nav class="mt-4" aria-label="Navegação de páginas">
-            {{ $logs->links() }}
-        </nav>
+        <x-pagination-relatorio :paginator="$logs" item-label="registros" />
     </section>
 </div>
 @endsection
