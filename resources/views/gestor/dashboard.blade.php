@@ -25,6 +25,7 @@
     <!-- Estatísticas Principais -->
     @php
         $pendentesCount = \App\Models\User::where(function($q) { $q->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', false)->count();
+        $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
     @endphp
     <section class="space-y-4">
         <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Estatísticas Principais</h2></header>
@@ -92,26 +93,6 @@
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ \App\Models\Visita::count() }}</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Insights do período -->
-    @php
-        $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
-        $inicioMes = now()->startOfMonth();
-        $doencaMaisMes = \Illuminate\Support\Facades\DB::table('monitoradas')
-            ->join('visitas', 'visitas.vis_id', '=', 'monitoradas.fk_visita_id')
-            ->join('doencas', 'doencas.doe_id', '=', 'monitoradas.fk_doenca_id')
-            ->where('visitas.vis_data', '>=', $inicioMes)
-            ->select('doencas.doe_nome', \Illuminate\Support\Facades\DB::raw('COUNT(*) as total'))
-            ->groupBy('doencas.doe_id', 'doencas.doe_nome')
-            ->orderByDesc('total')
-            ->first();
-        $visitasEsteMes = \App\Models\Visita::where('vis_data', '>=', $inicioMes)->count();
-    @endphp
-    <section class="mt-8 space-y-4">
-        <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Insights do período</h2></header>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Visitas com pendência -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow {{ $visitasComPendencia > 0 ? 'ring-2 ring-red-500 dark:ring-red-500 border-2 border-red-500 dark:border-red-500' : '' }}">
                 <div class="flex items-center">
@@ -122,17 +103,23 @@
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
             </div>
-            <!-- Visitas neste mês -->
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500 dark:text-emerald-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas neste mês</h3>
-                </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasEsteMes }}</p>
-            </div>
-            @if ($doencaMaisMes && $doencaMaisMes->total > 0)
+        </div>
+    </section>
+
+    @php
+        $inicioMes = now()->startOfMonth();
+        $doencaMaisMes = \Illuminate\Support\Facades\DB::table('monitoradas')
+            ->join('visitas', 'visitas.vis_id', '=', 'monitoradas.fk_visita_id')
+            ->join('doencas', 'doencas.doe_id', '=', 'monitoradas.fk_doenca_id')
+            ->where('visitas.vis_data', '>=', $inicioMes)
+            ->select('doencas.doe_nome', \Illuminate\Support\Facades\DB::raw('COUNT(*) as total'))
+            ->groupBy('doencas.doe_id', 'doencas.doe_nome')
+            ->orderByDesc('total')
+            ->first();
+    @endphp
+    @if ($doencaMaisMes && $doencaMaisMes->total > 0)
+    <section class="mt-8 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Destaque do mês -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
@@ -144,9 +131,9 @@
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100 truncate" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ $doencaMaisMes->total }} registro(s)</p>
             </div>
-            @endif
         </div>
     </section>
+    @endif
 
     <!-- Ações Rápidas -->
     <section class="mt-8 space-y-4">
