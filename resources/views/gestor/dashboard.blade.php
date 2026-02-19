@@ -120,7 +120,7 @@
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
                 </div>
-                <p class="mt-2 text-3xl {{ $visitasComPendencia > 0 ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-gray-900 dark:text-gray-100' }}">{{ $visitasComPendencia }}</p>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
             </div>
             <!-- Visitas neste mês -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">

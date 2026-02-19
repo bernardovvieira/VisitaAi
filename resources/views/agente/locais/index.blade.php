@@ -184,7 +184,7 @@
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Ele é criado automaticamente e não pode ser editado nem excluído. Os demais locais são os imóveis que você cadastra para realizar visitas.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído. Os demais locais são os imóveis que você cadastra para realizar visitas.</p>
     </section>
 </div>
 @endsection
