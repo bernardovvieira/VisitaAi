@@ -27,10 +27,12 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'use_senha.min'     => 'A senha deve ter no mínimo 8 caracteres.',
             'use_senha.letters' => 'A senha deve conter pelo menos uma letra.',
             'use_senha.mixed'   => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
             'use_senha.numbers' => 'A senha deve conter pelo menos um número.',
             'use_senha.symbols' => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
+            'use_senha.confirmed' => 'A confirmação da senha não confere.',
             'password.letters'  => 'A senha deve conter pelo menos uma letra.',
             'password.mixed'    => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
             'password.numbers'  => 'A senha deve conter pelo menos um número.',

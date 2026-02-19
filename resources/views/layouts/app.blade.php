@@ -154,12 +154,14 @@
                     }
                 });
             });
-            // Restaurar foco no campo de busca após recarregar a página (busca dinâmica)
+            // Restaurar foco no campo de busca após recarregar a página (busca dinâmica); cursor no fim do texto
             var searchParams = new URLSearchParams(window.location.search);
             document.querySelectorAll('input[data-live-url]').forEach(function(input) {
                 var param = input.getAttribute('data-live-param') || 'search';
                 if (searchParams.has(param)) {
                     input.focus();
+                    var len = (input.value || '').length;
+                    input.setSelectionRange(len, len);
                     return;
                 }
             });
