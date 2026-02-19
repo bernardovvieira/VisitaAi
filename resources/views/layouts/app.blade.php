@@ -135,16 +135,22 @@
                 var debounceMs = 600;
                 function doSearch() {
                     var val = (input.value || '').trim();
-                    if (!val) return;
                     if (loadingEl) loadingEl.classList.remove('hidden');
-                    var target = url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val);
+                    var target;
+                    if (val) {
+                        target = url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val);
+                    } else {
+                        var params = new URLSearchParams(window.location.search);
+                        params.delete(param);
+                        target = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+                    }
                     if (target !== (window.location.pathname + window.location.search)) window.location.href = target;
                 }
                 input.addEventListener('input', function() {
                     clearTimeout(timer);
                     if (loadingEl) loadingEl.classList.add('hidden');
                     var val = (input.value || '').trim();
-                    if (val) timer = setTimeout(doSearch, debounceMs);
+                    timer = setTimeout(doSearch, debounceMs);
                 });
                 input.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
