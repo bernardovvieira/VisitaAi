@@ -79,14 +79,17 @@
                 <input type="text" id="data_cadastro_display" value="{{ $user->use_data_criacao->format('d/m/Y') }}" 
                        readonly
                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border-0">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Data em que o usuário foi cadastrado no sistema.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Data em que o usuário se cadastrou.</p>
             </div>
 
             <!-- Nova Senha -->
             <div>
                 <label for="use_senha" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nova Senha</label>
                 <input type="password" id="use_senha" name="use_senha" autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha') border-red-500 dark:border-red-400 @enderror">
+                <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
+                    <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
+                </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !). Deixe em branco se não quiser alterar a senha atual.</p>
                 @error('use_senha')<p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ $message }}</p>@enderror
             </div>
@@ -95,7 +98,9 @@
             <div>
                 <label for="use_senha_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmar Nova Senha</label>
                 <input type="password" id="use_senha_confirmation" name="use_senha_confirmation" autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha_confirmation') border-red-500 dark:border-red-400 @enderror">
+                <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
+                @error('use_senha_confirmation')<p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div class="flex justify-end">
@@ -113,6 +118,51 @@
     var form = document.getElementById('user-edit-form');
     var btn = document.getElementById('user-edit-btn');
     if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Salvando…'; });
+
+    // Barra de força da senha (igual ao registro)
+    var bar = document.getElementById('password-strength-bar');
+    var pwd = document.getElementById('use_senha');
+    if (bar && pwd) {
+        function updatePasswordStrength() {
+            var val = (pwd.value || '');
+            var minLen = val.length >= 8;
+            var hasLetter = /[a-zA-Z]/.test(val);
+            var hasMixed = /[a-z]/.test(val) && /[A-Z]/.test(val);
+            var hasNumber = /\d/.test(val);
+            var hasSymbol = /[^a-zA-Z0-9]/.test(val);
+            var n = [minLen, hasLetter, hasMixed, hasNumber, hasSymbol].filter(Boolean).length;
+            bar.style.width = (n * 20) + '%';
+            bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-emerald-500');
+            bar.classList.add(n >= 5 ? 'bg-emerald-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
+        }
+        pwd.addEventListener('input', updatePasswordStrength);
+        pwd.addEventListener('change', updatePasswordStrength);
+    }
+
+    // Confirmar senha: exibir se as duas conferem ou não
+    var pwdConf = document.getElementById('use_senha_confirmation');
+    var matchFeedback = document.getElementById('password-match-feedback');
+    if (pwdConf && matchFeedback) {
+        function updateMatchFeedback() {
+            var p = (pwd && pwd.value) ? pwd.value : '';
+            var c = (pwdConf.value || '');
+            matchFeedback.classList.add('hidden');
+            if (c.length === 0) return;
+            if (p === c) {
+                matchFeedback.textContent = 'Senhas conferem.';
+                matchFeedback.classList.remove('text-red-600', 'dark:text-red-400');
+                matchFeedback.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                matchFeedback.classList.remove('hidden');
+            } else {
+                matchFeedback.textContent = 'As senhas não conferem.';
+                matchFeedback.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                matchFeedback.classList.add('text-red-600', 'dark:text-red-400');
+                matchFeedback.classList.remove('hidden');
+            }
+        }
+        if (pwd) pwd.addEventListener('input', updateMatchFeedback);
+        pwdConf.addEventListener('input', updateMatchFeedback);
+    }
 })();
 </script>
 @endsection
