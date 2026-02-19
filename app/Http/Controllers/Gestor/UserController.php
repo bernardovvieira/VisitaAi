@@ -26,18 +26,35 @@ class UserController extends Controller
             $search = trim(request('search'));
             $busca = strtolower($search);
 
-            // Só filtra por perfil quando a busca contém palavra-chave explícita (endemias, saude, gestor ou prefixos).
-            // "agente", "agente 1", "agente1" = só nome/email; nunca "todos os agentes".
+            // Busca por perfil: prefixos de "gestor", "endemias", "saude" e "agente de [resto]" (sem regrinhas fixas).
             $perfis = null;
-            $endemiasKeywords = ['endemias', 'endemia', 'endemi', 'endem', 'ende', 'end'];
-            $saudeKeywords = ['saude', 'saúde', 'saud', 'sau', 'saú'];
+            $gestorPalavra = 'gestor';
+            $endemiasPalavra = 'endemias';
+            $saudePalavra = 'saude';
 
-            if (str_contains($busca, 'gestor') || str_contains($busca, 'ges')) {
+            if (str_contains($busca, 'agente de')) {
+                $resto = trim(substr($busca, strpos($busca, 'agente de') + strlen('agente de')));
+                $restoNorm = preg_replace('/ú/u', 'u', $resto);
+                if ($resto === '') {
+                    $perfis = ['agente_endemias', 'agente_saude'];
+                } elseif ($restoNorm !== '' && str_starts_with($saudePalavra, $restoNorm)) {
+                    $perfis = ['agente_saude'];
+                } elseif ($resto !== '' && str_starts_with($endemiasPalavra, $resto)) {
+                    $perfis = ['agente_endemias'];
+                } else {
+                    $perfis = ['agente_endemias', 'agente_saude'];
+                }
+            } elseif (str_contains($busca, $gestorPalavra) || (strlen($busca) >= 3 && str_starts_with($gestorPalavra, $busca))) {
                 $perfis = ['gestor'];
-            } elseif (collect($endemiasKeywords)->contains(fn ($k) => str_contains($busca, $k))) {
-                $perfis = ['agente_endemias'];
-            } elseif (collect($saudeKeywords)->contains(fn ($k) => str_contains($busca, $k))) {
-                $perfis = ['agente_saude'];
+            } else {
+                $buscaNorm = preg_replace('/ú/u', 'u', $busca);
+                if ($buscaNorm !== '' && str_starts_with($saudePalavra, $buscaNorm)) {
+                    $perfis = ['agente_saude'];
+                } elseif ($busca !== '' && str_starts_with($endemiasPalavra, $busca)) {
+                    $perfis = ['agente_endemias'];
+                } elseif (strlen($busca) >= 3 && str_starts_with($gestorPalavra, $busca)) {
+                    $perfis = ['gestor'];
+                }
             }
 
             $query->where(function ($q) use ($search, $perfis) {

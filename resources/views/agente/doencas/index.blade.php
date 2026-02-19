@@ -19,10 +19,10 @@
   <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
     <div class="flex flex-col sm:flex-row sm:items-end gap-4">
       <div class="flex-1">
-        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Doença</label>
+        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
         <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                data-live-url="{{ route('agente.doencas.index') }}" data-live-param="search"
-               placeholder="Digite para filtrar por nome, sintomas, transmissão ou medidas..."
+               placeholder="Nome, sintomas, transmissão ou medidas..."
                class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
       </div>
     </div>

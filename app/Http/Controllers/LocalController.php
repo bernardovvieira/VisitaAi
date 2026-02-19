@@ -27,25 +27,27 @@ class LocalController extends Controller
 
         $query = Local::query();
 
-        if ($search) {
-            // Resolver tipo de imóvel por fragmento
+        if ($search !== '') {
+            // Busca inteligente: prefixos de residencial, comercial, terreno, urbano, rural (sem regras fixas).
             $tipo = null;
-            if (str_starts_with($search, 'res')) {
-                $tipo = 'R';
-            } elseif (str_starts_with($search, 'com')) {
-                $tipo = 'C';
-            } elseif (str_starts_with($search, 'ter')) {
-                $tipo = 'T';
-            } elseif (in_array($search, ['r', 'c', 't'])) {
-                $tipo = strtoupper($search);
-            }
-
-            // Resolver zona por fragmento
             $zona = null;
-            if (str_starts_with($search, 'urb')) {
-                $zona = 'U';
-            } elseif (str_starts_with($search, 'rur')) {
-                $zona = 'R';
+            $minPrefix = 2;
+            if (strlen($search) >= $minPrefix) {
+                if (str_starts_with('residencial', $search)) {
+                    $tipo = 'R';
+                } elseif (str_starts_with('comercial', $search)) {
+                    $tipo = 'C';
+                } elseif (str_starts_with('terreno', $search)) {
+                    $tipo = 'T';
+                }
+                if (str_starts_with('urbano', $search)) {
+                    $zona = 'U';
+                } elseif (str_starts_with('rural', $search)) {
+                    $zona = 'R';
+                }
+            }
+            if ($search === 'r' || $search === 'c' || $search === 't') {
+                $tipo = strtoupper($search);
             }
 
             $query->where(function ($q) use ($search, $tipo, $zona) {
