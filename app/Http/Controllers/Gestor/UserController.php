@@ -26,23 +26,25 @@ class UserController extends Controller
             $search = trim(request('search'));
             $busca = strtolower($search);
 
-            // Resolver tipo de perfil mesmo por fragmento parcial
-            $perfil = null;
+            // Resolver tipo de perfil: "agente" ou "agente de" = ambos; "endemias" = só endemias; "saude" = só saúde
+            $perfis = null;
 
             if (str_contains($busca, 'gestor') || str_contains($busca, 'ges')) {
-                $perfil = 'gestor';
-            } elseif (str_contains($busca, 'endemias') || str_contains($busca, 'en') || str_contains($busca, 'agente')) {
-                $perfil = 'agente_endemias';
-            } elseif (str_contains($busca, 'saude') || str_contains($busca, 'saúde') || str_contains($busca, 'sa') || str_contains($busca, 'agente')) {
-                $perfil = 'agente_saude';
+                $perfis = ['gestor'];
+            } elseif (str_contains($busca, 'endemias')) {
+                $perfis = ['agente_endemias'];
+            } elseif (str_contains($busca, 'saude') || str_contains($busca, 'saúde')) {
+                $perfis = ['agente_saude'];
+            } elseif (str_contains($busca, 'agente')) {
+                $perfis = ['agente_endemias', 'agente_saude'];
             }
 
-            $query->where(function ($q) use ($search, $perfil) {
+            $query->where(function ($q) use ($search, $perfis) {
                 $q->where('use_nome', 'like', "%{$search}%")
-                ->orWhere('use_email', 'like', "%{$search}%");
+                  ->orWhere('use_email', 'like', "%{$search}%");
 
-                if ($perfil) {
-                    $q->orWhere('use_perfil', $perfil);
+                if ($perfis !== null) {
+                    $q->orWhereIn('use_perfil', $perfis);
                 }
             });
         }
