@@ -6,6 +6,7 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
+  <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Doenças']]" />
 
   <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Doenças</h1>
 

@@ -2,7 +2,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-8">
+<div class="max-w-7xl mx-auto space-y-8">
+  <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Doenças', 'url' => route('saude.doencas.index')], ['label' => 'Visualizar']]" />
 
   <!-- Botão Voltar -->
   <div>

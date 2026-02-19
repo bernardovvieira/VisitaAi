@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-7xl mx-auto space-y-6">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Usuários', 'url' => route('gestor.users.index')], ['label' => 'Pendentes']]" />
 
     <!-- Botão Voltar -->
     <div>
