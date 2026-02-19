@@ -23,6 +23,9 @@
     </section>
 
     <!-- Estatísticas Principais -->
+    @php
+        $pendentesCount = \App\Models\User::where(function($q) { $q->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', false)->count();
+    @endphp
     <section class="space-y-4">
         <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Estatísticas Principais</h2></header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -38,14 +41,17 @@
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">    {{ \App\Models\User::where(function($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count() }}</p>
             </div>
             <!-- Agentes Pendentes -->
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow {{ $pendentesCount > 0 ? 'ring-2 ring-amber-400 dark:ring-amber-500 border-2 border-amber-400 dark:border-amber-500' : '' }}">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 dark:text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4m0 4h.01" />
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Agentes Pendentes</h3>
+                    @if($pendentesCount > 0)
+                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">Atenção</span>
+                    @endif
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ \App\Models\User::where(function($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', false)->count() }}</p>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $pendentesCount }}</p>
             </div>
             <!-- Total de Gestores -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
@@ -93,11 +99,14 @@
     <section class="mt-8 space-y-4">
         <header><h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Ações Rápidas</h2></header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a href="{{ route('gestor.pendentes') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <a href="{{ route('gestor.pendentes') }}" class="flex items-center justify-center px-4 py-2 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg {{ $pendentesCount > 0 ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-100 border-2 border-amber-400 dark:border-amber-500' : 'bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 dark:hover:bg-gray-500' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 {{ $pendentesCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-300' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
                 Usuários Pendentes
+                @if($pendentesCount > 0)
+                    <span class="ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500 dark:bg-amber-600 text-white text-xs font-bold">{{ $pendentesCount }}</span>
+                @endif
             </a>
             <a href="{{ route('gestor.users.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm transition duration-150 ease-in-out hover:shadow-lg dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -34,10 +34,14 @@
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Local</label>
-                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                       data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
-                       placeholder="Digite para filtrar por endereço, bairro ou cidade..."
-                       class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                <div class="flex items-center gap-2">
+                    <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                           data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
+                           data-live-loading-id="search-loading-locais"
+                           placeholder="Digite para filtrar por endereço, bairro ou cidade..."
+                           class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                    <span id="search-loading-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
+                </div>
             </div>
         </div>
     </section>
@@ -109,7 +113,8 @@
                                         <span class="text-xs text-amber-600 dark:text-amber-400 font-medium" title="Local primário: não pode ser editado nem excluído">Primário</span>
                                     @endif
                                     <a href="{{ route('agente.locais.show', $local) }}"
-                                       class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition">
+                                       class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
+                                       aria-label="Visualizar local">
                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -120,7 +125,8 @@
                                     </a>
                                     @if(!$local->isPrimary())
                                     <a href="{{ route('agente.locais.edit', $local) }}"
-                                        class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition">
+                                        class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition"
+                                        aria-label="Editar local">
                                         <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
@@ -130,8 +136,9 @@
                                     <form method="POST" action="{{ route('agente.locais.destroy', $local) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Excluir este local?')"
-                                                class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition">
+                                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.')"
+                                                class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition"
+                                                aria-label="Excluir local">
                                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M4 6H20 M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2 M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6 M10 11v6 M14 11v6" />
@@ -145,7 +152,21 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-6 text-center text-gray-600 dark:text-gray-400">Nenhum local cadastrado.</td>
+                            <td colspan="8" class="p-8 text-center">
+                                <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                    <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
+                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre o primeiro local para realizar visitas.</p>
+                                    <a href="{{ route('agente.locais.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        Cadastrar local
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

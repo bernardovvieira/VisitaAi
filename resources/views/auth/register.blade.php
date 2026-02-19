@@ -2,12 +2,20 @@
     <x-alert type="success" :message="session('status')" />
 
     @if ($errors->any())
+        @php
+            $fieldLabels = ['nome' => 'Nome', 'cpf' => 'CPF', 'email' => 'E‑mail', 'password' => 'Senha', 'password_confirmation' => 'Confirmar senha'];
+            $errorFields = array_unique($errors->keys());
+            $labels = array_map(fn ($k) => $fieldLabels[$k] ?? $k, $errorFields);
+        @endphp
         <div class="max-w-md mx-auto mt-4 px-4 py-3 rounded-lg bg-red-600 dark:bg-red-700 text-white text-sm" role="alert">
             <p class="font-medium">Corrija os erros nos campos indicados abaixo.</p>
+            @if (count($labels) > 0)
+                <p class="mt-1 opacity-90">Campos com erro: {{ implode(', ', $labels) }}.</p>
+            @endif
         </div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-8">
+    <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-8" id="register-form">
         @csrf
 
         {{-- Nome --}}
@@ -34,6 +42,7 @@
                         inputmode="numeric"
                         pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
                         title="Formato: XXX.XXX.XXX-XX" />
+            <p id="cpf-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
             <x-input-error :messages="$errors->get('cpf')" class="mt-2" />
         </div>
 
@@ -69,10 +78,11 @@
                           type="password" required autocomplete="new-password"
                           class="block w-full mt-1
                                  @error('password_confirmation') border-red-500 dark:border-red-400 @enderror" />
+            <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
             <x-input-error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <x-primary-button class="w-full justify-center">Registrar</x-primary-button>
+        <x-primary-button id="register-submit-btn" class="w-full justify-center">Registrar</x-primary-button>
     </form>
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
@@ -109,6 +119,41 @@
                 $pwd.addEventListener('input', updatePasswordStrength);
                 $pwd.addEventListener('change', updatePasswordStrength);
             }
+
+            // Confirmar senha em tempo real
+            var pwdConf = document.getElementById('password_confirmation');
+            var matchFeedback = document.getElementById('password-match-feedback');
+            if (pwdConf && matchFeedback) {
+                function updateMatchFeedback() {
+                    var p = ($('#password').val() || '');
+                    var c = (pwdConf.value || '');
+                    matchFeedback.classList.add('hidden');
+                    if (c.length === 0) return;
+                    if (p === c) {
+                        matchFeedback.textContent = 'Senhas conferem.';
+                        matchFeedback.classList.remove('text-red-600', 'dark:text-red-400');
+                        matchFeedback.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                        matchFeedback.classList.remove('hidden');
+                    } else {
+                        matchFeedback.textContent = 'As senhas não conferem.';
+                        matchFeedback.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                        matchFeedback.classList.add('text-red-600', 'dark:text-red-400');
+                        matchFeedback.classList.remove('hidden');
+                    }
+                }
+                $('#password').on('input', updateMatchFeedback);
+                pwdConf.addEventListener('input', updateMatchFeedback);
+            }
+
+            // Loading no botão ao enviar
+            var form = document.getElementById('register-form');
+            var btn = document.getElementById('register-submit-btn');
+            if (form && btn) {
+                form.addEventListener('submit', function () {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Registrando…</span>';
+                });
+            }
         });
 
             function validarCPF(cpf) {
@@ -129,17 +174,21 @@
         return resto === parseInt(cpf.charAt(10));
     }
 
+    var $cpfFeedback = $('#cpf-feedback');
     $('#cpf').on('blur', function () {
         const input = this;
         const cpf = input.value;
+        $cpfFeedback.addClass('hidden').text('');
 
         if (!cpf) return; // ignora se estiver vazio (deixa o required tratar)
 
         if (!validarCPF(cpf)) {
             input.setCustomValidity('CPF inválido.');
             input.reportValidity();
+            $cpfFeedback.removeClass('hidden').addClass('text-red-600 dark:text-red-400').text('CPF inválido.');
         } else {
             input.setCustomValidity('');
+            $cpfFeedback.removeClass('hidden').addClass('text-emerald-600 dark:text-emerald-400').text('CPF válido.');
         }
     });
     </script>

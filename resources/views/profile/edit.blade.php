@@ -68,7 +68,7 @@
                 </svg>
                 Atualizar Dados
             </h3>
-            <form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
+            <form method="POST" action="{{ route('profile.update') }}" class="space-y-4" id="profile-update-form">
                 @csrf
                 @method('patch')
 
@@ -101,11 +101,18 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                    <button type="submit" id="profile-update-btn" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition">
                         Aplicar Alterações
                     </button>
                 </div>
             </form>
+            <script>
+            (function(){
+                var form = document.getElementById('profile-update-form');
+                var btn = document.getElementById('profile-update-btn');
+                if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Salvando…'; });
+            })();
+            </script>
         </div>
     </div>
 
@@ -125,7 +132,7 @@
             @if(method_exists($user, 'hasEnabledTwoFactorAuthentication') && $user->hasEnabledTwoFactorAuthentication())
                 <p class="text-sm text-green-600 dark:text-green-400 font-medium">2FA ativado para esta conta.</p>
                 <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
-                   onclick="return confirm('Desativar autenticação em dois fatores?');"
+                   onclick="return confirm('Tem certeza que deseja desativar a autenticação em dois fatores?');"
                    class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg shadow transition">
                     Desativar autenticação em dois fatores
                 </a>

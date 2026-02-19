@@ -122,17 +122,27 @@
         @endif
         <script>
         document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[data-alert-autodismiss]').forEach(function(el) {
+                var ms = parseInt(el.getAttribute('data-alert-autodismiss'), 10) || 5000;
+                setTimeout(function() { el.style.display = 'none'; }, ms);
+            });
             document.querySelectorAll('input[data-live-url]').forEach(function(input) {
                 var url = input.getAttribute('data-live-url');
                 var param = input.getAttribute('data-live-param') || 'search';
+                var loadingId = input.getAttribute('data-live-loading-id');
+                var loadingEl = loadingId ? document.getElementById(loadingId) : null;
                 var timer;
                 input.addEventListener('input', function() {
                     clearTimeout(timer);
-                    timer = setTimeout(function() {
-                        var val = (input.value || '').trim();
-                        var target = val ? url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val) : url;
-                        if (target !== (window.location.pathname + window.location.search)) window.location.href = target;
-                    }, 380);
+                    if (loadingEl) loadingEl.classList.add('hidden');
+                    var val = (input.value || '').trim();
+                    if (val) {
+                        timer = setTimeout(function() {
+                            if (loadingEl) loadingEl.classList.remove('hidden');
+                            var target = url + (url.indexOf('?') >= 0 ? '&' : '?') + param + '=' + encodeURIComponent(val);
+                            if (target !== (window.location.pathname + window.location.search)) window.location.href = target;
+                        }, 380);
+                    }
                 });
             });
         });

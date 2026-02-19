@@ -29,10 +29,14 @@
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buscar Usuário</label>
-                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                       data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
-                    placeholder="Digite para filtrar por nome, e-mail ou perfil..."
-                    class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                <div class="flex items-center gap-2">
+                    <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                           data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
+                           data-live-loading-id="search-loading-users"
+                           placeholder="Digite para filtrar por nome, e-mail ou perfil..."
+                           class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                    <span id="search-loading-users" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
+                </div>
             </div>
         </div>
     </section>
@@ -109,7 +113,8 @@
     <div class="flex justify-center gap-3">
         <!-- Botão Editar -->
         <a href="{{ route('gestor.users.edit', $usuario) }}"
-           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow-md transition">
+           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow-md transition"
+           aria-label="Editar usuário">
             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
@@ -122,8 +127,9 @@
             @csrf
             @method('DELETE')
             <button type="submit"
-                    onclick="return confirm('Deseja realmente anonimizar este usuário?')"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                    onclick="return confirm('Tem certeza que deseja anonimizar este usuário? Esta ação não pode ser desfeita.')"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition"
+                    aria-label="Anonimizar usuário">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -138,7 +144,17 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="p-6 text-center text-gray-600 dark:text-gray-400">Nenhum usuário cadastrado.</td>
+                            <td colspan="8" class="p-8 text-center">
+                                <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                    <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
+                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                        </svg>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum usuário cadastrado.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Novos usuários devem se registrar pela tela de login.</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

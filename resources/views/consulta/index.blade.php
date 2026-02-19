@@ -21,7 +21,7 @@
     </div>
 
     {{-- Busca por código --}}
-    <form action="{{ route('consulta.codigo') }}" method="GET"
+    <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
           class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
         <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Digite o <strong>código único do imóvel</strong> fornecido pelo agente <span class="text-red-500">*</span>
@@ -32,11 +32,13 @@
                 id="codigo"
                 name="codigo"
                 value="{{ old('codigo') }}"
-                placeholder="Ex: 12345678"
+                placeholder="Ex: 12345678 (apenas números)"
                 required
+                inputmode="numeric"
+                pattern="[0-9]*"
                 class="w-full rounded-md p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600">
-            <button type="submit"
-                    class="btn-acesso-principal px-4 py-2 text-white font-semibold rounded-md shadow transition">
+            <button type="submit" id="consulta-codigo-btn"
+                    class="btn-acesso-principal px-4 py-2 text-white font-semibold rounded-md shadow transition inline-flex items-center justify-center min-w-[120px]">
                 Consultar
             </button>
         </div>
@@ -44,9 +46,21 @@
             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
         @enderror
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            O código único é um identificador exclusivo para cada imóvel, fornecido pelo agente durante a visita.
+            O código único é um identificador exclusivo para cada imóvel (apenas números), fornecido pelo agente durante a visita.
         </p>
     </form>
+    <script>
+    (function(){
+        var form = document.getElementById('consulta-codigo-form');
+        var btn = document.getElementById('consulta-codigo-btn');
+        if (form && btn) {
+            form.addEventListener('submit', function() {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Consultando…</span>';
+            });
+        }
+    })();
+    </script>
 
     {{-- Alerta de erro (código não encontrado ou inválido) --}}
     @if (session('erro'))
