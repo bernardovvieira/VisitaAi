@@ -133,11 +133,11 @@
         </div>
 
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
+    </section>
 
-        <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600">
-            <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Ele é criado automaticamente e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos agentes.</p>
-        </div>
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Ele é criado automaticamente e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos agentes.</p>
     </section>
 </div>
 @endsection

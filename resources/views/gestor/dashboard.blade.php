@@ -113,14 +113,14 @@
         <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Insights do período</h2></header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Visitas com pendência -->
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow {{ $visitasComPendencia > 0 ? 'ring-2 ring-amber-400 dark:ring-amber-500 border-2 border-amber-400 dark:border-amber-500' : '' }}">
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow {{ $visitasComPendencia > 0 ? 'ring-2 ring-red-500 dark:ring-red-500 border-2 border-red-500 dark:border-red-500' : '' }}">
                 <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 dark:text-amber-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {{ $visitasComPendencia > 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400' }} mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
+                <p class="mt-2 text-3xl {{ $visitasComPendencia > 0 ? 'text-red-600 dark:text-red-400 font-semibold' : 'text-gray-900 dark:text-gray-100' }}">{{ $visitasComPendencia }}</p>
             </div>
             <!-- Visitas neste mês -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
