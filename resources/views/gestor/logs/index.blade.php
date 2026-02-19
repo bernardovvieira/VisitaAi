@@ -67,9 +67,9 @@
             </table>
         </div>
 
-        <div class="mt-4">
+        <nav class="mt-4" aria-label="Navegação de páginas">
             {{ $logs->links() }}
-        </div>
+        </nav>
     </section>
 </div>
 @endsection

@@ -90,8 +90,8 @@
     </div>
   </section>
 
-  <div class="mt-4">
+  <nav class="mt-4" aria-label="Navegação de páginas">
     {{ $doencas->links() }}
-  </div>
+  </nav>
 </div>
 @endsection

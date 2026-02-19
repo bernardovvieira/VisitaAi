@@ -5,10 +5,17 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
+        <div class="flex flex-wrap gap-3 mt-2">
+            @if(session('created_visita_id'))
+                <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver visita registrada</a>
+            @endif
+            <a href="{{ route('agente.visitas.create') }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Registrar outra visita</a>
+        </div>
     @endif
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />
@@ -219,9 +226,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
+        <nav class="mt-4" aria-label="Navegação de páginas">
             {{ $visitas->appends(request()->query())->links() }}
-        </div>
+        </nav>
     </section>
 </div>
 @endsection

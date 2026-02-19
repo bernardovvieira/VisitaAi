@@ -4,15 +4,15 @@
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 text-sm font-medium text-green-600 dark:text-green-400">
+        <div class="mb-4 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm font-medium" role="alert">
             {{ __('Um novo link de verificação foi enviado para o e-mail informado.') }}
         </div>
     @endif
 
-    <div class="flex items-center justify-between gap-4">
-        <form method="POST" action="{{ route('verification.send') }}">
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+        <form method="POST" action="{{ route('verification.send') }}" id="verify-email-resend-form">
             @csrf
-            <x-primary-button>
+            <x-primary-button id="verify-email-resend-btn">
                 {{ __('Reenviar e-mail de verificação') }}
             </x-primary-button>
         </form>
@@ -24,4 +24,11 @@
             </button>
         </form>
     </div>
+    <script>
+    (function(){
+        var form = document.getElementById('verify-email-resend-form');
+        var btn = document.getElementById('verify-email-resend-btn');
+        if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = 'Enviando…'; });
+    })();
+    </script>
 </x-guest-layout>

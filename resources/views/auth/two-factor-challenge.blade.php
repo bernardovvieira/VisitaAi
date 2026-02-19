@@ -7,12 +7,12 @@
             </p>
 
             @if($errors->any())
-                <div class="mb-4 p-3 rounded-md bg-red-600 text-white text-sm font-medium">
+                <div class="mb-4 p-3 rounded-md bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 text-sm font-medium" role="alert">
                     {{ $errors->first() }}
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('two-factor.login.store') }}">
+            <form method="POST" action="{{ route('two-factor.login.store') }}" id="two-factor-form">
                 @csrf
                 <div class="mb-4">
                     <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código <span class="text-red-500">*</span></label>
@@ -32,11 +32,18 @@
                     <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-md transition">
                         Voltar ao login
                     </a>
-                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:ring-2 focus:ring-green-500 transition">
+                    <button type="submit" id="two-factor-submit-btn" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:ring-2 focus:ring-green-500 transition">
                         Verificar
                     </button>
                 </div>
             </form>
+            <script>
+            (function(){
+                var form = document.getElementById('two-factor-form');
+                var btn = document.getElementById('two-factor-submit-btn');
+                if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Verificando…</span>'; });
+            })();
+            </script>
         </div>
     </div>
 </x-guest-layout>

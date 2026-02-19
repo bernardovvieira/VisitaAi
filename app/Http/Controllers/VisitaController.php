@@ -153,7 +153,8 @@ class VisitaController extends Controller
 
         return redirect()
             ->route($user->isAgenteSaude() ? 'saude.visitas.index' : 'agente.visitas.index')
-            ->with('success', 'Visita registrada com sucesso.');
+            ->with('success', 'Visita registrada com sucesso.')
+            ->with('created_visita_id', $visita->vis_id);
     }
 
     public function edit(Visita $visita)

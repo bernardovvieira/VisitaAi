@@ -6,6 +6,7 @@
 
 @section('content')
 <div class="space-y-6">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Usuários']]" />
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Usuários</h1>
 
     @if(session('status'))
@@ -175,8 +176,8 @@
     </section>
 
 
-    <div class="mt-4">
+    <nav class="mt-4" aria-label="Navegação de páginas">
         {{ $usuarios->links() }}
-    </div>
+    </nav>
 </div>
 @endsection

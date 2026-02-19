@@ -149,7 +149,8 @@ class LocalController extends Controller
 
         return redirect()
             ->route($redirectRoute)
-            ->with('success', 'Local cadastrado com sucesso.');
+            ->with('success', 'Local cadastrado com sucesso.')
+            ->with('created_local_id', $local->loc_id);
     }
 
     public function edit(Local $local)
