@@ -26,14 +26,14 @@ class UserController extends Controller
             $search = trim(request('search'));
             $busca = strtolower($search);
 
-            // Resolver tipo de perfil: "agente" ou "agente de" = ambos; "endemias" = só endemias; "saude" = só saúde
+            // Resolver tipo de perfil: "agente de ende..." = só endemias; "agente de sau..." = só saúde; "agente" = ambos
             $perfis = null;
 
             if (str_contains($busca, 'gestor') || str_contains($busca, 'ges')) {
                 $perfis = ['gestor'];
-            } elseif (str_contains($busca, 'endemias')) {
+            } elseif (str_contains($busca, 'endemias') || str_contains($busca, 'ende')) {
                 $perfis = ['agente_endemias'];
-            } elseif (str_contains($busca, 'saude') || str_contains($busca, 'saúde')) {
+            } elseif (str_contains($busca, 'saude') || str_contains($busca, 'saúde') || str_contains($busca, 'sau') || str_contains($busca, 'saú')) {
                 $perfis = ['agente_saude'];
             } elseif (str_contains($busca, 'agente')) {
                 $perfis = ['agente_endemias', 'agente_saude'];
