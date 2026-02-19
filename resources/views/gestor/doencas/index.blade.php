@@ -141,10 +141,9 @@
                 </tbody>
             </table>
         </div>
+        <nav class="mt-4" aria-label="Navegação de páginas">
+            {{ $doencas->links() }}
+        </nav>
     </section>
-
-    <div class="mt-4">
-        <nav aria-label="Navegação de páginas">{{ $doencas->links() }}</nav>
-    </div>
 </div>
 @endsection

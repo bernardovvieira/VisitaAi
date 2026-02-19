@@ -161,6 +161,9 @@
                 </tbody>
             </table>
         </div>
+        <nav class="mt-4" aria-label="Navegação de páginas">
+            {{ $usuarios->links() }}
+        </nav>
     </section>
 
     <!-- Card de Acesso a Pendentes -->
@@ -174,10 +177,5 @@
             Ver usuários pendentes
         </a>
     </section>
-
-
-    <nav class="mt-4" aria-label="Navegação de páginas">
-        {{ $usuarios->links() }}
-    </nav>
 </div>
 @endsection

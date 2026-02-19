@@ -19,7 +19,7 @@ class UserApprovalController extends Controller
         $pendentes = User::where('use_aprovado', false)
             ->whereNull('use_data_anonimizacao')
             ->orderBy('use_data_criacao')
-            ->get();
+            ->paginate(10);
 
         return view('gestor.users.pendentes', compact('pendentes'));
     }

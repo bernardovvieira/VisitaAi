@@ -117,7 +117,7 @@
                             <td class="p-4 text-center">
                                 <div class="flex justify-center items-center gap-3 flex-wrap">
                                     @if($local->isPrimary())
-                                        <span class="text-xs text-gray-500 dark:text-gray-400" title="Local de referência do município (não editável pela interface)">Referência</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400" title="Local primário do município">Primário</span>
                                     @endif
                                     <a href="{{ route('agente.locais.show', $local) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
@@ -182,6 +182,11 @@
         <nav class="mt-4" aria-label="Navegação de páginas">
             {{ $locais->links() }}
         </nav>
+
+        <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600">
+            <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Ele é criado automaticamente e não pode ser editado nem excluído. Os demais locais são os imóveis que você cadastra para realizar visitas.</p>
+        </div>
     </section>
 </div>
 @endsection

@@ -34,8 +34,8 @@
     <!-- Tabela de Pendentes -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            @if($pendentes->count() > 0)
-                Exibindo {{ $pendentes->count() }} usuário(s) pendente(s).
+            @if($pendentes->total() > 0)
+                Exibindo {{ $pendentes->count() }} de {{ $pendentes->total() }} usuário(s) pendente(s).
             @else
                 Nenhum usuário pendente no momento.
             @endif
@@ -88,6 +88,11 @@
                 </tbody>
             </table>
         </div>
+        @if($pendentes->hasPages())
+        <nav class="mt-4" aria-label="Navegação de páginas">
+            {{ $pendentes->links() }}
+        </nav>
+        @endif
     </section>
 
 </div>

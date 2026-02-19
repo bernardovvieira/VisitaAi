@@ -98,7 +98,6 @@
     <!-- Insights do período -->
     @php
         $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
-        $bairrosComPendencia = (int) \App\Models\Local::whereHas('visitas', fn ($q) => $q->where('vis_pendencias', true))->selectRaw('COUNT(DISTINCT loc_bairro) as total')->value('total');
         $inicioMes = now()->startOfMonth();
         $doencaMaisMes = \Illuminate\Support\Facades\DB::table('monitoradas')
             ->join('visitas', 'visitas.vis_id', '=', 'monitoradas.fk_visita_id')
@@ -122,9 +121,6 @@
                     <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
-                @if($bairrosComPendencia > 0)
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">em {{ $bairrosComPendencia }} bairro(s)</p>
-                @endif
             </div>
             <!-- Visitas neste mês -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">

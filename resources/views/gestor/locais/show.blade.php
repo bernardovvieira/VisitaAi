@@ -29,7 +29,7 @@
                         {{ $local->loc_codigo_unico }}
                     </span>
                     @if($local->isPrimary())
-                        <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">Referência do município</span>
+                        <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">Primário</span>
                     @endif
                 </dd>
             </div>
