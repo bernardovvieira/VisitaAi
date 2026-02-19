@@ -11,7 +11,10 @@
 
     {{-- Cabeçalho --}}
     <div style="padding-top: 2rem;">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Consulta Pública</h1>
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/visitaai_rembg.png') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Consulta Pública</h1>
+        </div>
         <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
