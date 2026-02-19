@@ -113,25 +113,45 @@
     <section class="mt-8 space-y-4">
         <header>
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Insights do período</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Visão geral com base nos dados registrados no sistema. Atualizado em tempo real.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Visão geral com base nos dados registrados no sistema.</p>
         </header>
-        <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-3">
-            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                <li class="flex items-start gap-2">
-                    <span class="text-gray-500 dark:text-gray-400 shrink-0">•</span>
-                    <span><strong>{{ $visitasComPendencia }}</strong> visita(s) com pendência{{ $bairrosComPendencia > 0 ? ', em <strong>' . $bairrosComPendencia . '</strong> bairro(s)' : '' }}.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <span class="text-gray-500 dark:text-gray-400 shrink-0">•</span>
-                    <span>No mês atual: <strong>{{ $visitasEsteMes }}</strong> visita(s) realizada(s).</span>
-                </li>
-                @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-                <li class="flex items-start gap-2">
-                    <span class="text-gray-500 dark:text-gray-400 shrink-0">•</span>
-                    <span>Doença ou situação mais registrada este mês: <strong>{{ $doencaMaisMes->doe_nome }}</strong> ({{ $doencaMaisMes->total }} registro(s)).</span>
-                </li>
-                @endif
-            </ul>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow flex items-center gap-3 {{ $visitasComPendencia > 0 ? 'ring-2 ring-amber-400 dark:ring-amber-500' : '' }}">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Visita(s) com pendência @if($bairrosComPendencia > 0)<span class="font-medium text-gray-700 dark:text-gray-300">em {{ $bairrosComPendencia }} bairro(s)</span>@endif</p>
+                </div>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow flex items-center gap-3">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $visitasEsteMes }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Visita(s) neste mês</p>
+                </div>
+            </div>
+            @if ($doencaMaisMes && $doencaMaisMes->total > 0)
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow flex items-center gap-3 sm:col-span-2 lg:col-span-1">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400 truncate" title="{{ $doencaMaisMes->doe_nome }}">Destaque do mês</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-gray-100 truncate" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $doencaMaisMes->total }} registro(s)</p>
+                </div>
+            </div>
+            @endif
         </div>
     </section>
 

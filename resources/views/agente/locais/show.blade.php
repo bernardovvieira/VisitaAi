@@ -29,6 +29,9 @@
                     <span class="inline-block bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-semibold">
                         {{ $local->loc_codigo_unico }}
                     </span>
+                    @if($local->isPrimary())
+                        <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">Referência do município</span>
+                    @endif
                 </dd>
             </div>
             <div>

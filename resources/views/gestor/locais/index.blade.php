@@ -65,6 +65,9 @@
                                 <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
                                     #{{ $local->loc_codigo_unico }}
                                 </span>
+                                @if($local->isPrimary())
+                                    <span class="block mt-1 text-xs text-gray-500 dark:text-gray-400" title="Local de referência do município (cidade/estado)">Referência</span>
+                                @endif
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 @if ($local->loc_zona == 'U')

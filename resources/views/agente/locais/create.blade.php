@@ -14,27 +14,24 @@
             Voltar
         </a>
         @else
-        <span class="text-sm text-amber-600 dark:text-amber-400">Cadastre o local primário para iniciar.</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400">Cadastre o local de referência do município para iniciar.</span>
         @endif
     </div>
 
     @if($isPrimario ?? false)
-    <section class="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-amber-800 dark:text-amber-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            Cadastro do local primário
+    <section class="p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-600 rounded-lg shadow">
+        <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Local de referência do município
         </h2>
-        <p class="mt-2 text-amber-700 dark:text-amber-300">
-            Cadastre o <strong>local primário</strong> do município — sugerimos a prefeitura ou a secretaria de saúde. Este local define a cidade/estado do sistema e <strong>não poderá ser editado nem excluído</strong> pela interface posteriormente.
-        </p>
-        <p class="mt-2 text-sm text-amber-600 dark:text-amber-400">
-            Para alterações ou exclusão do local primário, entre em contato com o suporte técnico.
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Este é o primeiro local e define cidade/estado do sistema. Sugerimos a prefeitura ou a secretaria de saúde. Não poderá ser editado nem excluído pela interface; para alterações, entre em contato com o suporte.
         </p>
     </section>
     @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ ($isPrimario ?? false) ? 'Cadastrar Local Primário' : 'Cadastrar Local' }}</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ ($isPrimario ?? false) ? 'Cadastrar local de referência' : 'Cadastrar Local' }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Preencha os dados do local. Preencha o CEP para preencher automaticamente os campos de endereço, bairro, cidade e estado.
             Utilize o botão "Minha Localização" para obter as coordenadas do dispositivo.

@@ -115,9 +115,9 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_cidade }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="p-4 text-center">
-                                <div class="flex justify-center gap-3">
+                                <div class="flex justify-center items-center gap-3 flex-wrap">
                                     @if($local->isPrimary())
-                                        <span class="text-xs text-amber-600 dark:text-amber-400 font-medium" title="Local primário: não pode ser editado nem excluído">Primário</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400" title="Local de referência do município (não editável pela interface)">Referência</span>
                                     @endif
                                     <a href="{{ route('agente.locais.show', $local) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
