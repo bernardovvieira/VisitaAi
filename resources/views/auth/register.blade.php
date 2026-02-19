@@ -185,10 +185,10 @@
         if (!validarCPF(cpf)) {
             input.setCustomValidity('CPF inválido.');
             input.reportValidity();
-            $cpfFeedback.removeClass('hidden').addClass('text-red-600 dark:text-red-400').text('CPF inválido.');
+            $cpfFeedback.removeClass('hidden text-emerald-600 dark:text-emerald-400').addClass('text-red-600 dark:text-red-400').text('CPF inválido.');
         } else {
             input.setCustomValidity('');
-            $cpfFeedback.removeClass('hidden').addClass('text-emerald-600 dark:text-emerald-400').text('CPF válido.');
+            $cpfFeedback.removeClass('hidden text-red-600 dark:text-red-400').addClass('text-emerald-600 dark:text-emerald-400').text('CPF válido.');
         }
     });
     </script>

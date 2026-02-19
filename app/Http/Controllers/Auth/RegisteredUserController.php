@@ -25,7 +25,18 @@ class RegisteredUserController extends Controller
      * Processa o registro de um novo usuário.
      */
     public function store(Request $request): RedirectResponse
-    { 
+    {
+        /* -----------------------------------------------------------------
+         |  0. Normaliza CPF (só dígitos → formato 000.000.000-00) para
+         |     validação e armazenamento consistentes (evita duplicados por máscara)
+         |-----------------------------------------------------------------*/
+        $cpfDigits = preg_replace('/\D/', '', (string) $request->input('cpf', ''));
+        if (strlen($cpfDigits) === 11) {
+            $request->merge([
+                'cpf' => substr($cpfDigits, 0, 3) . '.' . substr($cpfDigits, 3, 3) . '.' . substr($cpfDigits, 6, 3) . '-' . substr($cpfDigits, 9, 2),
+            ]);
+        }
+
         /* -----------------------------------------------------------------
          |  1. Validação
          |-----------------------------------------------------------------*/
@@ -35,7 +46,7 @@ class RegisteredUserController extends Controller
 
         $request->validate([
             'nome'     => ['required','string','max:255'],
-            'cpf'      => ['required','string','max:14','unique:users,use_cpf'],
+            'cpf'      => ['required','string','size:14','unique:users,use_cpf'],
             'email'    => $emailRule,
             'password' => ['required','confirmed', Rules\Password::defaults()],
         ], [
