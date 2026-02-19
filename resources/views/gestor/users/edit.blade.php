@@ -30,6 +30,26 @@
             <x-alert type="success" :message="session('status')" />
         @endif
 
+        @if ($errors->any())
+            @php
+                $fieldLabels = [
+                    'use_nome' => 'Nome',
+                    'use_email' => 'E-mail',
+                    'use_perfil' => 'Perfil',
+                    'use_senha' => 'Nova senha',
+                    'use_senha_confirmation' => 'Confirmar nova senha',
+                ];
+                $errorFields = array_unique($errors->keys());
+                $labels = array_map(fn ($k) => $fieldLabels[$k] ?? $k, $errorFields);
+            @endphp
+            <div class="px-4 py-3 rounded-lg bg-red-600 dark:bg-red-700 text-white text-sm" role="alert">
+                <p class="font-medium">Corrija os erros nos campos indicados abaixo.</p>
+                @if (count($labels) > 0)
+                    <p class="mt-1 opacity-90">Campos com erro: {{ implode(', ', $labels) }}.</p>
+                @endif
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('gestor.users.update', $user) }}" class="space-y-6" id="user-edit-form">
             @csrf
             @method('PATCH')
@@ -39,7 +59,8 @@
                 <label for="use_nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome <span class="text-red-500">*</span></label>
                 <input type="text" id="use_nome" name="use_nome" value="{{ old('use_nome', $user->use_nome) }}" 
                        required autofocus
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_nome') border-red-500 dark:border-red-400 border @enderror">
+                <x-input-error :messages="$errors->get('use_nome')" class="mt-1" />
             </div>
 
             <!-- CPF (somente leitura) -->
@@ -59,18 +80,20 @@
                 <label for="use_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail <span class="text-red-500">*</span></label>
                 <input type="email" id="use_email" name="use_email" value="{{ old('use_email', $user->use_email) }}"
                        required
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_email') border-red-500 dark:border-red-400 border @enderror">
+                <x-input-error :messages="$errors->get('use_email')" class="mt-1" />
             </div>
 
             <!-- Perfil -->
             <div>
                 <label for="use_perfil" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Perfil <span class="text-red-500">*</span></label>
                 <select id="use_perfil" name="use_perfil"
-                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm" required>
-                    <option value="gestor" {{ $user->use_perfil == 'gestor' ? 'selected' : '' }}>Gestor Municipal</option>
-                    <option value="agente_endemias" {{ $user->use_perfil == 'agente_endemias' ? 'selected' : '' }}>Agente de Endemias</option>
-                    <option value="agente_saude" {{ $user->use_perfil == 'agente_saude' ? 'selected' : '' }}>Agente de Saúde</option>
+                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_perfil') border-red-500 dark:border-red-400 border @enderror" required>
+                    <option value="gestor" {{ old('use_perfil', $user->use_perfil) == 'gestor' ? 'selected' : '' }}>Gestor Municipal</option>
+                    <option value="agente_endemias" {{ old('use_perfil', $user->use_perfil) == 'agente_endemias' ? 'selected' : '' }}>Agente de Endemias</option>
+                    <option value="agente_saude" {{ old('use_perfil', $user->use_perfil) == 'agente_saude' ? 'selected' : '' }}>Agente de Saúde</option>
                 </select>
+                <x-input-error :messages="$errors->get('use_perfil')" class="mt-1" />
             </div>
 
             <!-- Data Cadastro -->
@@ -86,21 +109,21 @@
             <div>
                 <label for="use_senha" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nova Senha</label>
                 <input type="password" id="use_senha" name="use_senha" autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha') border-red-500 dark:border-red-400 @enderror">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha') border border-red-500 dark:border-red-400 @enderror">
                 <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
                     <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !). Deixe em branco se não quiser alterar a senha atual.</p>
-                @error('use_senha')<p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ $message }}</p>@enderror
+                <x-input-error :messages="$errors->get('use_senha')" class="mt-1" />
             </div>
 
             <!-- Confirmar Nova Senha -->
             <div>
                 <label for="use_senha_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmar Nova Senha</label>
                 <input type="password" id="use_senha_confirmation" name="use_senha_confirmation" autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha_confirmation') border-red-500 dark:border-red-400 @enderror">
+                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha_confirmation') border-red-500 dark:border-red-400 border @enderror">
                 <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
-                @error('use_senha_confirmation')<p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ $message }}</p>@enderror
+                <x-input-error :messages="$errors->get('use_senha_confirmation')" class="mt-1" />
             </div>
 
             <div class="flex justify-end">
