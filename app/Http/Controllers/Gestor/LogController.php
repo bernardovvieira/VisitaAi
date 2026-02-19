@@ -12,9 +12,8 @@ class LogController extends Controller
     {
         $query = Log::with('usuario')->orderByDesc('log_data');
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-
+        $search = trim((string) $request->input('search'));
+        if ($search !== '') {
             $query->whereHas('usuario', function ($q) use ($search) {
                 $q->where('use_nome', 'like', "%{$search}%");
             })
@@ -23,7 +22,7 @@ class LogController extends Controller
             ->orWhere('log_descricao', 'like', "%{$search}%");
         }
 
-        $logs = $query->paginate(15)->appends(['search' => $request->search]);
+        $logs = $query->paginate(15)->appends(['search' => $search]);
 
         return view('gestor.logs.index', compact('logs'));
     }

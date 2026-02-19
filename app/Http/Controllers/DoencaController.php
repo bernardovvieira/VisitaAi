@@ -19,10 +19,10 @@ class DoencaController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search'));
     
         $query = Doenca::query();
-        if ($search) {
+        if ($search !== '') {
             $term = '%' . $search . '%';
             $query->where(function ($q) use ($term) {
                 $q->where('doe_nome', 'like', $term)

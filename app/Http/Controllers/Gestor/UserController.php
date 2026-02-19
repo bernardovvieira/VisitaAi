@@ -26,17 +26,18 @@ class UserController extends Controller
             $search = trim(request('search'));
             $busca = strtolower($search);
 
-            // Resolver tipo de perfil: "agente de ende..." = só endemias; "agente de sau..." = só saúde; "agente" = ambos
+            // Só filtra por perfil quando a busca contém palavra-chave explícita (endemias, saude, gestor ou prefixos).
+            // "agente", "agente 1", "agente1" = só nome/email; nunca "todos os agentes".
             $perfis = null;
+            $endemiasKeywords = ['endemias', 'endemia', 'endemi', 'endem', 'ende', 'end'];
+            $saudeKeywords = ['saude', 'saúde', 'saud', 'sau', 'saú'];
 
             if (str_contains($busca, 'gestor') || str_contains($busca, 'ges')) {
                 $perfis = ['gestor'];
-            } elseif (str_contains($busca, 'endemias') || str_contains($busca, 'ende')) {
+            } elseif (collect($endemiasKeywords)->contains(fn ($k) => str_contains($busca, $k))) {
                 $perfis = ['agente_endemias'];
-            } elseif (str_contains($busca, 'saude') || str_contains($busca, 'saúde') || str_contains($busca, 'sau') || str_contains($busca, 'saú')) {
+            } elseif (collect($saudeKeywords)->contains(fn ($k) => str_contains($busca, $k))) {
                 $perfis = ['agente_saude'];
-            } elseif (str_contains($busca, 'agente')) {
-                $perfis = ['agente_endemias', 'agente_saude'];
             }
 
             $query->where(function ($q) use ($search, $perfis) {

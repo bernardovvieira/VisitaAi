@@ -15,11 +15,11 @@ class VisitaController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $busca = $request->input('busca');
+        $busca = trim((string) $request->input('busca'));
 
         $query = Visita::with(['local', 'doencas', 'usuario']);
 
-        if ($busca) {
+        if ($busca !== '') {
             $query->where(function ($q) use ($busca) {
                 $q->whereHas('local', fn($q) => $q->where('loc_endereco', 'like', "%$busca%"))
                 ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
