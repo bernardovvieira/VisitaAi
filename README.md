@@ -78,8 +78,6 @@ docker compose down
 
 **Serviços:** `app` (PHP-FPM), `db` (MySQL 8, porta 3307 no host), `web` (Nginx na porta 80).
 
-Detalhes de **login (use_email/use_cpf)** e **2FA** (ativar sem senha, desativar com senha): ver `docs/AUTH.md`.
-
 ---
 
 ## 🚀 Deploy em produção (push → VPS)
