@@ -61,7 +61,7 @@
                     Conformidade com o Ministério da Saúde
                 </p>
                 <p class="text-xs text-green-700 dark:text-green-400 mt-1 leading-relaxed">
-                    Este sistema está <strong>100% em conformidade</strong> com as recomendações do MS: Lei nº 11.350/2006 (ACE e ACS), Diretriz Nacional para Atuação Integrada dos ACE e ACS, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) e PNCD. Terminologia, atividades e perfis seguem rigorosamente essas diretrizes.
+                    Este sistema está <strong>100% em conformidade</strong> com as recomendações do MS: Lei nº 11.350/2006 (ACE e ACS), Diretriz Nacional para Atuação Integrada dos ACE e ACS, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas e PNCD.
                 </p>
             </div>
 
