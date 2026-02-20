@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\LogHelper;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,6 +47,9 @@ class AuthenticatedSessionController extends Controller
             ]);
             return redirect()->route('two-factor.login');
         }
+
+        // Registra login na auditoria
+        LogHelper::registrar('login', 'sessão', 'login', 'Login realizado', $request);
 
         // Redireciona conforme o perfil
         if ($user->isGestor()) {

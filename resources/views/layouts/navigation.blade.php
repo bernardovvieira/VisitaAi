@@ -70,7 +70,7 @@
                             <div class="text-left min-w-0 truncate">
                                 <div class="truncate" title="{{ Auth::user()->use_nome }}">{{ Auth::user()->use_nome }}</div>
                                 <div class="text-xs font-normal text-gray-400 dark:text-gray-500 truncate">
-                                    {{ \App\Models\User::perfilLabel(Auth::user()->use_perfil) }}
+                                    {{ \App\Helpers\MsTerminologia::perfilLabelNav(Auth::user()->use_perfil) }}
                                 </div>
                             </div>
                             <div class="ml-1">

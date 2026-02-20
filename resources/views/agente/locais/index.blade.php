@@ -10,12 +10,11 @@
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
-        <div class="flex flex-wrap gap-3 mt-2">
-            @if(session('created_local_id'))
+        @if(session('created_local_id'))
+            <div class="flex flex-wrap gap-3 mt-2">
                 <a href="{{ route('agente.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver local cadastrado</a>
-            @endif
-            <a href="{{ route('agente.locais.create') }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Cadastrar outro local</a>
-        </div>
+            </div>
+        @endif
     @endif
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />
@@ -184,7 +183,7 @@
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído. Os demais locais são os imóveis que você cadastra para realizar visitas.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
     </section>
 </div>
 @endsection

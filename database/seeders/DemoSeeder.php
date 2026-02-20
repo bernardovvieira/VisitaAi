@@ -60,52 +60,20 @@ class DemoSeeder extends Seeder
             User::factory()->create($usuario);
         }
 
-        // Doenças monitoradas (prioridade: arboviroses)
-        $doencas = [
-            [
-                'doe_nome' => 'Dengue',
-                'doe_sintomas' => [
-                    'Febre alta', 'Dor de cabeça intensa', 'Dor atrás dos olhos',
-                    'Dor muscular e nas articulações', 'Náusea', 'Vômito', 'Manchas na pele'
-                ],
-                'doe_transmissao' => ['Picada do mosquito Aedes aegypti'],
-                'doe_medidas_controle' => [
-                    'Eliminação de criadouros', 'Uso de repelentes', 'Telagem de recipientes',
-                    'Educação em saúde', 'Ações de controle vetorial'
-                ],
+        // Doença padrão da demo: apenas Dengue (arbovirose prioritária)
+        $dengue = [
+            'doe_nome' => 'Dengue',
+            'doe_sintomas' => [
+                'Febre alta', 'Dor de cabeça intensa', 'Dor atrás dos olhos',
+                'Dor muscular e nas articulações', 'Náusea', 'Vômito', 'Manchas na pele'
             ],
-            [
-                'doe_nome' => 'Zika',
-                'doe_sintomas' => [
-                    'Febre baixa', 'Conjuntivite', 'Dor nas articulações',
-                    'Manchas vermelhas na pele', 'Dor de cabeça', 'Coceira'
-                ],
-                'doe_transmissao' => [
-                    'Picada do mosquito Aedes aegypti',
-                    'Transmissão sexual', 'Transmissão vertical (gestante para o feto)'
-                ],
-                'doe_medidas_controle' => [
-                    'Eliminação de criadouros', 'Uso de preservativos',
-                    'Proteção da gestante', 'Controle vetorial', 'Repelente'
-                ],
-            ],
-            [
-                'doe_nome' => 'Chikungunya',
-                'doe_sintomas' => [
-                    'Febre alta', 'Dor intensa nas articulações', 'Dor muscular',
-                    'Cefaleia', 'Manchas vermelhas na pele', 'Fadiga'
-                ],
-                'doe_transmissao' => ['Picada do mosquito Aedes aegypti'],
-                'doe_medidas_controle' => [
-                    'Controle de vetores', 'Repelente', 'Acompanhamento médico',
-                    'Eliminação de água parada', 'Campanhas de conscientização'
-                ],
+            'doe_transmissao' => ['Picada do mosquito Aedes aegypti'],
+            'doe_medidas_controle' => [
+                'Eliminação de criadouros', 'Uso de repelentes', 'Telagem de recipientes',
+                'Educação em saúde', 'Ações de controle vetorial'
             ],
         ];
-
-        foreach ($doencas as $doenca) {
-            Doenca::create($doenca);
-        }
+        Doenca::create($dengue);
 
         // Locais
         $locais = [
@@ -221,6 +189,6 @@ class DemoSeeder extends Seeder
             ],
         ]);
 
-        $visita2->doencas()->sync([1]);
+        $visita2->doencas()->sync([Doenca::where('doe_nome', 'Dengue')->value('doe_id')]);
     }
 }

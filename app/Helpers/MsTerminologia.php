@@ -29,6 +29,26 @@ class MsTerminologia
     }
 
     /**
+     * Rótulo curto para navbar: apenas "Gestor", "ACE" ou "ACS".
+     */
+    public static function perfilLabelNav(?string $perfil): string
+    {
+        if ($perfil === null || $perfil === '') {
+            return '';
+        }
+        if ($perfil === 'gestor') {
+            return 'Gestor';
+        }
+        if ($perfil === 'agente_endemias') {
+            return 'ACE';
+        }
+        if ($perfil === 'agente_saude') {
+            return 'ACS';
+        }
+        return self::perfilSigla($perfil) ?: ucfirst(str_replace('_', ' ', $perfil));
+    }
+
+    /**
      * Sigla do perfil quando existir (ACE, ACS); senão vazio.
      */
     public static function perfilSigla(?string $perfil): string

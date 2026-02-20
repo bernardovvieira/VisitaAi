@@ -4,7 +4,8 @@
 @section('og_description', 'Painel do ' . \App\Helpers\MsTerminologia::perfilLabel('agente_saude') . '. Registre visitas LIRAa e consulte doenças monitoradas. Conforme Lei 11.350/2006 e Diretriz MS.')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-7xl mx-auto space-y-6">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
     <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Painel do {{ \App\Helpers\MsTerminologia::perfilLabel('agente_saude') }}</h1>
 
     <!-- Mensagem de boas-vindas -->

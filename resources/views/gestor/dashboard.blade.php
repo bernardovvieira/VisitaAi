@@ -5,7 +5,8 @@
 @section('og_description', 'Painel do gestor municipal. Acompanhe estatísticas e gerencie doenças, locais, visitas, usuários e relatórios.')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-7xl mx-auto space-y-6">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
     <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Painel do Gestor</h1>
 
     <!-- Mensagem de boas-vindas -->
@@ -47,7 +48,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 dark:text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4m0 4h.01" />
                     </svg>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Profissionais pendentes (ACE/ACS)</h3>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Usuários pendentes</h3>
                     @if($pendentesCount > 0)
                         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">Atenção</span>
                     @endif

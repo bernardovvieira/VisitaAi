@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/25" para a primeira referência do ano de 2025.
+                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/{{ now()->format('y') }}" para a primeira referência do ano de {{ now()->year }}.
                 </p>
             </fieldset>
 
@@ -341,32 +341,34 @@
                      }
                  }">
                 <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" @click="carregarSugestoes()" :disabled="carregandoSugestoes"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-500 disabled:opacity-50">
-                        <template x-if="carregandoSugestoes"><span>Carregando…</span></template>
-                        <template x-if="!carregandoSugestoes"><span>Carregar sugestões</span></template>
+                    <button type="button" @click="carregarSugestoes()"
+                            class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                        Obter sugestões de doenças
                     </button>
                 </div>
-                <div x-show="sugestoes.length > 0" x-cloak class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
-                    <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados do sistema</p>
-                    <p class="text-xs text-gray-600 dark:text-gray-400">
-                        As sugestões são geradas apenas com os dados já registrados no sistema (histórico do imóvel, frequência no município e palavras das observações). Nenhum serviço externo ou cota de IA é utilizado.
-                    </p>
-                    <div class="flex flex-wrap gap-2 items-center">
-                        <template x-for="s in sugestoes" :key="s.doe_id">
-                            <button type="button" @click="marcarSugestao(s.doe_id)"
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
-                                    :title="s.motivo">
-                                <span x-text="s.nome"></span>
-                            </button>
-                        </template>
+                <div x-show="carregandoSugestoes || sugestoes.length > 0" x-cloak class="space-y-2">
+                    <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Carregando…</div>
+                    <div x-show="sugestoes.length > 0" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
+                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados do sistema</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                            As sugestões são geradas apenas com os dados já registrados no sistema (histórico do imóvel, frequência no município e palavras das observações). Nenhum serviço externo ou cota de IA é utilizado.
+                        </p>
+                        <div class="flex flex-wrap gap-2 items-center">
+                            <template x-for="s in sugestoes" :key="s.doe_id">
+                                <button type="button" x-show="s.nome" @click="marcarSugestao(s.doe_id)"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
+                                        :title="s.motivo">
+                                    <span x-text="s.nome"></span>
+                                </button>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Doenças Detectadas --}}
+            {{-- Possíveis doenças --}}
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Doenças Detectadas</legend>
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Possíveis doenças</legend>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     @foreach ($doencas as $doenca)
@@ -385,7 +387,7 @@
                 </div>
 
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Marque as doenças detectadas durante a visita, se houver. Por exemplo, se há algum morador no local com suspeita de dengue.
+                    Marque as possíveis doenças relacionadas à visita, se houver. Por exemplo, se há algum morador no local com suspeita de dengue.
                 </p>
             </fieldset>
 
