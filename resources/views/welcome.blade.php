@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name'))
-@section('og_description', 'Sistema de apoio à vigilância epidemiológica municipal. Acompanhe, consulte e controle visitas de forma ágil e segura. Acesso para agentes, gestores e consulta pública.')
+@section('og_description', 'Sistema de apoio à vigilância epidemiológica municipal, 100% em conformidade com as recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes ACE/ACS, Arboviroses e PNCD). Acesso para gestores, ACE, ACS e consulta pública.')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12 min-w-full">
@@ -40,7 +40,7 @@
                     <svg class="h-5 w-5 transform transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Acesso de Agentes e Gestores
+                    Acesso de Gestores, ACE e ACS
                 </a>
 
                 <a href="{{ route('consulta.index') }}"
@@ -50,6 +50,19 @@
                     </svg>
                     Consulta Pública
                 </a>
+            </div>
+
+            {{-- Conformidade MS --}}
+            <div class="rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 px-4 py-3 mt-6" id="anim-conformidade">
+                <p class="text-sm font-semibold text-green-800 dark:text-green-300 flex items-center gap-2">
+                    <svg class="h-5 w-5 shrink-0 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    Conformidade com o Ministério da Saúde
+                </p>
+                <p class="text-xs text-green-700 dark:text-green-400 mt-1 leading-relaxed">
+                    Este sistema está <strong>100% em conformidade</strong> com as recomendações do MS: Lei nº 11.350/2006 (ACE e ACS), Diretriz Nacional para Atuação Integrada dos ACE e ACS, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) e PNCD. Terminologia, atividades e perfis seguem rigorosamente essas diretrizes.
+                </p>
             </div>
 
             <p class="text-xs text-gray-400 dark:text-gray-500 mt-6" id="anim-footer">
@@ -75,6 +88,7 @@
         // Aplica data-aos apenas no desktop
         document.getElementById('anim-texto')?.setAttribute('data-aos', 'fade-left');
         document.getElementById('anim-botoes')?.setAttribute('data-aos', 'fade-left');
+        document.getElementById('anim-conformidade')?.setAttribute('data-aos', 'fade-left');
         document.getElementById('anim-footer')?.setAttribute('data-aos', 'fade-left');
         document.getElementById('anim-ilustracao')?.setAttribute('data-aos', 'fade-left');
 

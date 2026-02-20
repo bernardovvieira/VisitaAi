@@ -70,10 +70,7 @@
                             <div class="text-left min-w-0 truncate">
                                 <div class="truncate" title="{{ Auth::user()->use_nome }}">{{ Auth::user()->use_nome }}</div>
                                 <div class="text-xs font-normal text-gray-400 dark:text-gray-500 truncate">
-                                    @if(Auth::user()->use_perfil === 'gestor') Gestor Municipal
-                                    @elseif(Auth::user()->use_perfil === 'agente_endemias') Agente de Endemias
-                                    @else Agente de Saúde
-                                    @endif
+                                    {{ \App\Models\User::perfilLabel(Auth::user()->use_perfil) }}
                                 </div>
                             </div>
                             <div class="ml-1">
@@ -175,10 +172,7 @@
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->use_nome }}</div>
                 <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    @if(Auth::user()->use_perfil === 'gestor') Gestor Municipal
-                    @elseif(Auth::user()->use_perfil === 'agente_endemias') Agente de Endemias
-                    @else Agente de Saúde
-                    @endif
+                    {{ \App\Models\User::perfilLabel(Auth::user()->use_perfil) }}
                 </div>
                 <div class="font-medium text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Auth::user()->use_email }}</div>
             </div>

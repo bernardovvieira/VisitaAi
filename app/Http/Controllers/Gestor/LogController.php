@@ -14,12 +14,13 @@ class LogController extends Controller
 
         $search = trim((string) $request->input('search'));
         if ($search !== '') {
-            $query->whereHas('usuario', function ($q) use ($search) {
-                $q->where('use_nome', 'like', "%{$search}%");
-            })
-            ->orWhere('log_acao', 'like', "%{$search}%")
-            ->orWhere('log_entidade', 'like', "%{$search}%")
-            ->orWhere('log_descricao', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('usuario', fn($u) => $u->where('use_nome', 'like', "%{$search}%")->orWhere('use_email', 'like', "%{$search}%"))
+                  ->orWhere('log_acao', 'like', "%{$search}%")
+                  ->orWhere('log_entidade', 'like', "%{$search}%")
+                  ->orWhere('log_descricao', 'like', "%{$search}%")
+                  ->orWhere('log_ip', 'like', "%{$search}%");
+            });
         }
 
         $logs = $query->paginate(15)->appends(['search' => $search]);

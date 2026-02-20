@@ -34,7 +34,7 @@
                     <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                            data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-users"
-                           placeholder="Nome, e-mail ou perfil (ex.: agente de, endemias, saude, gestor)..."
+                           placeholder="Nome, e-mail ou perfil (ex.: ACE, ACS, gestor)..."
                            class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
                     <span id="search-loading-users" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
@@ -77,19 +77,7 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100"><a href="mailto:{{ $usuario->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ $usuario->use_email }}</a></td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 @php
-                                    switch ($usuario->use_perfil) {
-                                        case 'gestor':
-                                            $perfil = 'Gestor Municipal';
-                                            break;
-                                        case 'agente_endemias':
-                                            $perfil = 'Agente de Endemias';
-                                            break;
-                                        case 'agente_saude':
-                                            $perfil = 'Agente de Saúde';
-                                            break;
-                                        default:
-                                            $perfil = ucfirst($usuario->use_perfil);
-                                    }
+                                    $perfil = \App\Models\User::perfilLabel($usuario->use_perfil);
                                 @endphp
                                 {{ $perfil }}
                             </td>

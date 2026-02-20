@@ -14,6 +14,13 @@ class VisitaRequest extends FormRequest
 
     public function rules()
     {
+        $user = $this->user();
+        $regraAtividade = ['nullable', 'in:1,2,3,4,5,6,7,8'];
+        // ACS (Agente Comunitário de Saúde) só pode registrar visita tipo 7 - LIRAa (Diretriz MS)
+        if ($user && $user->use_perfil === 'agente_saude') {
+            $regraAtividade = ['required', 'in:7'];
+        }
+
         return [
             'vis_data'             => ['required', 'date'],
             'vis_observacoes'      => ['nullable', 'string'],
@@ -23,7 +30,7 @@ class VisitaRequest extends FormRequest
 
             // PNCD
             'vis_ciclo'            => ['nullable', 'string', 'max:10'],
-            'vis_atividade'        => ['nullable', 'in:1,2,3,4,5,6,7,8'],
+            'vis_atividade'        => $regraAtividade,
             'vis_concluida'        => ['nullable', 'boolean'],
             'vis_visita_tipo'      => ['nullable', 'in:N,R'],
             'vis_pendencias'       => ['nullable', 'boolean'],
@@ -57,6 +64,11 @@ class VisitaRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        // Garante vis_atividade = 7 para ACS mesmo se o request vier alterado (conformidade MS)
+        if ($this->user() && $this->user()->use_perfil === 'agente_saude') {
+            $this->merge(['vis_atividade' => '7']);
+        }
+
         $tratamentos = $this->input('tratamentos');
 
         if (is_string($tratamentos)) {

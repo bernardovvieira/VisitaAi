@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Local;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rule;
 
 class LocalRequest extends FormRequest
 {
@@ -54,7 +55,7 @@ class LocalRequest extends FormRequest
                     }
                 },
             ],
-            'loc_tipo'           => ['required', 'string', 'max:50'],
+            'loc_tipo'           => ['required', Rule::in(['R', 'C', 'T'])], // R-Residencial, C-Comercial, T-Terreno Baldio (conformidade PNCD)
             'loc_quarteirao'     => ['nullable', 'string', 'max:50'],
             'loc_endereco'       => ['required', 'string', 'max:255', "unique:locais,loc_endereco,{$localId},loc_id"],
             'loc_numero'         => ['nullable', 'string', 'max:20'],

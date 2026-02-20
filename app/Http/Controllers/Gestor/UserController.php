@@ -26,13 +26,17 @@ class UserController extends Controller
             $search = trim(request('search'));
             $busca = strtolower($search);
 
-            // Busca por perfil: prefixos de "gestor", "endemias", "saude" e "agente de [resto]" (sem regrinhas fixas).
+            // Busca por perfil: gestor, ACE (agente_endemias), ACS (agente_saude) — conformidade MS (Lei 11.350/2006).
             $perfis = null;
             $gestorPalavra = 'gestor';
             $endemiasPalavra = 'endemias';
             $saudePalavra = 'saude';
 
-            if (str_contains($busca, 'agente de')) {
+            if (str_contains($busca, 'ace') || (strlen($busca) >= 2 && str_starts_with($busca, 'ace'))) {
+                $perfis = ['agente_endemias'];
+            } elseif (str_contains($busca, 'acs') || (strlen($busca) >= 2 && str_starts_with($busca, 'acs'))) {
+                $perfis = ['agente_saude'];
+            } elseif (str_contains($busca, 'agente de')) {
                 $resto = trim(substr($busca, strpos($busca, 'agente de') + strlen('agente de')));
                 $restoNorm = preg_replace('/ú/u', 'u', $resto);
                 if ($resto === '') {

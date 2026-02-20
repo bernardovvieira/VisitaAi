@@ -8,7 +8,7 @@ use App\Models\Monitorada;
 class MonitoradaPolicy
 {
     /**
-     * Apenas agentes devem poder manipular diretamente se necessário.
+     * Apenas ACE e ACS (profissionais de campo) manipulam monitoradas, se necessário.
      */
     public function viewAny(User $user): bool
     {

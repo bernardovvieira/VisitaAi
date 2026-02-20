@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', CheckApproved::class])->group(function () {
 
         /**
-         * AGENTE DE ENDEMIAS
+         * ACE (Agente de Combate às Endemias) — Lei 11.350/2006
          */
         Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->group(function () {
             Route::view('/dashboard', 'agente.dashboard')->name('dashboard');        
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
         });
 
         /**
-         * AGENTE DE SAÚDE
+         * ACS (Agente Comunitário de Saúde) — Lei 11.350/2006
          */
         Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group(function () {
             Route::view('/dashboard', 'saude.dashboard')->name('dashboard');

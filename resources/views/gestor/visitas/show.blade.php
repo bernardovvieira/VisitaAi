@@ -113,28 +113,20 @@
             <div>
                 <dt class="font-medium">Atividade PNCD</dt>
                 <dd>
-                    @php
-                        $atividades = [
-                            '1' => '1 - LI (Levantamento de Índice)',
-                            '2' => '2 - LI+T (Levantamento + Tratamento)',
-                            '3' => '3 - PPE+T (Ponto Estratégico + Tratamento)',
-                            '4' => '4 - T (Tratamento)',
-                            '5' => '5 - DF (Delimitação de Foco)',
-                            '6' => '6 - PVE (Pesquisa Vetorial Especial)',
-                            '7' => '7 - LIRAa (Levantamento de Índice Rápido)',
-                            '8' => '8 - PE (Ponto Estratégico)',
-                        ];
-                    @endphp
-                    {{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}
+                    @if(\App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade))
+                        {{ \App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade) }} — {{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}
+                    @else
+                        Não informado
+                    @endif
                 </dd>
             </div>
             <div>
                 <dt class="font-medium">Tipo de Visita</dt>
                 <dd>
                     @if ($visita->vis_visita_tipo === 'N')
-                        <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">Normal</span>
+                        <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">{{ \App\Helpers\MsTerminologia::visitaTipoLabel('N') }}</span>
                     @elseif ($visita->vis_visita_tipo === 'R')
-                        <span class="inline-block bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200 px-2 py-1 rounded text-xs font-semibold">Recuperação</span>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200 px-2 py-1 rounded text-xs font-semibold">{{ \App\Helpers\MsTerminologia::visitaTipoLabel('R') }}</span>
                     @else
                         <span class="text-gray-500 dark:text-gray-400 italic">Não informado</span>
                     @endif

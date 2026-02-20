@@ -37,7 +37,7 @@
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Nenhuma visita cadastrada</h2>
                 <p class="text-gray-600 dark:text-gray-400 mb-6">
-                    Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos agentes.
+                    Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos profissionais (ACE/ACS).
                 </p>
                 <a href="{{ route('gestor.visitas.index') }}" class="btn-acesso-principal inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7-3.732 7-9.542 7-8.268-2.943-9.542-7z"/></svg>
@@ -50,6 +50,9 @@
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Relatórios e indicadores</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
+        </p>
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-500 italic">
+            Atividades PNCD e terminologia (ACE/ACS, tipos de visita, códigos) conforme recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas e PNCD).
         </p>
     </section>
     {{-- Filtros e PDF --}}
@@ -386,7 +389,7 @@
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Local</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Agente</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Profissional (ACE/ACS)</th>
                     <th class="p-4 text-center font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                 </tr>
             </thead>
@@ -430,26 +433,14 @@
                                 </span>
                             @endif
                         </td>
-                        @php
-                            $atividades = [
-                                '1' => 'LI',
-                                '2' => 'LI+T',
-                                '3' => 'PPE+T',
-                                '4' => 'T',
-                                '5' => 'DF',
-                                '6' => 'PVE',
-                                '7' => 'LIRAa',
-                                '8' => 'PE',
-                            ];
-                        @endphp
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                             <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
                                 Bairro/Localidade: {{ $visita->local->loc_bairro }} — Cód.: {{ $visita->local->loc_codigo_unico }}
                             </div>
                         </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100">
-                            <span class="text-sm">{{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}</span>
+                        <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
+                            <span class="text-sm">{{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: 'Não informado' }}</span>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
                             {{ $visita->usuario->use_nome ?? '—' }}

@@ -17,6 +17,8 @@ class Log extends Model
         'log_tipo',
         'log_descricao',
         'log_data',
+        'log_ip',
+        'log_user_agent',
     ];
 
     public function usuario()

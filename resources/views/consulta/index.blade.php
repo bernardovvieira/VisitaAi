@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' — Consulta Pública')
-@section('og_description', 'Consulte o histórico de visitas epidemiológicas do seu imóvel pelo código único fornecido pelo agente.')
+@section('og_description', 'Consulte o histórico de visitas epidemiológicas do seu imóvel pelo código único fornecido pelo profissional (ACE/ACS).')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-10">
@@ -27,7 +27,7 @@
     <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
           class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
         <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Digite o <strong>código único do imóvel</strong> fornecido pelo agente <span class="text-red-500">*</span>
+            Digite o <strong>código único do imóvel</strong> fornecido pelo profissional (ACE/ACS) <span class="text-red-500">*</span>
         </label>
         <div class="flex gap-4 flex-col md:flex-row">
             <input
@@ -49,7 +49,7 @@
             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
         @enderror
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            O código único é um identificador exclusivo para cada imóvel (apenas números), fornecido pelo agente durante a visita.
+            O código único é um identificador exclusivo para cada imóvel (apenas números), fornecido pelo profissional (ACE/ACS) durante a visita.
         </p>
     </form>
     <script>

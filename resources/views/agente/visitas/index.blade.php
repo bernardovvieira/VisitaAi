@@ -44,7 +44,7 @@
                     <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                            data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading"
-                           placeholder="Local, agente, doença ou atividade..."
+                           placeholder="Local, profissional, doença ou atividade..."
                            class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
                     <span id="search-loading" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
@@ -91,7 +91,7 @@
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Local</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Agente</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Profissional (ACE/ACS)</th>
                         <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                     </tr>
                 </thead>
@@ -135,22 +135,9 @@
                                     </span>
                                 @endif
                             </td>
-                            @php
-                                $atividades = [
-                                    '1' => 'LI',
-                                    '2' => 'LI+T',
-                                    '3' => 'PPE+T',
-                                    '4' => 'T',
-                                    '5' => 'DF',
-                                    '6' => 'PVE',
-                                    '7' => 'LIRAa',
-                                    '8' => 'PE',
-                                ];
-                            @endphp
-
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                            <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}
+                                    {{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: 'Não informado' }}
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
@@ -163,7 +150,7 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 <div class="font-semibold">{{ $visita->usuario->use_nome }}</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ $visita->usuario->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : 'Agente de Saúde' }}
+                                    {{ \App\Models\User::perfilLabel($visita->usuario->use_perfil) }}
                                 </div>
                             </td>
                             <td class="p-4 text-center">

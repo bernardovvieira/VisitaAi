@@ -126,7 +126,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Agentes vinculados a este gestor.
+     * Profissionais de campo (ACE/ACS) vinculados a este gestor.
      */
     public function agentes()
     {
@@ -155,6 +155,23 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isGestor(): bool
     {
         return $this->use_perfil === 'gestor';
+    }
+
+    /**
+     * Rótulo exibido para cada perfil (único ponto de definição para a interface).
+     * Conforme Lei 11.350/2006 e Diretrizes Nacionais ACE/ACS (MS).
+     */
+    public static function perfilLabel(?string $perfil): string
+    {
+        return \App\Helpers\MsTerminologia::perfilLabel($perfil);
+    }
+
+    /**
+     * Rótulo do perfil do usuário atual (atalho para exibição em views).
+     */
+    public function getPerfilLabelAttribute(): string
+    {
+        return self::perfilLabel($this->use_perfil);
     }
 
     public function isAprovado(): bool

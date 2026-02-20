@@ -117,23 +117,18 @@
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atvidades</legend>
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atividades</legend>
                 <div>
                     <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade PNCD <span class="text-red-500">*</span></label>
                     <select id="vis_atividade" name="vis_atividade" required
                             class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                         <option value="">Selecione...</option>
-                        <option value="1" {{ old('vis_atividade') == '1' ? 'selected' : '' }}>1 - LI (Levantamento de Índice)</option>
-                        <option value="2" {{ old('vis_atividade') == '2' ? 'selected' : '' }}>2 - LI+T (Levantamento + Tratamento)</option>
-                        <option value="3" {{ old('vis_atividade') == '3' ? 'selected' : '' }}>3 - PPE+T (Ponto Estratégico + Tratamento)</option>
-                        <option value="4" {{ old('vis_atividade') == '4' ? 'selected' : '' }}>4 - T (Tratamento)</option>
-                        <option value="5" {{ old('vis_atividade') == '5' ? 'selected' : '' }}>5 - DF (Delimitação de Foco)</option>
-                        <option value="6" {{ old('vis_atividade') == '6' ? 'selected' : '' }}>6 - PVE (Pesquisa Vetorial Especial)</option>
-                        <option value="7" {{ old('vis_atividade') == '7' ? 'selected' : '' }}>7 - LIRAa (Levantamento de Índice Rápido)</option>
-                        <option value="8" {{ old('vis_atividade') == '8' ? 'selected' : '' }}>8 - PE (Ponto Estratégico)</option>
+                        @foreach(config('ms_terminologia.atividades_pncd') as $cod => $at)
+                            <option value="{{ $cod }}" {{ old('vis_atividade') == $cod ? 'selected' : '' }}>{{ $at['codigo'] }} — {{ $at['nome'] }}</option>
+                        @endforeach
                     </select>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        O tipo "7 - LIRAa" é um tipo especial e não faz parte da tabela original PNCD.
+                        Atividades conforme PNCD e Diretrizes Nacionais (MS). LIRAa (7) é método simplificado de vigilância entomológica (MS).
                     </p>
                 </div>
             </fieldset>
@@ -145,8 +140,9 @@
                     <select name="vis_visita_tipo" id="vis_visita_tipo"
                             class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                         <option value="">Selecione...</option>
-                        <option value="N" {{ old('vis_visita_tipo') == 'N' ? 'selected' : '' }}>Normal</option>
-                        <option value="R" {{ old('vis_visita_tipo') == 'R' ? 'selected' : '' }}>Recuperação</option>
+                        @foreach(config('ms_terminologia.visita_tipo') as $tipoVal => $tipoConf)
+                            <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo') == $tipoVal ? 'selected' : '' }}>{{ $tipoConf['label'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

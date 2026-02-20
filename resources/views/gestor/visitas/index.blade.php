@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' — Visitas')
-@section('og_description', 'Visitas epidemiológicas registradas. Visualize e busque visitas realizadas pelos agentes.')
+@section('og_description', 'Visitas epidemiológicas registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).')
 
 @section('content')
 <div class="space-y-6">
@@ -18,7 +18,7 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas epidemiológicas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Visualize e busque visitas registradas pelos agentes.
+            Visualize e busque visitas registradas pelos profissionais de campo (ACE/ACS).
         </p>
     </section>
 
@@ -31,7 +31,7 @@
                     <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                            data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading-gestor-visitas"
-                           placeholder="Local, agente, doença ou atividade..."
+                           placeholder="Local, profissional, doença ou atividade..."
                            class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
                     <span id="search-loading-gestor-visitas" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
@@ -78,7 +78,7 @@
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Local</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Agente</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Profissional (ACE/ACS)</th>
                         <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                     </tr>
                 </thead>
@@ -122,22 +122,9 @@
                                     </span>
                                 @endif
                             </td>
-                            @php
-                                $atividades = [
-                                    '1' => 'LI',
-                                    '2' => 'LI+T',
-                                    '3' => 'PPE+T',
-                                    '4' => 'T',
-                                    '5' => 'DF',
-                                    '6' => 'PVE',
-                                    '7' => 'LIRAa',
-                                    '8' => 'PE',
-                                ];
-                            @endphp
-
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                            <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ $atividades[$visita->vis_atividade] ?? 'Não informado' }}
+                                    {{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: 'Não informado' }}
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
@@ -150,7 +137,7 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 <div class="font-semibold">{{ $visita->usuario->use_nome }}</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ $visita->usuario->use_perfil == 'agente_endemias' ? 'Agente de Endemias' : 'Agente de Saúde' }}
+                                    {{ \App\Models\User::perfilLabel($visita->usuario->use_perfil) }}
                                 </div>
                             </td>
                             <td class="p-4 text-center">
@@ -179,7 +166,7 @@
                                         </svg>
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma visita registrada.</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">As visitas aparecerão aqui quando os agentes as registrarem.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">As visitas aparecerão aqui quando os profissionais (ACE/ACS) as registrarem.</p>
                                     <a href="{{ route('gestor.locais.index') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white text-sm font-semibold rounded-lg shadow transition">
                                         Ver locais cadastrados
                                     </a>

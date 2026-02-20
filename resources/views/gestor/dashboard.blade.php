@@ -11,7 +11,7 @@
     <!-- Mensagem de boas-vindas -->
     <section class="mb-8 p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a), {{ Auth::user()->use_nome }}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">O sistema Visita Aí organiza e facilita o gerenciamento de Agentes de Epidemiologia e suas visitas. Acompanhe abaixo as principais estatísticas e acesse rapidamente as funcionalidades.</p>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">O sistema Visita Aí organiza e facilita o gerenciamento dos profissionais de campo (ACE e ACS) e suas visitas, em conformidade com a Lei 11.350/2006 e Diretrizes do MS. Acompanhe abaixo as principais estatísticas e acesse rapidamente as funcionalidades.</p>
         <br>
         <!-- Relógio -->
         <div class="flex items-center">
@@ -30,24 +30,24 @@
     <section class="space-y-4">
         <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Estatísticas Principais</h2></header>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Total de Agentes -->
+            <!-- Total de profissionais (ACE/ACS) -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z" />
                     </svg>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total de Agentes</h3>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total de profissionais (ACE/ACS)</h3>
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">    {{ \App\Models\User::where(function($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count() }}</p>
             </div>
-            <!-- Agentes Pendentes -->
+            <!-- Profissionais (ACE/ACS) pendentes -->
             <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow {{ $pendentesCount > 0 ? 'ring-2 ring-amber-400 dark:ring-amber-500 border-2 border-amber-400 dark:border-amber-500' : '' }}">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 dark:text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4m0 4h.01" />
                     </svg>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Agentes Pendentes</h3>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Profissionais pendentes (ACE/ACS)</h3>
                     @if($pendentesCount > 0)
                         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">Atenção</span>
                     @endif

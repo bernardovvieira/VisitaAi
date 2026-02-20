@@ -16,7 +16,7 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        // Usuários (Gestor e Agentes)
+        // Usuários (Gestor e profissionais ACE/ACS)
         $usuarios = [
             [
                 'use_nome'         => 'Gestor Teste',

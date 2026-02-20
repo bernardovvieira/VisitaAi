@@ -5,10 +5,14 @@ namespace App\Policies;
 use App\Models\Doenca;
 use App\Models\User;
 
+/**
+ * Conformidade MS: lista de doenças de notificação é de responsabilidade do gestor (Vigilância em Saúde).
+ * ACE e ACS apenas consultam para registrar nas visitas.
+ */
 class DoencaPolicy
 {
     /**
-     * Agentes e gestores podem listar doenças.
+     * Gestor, ACE e ACS podem listar e visualizar doenças.
      */
     public function viewAny(User $user): bool
     {
@@ -16,7 +20,7 @@ class DoencaPolicy
     }
 
     /**
-     * Agentes e gestores podem ver detalhes de uma doença.
+     * Gestor, ACE e ACS podem ver detalhes de uma doença.
      */
     public function view(User $user, Doenca $doenca): bool
     {

@@ -1,12 +1,12 @@
 {{-- resources/views/agente/dashboard.blade.php --}}
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Painel do Agente de Endemias')
-@section('og_description', 'Painel do agente de endemias. Registre visitas, gerencie locais e consulte doenças monitoradas.')
+@section('og_title', config('app.name') . ' — Painel do ' . \App\Helpers\MsTerminologia::perfilLabel('agente_endemias'))
+@section('og_description', 'Painel do ' . \App\Helpers\MsTerminologia::perfilLabel('agente_endemias') . '. Registre visitas, gerencie locais e consulte doenças monitoradas. Conforme Lei 11.350/2006 e Diretriz MS.')
 
 @section('content')
 <div class="space-y-6">
-    <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Painel do Agente de Endemias</h1>
+    <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Painel do {{ \App\Helpers\MsTerminologia::perfilLabel('agente_endemias') }}</h1>
 
     <!-- Mensagem de boas-vindas -->
     <section class="mb-8 p-4 bg-white dark:bg-gray-700 rounded-lg shadow">

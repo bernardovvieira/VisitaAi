@@ -5,10 +5,14 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Visita;
 
+/**
+ * Conformidade MS/PNCD: apenas ACE e ACS registram visitas (ACS somente LIRAa — Diretriz ACE/ACS).
+ * Gestor apenas visualiza e gera relatórios.
+ */
 class VisitaPolicy
 {
     /**
-     * Agentes e gestores podem listar visitas.
+     * ACE, ACS e gestores podem listar (controller filtra: ACS só as próprias e LIRAa).
      */
     public function viewAny(User $user): bool
     {
@@ -16,19 +20,18 @@ class VisitaPolicy
     }
 
     /**
-     * Agentes e gestores podem ver visitas específicas.
+     * ACS só vê as próprias visitas. ACE e gestor veem todas.
      */
     public function view(User $user, Visita $visita): bool
     {
         if ($user->isAgenteSaude()) {
             return $visita->fk_usuario_id === $user->use_id;
         }
-
-        return $user->isGestor() || $user->isAgente(); // agentes epidemiológicos (não de saúde) podem ver tudo
+        return $user->isGestor() || $user->isAgenteEndemias();
     }
 
     /**
-     * Apenas agentes podem registrar visitas.
+     * Apenas ACE e ACS registram visitas (VisitaRequest restringe ACS a atividade 7 - LIRAa).
      */
     public function create(User $user): bool
     {
@@ -36,28 +39,40 @@ class VisitaPolicy
     }
 
     /**
-     * Apenas agentes podem editar visitas.
+     * ACE pode editar qualquer visita. ACS apenas a própria (conformidade Diretriz MS).
      */
     public function update(User $user, Visita $visita): bool
     {
-        return $user->isAgente();
+        if ($user->isAgenteSaude()) {
+            return $visita->fk_usuario_id === $user->use_id;
+        }
+        return $user->isAgenteEndemias();
     }
 
     /**
-     * Apenas agentes podem excluir visitas.
+     * ACE pode excluir qualquer visita. ACS apenas a própria.
      */
     public function delete(User $user, Visita $visita): bool
     {
-        return $user->isAgente();
+        if ($user->isAgenteSaude()) {
+            return $visita->fk_usuario_id === $user->use_id;
+        }
+        return $user->isAgenteEndemias();
     }
 
     public function restore(User $user, Visita $visita): bool
     {
-        return $user->isAgente();
+        if ($user->isAgenteSaude()) {
+            return $visita->fk_usuario_id === $user->use_id;
+        }
+        return $user->isAgenteEndemias();
     }
 
     public function forceDelete(User $user, Visita $visita): bool
     {
-        return $user->isAgente();
+        if ($user->isAgenteSaude()) {
+            return $visita->fk_usuario_id === $user->use_id;
+        }
+        return $user->isAgenteEndemias();
     }
 }

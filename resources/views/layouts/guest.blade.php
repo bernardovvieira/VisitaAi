@@ -9,8 +9,8 @@
 
         @php
             $authMeta = match (request()->route()?->getName()) {
-                'login' => ['title' => config('app.name') . ' — Login', 'desc' => 'Acesse o sistema Visita Aí com CPF ou e-mail. Área de agentes e gestores.'],
-                'register' => ['title' => config('app.name') . ' — Cadastro', 'desc' => 'Cadastre-se no Visita Aí para atuar como agente de endemias ou agente de saúde.'],
+                'login' => ['title' => config('app.name') . ' — Login', 'desc' => 'Acesse o sistema Visita Aí com CPF ou e-mail. Área de gestores, ACE e ACS.'],
+                'register' => ['title' => config('app.name') . ' — Cadastro', 'desc' => 'Cadastre-se no Visita Aí para atuar como ACE (Agente de Combate às Endemias) ou ACS (Agente Comunitário de Saúde), conforme Lei 11.350/2006.'],
                 'password.request' => ['title' => config('app.name') . ' — Esqueci a Senha', 'desc' => 'Recupere o acesso ao sistema Visita Aí pelo e-mail.'],
                 'password.reset' => ['title' => config('app.name') . ' — Redefinir Senha', 'desc' => 'Defina uma nova senha para sua conta no Visita Aí.'],
                 'verification.notice' => ['title' => config('app.name') . ' — Verificar E-mail', 'desc' => 'Confirme seu e-mail para ativar sua conta no Visita Aí.'],

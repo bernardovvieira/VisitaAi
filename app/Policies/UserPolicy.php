@@ -4,6 +4,9 @@ namespace App\Policies;
 
 use App\Models\User;
 
+/**
+ * Conformidade MS: apenas gestor municipal gerencia usuários (ACE/ACS) e aprovações (Diretriz Vigilância em Saúde).
+ */
 class UserPolicy
 {
     public function viewAny(User $user)

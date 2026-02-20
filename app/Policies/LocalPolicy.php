@@ -5,64 +5,65 @@ namespace App\Policies;
 use App\Models\Local;
 use App\Models\User;
 
+/**
+ * Conformidade MS: cadastro e gestão de imóveis/locais é atribuição do ACE (Diretriz Nacional ACE/ACS).
+ * ACS não possui rotas de locais; apenas ACE e gestor (local primário) podem criar/editar/excluir.
+ */
 class LocalPolicy
 {
     /**
-     * Agentes e gestores podem listar locais.
+     * ACE, ACS e gestores podem listar e visualizar locais (ACS precisa selecionar local na visita LIRAa).
      */
     public function viewAny(User $user): bool
     {
         return $user->isAgente() || $user->isGestor();
     }
 
-    /**
-     * Agentes e gestores podem ver detalhes de um local.
-     */
     public function view(User $user, Local $local): bool
     {
         return $user->isAgente() || $user->isGestor();
     }
 
     /**
-     * Gestor pode criar o primeiro local (primário). Demais locais: apenas agentes.
+     * Primeiro local (primário): apenas gestor. Demais locais: apenas ACE (Diretriz MS).
      */
     public function create(User $user): bool
     {
         if (Local::count() === 0) {
             return $user->isGestor();
         }
-        return $user->isAgente();
+        return $user->isAgenteEndemias();
     }
 
     /**
-     * Apenas agentes podem editar. O local primário nunca pode ser editado pela UI.
+     * Apenas ACE pode editar locais (exceto primário, que não é editável pela UI).
      */
     public function update(User $user, Local $local): bool
     {
         if ($local->isPrimary()) {
             return false;
         }
-        return $user->isAgente();
+        return $user->isAgenteEndemias();
     }
 
     /**
-     * Apenas agentes podem excluir. O local primário nunca pode ser excluído pela UI.
+     * Apenas ACE pode excluir locais (exceto primário).
      */
     public function delete(User $user, Local $local): bool
     {
         if ($local->isPrimary()) {
             return false;
         }
-        return $user->isAgente();
+        return $user->isAgenteEndemias();
     }
 
     public function restore(User $user, Local $local): bool
     {
-        return $user->isAgente();
+        return $user->isAgenteEndemias();
     }
 
     public function forceDelete(User $user, Local $local): bool
     {
-        return $user->isAgente();
+        return $user->isAgenteEndemias();
     }
 }

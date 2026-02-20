@@ -37,7 +37,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('agente.visitas.store') }}" class="space-y-6"
+        <form method="POST" action="{{ route('saude.visitas.store') }}" class="space-y-6"
             x-data="{ carregando: false }"
             x-on:submit="carregando = true">
 
@@ -112,20 +112,21 @@
                     <input type="hidden" name="fk_local_id" x-bind:value="selectedId"> 
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Se o local visitado não estiver na lista, contate um Agente de Endemias para cadastrá-lo.
+                    Se o local visitado não estiver na lista, contate um {{ \App\Helpers\MsTerminologia::perfilLabel('agente_endemias') }} para cadastrá-lo.
                 </p>
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atvidades</legend>
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atividades</legend>
                 <div>
                     <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade PNCD <span class="text-red-500">*</span></label>
+                    @php $at7 = config('ms_terminologia.atividades_pncd.7', ['codigo' => '7-LIRAa', 'nome' => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)']); @endphp
                     <select id="vis_atividade" name="vis_atividade" required
                             class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
-                        <option value="7" selected>7 - LIRAa (Levantamento de Índice Rápido)</option>
+                        <option value="7" selected>{{ $at7['codigo'] }} — {{ $at7['nome'] }}</option>
                     </select>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        O perfil de Agente de Saúde apenas permite registrar atividades do tipo "7 - LIRAa", sendo um tipo especial que não faz parte da tabela original PNCD.
+                        O perfil ACS permite registrar a atividade LIRAa conforme Diretriz Nacional para Atuação Integrada dos ACE e ACS no Território (MS).
                     </p>
                 </div>
             </fieldset>
@@ -137,8 +138,9 @@
                     <select name="vis_visita_tipo" id="vis_visita_tipo"
                             class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                         <option value="">Selecione...</option>
-                        <option value="N" {{ old('vis_visita_tipo') == 'N' ? 'selected' : '' }}>Normal</option>
-                        <option value="R" {{ old('vis_visita_tipo') == 'R' ? 'selected' : '' }}>Recuperação</option>
+                        @foreach(config('ms_terminologia.visita_tipo') as $tipoVal => $tipoConf)
+                            <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo') == $tipoVal ? 'selected' : '' }}>{{ $tipoConf['label'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

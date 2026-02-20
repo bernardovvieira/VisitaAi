@@ -2,6 +2,8 @@
 
 Sistema desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
 
+**Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde) — Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
+
 > **Desenvolvido por:** Bitwise Technologies  
 > **CNPJ:** 49.973.865/0001-23
 

@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' — Locais')
-@section('og_description', 'Locais cadastrados pelos agentes. Visualize os detalhes de cada endereço de visitação epidemiológica.')
+@section('og_description', 'Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação epidemiológica.')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
@@ -16,7 +16,7 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais cadastrados</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Locais registrados pelos agentes. Visualize os detalhes de cada endereço.
+            Locais registrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço.
         </p>
     </section>
 
@@ -123,7 +123,7 @@
                                         </svg>
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Os locais aparecerão aqui quando os agentes os cadastrarem.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Os locais aparecerão aqui quando os profissionais (ACE/ACS) os cadastrarem.</p>
                                 </div>
                             </td>
                         </tr>
@@ -137,7 +137,7 @@
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos agentes.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
     </section>
 </div>
 @endsection

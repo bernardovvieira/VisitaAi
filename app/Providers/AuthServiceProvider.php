@@ -52,10 +52,10 @@ class AuthServiceProvider extends ServiceProvider
         // Apenas usuários aprovados
         Gate::define('isAprovado', fn(User $user) => $user->isAprovado());
 
-        // Apenas agentes de saúde
+        // ACS (Agente Comunitário de Saúde) — Lei 11.350/2006
         Gate::define('isAgenteSaude', fn(User $user) => $user->isAgenteSaude());
 
-        // Apenas agentes de endemias
+        // ACE (Agente de Combate às Endemias) — Lei 11.350/2006
         Gate::define('isAgenteEndemias', fn(User $user) => $user->isAgenteEndemias());
     }
 }

@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>PNCD — Registro do Serviço Antivetorial</title>
+  <title>PNCD — Registro de Atividades de Controle Vetorial</title>
   <style>
-    @page { size: A4 landscape; margin: 88px 30px 58px 30px; }
+    @page { size: A4 landscape; margin: 88px 30px 68px 30px; }
     body { font-family: Arial, sans-serif; font-size: 10px; color: #222; line-height: 1.35; }
     header {
       position: fixed;
@@ -17,9 +17,10 @@
     }
     header h1 { font-size: 14px; margin: 0; color: #0e4a76; text-transform: uppercase; line-height: 1.2; }
     header h2 { font-size: 11px; margin: 2px 0 0 0; font-weight: normal; color: #333; }
+    header .header-nota { font-size: 9px; margin: 4px 0 0 0; color: #555; font-style: italic; }
     footer {
       position: fixed;
-      bottom: -48px;
+      bottom: -56px;
       left: 0;
       right: 0;
       text-align: center;
@@ -78,27 +79,20 @@
   $primeiroLocal = $visitas->first()?->local;
   $mun = $primeiroLocal?->loc_cidade ?? 'Município';
   $uf = $primeiroLocal?->loc_estado ?? 'UF';
-  $atividades = [
-    '1' => '1-LI',
-    '2' => '2-LI+T',
-    '3' => '3-PPE+T',
-    '4' => '4-T',
-    '5' => '5-DF',
-    '6' => '6-PVE',
-    '7' => '7-LIRAa',
-    '8' => '8-PE',
-  ];
+  $atividades = \App\Helpers\MsTerminologia::atividadesPncdCodigos();
   $tipoImovel = ['R' => 'R', 'C' => 'C', 'T' => 'TB'];
 @endphp
 
 <header>
-  <h1>PNCD — Programa Nacional de Controle</h1>
-  <h2>Registro do Serviço Antivetorial — Município de {{ $mun }} / {{ $uf }}</h2>
+  <h1>PNCD — Programa Nacional de Controle da Dengue</h1>
+  <h2>Registro de Atividades de Controle Vetorial — Município de {{ $mun }} / {{ $uf }}</h2>
+  <p class="header-nota">{{ config('ms_terminologia.sistema.nome_subtitulo') }}</p>
 </header>
 
 <footer>
   <div class="page-number"></div>
-  Documento gerado pelo Sistema Visita Aí · Bitwise Technologies em {{ now()->format('d/m/Y H:i') }}.
+  Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) e PNCD — Ministério da Saúde.@if(strtoupper($uf ?? '') === 'RS') No âmbito estadual, em conformidade com a SES-RS e o CEVS.@endif<br>
+  Documento gerado por {{ config('ms_terminologia.sistema.nome_subtitulo') }} (Visita Aí) em {{ now()->format('d/m/Y H:i') }}.
 </footer>
 
 <main>
@@ -120,7 +114,7 @@
     </table>
   </div>
 
-  <div class="titulo-secao">Pesquisa Entomológica / Tratamento</div>
+  <div class="titulo-secao">Vigilância Entomológica e Controle Vetorial</div>
   <table class="tabela-principal">
     <thead>
       <tr>
@@ -153,7 +147,7 @@
         <th style="width:4.5%">Dep.Elim.</th>
         <th style="width:2.5%">Coleta</th>
         <th style="width:12%" class="text-left">Tratamento</th>
-        <th style="width:7%" class="text-left">Agente</th>
+        <th style="width:7%" class="text-left">Profissional (ACE/ACS)</th>
       </tr>
     </thead>
     <tbody>
@@ -209,13 +203,14 @@
   </table>
 
   <div class="legenda">
-    <strong>Atividade:</strong> 1-LI, 2-LI+T, 3-PPE+T, 4-T, 5-DF, 6-PVE, 7-LIRAa, 8-PE &nbsp;|&nbsp;
-    <strong>N/R:</strong> N-Normal, R-Recuperação &nbsp;|&nbsp;
+    <strong>Atividade (PNCD — MS):</strong> {{ implode(', ', array_values($atividades)) }} &nbsp;|&nbsp;
+    <strong>N/R:</strong> N-Normal, R-Recuperação (conforme Diretriz MS) &nbsp;|&nbsp;
     <strong>Conc.:</strong> Concluída S/N (sem pendência = S) &nbsp;|&nbsp;
     <strong>Cód.:</strong> Código único do imóvel &nbsp;|&nbsp;
-    <strong>Tipo:</strong> R-Residencial, C-Comércio, TB-Terreno Baldio, PE-Ponto Estratégico &nbsp;|&nbsp;
+    <strong>Tipo (imóvel):</strong> R-Residencial, C-Comercial, T-Terreno Baldio (PE = atividade 8, não tipo de imóvel) &nbsp;|&nbsp;
     <strong>Pend.:</strong> Pendência (recusado, fechado ou retorno) &nbsp;|&nbsp;
-    <strong>Amostra:</strong> Inicial-Final &nbsp;|&nbsp;
+    <strong>A1–E:</strong> Depósitos inspecionados por tipo (classificação LIRAa/PNCD — MS) &nbsp;|&nbsp;
+    <strong>Amostra:</strong> Inicial-Final (LIRAa) &nbsp;|&nbsp;
     <strong>Dep.Elim.:</strong> Depósitos eliminados &nbsp;|&nbsp;
     <strong>Tub.:</strong> Tubitos &nbsp;|&nbsp;
     <strong>Coleta:</strong> Coleta de amostra Sim/Não
