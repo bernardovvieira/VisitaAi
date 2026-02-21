@@ -20,9 +20,9 @@
     </div>
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Registrar Visita</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Registrar visita</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Preencha os dados da visita e tratamentos realizados conforme as diretrizes de vigilância entomológica e controle vetorial (MS).
+            Preencha os dados da visita e dos tratamentos realizados. Se estiver <strong>sem internet</strong>, você pode guardar a visita no dispositivo e enviar depois pela tela «Visitas» → «Enviar visitas salvas no dispositivo».
         </p>
     </section>
 
@@ -320,7 +320,8 @@
                 </p>
             </div>
 
-            {{-- Sugestões com base nos dados do sistema --}}
+            @if($sugestoesDisponiveis ?? false)
+            {{-- Sugestões com base nos dados do sistema (só aparece quando já há visitas com doenças ou doenças com sintomas) --}}
             <div class="space-y-2"
                  x-data="{
                      sugestoes: [],
@@ -345,15 +346,15 @@
                 <div class="flex flex-wrap gap-2 items-center">
                     <button type="button" @click="carregarSugestoes()"
                             class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
-                        Obter sugestões de doenças
+                        Ver sugestões de doenças para este imóvel
                     </button>
                 </div>
                 <div x-show="carregandoSugestoes || sugestoes.length > 0" x-cloak class="space-y-2">
-                    <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Carregando…</div>
+                    <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Buscando…</div>
                     <div x-show="sugestoes.length > 0" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
-                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados do sistema</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados já cadastrados</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400">
-                            As sugestões são geradas apenas com os dados já registrados no sistema (histórico do imóvel, frequência no município e palavras das observações). Nenhum serviço externo ou cota de IA é utilizado.
+                            O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.
                         </p>
                         <div class="flex flex-wrap gap-2 items-center">
                             <template x-for="s in sugestoes" :key="s.doe_id">
@@ -367,6 +368,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             {{-- Possíveis doenças --}}
             <fieldset class="space-y-3">
@@ -415,20 +417,22 @@
                 Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.
             </p>
 
-            <div class="flex flex-wrap justify-end gap-3">
-                <button type="button" id="btn-save-draft"
-                        class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
-                    Salvar para enviar depois
-                </button>
-                <button type="submit"
-                        x-bind:disabled="carregando"
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
-                    Registrar Visita
-                </button>
+            <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    <strong>Com internet:</strong> use o botão verde para registrar na hora. <strong>Sem internet (em campo):</strong> use o botão amarelo para guardar no dispositivo; depois, quando tiver conexão, vá em Visitas e clique em «Enviar visitas salvas no dispositivo».
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button type="submit"
+                            x-bind:disabled="carregando"
+                            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        Registrar visita agora (com internet)
+                    </button>
+                    <button type="button" id="btn-save-draft"
+                            class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
+                        Guardar no dispositivo para enviar depois
+                    </button>
+                </div>
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                <strong>Sem internet?</strong> Use <strong>Salvar para enviar depois</strong> — a visita fica no seu aparelho. Quando tiver conexão, abra o menu <strong>Sincronizar</strong> e envie todas de uma vez.
-            </p>
         </form>
     </section>
 </div>
@@ -500,7 +504,7 @@
             return;
         }
         window.VisitaOfflineSaveDraft('agente', payload).then(function() {
-            alert('Visita salva no dispositivo. Quando tiver internet, acesse o menu «Sincronizar» para enviar.');
+            alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em «Enviar visitas salvas no dispositivo» para enviar.');
             if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
         }).catch(function() {
             alert('Não foi possível salvar no dispositivo. Verifique se o navegador permite armazenamento local.');

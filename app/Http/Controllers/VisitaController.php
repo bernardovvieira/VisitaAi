@@ -146,11 +146,19 @@ class VisitaController extends Controller
         $locais = Local::all();
         $doencas = Doenca::all();
 
+        $sugestoesDisponiveis = false;
+        if ($user->isAgenteEndemias() || $user->isAgenteSaude()) {
+            $sugestoesDisponiveis = Visita::whereHas('doencas')
+                ->where('vis_data', '>=', now()->subMonths(\App\Services\SugestaoDoencasService::MESES_FREQUENCIA))
+                ->exists()
+                || (Doenca::count() > 0 && Doenca::whereNotNull('doe_sintomas')->exists());
+        }
+
         $view = $user->isAgenteSaude()
             ? 'saude.visitas.create'
             : ($user->isAgenteEndemias() ? 'agente.visitas.create' : 'gestor.visitas.create');
 
-        return view($view, compact('locais', 'doencas'));
+        return view($view, compact('locais', 'doencas', 'sugestoesDisponiveis'));
     }
 
     public function store(VisitaRequest $request)
@@ -388,11 +396,19 @@ class VisitaController extends Controller
         $locais = Local::all();
         $doencas = Doenca::all();
 
+        $sugestoesDisponiveis = false;
+        if ($user->isAgenteEndemias() || $user->isAgenteSaude()) {
+            $sugestoesDisponiveis = Visita::whereHas('doencas')
+                ->where('vis_data', '>=', now()->subMonths(\App\Services\SugestaoDoencasService::MESES_FREQUENCIA))
+                ->exists()
+                || (Doenca::count() > 0 && Doenca::whereNotNull('doe_sintomas')->exists());
+        }
+
         $view = $user->isAgenteSaude()
             ? 'saude.visitas.edit'
             : ($user->isAgenteEndemias() ? 'agente.visitas.edit' : 'gestor.visitas.edit');
 
-        return view($view, compact('visita', 'locais', 'doencas'));
+        return view($view, compact('visita', 'locais', 'doencas', 'sugestoesDisponiveis'));
     }
 
     public function update(VisitaRequest $request, Visita $visita)

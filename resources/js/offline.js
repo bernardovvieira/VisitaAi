@@ -67,12 +67,12 @@ function showPendingBanner(count, syncPageUrl) {
     el.className = 'bg-amber-500 text-amber-900 px-4 py-3 flex flex-wrap items-center justify-center gap-3 text-sm font-medium shadow';
     const span = document.createElement('span');
     span.setAttribute('data-pending-msg', '');
-    span.textContent = (count === 1 ? '1 visita' : count + ' visitas') + ' salva(s) no dispositivo para transmitir. ';
+    span.textContent = (count === 1 ? '1 visita' : count + ' visitas') + ' guardada(s) no dispositivo para enviar. ';
     const a = document.createElement('a');
     a.setAttribute('data-sync-link', '');
     a.setAttribute('href', syncPageUrl || '#');
     a.className = 'underline font-semibold hover:no-underline';
-    a.textContent = 'Sincronizar agora';
+    a.textContent = 'Enviar agora';
     const btn = document.createElement('button');
     btn.setAttribute('type', 'button');
     btn.setAttribute('aria-label', 'Fechar');

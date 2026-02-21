@@ -24,15 +24,27 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Visualize, busque, edite ou remova visitas registradas.
+            Veja as visitas que você já registrou, busque, edite ou cadastre novas.
         </p>
-        <a href="{{ route('agente.visitas.create') }}"
-           class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Registrar Visita
-        </a>
+        <div class="flex flex-wrap gap-3 mt-4">
+            <a href="{{ route('agente.visitas.create') }}"
+               class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Registrar nova visita
+            </a>
+            <a href="{{ route('agente.visitas.sync') }}"
+               class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Enviar visitas salvas no dispositivo
+            </a>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            Use «Enviar visitas salvas no dispositivo» quando tiver internet para mandar as visitas que você guardou sem conexão.
+        </p>
     </section>
 
     <!-- Busca (atualiza ao digitar) -->

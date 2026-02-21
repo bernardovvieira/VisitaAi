@@ -311,7 +311,8 @@
                 </p>
             </div>
 
-            {{-- Sugestões com base nos dados do sistema --}}
+            @if($sugestoesDisponiveis ?? false)
+            {{-- Sugestões (só aparece quando já há dados para sugerir) --}}
             <div class="space-y-2"
                  x-data="{
                      sugestoes: [],
@@ -336,15 +337,15 @@
                 <div class="flex flex-wrap gap-2 items-center">
                     <button type="button" @click="carregarSugestoes()"
                             class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
-                        Obter sugestões de doenças
+                        Ver sugestões de doenças para este imóvel
                     </button>
                 </div>
                 <div x-show="carregandoSugestoes || sugestoes.length > 0" x-cloak class="space-y-2">
-                    <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Carregando…</div>
+                    <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Buscando…</div>
                     <div x-show="sugestoes.length > 0" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
-                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados do sistema</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados já cadastrados</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400">
-                            As sugestões são geradas apenas com os dados já registrados no sistema (histórico do imóvel, frequência no município e palavras das observações). Nenhum serviço externo ou cota de IA é utilizado.
+                            O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.
                         </p>
                         <div class="flex flex-wrap gap-2 items-center">
                             <template x-for="s in sugestoes" :key="s.doe_id">
@@ -358,6 +359,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             {{-- Doenças Monitoradas --}}
             <fieldset class="space-y-3">

@@ -5,20 +5,20 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => $visitasIndexRoute], ['label' => 'Sincronizar']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Sincronizar visitas</h1>
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => $visitasIndexRoute], ['label' => 'Enviar visitas salvas']]" />
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Enviar visitas salvas no dispositivo</h1>
 
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Para que serve</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">O que é esta tela?</h2>
         <p class="text-gray-600 dark:text-gray-400">
-            Use esta tela <strong>quando tiver internet</strong> para enviar as visitas que você salvou no celular ou computador sem conexão.
-            As visitas ficam guardadas no seu aparelho até você clicar em <strong>Sincronizar agora</strong>.
+            Quando você está <strong>sem internet</strong> (em campo), pode guardar a visita no dispositivo e enviar depois.
+            Esta tela serve para <strong>enviar</strong> essas visitas guardadas quando você estiver com conexão.
         </p>
-        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-4">Passo a passo</h3>
+        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-4">Como usar</h3>
         <ol class="list-decimal list-inside text-gray-600 dark:text-gray-400 space-y-2">
-            <li><strong>Com internet (na unidade):</strong> Abra o sistema e visite esta tela e a de «Registrar visita» pelo menos uma vez — assim elas funcionam depois sem rede.</li>
-            <li><strong>Sem internet (em campo):</strong> Preencha a visita e clique em <strong>Salvar para enviar depois</strong> (no formulário). Nada é enviado ainda.</li>
-            <li><strong>De volta com internet:</strong> Um aviso amarelo aparecerá no topo da tela. Abra o menu <strong>Sincronizar</strong> e clique em <strong>Sincronizar agora</strong> para enviar todas.</li>
+            <li><strong>Na unidade (com internet):</strong> Abra o sistema e entre em «Visitas» e em «Registrar nova visita» pelo menos uma vez. Assim o dispositivo guarda a tela para usar sem rede.</li>
+            <li><strong>Em campo (sem internet):</strong> Preencha a visita e use o botão <strong>«Guardar no dispositivo para enviar depois»</strong>. A visita fica só no seu dispositivo.</li>
+            <li><strong>Quando tiver internet de novo:</strong> Entre em «Visitas» e clique em <strong>«Enviar visitas salvas no dispositivo»</strong>. Aqui você verá a lista e o botão para enviar tudo.</li>
         </ol>
     </section>
 
@@ -27,23 +27,23 @@
              data-sync-url="{{ $syncSubmitUrl }}"
              data-csrf-token="{{ csrf_token() }}"
              data-perfil="{{ $perfil }}">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas pendentes de envio</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas guardadas no aparelho</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400" id="sync-status">
             Carregando…
         </p>
         <p class="text-xs text-gray-500 dark:text-gray-500 mt-1" id="sync-empty-hint">
-            As visitas que você salvar com «Salvar para enviar depois» (na tela de registrar visita) aparecerão aqui.
+            Quando você usar «Guardar no dispositivo para enviar depois» na tela de registrar visita, as visitas aparecerão aqui para você enviar.
         </p>
         <div id="sync-list" class="space-y-2">
             <!-- Preenchido via JS a partir do IndexedDB -->
         </div>
         <p id="sync-offline-warning" class="hidden text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
-            Você está sem internet. Conecte-se para poder sincronizar.
+            Você está sem internet. Conecte o dispositivo à internet (Wi‑Fi ou dados) para poder enviar as visitas.
         </p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center">
             <button type="button" id="sync-btn"
                     class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition disabled:opacity-50 disabled:cursor-not-allowed">
-                Sincronizar agora
+                Enviar todas agora
             </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
         </div>
@@ -55,6 +55,9 @@
                 Registrar nova visita
             </a>
         </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            Depois de enviar, as visitas saem da lista e passam a aparecer na sua lista de visitas normalmente.
+        </p>
     </section>
 </div>
 
@@ -131,7 +134,7 @@
             ACTIONS.classList.add('hidden');
             return;
         }
-        STATUS.textContent = 'Você tem ' + drafts.length + ' visita(s) salva(s) no dispositivo para transmitir.';
+        STATUS.textContent = 'Você tem ' + drafts.length + ' visita(s) guardada(s) no dispositivo. Clique no botão abaixo para enviar.';
         if (emptyHint) emptyHint.classList.add('hidden');
         ACTIONS.classList.remove('hidden');
         RESULT.textContent = '';
@@ -201,7 +204,7 @@
             })
             .then(function() {
                 if (syncedIds.length > 0) {
-                    RESULT.textContent = syncedIds.length + ' visita(s) transmitida(s) com sucesso.';
+                    RESULT.textContent = syncedIds.length + ' visita(s) enviada(s) com sucesso.';
                     if (errors.length > 0) {
                         RESULT.textContent += ' ' + errors.length + ' não enviada(s) (verifique os dados).';
                     }
