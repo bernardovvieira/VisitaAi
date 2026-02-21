@@ -323,61 +323,21 @@
             </div>
 
             @if($sugestoesDisponiveis ?? false)
-            {{-- Sugestões (só aparece quando já há dados para sugerir) --}}
-            <div class="space-y-2"
-                 data-sugestoes-url="{{ route('saude.sugestoes-doencas') }}"
-                 x-data="{
-                     sugestoes: [],
-                     carregandoSugestoes: false,
-                     mostrouResultado: false,
-                     erro: null,
-                     carregarSugestoes() {
-                         this.erro = null;
-                         this.mostrouResultado = true;
-                         this.carregandoSugestoes = true;
-                         this.sugestoes = [];
-                         var baseUrl = this.$el.getAttribute('data-sugestoes-url') || '';
-                         var localId = document.querySelector('input[name=\"fk_local_id\"]')?.value || '';
-                         var obs = document.querySelector('#vis_observacoes')?.value || '';
-                         var url = baseUrl + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs);
-                         fetch(url)
-                             .then(r => {
-                                 if (!r.ok) throw new Error('Erro ' + r.status);
-                                 return r.json();
-                             })
-                             .then(data => { this.sugestoes = data.sugestoes || []; })
-                             .catch(e => { this.erro = e.message || 'Falha ao carregar.'; })
-                             .finally(() => { this.carregandoSugestoes = false; });
-                     },
-                     marcarSugestao(doeId) {
-                         var cb = document.getElementById('doenca_' + doeId);
-                         if (cb && !cb.checked) { cb.checked = true; }
-                     }
-                 }">
+            {{-- Sugestões de doenças (JS puro) --}}
+            <div id="sugestoes-doencas-wrap" class="space-y-2" data-sugestoes-url="{{ route('saude.sugestoes-doencas') }}">
                 <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" @click="carregarSugestoes()"
-                            class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                    <button type="button" id="btn-sugestoes-doencas" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
                         Ver sugestões de doenças para este imóvel
                     </button>
                 </div>
-                <div x-show="mostrouResultado" x-cloak class="space-y-2">
-                    <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Buscando…</div>
-                    <div x-show="erro" class="text-sm text-red-600 dark:text-red-400" x-text="erro"></div>
-                    <div x-show="!carregandoSugestoes && !erro && sugestoes.length === 0" class="text-sm text-gray-500 dark:text-gray-400">Nenhuma sugestão para este imóvel.</div>
-                    <div x-show="!carregandoSugestoes && !erro && sugestoes.length > 0" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
+                <div id="sugestoes-doencas-result" class="space-y-2" style="display:none;">
+                    <div id="sugestoes-doencas-loading" class="text-sm text-gray-500 dark:text-gray-400">Buscando…</div>
+                    <div id="sugestoes-doencas-erro" class="text-sm text-red-600 dark:text-red-400" style="display:none;"></div>
+                    <div id="sugestoes-doencas-empty" class="text-sm text-gray-500 dark:text-gray-400" style="display:none;">Nenhuma sugestão para este imóvel.</div>
+                    <div id="sugestoes-doencas-list" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3" style="display:none;">
                         <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados já cadastrados</p>
-                        <p class="text-xs text-gray-600 dark:text-gray-400">
-                            O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.
-                        </p>
-                        <div class="flex flex-wrap gap-2 items-center">
-                            <template x-for="s in sugestoes" :key="s.doe_id">
-                                <button type="button" @click="marcarSugestao(s.doe_id)"
-                                        class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
-                                        :title="s.motivo">
-                                    <span x-text="s.nome"></span>
-                                </button>
-                            </template>
-                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.</p>
+                        <div id="sugestoes-doencas-buttons" class="flex flex-wrap gap-2 items-center"></div>
                     </div>
                 </div>
             </div>
@@ -451,9 +411,63 @@
     </section>
 </div>
 
-<!-- mascara ciclo -mm/aa com barra -->
+<!-- mascara ciclo -mm/aa com barra e sugestões de doenças -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var wrap = document.getElementById('sugestoes-doencas-wrap');
+        if (wrap) {
+            var btn = document.getElementById('btn-sugestoes-doencas');
+            var result = document.getElementById('sugestoes-doencas-result');
+            var loading = document.getElementById('sugestoes-doencas-loading');
+            var erroEl = document.getElementById('sugestoes-doencas-erro');
+            var emptyEl = document.getElementById('sugestoes-doencas-empty');
+            var listWrap = document.getElementById('sugestoes-doencas-list');
+            var buttonsWrap = document.getElementById('sugestoes-doencas-buttons');
+            btn.addEventListener('click', function() {
+                result.style.display = '';
+                loading.style.display = '';
+                erroEl.style.display = 'none';
+                emptyEl.style.display = 'none';
+                listWrap.style.display = 'none';
+                var url = wrap.getAttribute('data-sugestoes-url');
+                var localId = (document.querySelector('input[name="fk_local_id"]') || {}).value || '';
+                var obs = (document.getElementById('vis_observacoes') || {}).value || '';
+                var fullUrl = url + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs);
+                fetch(fullUrl)
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('Erro ' + r.status);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        var sugestoes = data.sugestoes || [];
+                        loading.style.display = 'none';
+                        if (sugestoes.length === 0) {
+                            emptyEl.style.display = '';
+                            return;
+                        }
+                        buttonsWrap.innerHTML = '';
+                        sugestoes.forEach(function(s) {
+                            var bt = document.createElement('button');
+                            bt.type = 'button';
+                            bt.className = 'inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700';
+                            bt.title = s.motivo || '';
+                            bt.textContent = s.nome || '';
+                            bt.addEventListener('click', function() {
+                                var cb = document.getElementById('doenca_' + s.doe_id);
+                                if (cb && !cb.checked) cb.checked = true;
+                            });
+                            buttonsWrap.appendChild(bt);
+                        });
+                        listWrap.style.display = 'block';
+                    })
+                    .catch(function(e) {
+                        loading.style.display = 'none';
+                        erroEl.textContent = e.message || 'Falha ao carregar.';
+                        erroEl.style.display = '';
+                    });
+            });
+        }
+
         const cicloInput = document.getElementById('vis_ciclo');
         cicloInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
