@@ -88,8 +88,7 @@
         </tbody>
       </table>
     </div>
+    <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
   </section>
-
-  <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
 </div>
 @endsection
