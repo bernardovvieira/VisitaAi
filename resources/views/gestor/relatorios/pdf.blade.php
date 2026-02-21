@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>PNCD — Registro de Atividades de Controle Vetorial</title>
+  <title>Registro de Atividades de Controle Vetorial</title>
   <style>
     @page { size: A4 landscape; margin: 88px 30px 68px 30px; }
     body { font-family: Arial, sans-serif; font-size: 10px; color: #222; line-height: 1.35; }
@@ -84,14 +84,14 @@
 @endphp
 
 <header>
-  <h1>PNCD — Programa Nacional de Controle da Dengue</h1>
-  <h2>Registro de Atividades de Controle Vetorial — Município de {{ $mun }} / {{ $uf }}</h2>
+  <h1>Vigilância Entomológica e Controle Vetorial</h1>
+  <h2>Registro de Atividades — Município de {{ $mun }} / {{ $uf }}</h2>
   <p class="header-nota">{{ config('ms_terminologia.sistema.nome_subtitulo') }}</p>
 </header>
 
 <footer>
   <div class="page-number"></div>
-  Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) e PNCD — Ministério da Saúde.@if(strtoupper($uf ?? '') === 'RS') No âmbito estadual, em conformidade com a SES-RS e o CEVS.@endif<br>
+  Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) — Ministério da Saúde.@if(strtoupper($uf ?? '') === 'RS') No âmbito estadual, em conformidade com a SES-RS e o CEVS.@endif<br>
   Documento gerado por {{ config('ms_terminologia.sistema.nome_subtitulo') }} (Visita Aí) em {{ now()->format('d/m/Y H:i') }}.
 </footer>
 
@@ -203,13 +203,13 @@
   </table>
 
   <div class="legenda">
-    <strong>Atividade (PNCD — MS):</strong> {{ implode(', ', array_values($atividades)) }} &nbsp;|&nbsp;
+    <strong>Atividade (MS):</strong> {{ implode(', ', array_values($atividades)) }} &nbsp;|&nbsp;
     <strong>N/R:</strong> N-Normal, R-Recuperação (conforme Diretriz MS) &nbsp;|&nbsp;
     <strong>Conc.:</strong> Concluída S/N (sem pendência = S) &nbsp;|&nbsp;
     <strong>Cód.:</strong> Código único do imóvel &nbsp;|&nbsp;
     <strong>Tipo (imóvel):</strong> R-Residencial, C-Comercial, T-Terreno Baldio (PE = atividade 8, não tipo de imóvel) &nbsp;|&nbsp;
     <strong>Pend.:</strong> Pendência (recusado, fechado ou retorno) &nbsp;|&nbsp;
-    <strong>A1–E:</strong> Depósitos inspecionados por tipo (classificação LIRAa/PNCD — MS) &nbsp;|&nbsp;
+    <strong>A1–E:</strong> Depósitos inspecionados por tipo (classificação LIRAa — MS) &nbsp;|&nbsp;
     <strong>Amostra:</strong> Inicial-Final (LIRAa) &nbsp;|&nbsp;
     <strong>Dep.Elim.:</strong> Depósitos eliminados &nbsp;|&nbsp;
     <strong>Tub.:</strong> Tubitos &nbsp;|&nbsp;

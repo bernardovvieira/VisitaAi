@@ -114,7 +114,7 @@
             <fieldset class="space-y-3">
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atividades</legend>
                 <div>
-                    <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade PNCD <span class="text-red-500">*</span></label>
+                    <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade <span class="text-red-500">*</span></label>
                     <select id="vis_atividade" name="vis_atividade" required
                             class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                         <option value="">Selecione...</option>
@@ -123,14 +123,14 @@
                         @endforeach
                     </select>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Atividades conforme PNCD e Diretrizes Nacionais (MS). LIRAa (7) é método simplificado de vigilância entomológica (MS).
+                        Atividades conforme Diretrizes Nacionais (MS). LIRAa (7) é método simplificado de vigilância entomológica.
                     </p>
                 </div>
             </fieldset>
 
             <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
                 <div>
-                    <label for="vis_visita_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo da Visita PNCD</label>
+                    <label for="vis_visita_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo da visita</label>
                     <select name="vis_visita_tipo" id="vis_visita_tipo"
                             class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
                         <option value="">Selecione...</option>

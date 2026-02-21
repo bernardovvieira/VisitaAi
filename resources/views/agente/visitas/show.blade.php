@@ -111,7 +111,7 @@
                 <dd>{{ $visita->vis_ciclo ?? 'N/A' }}</dd>
             </div>
             <div>
-                <dt class="font-medium">Atividade PNCD</dt>
+                <dt class="font-medium">Atividade</dt>
                 <dd>
                     @if(\App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade))
                         {{ \App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade) }} — {{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}

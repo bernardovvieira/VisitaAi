@@ -52,7 +52,7 @@
             Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
         </p>
         <p class="mt-2 text-xs text-gray-500 dark:text-gray-500 italic">
-            Atividades PNCD e terminologia (ACE/ACS, tipos de visita, códigos) conforme recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas e PNCD).
+            Atividades e terminologia (ACE/ACS, tipos de visita, códigos) conforme recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas — Vigilância Entomológica e Controle Vetorial).
         </p>
     </section>
     {{-- Filtros e PDF --}}
