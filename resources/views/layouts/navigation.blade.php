@@ -1,6 +1,9 @@
 @auth
 <nav x-data="{ open: false, online: typeof navigator !== 'undefined' ? navigator.onLine : true }"
-     x-init="window.addEventListener('online', () => online = true); window.addEventListener('offline', () => online = false);"
+     x-init="
+       document.addEventListener('visita-connection-change', (e) => online = e.detail.online);
+       $nextTick(() => { online = typeof navigator !== 'undefined' ? navigator.onLine : true; });
+     "
      class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">

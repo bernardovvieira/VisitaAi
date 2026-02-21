@@ -128,6 +128,26 @@
             <x-cookie-banner />
         @endif
         <script>
+        (function() {
+            function updateConnection() {
+                var o = typeof navigator !== 'undefined' && navigator.onLine;
+                window.visitaConnectionOnline = o;
+                document.dispatchEvent(new CustomEvent('visita-connection-change', { detail: { online: o } }));
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    updateConnection();
+                    window.addEventListener('online', updateConnection);
+                    window.addEventListener('offline', updateConnection);
+                    setInterval(updateConnection, 1000);
+                });
+            } else {
+                updateConnection();
+                window.addEventListener('online', updateConnection);
+                window.addEventListener('offline', updateConnection);
+                setInterval(updateConnection, 1000);
+            }
+        })();
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('[data-alert-autodismiss]').forEach(function(el) {
                 var ms = parseInt(el.getAttribute('data-alert-autodismiss'), 10) || 5000;

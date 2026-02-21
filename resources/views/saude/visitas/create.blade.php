@@ -551,8 +551,7 @@
         }
 
         updateVisitaOnlineUI();
-        window.addEventListener('online', updateVisitaOnlineUI);
-        window.addEventListener('offline', updateVisitaOnlineUI);
+        document.addEventListener('visita-connection-change', function() { updateVisitaOnlineUI(); });
 
         btn.addEventListener('click', function() {
             if (btn.disabled) return;
