@@ -7,11 +7,12 @@
      class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <!-- Logo + Dashboard -->
-            <div class="flex">
+            <!-- Logo + links -->
+            <div class="flex items-center min-w-0">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
                 <div class="shrink-0 flex items-center leading-none h-full">
-                    <a href="{{ route('dashboard') }}" class="flex flex-col items-center">
+                    <a :href="online ? '{{ route('dashboard') }}' : '{{ Auth::user()->isAgenteEndemias() ? route('agente.visitas.index') : (Auth::user()->isAgenteSaude() ? route('saude.visitas.index') : route('gestor.visitas.index')) }}'"
+                       class="flex flex-col items-center">
                         <img src="{{ asset('images/visitaai_rembg.png') }}"
                             alt="Visita Aí Logo"
                             class="h-12 w-auto mb-[-9px] p-0 m-0 leading-none" />
@@ -20,40 +21,34 @@
                         </span>
                     </a>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <span x-show="online" x-cloak>
+                <div class="hidden sm:flex sm:items-center sm:gap-6 sm:-my-px sm:ml-8">
+                    <span x-show="online" x-cloak class="inline-flex">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard')">
                             {{ __('Página Inicial') }}
                         </x-nav-link>
                     </span>
 
                     @if(Auth::user()->isGestor())
-                        <span x-show="online" x-cloak><x-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
-                        <span x-show="online" x-cloak><x-nav-link :href="route('gestor.locais.index')" :active="request()->routeIs('gestor.locais.*')">{{ __('Locais') }}</x-nav-link></span>
-                        <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">
-                            {{ __('Visitas') }}
-                        </x-nav-link>
-                        <span x-show="online" x-cloak><x-nav-link :href="route('gestor.relatorios.index')" :active="request()->routeIs('gestor.relatorios.*')">{{ __('Relatórios') }}</x-nav-link></span>
-                        <span x-show="online" x-cloak><x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">{{ __('Usuários') }}</x-nav-link></span>
-                        <span x-show="online" x-cloak><x-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">{{ __('Auditoria') }}</x-nav-link></span>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('gestor.doencas.index')" :active="request()->routeIs('gestor.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('gestor.locais.index')" :active="request()->routeIs('gestor.locais.*')">{{ __('Locais') }}</x-nav-link></span>
+                        <x-nav-link :href="route('gestor.visitas.index')" :active="request()->routeIs('gestor.visitas.*')">{{ __('Visitas') }}</x-nav-link>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('gestor.relatorios.index')" :active="request()->routeIs('gestor.relatorios.*')">{{ __('Relatórios') }}</x-nav-link></span>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('gestor.users.index')" :active="request()->routeIs('gestor.users.*')">{{ __('Usuários') }}</x-nav-link></span>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">{{ __('Auditoria') }}</x-nav-link></span>
                     @elseif(Auth::user()->isAgenteEndemias())
-                        <span x-show="online" x-cloak><x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
-                        <span x-show="online" x-cloak><x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-nav-link></span>
-                        <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
-                            {{ __('Visitas') }}
-                        </x-nav-link>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-nav-link></span>
+                        <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">{{ __('Visitas') }}</x-nav-link>
                     @elseif(Auth::user()->isAgenteSaude())
-                        <span x-show="online" x-cloak><x-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
-                        <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
-                            {{ __('Minhas Visitas') }}
-                        </x-nav-link>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
+                        <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">{{ __('Minhas Visitas') }}</x-nav-link>
                     @endif
                 </div>
             </div>
 
             <!-- Status conexão + Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ml-6 gap-3">
-                <span class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400"
+            <div class="hidden sm:flex sm:items-center sm:ml-6 gap-3 shrink-0">
+                <span class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 shrink-0"
                       :title="online ? 'Conectado à internet' : 'Sem conexão — visitas podem ser guardadas no dispositivo'">
                     <span class="relative flex h-2 w-2" x-cloak>
                         <span x-show="online" class="absolute inline-flex h-full w-full rounded-full bg-green-500 ring-2 ring-green-500/30"></span>
@@ -87,9 +82,12 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')" :class="request()->routeIs('profile.*') ? 'dropdown-link-active' : ''">
-                            {{ __('Meu Perfil') }}
-                        </x-dropdown-link>
+                        <div x-show="online" x-cloak>
+                            <x-dropdown-link :href="route('profile.edit')" :class="request()->routeIs('profile.*') ? 'dropdown-link-active' : ''">
+                                {{ __('Meu Perfil') }}
+                            </x-dropdown-link>
+                        </div>
+                        <p x-show="!online" x-cloak class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">Offline — apenas Visitas disponível.</p>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
