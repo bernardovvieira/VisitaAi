@@ -48,5 +48,17 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return response()->view('errors.404', [], 404);
         });
+
+        // Erros 500 em rotas de sync: retornar JSON para o front exibir a mensagem
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            if ($request->is('agente/visitas-sync', 'saude/visitas-sync') && $request->isMethod('POST')) {
+                \Illuminate\Support\Facades\Log::error('visitas-sync: ' . $e->getMessage(), ['exception' => $e]);
+                return response()->json([
+                    'sincronizados' => 0,
+                    'erros' => [['index' => 0, 'message' => 'Erro no servidor: ' . $e->getMessage()]],
+                ], 500);
+            }
+            return null;
+        });
     })
     ->create();

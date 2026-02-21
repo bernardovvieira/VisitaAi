@@ -160,7 +160,11 @@ if ('serviceWorker' in navigator) {
 }
 
 window.addEventListener('load', () => {
-    if (navigator.onLine && window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) {
+    if (!isOnline()) {
+        hidePendingBanner();
+        return;
+    }
+    if (window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) {
         updatePendingBanner();
     }
 });

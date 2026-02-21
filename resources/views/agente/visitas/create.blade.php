@@ -458,10 +458,18 @@
                 var url = wrap.getAttribute('data-sugestoes-url');
                 var obs = (document.getElementById('vis_observacoes') || {}).value || '';
                 var fullUrl = url + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs);
-                fetch(fullUrl)
+                fetch(fullUrl, { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
                     .then(function(r) {
-                        if (!r.ok) throw new Error('Erro ' + r.status);
-                        return r.json();
+                        return r.text().then(function(text) {
+                            if (!r.ok) {
+                                var msg = 'Erro ' + r.status + '. Tente novamente.';
+                                if (r.status === 401 || r.status === 419) msg = 'Sessão expirada. Recarregue a página.';
+                                else if (text && text.trim().startsWith('{')) try { var d = JSON.parse(text); if (d.message) msg = d.message; } catch(e) {}
+                                throw new Error(msg);
+                            }
+                            if (!text || !text.trim().startsWith('{')) throw new Error('Resposta inválida. Tente novamente.');
+                            return JSON.parse(text);
+                        });
                     })
                     .then(function(data) {
                         var sugestoes = data.sugestoes || [];
@@ -590,8 +598,9 @@
                 btn.disabled = true;
                 saveDraft().then(function() {
                     if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
+                    var indexUrl = '{{ route('agente.visitas.index') }}';
                     alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
-                    window.location.href = '{{ route('agente.visitas.index') }}';
+                    setTimeout(function() { window.location.href = indexUrl; }, 0);
                 }).catch(function() {}).finally(function() { btn.disabled = false; });
             }
         });

@@ -200,56 +200,6 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
-
-        <section x-show="!online" x-cloak class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg shadow border border-amber-200 dark:border-amber-800 mt-6">
-            <h2 class="text-lg font-semibold text-amber-900 dark:text-amber-200">Rascunhos no dispositivo</h2>
-            <p class="mt-1 text-sm text-amber-800 dark:text-amber-300">Quando estiver offline, você pode editar ou remover apenas as visitas que foram guardadas neste aparelho e ainda não enviadas.</p>
-            <div id="visita-offline-drafts-list-saude" class="mt-3 space-y-2"></div>
-        </section>
     </section>
 </div>
-<script>
-(function() {
-    var createUrl = @json(route('saude.visitas.create'));
-    var listEl = document.getElementById('visita-offline-drafts-list-saude');
-    if (!listEl) return;
-    function renderDrafts(drafts) {
-        listEl.innerHTML = '';
-        if (!drafts || drafts.length === 0) {
-            listEl.innerHTML = '<p class="text-sm text-gray-600 dark:text-gray-400">Nenhum rascunho guardado.</p>';
-            return;
-        }
-        drafts.forEach(function(d, i) {
-            var p = d.payload || {};
-            var label = 'Visita em ' + (p.vis_data || '?') + ' (local ' + (p.fk_local_id || '?') + ') — nº ' + (i + 1);
-            var row = document.createElement('div');
-            row.className = 'flex flex-wrap items-center gap-2 py-2 border-b border-amber-200 dark:border-amber-700 last:border-0';
-            row.innerHTML = '<span class="text-sm text-gray-700 dark:text-gray-300">' + label + '</span>' +
-                '<a href="' + createUrl + '?draft=' + encodeURIComponent(d.id) + '" class="inline-flex items-center gap-1 px-2 py-1 bg-gray-700 hover:bg-gray-800 text-white text-xs font-medium rounded">Editar</a>' +
-                '<button type="button" class="inline-flex items-center gap-1 px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded" data-draft-id="' + d.id + '" aria-label="Remover rascunho">Remover</button>';
-            listEl.appendChild(row);
-            var btn = row.querySelector('button[data-draft-id]');
-            if (btn && typeof window.VisitaOfflineDeleteDraft === 'function') {
-                btn.addEventListener('click', function() {
-                    if (!confirm('Remover este rascunho do dispositivo?')) return;
-                    window.VisitaOfflineDeleteDraft(btn.getAttribute('data-draft-id')).then(function() {
-                        if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
-                        if (typeof window.VisitaOfflineGetDrafts === 'function') {
-                            window.VisitaOfflineGetDrafts('saude').then(renderDrafts);
-                        }
-                    });
-                });
-            }
-        });
-    }
-    function updateDraftsWhenOffline() {
-        if (typeof window.visitaConnectionOnline !== 'undefined' && window.visitaConnectionOnline) return;
-        if (typeof window.VisitaOfflineGetDrafts !== 'function') return;
-        window.VisitaOfflineGetDrafts('saude').then(renderDrafts).catch(function() { listEl.innerHTML = '<p class="text-sm text-gray-500">Erro ao carregar rascunhos.</p>'; });
-    }
-    document.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateDraftsWhenOffline(); });
-    window.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateDraftsWhenOffline(); });
-    if (typeof window.visitaConnectionOnline !== 'undefined' && !window.visitaConnectionOnline) updateDraftsWhenOffline();
-})();
-</script>
 @endsection

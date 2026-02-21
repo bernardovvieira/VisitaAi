@@ -169,12 +169,21 @@
                 .then(function(r) {
                     if (r.status === 419) throw new Error('Sessão expirada. Recarregue a página e tente novamente.');
                     if (!r.ok) {
-                        return r.json().then(function(data) {
-                            var msg = (data.erros && data.erros[0] && data.erros[0].message) ? data.erros[0].message : ('Rede: ' + r.status);
+                        return r.text().then(function(text) {
+                            var msg = 'Erro no servidor (' + r.status + '). Tente novamente ou verifique os dados.';
+                            if (text && text.trim().startsWith('{')) {
+                                try {
+                                    var data = JSON.parse(text);
+                                    if (data.erros && data.erros[0] && data.erros[0].message) msg = data.erros[0].message;
+                                } catch(e) {}
+                            }
                             throw new Error(msg);
-                        }).catch(function() { throw new Error('Rede: ' + r.status); });
+                        });
                     }
-                    return r.json();
+                    return r.text().then(function(text) {
+                        if (!text || !text.trim().startsWith('{')) throw new Error('Resposta inválida do servidor.');
+                        return JSON.parse(text);
+                    });
                 })
                 .then(function(data) {
                     if ((data.sincronizados || 0) > 0) {
