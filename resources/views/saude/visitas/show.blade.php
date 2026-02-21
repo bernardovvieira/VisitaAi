@@ -68,6 +68,10 @@
                     <span class="text-sm text-gray-600 dark:text-gray-400">Complemento: {{ $visita->local->loc_complemento ?? 'N/A' }}</span>
                 </dd>
             </div>
+            <div class="sm:col-span-4">
+                <dt class="font-medium">Responsável pelo imóvel</dt>
+                <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $visita->local->loc_responsavel_nome ?? 'Não informado' }}</dd>
+            </div>
         </dl>
 
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">

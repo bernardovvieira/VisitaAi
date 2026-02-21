@@ -46,15 +46,21 @@
                         <x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">
                             {{ __('Locais') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
+                        <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.index') || request()->routeIs('agente.visitas.create') || request()->routeIs('agente.visitas.show')">
                             {{ __('Visitas') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('agente.visitas.sync')" :active="request()->routeIs('agente.visitas.sync')">
+                            {{ __('Sincronizar') }}
                         </x-nav-link>
                     @elseif(Auth::user()->isAgenteSaude())
                         <x-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">
                             {{ __('Doenças') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
+                        <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.index') || request()->routeIs('saude.visitas.create') || request()->routeIs('saude.visitas.show')">
                             {{ __('Minhas Visitas') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('saude.visitas.sync')" :active="request()->routeIs('saude.visitas.sync')">
+                            {{ __('Sincronizar') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -154,15 +160,21 @@
                 <x-responsive-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">
                     {{ __('Locais') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">
+                <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.index') || request()->routeIs('agente.visitas.create') || request()->routeIs('agente.visitas.show')">
                     {{ __('Visitas') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('agente.visitas.sync')" :active="request()->routeIs('agente.visitas.sync')">
+                    {{ __('Sincronizar') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->isAgenteSaude())
                 <x-responsive-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">
                     {{ __('Doenças') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">
+                <x-responsive-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.index') || request()->routeIs('saude.visitas.create') || request()->routeIs('saude.visitas.show')">
                     {{ __('Minhas Visitas') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('saude.visitas.sync')" :active="request()->routeIs('saude.visitas.sync')">
+                    {{ __('Sincronizar') }}
                 </x-responsive-nav-link>
             @endif
         </div>

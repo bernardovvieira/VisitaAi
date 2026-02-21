@@ -6,8 +6,10 @@ use App\Models\{Visita, Local, Doenca};
 use App\Http\Requests\VisitaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Helpers\LogHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Carbon\Carbon;
 
 class VisitaController extends Controller
 {
@@ -23,9 +25,27 @@ class VisitaController extends Controller
             $query->where(function ($q) use ($busca) {
                 $q->whereHas('local', fn($q) => $q->where('loc_endereco', 'like', "%$busca%"))
                 ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
+                ->orWhereHas('local', fn($q) => $q->where('loc_responsavel_nome', 'like', "%$busca%"))
                 ->orWhereHas('usuario', fn($q) => $q->where('use_nome', 'like', "%$busca%"))
                 ->orWhereHas('doencas', fn($q) => $q->where('doe_nome', 'like', "%$busca%"))
                 ->orWhere('vis_atividade', 'like', "%$busca%");
+
+                $buscaLower = mb_strtolower($busca);
+                if (str_starts_with($buscaLower, 'pendente')) {
+                    $q->orWhere('vis_pendencias', true);
+                }
+                if (str_starts_with($buscaLower, 'concluida') || str_starts_with($buscaLower, 'concluída')) {
+                    $q->orWhere('vis_concluida', true);
+                }
+
+                $dataParsed = $this->parseBuscaData($busca);
+                if ($dataParsed !== null) {
+                    if (isset($dataParsed['date'])) {
+                        $q->orWhereDate('vis_data', $dataParsed['date']);
+                    } elseif (isset($dataParsed['day'])) {
+                        $q->orWhereDay('vis_data', $dataParsed['day']);
+                    }
+                }
             });
         }
 
@@ -58,6 +78,51 @@ class VisitaController extends Controller
             });
 
         return view($view, compact('visitas', 'busca', 'locaisComPendenciasNaoRevisitadas'));
+    }
+
+    /**
+     * Interpreta o termo de busca como data para filtrar visitas.
+     * Aceita: dia só (ex: 30), DD/MM (ex: 30/05), DD/MM/AA (ex: 30/05/25), DD/MM/AAAA (ex: 30/05/2025).
+     * Retorna null se não parecer data; ['day' => int] para dia do mês; ['date' => 'Y-m-d'] para data completa.
+     */
+    private function parseBuscaData(string $busca): ?array
+    {
+        $busca = trim($busca);
+        if ($busca === '') {
+            return null;
+        }
+        if (preg_match('/^\d{1,2}$/', $busca)) {
+            $d = (int) $busca;
+            if ($d >= 1 && $d <= 31) {
+                return ['day' => $d];
+            }
+        }
+        if (preg_match('/^(\d{1,2})\/(\d{1,2})$/', $busca, $m)) {
+            $dia = (int) $m[1];
+            $mes = (int) $m[2];
+            if ($dia >= 1 && $dia <= 31 && $mes >= 1 && $mes <= 12) {
+                $ano = (int) now()->format('Y');
+                $date = sprintf('%04d-%02d-%02d', $ano, $mes, $dia);
+                if (Carbon::createFromFormat('Y-m-d', $date) !== false) {
+                    return ['date' => $date];
+                }
+            }
+        }
+        if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $busca, $m)) {
+            $dia = (int) $m[1];
+            $mes = (int) $m[2];
+            $ano = (int) $m[3];
+            if (strlen($m[3]) === 2) {
+                $ano = 2000 + $ano;
+            }
+            if ($dia >= 1 && $dia <= 31 && $mes >= 1 && $mes <= 12 && $ano >= 2000 && $ano <= 2100) {
+                $date = sprintf('%04d-%02d-%02d', $ano, $mes, $dia);
+                if (Carbon::createFromFormat('Y-m-d', $date) !== false) {
+                    return ['date' => $date];
+                }
+            }
+        }
+        return null;
     }
 
     public function show(Visita $visita)
@@ -155,6 +220,165 @@ class VisitaController extends Controller
             ->route($user->isAgenteSaude() ? 'saude.visitas.index' : 'agente.visitas.index')
             ->with('success', 'Visita registrada com sucesso.')
             ->with('created_visita_id', $visita->vis_id);
+    }
+
+    /**
+     * Exibe a tela de sincronização de visitas salvas offline (rascunhos).
+     * Disponível apenas para ACE e ACS.
+     */
+    public function syncPage()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAgenteEndemias() && !$user->isAgenteSaude()) {
+            abort(403, 'Acesso negado.');
+        }
+
+        $visitasIndexRoute = $user->isAgenteSaude() ? route('saude.visitas.index') : route('agente.visitas.index');
+        $visitasCreateRoute = $user->isAgenteSaude() ? route('saude.visitas.create') : route('agente.visitas.create');
+        $syncSubmitUrl = $user->isAgenteSaude() ? route('saude.visitas.sync.submit') : route('agente.visitas.sync.submit');
+        $perfil = $user->isAgenteSaude() ? 'saude' : 'agente';
+
+        return view('visitas.sync', compact('visitasIndexRoute', 'visitasCreateRoute', 'syncSubmitUrl', 'perfil'));
+    }
+
+    /**
+     * Recebe visitas salvas offline (rascunhos) e persiste no servidor.
+     * Espera JSON: { "visitas": [ { "vis_data", "fk_local_id", ... } ] }
+     * Retorna JSON: { "sincronizados": int, "erros": [ { "index": int, "message": string } ] }
+     */
+    public function syncStore(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAgenteEndemias() && !$user->isAgenteSaude()) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+
+        $this->authorize('create', Visita::class);
+
+        $payload = $request->validate([
+            'visitas' => ['required', 'array', 'max:50'],
+            'visitas.*' => ['array'],
+        ]);
+
+        $visitas = $payload['visitas'];
+        $sincronizados = 0;
+        $erros = [];
+
+        foreach ($visitas as $index => $item) {
+            $item = $this->prepareVisitaPayloadForSync($item, $user);
+            $rules = VisitaRequest::validationRules($user);
+
+            $validator = Validator::make($item, $rules);
+            if ($validator->fails()) {
+                $erros[] = [
+                    'index' => $index,
+                    'message' => implode(' ', $validator->errors()->all()),
+                ];
+                continue;
+            }
+
+            $validated = $validator->validated();
+            $doencas = $validated['doencas'] ?? [];
+            unset($validated['doencas']);
+            $tratamentos = $validated['tratamentos'] ?? [];
+            unset($validated['tratamentos']);
+
+            $validated['fk_usuario_id'] = $user->use_id;
+            $validated['vis_coleta_amostra'] = (bool) ($item['vis_coleta_amostra'] ?? false);
+            $validated['vis_pendencias'] = (bool) ($item['vis_pendencias'] ?? false);
+            $validated['vis_concluida'] = ($validated['vis_pendencias'] ?? false)
+                ? (bool) ($item['vis_concluida'] ?? false)
+                : true;
+
+            $existe = Visita::where('fk_usuario_id', $user->use_id)
+                ->where('fk_local_id', $validated['fk_local_id'])
+                ->whereDate('vis_data', $validated['vis_data'])
+                ->where('vis_atividade', $validated['vis_atividade'])
+                ->where('vis_ciclo', $validated['vis_ciclo'] ?? null)
+                ->exists();
+            if ($existe) {
+                $erros[] = [
+                    'index' => $index,
+                    'message' => 'Visita já registrada com estes dados (local, data, atividade e ciclo).',
+                ];
+                continue;
+            }
+
+            try {
+                $visita = Visita::create($validated);
+                $visita->doencas()->sync($doencas);
+
+                foreach ($tratamentos as $t) {
+                    if (
+                        !empty($t['trat_tipo']) && !empty($t['trat_forma']) &&
+                        (
+                            (strtolower($t['trat_forma'] ?? '') === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
+                            (strtolower($t['trat_forma'] ?? '') === 'perifocal' && !empty($t['qtd_cargas']))
+                        )
+                    ) {
+                        $visita->tratamentos()->create([
+                            'trat_tipo'               => $t['trat_tipo'],
+                            'trat_forma'              => $t['trat_forma'],
+                            'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                            'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                            'qtd_depositos_tratados'   => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                            'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
+                        ]);
+                    }
+                }
+
+                LogHelper::registrar(
+                    'Sincronização offline',
+                    'Visita',
+                    'create',
+                    'Visita sincronizada no local ID ' . $visita->fk_local_id . ', data ' . $visita->vis_data
+                );
+
+                $sincronizados++;
+            } catch (\Throwable $e) {
+                $erros[] = [
+                    'index' => $index,
+                    'message' => 'Erro ao salvar: ' . $e->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json([
+            'sincronizados' => $sincronizados,
+            'erros' => $erros,
+        ]);
+    }
+
+    /**
+     * Normaliza o payload de uma visita vinda do cliente (tratamentos JSON, vis_atividade ACS, etc.).
+     */
+    private function prepareVisitaPayloadForSync(array $item, \App\Models\User $user): array
+    {
+        if ($user->use_perfil === 'agente_saude') {
+            $item['vis_atividade'] = '7';
+        }
+
+        if (isset($item['tratamentos'])) {
+            $trat = $item['tratamentos'];
+            if (is_string($trat)) {
+                $trat = json_decode($trat, true);
+            }
+            if (is_array($trat)) {
+                $item['tratamentos'] = collect($trat)->filter(function ($t) {
+                    return !empty($t['trat_forma']) || !empty($t['trat_tipo'])
+                        || !empty($t['linha']) || !empty($t['qtd_gramas'])
+                        || !empty($t['qtd_depositos_tratados']) || !empty($t['qtd_cargas']);
+                })->values()->toArray();
+            }
+        }
+
+        if (isset($item['fk_local_id']) && !is_int($item['fk_local_id'])) {
+            $item['fk_local_id'] = (int) $item['fk_local_id'];
+        }
+
+        return $item;
     }
 
     public function edit(Visita $visita)

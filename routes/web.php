@@ -76,6 +76,10 @@ Route::middleware('auth')->group(function () {
                 ->name('visitas.show')
                 ->middleware('can:view,visita');
 
+            Route::get('visitas-sync', [VisitaController::class, 'syncPage'])->name('visitas.sync');
+            Route::post('visitas-sync', [VisitaController::class, 'syncStore'])->name('visitas.sync.submit')
+                ->middleware('throttle:60,1');
+
             Route::get('doencas', [DoencaController::class, 'index'])->name('doencas.index')
                 ->middleware('can:viewAny,App\Models\Doenca');
 
@@ -94,6 +98,10 @@ Route::middleware('auth')->group(function () {
             Route::resource('visitas', VisitaController::class)
                 ->only(['index', 'create', 'store', 'show'])
                 ->middleware('can:viewAny,App\Models\Visita');
+
+            Route::get('visitas-sync', [VisitaController::class, 'syncPage'])->name('visitas.sync');
+            Route::post('visitas-sync', [VisitaController::class, 'syncStore'])->name('visitas.sync.submit')
+                ->middleware('throttle:60,1');
 
             Route::get('doencas', [DoencaController::class, 'index'])->name('doencas.index')
                 ->middleware('can:viewAny,App\Models\Doenca');

@@ -44,7 +44,7 @@
                     <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                            data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading"
-                           placeholder="Local, profissional, doença ou atividade..."
+                           placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data (ex: 30/05/25)..."
                            class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
                     <span id="search-loading" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
@@ -144,7 +144,8 @@
                                 <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                                 <div class="text-sm text-gray-600 dark:text-gray-400">
                                     Bairro/Localidade: {{ $visita->local->loc_bairro }}<br>
-                                    Cód.: {{ $visita->local->loc_codigo_unico }}
+                                    Cód.: {{ $visita->local->loc_codigo_unico }}<br>
+                                    Resp.: {{ $visita->local->loc_responsavel_nome ?? 'Não informado' }}
                                 </div>
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">

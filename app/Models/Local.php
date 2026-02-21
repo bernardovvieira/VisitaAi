@@ -32,6 +32,7 @@ class Local extends Model
         'loc_longitude',
         'loc_codigo',
         'loc_codigo_unico',
+        'loc_responsavel_nome',
     ];
 
     public function visitas()

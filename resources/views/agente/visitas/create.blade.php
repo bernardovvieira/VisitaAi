@@ -415,13 +415,20 @@
                 Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.
             </p>
 
-            <div class="flex justify-end">
+            <div class="flex flex-wrap justify-end gap-3">
+                <button type="button" id="btn-save-draft"
+                        class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
+                    Salvar para enviar depois
+                </button>
                 <button type="submit"
                         x-bind:disabled="carregando"
                         class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                     Registrar Visita
                 </button>
             </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <strong>Sem internet?</strong> Use <strong>Salvar para enviar depois</strong> — a visita fica no seu aparelho. Quando tiver conexão, abra o menu <strong>Sincronizar</strong> e envie todas de uma vez.
+            </p>
         </form>
     </section>
 </div>
@@ -452,6 +459,52 @@
             amostraFinal.disabled = true;
             qtdTubitos.disabled = true;
         }
+    });
+
+    document.getElementById('btn-save-draft').addEventListener('click', function() {
+        var form = document.querySelector('form[action="{{ route('agente.visitas.store') }}"]');
+        if (!form) return;
+        var localId = form.querySelector('input[name="fk_local_id"]');
+        var localIdVal = localId ? parseInt(localId.value, 10) : 0;
+        if (!localIdVal) {
+            alert('Selecione o local visitado antes de salvar para enviar depois.');
+            return;
+        }
+        var payload = {
+            vis_data: (form.querySelector('input[name="vis_data"]') || {}).value || '',
+            vis_ciclo: (form.querySelector('input[name="vis_ciclo"]') || {}).value || '',
+            fk_local_id: localIdVal,
+            vis_atividade: (form.querySelector('select[name="vis_atividade"]') || {}).value || '',
+            vis_visita_tipo: (form.querySelector('select[name="vis_visita_tipo"]') || {}).value || '',
+            vis_observacoes: (form.querySelector('textarea[name="vis_observacoes"]') || {}).value || '',
+            vis_pendencias: (form.querySelector('input[name="vis_pendencias"]') || {}).checked ? 1 : 0,
+            vis_coleta_amostra: (form.querySelector('input[name="vis_coleta_amostra"]') || {}).checked ? 1 : 0,
+            vis_amos_inicial: parseInt((form.querySelector('input[name="vis_amos_inicial"]') || {}).value || 0, 10) || null,
+            vis_amos_final: parseInt((form.querySelector('input[name="vis_amos_final"]') || {}).value || 0, 10) || null,
+            vis_qtd_tubitos: parseInt((form.querySelector('input[name="vis_qtd_tubitos"]') || {}).value || 0, 10) || null,
+            vis_depositos_eliminados: parseInt((form.querySelector('input[name="vis_depositos_eliminados"]') || {}).value || 0, 10) || null
+        };
+        ['insp_a1','insp_a2','insp_b','insp_c','insp_d1','insp_d2','insp_e'].forEach(function(name) {
+            var el = form.querySelector('input[name="' + name + '"]');
+            payload[name] = el ? (parseInt(el.value, 10) || null) : null;
+        });
+        var doencas = [];
+        form.querySelectorAll('input[name="doencas[]"]:checked').forEach(function(cb) { doencas.push(parseInt(cb.value, 10)); });
+        payload.doencas = doencas;
+        var tratInput = form.querySelector('input[name="tratamentos"]');
+        if (tratInput && tratInput.value) {
+            try { payload.tratamentos = JSON.parse(tratInput.value); } catch (e) { payload.tratamentos = []; }
+        } else { payload.tratamentos = []; }
+        if (typeof window.VisitaOfflineSaveDraft !== 'function') {
+            alert('Recurso de offline não disponível. Tente recarregar a página.');
+            return;
+        }
+        window.VisitaOfflineSaveDraft('agente', payload).then(function() {
+            alert('Visita salva no dispositivo. Quando tiver internet, acesse o menu «Sincronizar» para enviar.');
+            if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
+        }).catch(function() {
+            alert('Não foi possível salvar no dispositivo. Verifique se o navegador permite armazenamento local.');
+        });
     });
 </script>
 @endsection

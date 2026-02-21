@@ -40,19 +40,26 @@ class LocalController extends Controller
                 } elseif (str_starts_with('terreno', $search)) {
                     $tipo = 'T';
                 }
-                if (str_starts_with('urbano', $search)) {
+                if (str_starts_with('urbano', $search) || str_starts_with('urbana', $search)
+                    || str_starts_with($search, 'urbano') || str_starts_with($search, 'urbana')) {
                     $zona = 'U';
-                } elseif (str_starts_with('rural', $search)) {
+                } elseif (str_starts_with('rural', $search) || str_starts_with($search, 'rural')) {
                     $zona = 'R';
                 }
             }
             if ($search === 'r' || $search === 'c' || $search === 't') {
                 $tipo = strtoupper($search);
             }
+            if ($search === 'u') {
+                $zona = 'U';
+            } elseif ($search === 'r' && $zona === null) {
+                $zona = 'R';
+            }
 
             $query->where(function ($q) use ($search, $tipo, $zona) {
                 $q->whereRaw("LOWER(loc_endereco) LIKE ?", ["%{$search}%"])
                 ->orWhereRaw("LOWER(loc_bairro) LIKE ?", ["%{$search}%"])
+                ->orWhereRaw("LOWER(COALESCE(loc_responsavel_nome, '')) LIKE ?", ["%{$search}%"])
                 ->orWhere('loc_codigo_unico', $search);
 
                 if ($tipo) {

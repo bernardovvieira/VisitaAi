@@ -72,6 +72,7 @@ class LocalRequest extends FormRequest
             'loc_lado'           => ['nullable', 'integer'],
             'loc_codigo'         => ['required', 'string'],
             'loc_codigo_unico'   => ['nullable', 'string', 'max:255', "unique:locais,loc_codigo_unico,{$localId},loc_id"],
+            'loc_responsavel_nome' => ['nullable', 'string', 'max:255'],
         ];
     }
 

@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
 
         <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal') }}</title>
 
@@ -52,6 +53,10 @@
         <script>
             window.VisitaThemePreference = @json(auth()->user()->use_tema ?? 'light');
             window.VisitaThemeSyncUrl = @json(route('profile.tema.update'));
+            @if(auth()->user()->isAgenteEndemias() || auth()->user()->isAgenteSaude())
+            window.VisitaOfflineSyncPageUrl = @json(auth()->user()->isAgenteSaude() ? route('saude.visitas.sync') : route('agente.visitas.sync'));
+            window.VisitaOfflineProfile = @json(auth()->user()->isAgenteSaude() ? 'saude' : 'agente');
+            @endif
         </script>
         @endauth
         <!-- Tema claro/escuro: aplicado antes da pintura para evitar flash. Em todas as páginas (incl. públicas) respeita localStorage; fallback: preferência do sistema ou claro. -->

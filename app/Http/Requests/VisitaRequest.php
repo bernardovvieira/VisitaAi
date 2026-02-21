@@ -12,11 +12,15 @@ class VisitaRequest extends FormRequest
         return $this->user()->can('create', Visita::class);
     }
 
-    public function rules()
+    /**
+     * Regras de validação para uma visita (uso em formulário e em sync offline).
+     *
+     * @param \App\Models\User|null $user Usuário logado (para regra de atividade ACS)
+     * @return array<string, array<int, string>>
+     */
+    public static function validationRules(?\Illuminate\Contracts\Auth\Authenticatable $user = null): array
     {
-        $user = $this->user();
         $regraAtividade = ['nullable', 'in:1,2,3,4,5,6,7,8'];
-        // ACS (Agente Comunitário de Saúde) só pode registrar visita tipo 7 - LIRAa (Diretriz MS)
         if ($user && $user->use_perfil === 'agente_saude') {
             $regraAtividade = ['required', 'in:7'];
         }
@@ -24,11 +28,10 @@ class VisitaRequest extends FormRequest
         return [
             'vis_data'             => ['required', 'date'],
             'vis_observacoes'      => ['nullable', 'string'],
-            'fk_local_id'          => ['required', 'exists:locais,loc_id'],
+            'fk_local_id'          => ['required', 'integer', 'exists:locais,loc_id'],
             'doencas'              => ['nullable', 'array'],
-            'doencas.*'            => ['exists:doencas,doe_id'],
+            'doencas.*'            => ['integer', 'exists:doencas,doe_id'],
 
-            // PNCD
             'vis_ciclo'            => ['nullable', 'string', 'max:10'],
             'vis_atividade'        => $regraAtividade,
             'vis_concluida'        => ['nullable', 'boolean'],
@@ -42,16 +45,14 @@ class VisitaRequest extends FormRequest
             'vis_imoveis_tratados' => ['nullable', 'integer', 'min:0'],
             'vis_depositos_eliminados' => ['nullable', 'integer', 'min:0'],
 
-            // Depósitos inspecionados
             'insp_a1' => ['nullable', 'integer', 'min:0'],
             'insp_a2' => ['nullable', 'integer', 'min:0'],
             'insp_b'  => ['nullable', 'integer', 'min:0'],
             'insp_c'  => ['nullable', 'integer', 'min:0'],
             'insp_d1' => ['nullable', 'integer', 'min:0'],
             'insp_d2' => ['nullable', 'integer', 'min:0'],
-            'insp_e'  => ['nullable', 'integer', 'min:0'], 
+            'insp_e'  => ['nullable', 'integer', 'min:0'],
 
-            // Tratamentos
             'tratamentos'                         => ['nullable', 'array'],
             'tratamentos.*.trat_tipo'             => ['nullable', 'in:Larvicida,Adulticida'],
             'tratamentos.*.trat_forma'            => ['nullable', 'in:Focal,Perifocal'],
@@ -60,6 +61,11 @@ class VisitaRequest extends FormRequest
             'tratamentos.*.qtd_depositos_tratados'=> ['nullable', 'integer', 'min:0'],
             'tratamentos.*.qtd_cargas'            => ['nullable', 'integer', 'min:0'],
         ];
+    }
+
+    public function rules()
+    {
+        return static::validationRules($this->user());
     }
 
     protected function prepareForValidation()

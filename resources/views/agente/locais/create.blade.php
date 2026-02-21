@@ -143,6 +143,16 @@
             </p>
 
             <fieldset class="space-y-3">
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Responsável pelo imóvel</legend>
+                <div>
+                    <label for="loc_responsavel_nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome completo (morador, locatário ou proprietário)</label>
+                    <input id="loc_responsavel_nome" name="loc_responsavel_nome" type="text" value="{{ old('loc_responsavel_nome') }}" maxlength="255"
+                           class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                           placeholder="Opcional">
+                </div>
+            </fieldset>
+
+            <fieldset class="space-y-3">
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Informações Complementares</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
