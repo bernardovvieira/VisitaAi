@@ -44,10 +44,15 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Página de login/registro: sempre modo claro (ignora localStorage) -->
+        <!-- Tema: respeita localStorage (igual às páginas públicas); fallback preferência do sistema ou claro -->
         <script>
             (function(){
-                document.documentElement.classList.remove('dark');
+                var t = null;
+                try { t = localStorage.getItem('theme'); } catch (e) {}
+                if (t !== 'dark' && t !== 'light') {
+                    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                document.documentElement.classList.toggle('dark', t === 'dark');
             })();
         </script>
 

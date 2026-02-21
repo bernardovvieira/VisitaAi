@@ -62,8 +62,9 @@
                     t = window.VisitaThemePreference;
                     try { localStorage.setItem('theme', t); } catch (e) {}
                 } else {
-                    t = null;
-                    try { t = localStorage.getItem('theme'); } catch (e) {}
+                    try {
+                        t = (localStorage.getItem('theme') || '').trim();
+                    } catch (e) { t = ''; }
                     if (t !== 'dark' && t !== 'light') {
                         t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                     }
