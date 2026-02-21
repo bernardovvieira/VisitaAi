@@ -33,6 +33,10 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ ($isPrimario ?? false) ? 'Cadastrar local de referência' : 'Cadastrar Local' }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
+            <strong>Sem internet?</strong> Use o botão &quot;Guardar local&quot; para salvar no dispositivo e sincronize depois na aba Sincronizar.<br>
+            <b>Nota:</b> Antes de ir a campo, abra esta tela pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.
+        </p>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">
             Preencha os dados do local. Preencha o CEP para preencher automaticamente os campos de endereço, bairro, cidade e estado.
             Utilize o botão "Minha Localização" para obter as coordenadas do dispositivo.
         </p>

@@ -1,14 +1,15 @@
 /**
  * Service Worker – Visita Aí
- * Permite uso offline das telas de visitas (após carregá-las uma vez com internet).
+ * Permite uso offline das telas de visitas e locais (após carregá-las uma vez com internet).
  * Estratégia: network-first; em caso de falha, usa cache (exato ou por pathname).
  */
-const CACHE_NAME = 'visitaai-v2';
+const CACHE_NAME = 'visitaai-v3';
 
 var CACHEABLE_PATHS = [
     '/', '/agente/dashboard', '/saude/dashboard',
     '/agente/visitas', '/agente/visitas/create', '/agente/visitas-sync',
-    '/saude/visitas', '/saude/visitas/create', '/saude/visitas-sync'
+    '/saude/visitas', '/saude/visitas/create', '/saude/visitas-sync',
+    '/agente/locais', '/agente/locais/create'
 ];
 
 function pathMatches(a, b) {
@@ -114,6 +115,14 @@ self.addEventListener('fetch', function (event) {
                             if (pathname.indexOf('/visitas/create') !== -1) {
                                 var indexPath = pathname.indexOf('/agente/') === 0 ? '/agente/visitas' : '/saude/visitas';
                                 var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline</title></head><body style="font-family:sans-serif;max-width:420px;margin:2rem auto;padding:1.5rem;text-align:center;background:#fef3c7;color:#92400e;border-radius:8px;"><p style="margin:0 0 1rem;">Esta p&aacute;gina (Registrar visita) ainda n&atilde;o foi guardada para uso offline.</p><p style="margin:0 0 1rem;font-size:0.9em;">Abra <strong>Registrar visita</strong> uma vez com internet para poder us&aacute;-la sem conex&atilde;o.</p><a href="' + indexPath + '" style="display:inline-block;padding:0.5rem 1rem;background:#d97706;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;">Voltar para Visitas</a></body></html>';
+                                return new Response(html, { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                            }
+                            if (pathname.indexOf('/agente/') === 0 && pathname.indexOf('/locais/create') !== -1) {
+                                var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline</title></head><body style="font-family:sans-serif;max-width:420px;margin:2rem auto;padding:1.5rem;text-align:center;background:#fef3c7;color:#92400e;border-radius:8px;"><p style="margin:0 0 1rem;">Esta p&aacute;gina (Adicionar local) ainda n&atilde;o foi guardada para uso offline.</p><p style="margin:0 0 1rem;font-size:0.9em;">Abra <strong>Cadastrar local</strong> uma vez com internet para poder us&aacute;-la sem conex&atilde;o.</p><a href="/agente/locais" style="display:inline-block;padding:0.5rem 1rem;background:#d97706;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;">Voltar para Locais</a></body></html>';
+                                return new Response(html, { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                            }
+                            if (pathname.replace(/\/$/, '') === '/agente/locais') {
+                                var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline</title></head><body style="font-family:sans-serif;max-width:420px;margin:2rem auto;padding:1.5rem;text-align:center;background:#fef3c7;color:#92400e;border-radius:8px;"><p style="margin:0 0 1rem;">Esta p&aacute;gina (Locais) ainda n&atilde;o foi guardada para uso offline.</p><p style="margin:0 0 1rem;font-size:0.9em;">Abra <strong>Locais</strong> uma vez com internet para poder us&aacute;-la sem conex&atilde;o.</p><a href="/agente/visitas" style="display:inline-block;padding:0.5rem 1rem;background:#d97706;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;">Ir para Visitas</a></body></html>';
                                 return new Response(html, { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } });
                             }
                             return matchAnyAppPage(cache).then(function (r) {

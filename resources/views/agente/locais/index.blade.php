@@ -33,6 +33,9 @@
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.
         </p>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            <strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.
+        </p>
         <a href="{{ route('agente.locais.create') }}"
            class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

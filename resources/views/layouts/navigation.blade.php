@@ -41,7 +41,7 @@
                         <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">{{ __('Auditoria') }}</x-nav-link></span>
                     @elseif(Auth::user()->isAgenteEndemias())
                         <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
-                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-nav-link></span>
+                        <x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-nav-link>
                         <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">{{ __('Visitas') }}</x-nav-link>
                         <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.sincronizar')" :active="request()->routeIs('agente.sincronizar')">{{ __('Sincronizar') }}</x-nav-link></span>
                     @elseif(Auth::user()->isAgenteSaude())
@@ -150,7 +150,7 @@
                 <div x-show="online" x-cloak><x-responsive-nav-link :href="route('gestor.logs.index')" :active="request()->routeIs('gestor.logs.*')">{{ __('Auditoria') }}</x-responsive-nav-link></div>
             @elseif(Auth::user()->isAgenteEndemias())
                 <div x-show="online" x-cloak><x-responsive-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">{{ __('Doenças') }}</x-responsive-nav-link></div>
-                <div x-show="online" x-cloak><x-responsive-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-responsive-nav-link></div>
+                <x-responsive-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">{{ __('Visitas') }}</x-responsive-nav-link>
                 <div x-show="online" x-cloak><x-responsive-nav-link :href="route('agente.sincronizar')" :active="request()->routeIs('agente.sincronizar')">{{ __('Sincronizar') }}</x-responsive-nav-link></div>
             @elseif(Auth::user()->isAgenteSaude())
