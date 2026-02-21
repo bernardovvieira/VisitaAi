@@ -40,6 +40,10 @@
                     class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                 Enviar todas agora
             </button>
+            <button type="button" id="sync-clear-btn"
+                    class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                Apagar todas do dispositivo
+            </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
         </div>
     </section>
@@ -55,6 +59,7 @@
     const LIST = document.getElementById('sync-list');
     const ACTIONS = document.getElementById('sync-actions');
     const SYNC_BTN = document.getElementById('sync-btn');
+    const CLEAR_BTN = document.getElementById('sync-clear-btn');
     const RESULT = document.getElementById('sync-result');
 
     const syncUrl = SECTION.getAttribute('data-sync-url');
@@ -102,11 +107,12 @@
         });
     }
 
-    function formatDraftLabel(draft) {
+    function formatDraftLabel(draft, index) {
         var p = draft.payload || {};
         var data = p.vis_data || '';
         var localId = p.fk_local_id || '';
-        return 'Visita em ' + data + ' (local ID ' + localId + ')';
+        var num = index != null ? ' — nº ' + (index + 1) : '';
+        return 'Visita em ' + data + ' (local ' + localId + ')' + num;
     }
 
     var emptyHint = document.getElementById('sync-empty-hint');
@@ -122,10 +128,10 @@
         if (emptyHint) emptyHint.classList.add('hidden');
         ACTIONS.classList.remove('hidden');
         RESULT.textContent = '';
-        drafts.forEach(function(d) {
+        drafts.forEach(function(d, i) {
             var div = document.createElement('div');
             div.className = 'p-4 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
-            div.textContent = formatDraftLabel(d);
+            div.textContent = formatDraftLabel(d, i);
             div.setAttribute('data-draft-id', d.id);
             LIST.appendChild(div);
         });
@@ -212,6 +218,35 @@
     }
 
     SYNC_BTN.addEventListener('click', doSync);
+
+    CLEAR_BTN.addEventListener('click', function() {
+        getAllDrafts().then(function(drafts) {
+            if (drafts.length === 0) {
+                RESULT.textContent = 'Nenhuma visita guardada para apagar.';
+                return;
+            }
+            if (!confirm('Apagar as ' + drafts.length + ' visita(s) guardada(s) no dispositivo? Elas não poderão ser recuperadas.')) {
+                return;
+            }
+            var ids = drafts.map(function(d) { return d.id; });
+            CLEAR_BTN.disabled = true;
+            RESULT.textContent = 'Apagando…';
+            removeDrafts(ids)
+                .then(function() {
+                    RESULT.textContent = drafts.length + ' visita(s) apagada(s) do dispositivo.';
+                    renderList([]);
+                    if (typeof window.VisitaOfflineUpdateBanner === 'function') {
+                        window.VisitaOfflineUpdateBanner();
+                    }
+                })
+                .catch(function() {
+                    RESULT.textContent = 'Erro ao apagar. Tente novamente.';
+                })
+                .finally(function() {
+                    CLEAR_BTN.disabled = false;
+                });
+        });
+    });
 
     function updateOfflineWarning() {
         var offlineEl = document.getElementById('sync-offline-warning');

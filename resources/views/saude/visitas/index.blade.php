@@ -219,9 +219,9 @@
             listEl.innerHTML = '<p class="text-sm text-gray-600 dark:text-gray-400">Nenhum rascunho guardado.</p>';
             return;
         }
-        drafts.forEach(function(d) {
+        drafts.forEach(function(d, i) {
             var p = d.payload || {};
-            var label = 'Visita em ' + (p.vis_data || '?') + ' (local ' + (p.fk_local_id || '?') + ')';
+            var label = 'Visita em ' + (p.vis_data || '?') + ' (local ' + (p.fk_local_id || '?') + ') — nº ' + (i + 1);
             var row = document.createElement('div');
             row.className = 'flex flex-wrap items-center gap-2 py-2 border-b border-amber-200 dark:border-amber-700 last:border-0';
             row.innerHTML = '<span class="text-sm text-gray-700 dark:text-gray-300">' + label + '</span>' +

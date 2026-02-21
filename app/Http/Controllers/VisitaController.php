@@ -168,17 +168,16 @@ class VisitaController extends Controller
         $validated = $request->validated();
 
         $existe = Visita::where('fk_usuario_id', $user->use_id)
-        ->where('fk_local_id', $validated['fk_local_id'])
-        ->whereDate('vis_data', $validated['vis_data'])
-        ->where('vis_atividade', $validated['vis_atividade'])
-        ->where('vis_ciclo', $validated['vis_ciclo'])
-        ->where('created_at', '>=', now()->subMinutes(2)) // intervalo para evitar duplicações
-        ->exists();
+            ->where('fk_local_id', $validated['fk_local_id'])
+            ->whereDate('vis_data', $validated['vis_data'])
+            ->where('vis_atividade', $validated['vis_atividade'])
+            ->where('vis_ciclo', $validated['vis_ciclo'] ?? null)
+            ->exists();
 
         if ($existe) {
             return redirect()
                 ->back()
-                ->withErrors(['duplicado' => 'Existe uma visita registrada recentemente com os mesmos dados.'])
+                ->withErrors(['duplicado' => 'Já existe uma visita para este local nesta data (e atividade/ciclo). Não é permitido lançar duas visitas no mesmo dia para o mesmo imóvel.'])
                 ->withInput();
         }
 
