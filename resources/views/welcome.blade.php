@@ -29,8 +29,7 @@
                     </p>
                 @endif
                 <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed max-w-md">
-                    Sistema de apoio à vigilância entomológica e controle vetorial municipal.<br>
-                    Acompanhe, consulte e controle visitas de forma ágil e segura.
+                    Sistema de apoio à vigilância entomológica e controle vetorial municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.
                 </p>
             </div>
 
