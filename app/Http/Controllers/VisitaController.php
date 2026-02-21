@@ -256,106 +256,118 @@ class VisitaController extends Controller
      */
     public function syncStore(Request $request)
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        if (!$user->isAgenteEndemias() && !$user->isAgenteSaude()) {
-            return response()->json(['message' => 'Acesso negado.'], 403);
-        }
-
-        $this->authorize('create', Visita::class);
-
-        $payload = $request->validate([
-            'visitas' => ['required', 'array', 'max:50'],
-            'visitas.*' => ['array'],
-        ]);
-
-        $visitas = $payload['visitas'];
-        $sincronizados = 0;
-        $erros = [];
-
-        foreach ($visitas as $index => $item) {
-            $item = $this->prepareVisitaPayloadForSync($item, $user);
-            $rules = VisitaRequest::validationRules($user);
-
-            $validator = Validator::make($item, $rules);
-            if ($validator->fails()) {
-                $erros[] = [
-                    'index' => $index,
-                    'message' => implode(' ', $validator->errors()->all()),
-                ];
-                continue;
+        try {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            if (!$user->isAgenteEndemias() && !$user->isAgenteSaude()) {
+                return response()->json(['message' => 'Acesso negado.'], 403);
             }
 
-            $validated = $validator->validated();
-            $doencas = $validated['doencas'] ?? [];
-            unset($validated['doencas']);
-            $tratamentos = $validated['tratamentos'] ?? [];
-            unset($validated['tratamentos']);
+            $this->authorize('create', Visita::class);
 
-            $validated['fk_usuario_id'] = $user->use_id;
-            $validated['vis_coleta_amostra'] = (bool) ($item['vis_coleta_amostra'] ?? false);
-            $validated['vis_pendencias'] = (bool) ($item['vis_pendencias'] ?? false);
-            $validated['vis_concluida'] = ($validated['vis_pendencias'] ?? false)
-                ? (bool) ($item['vis_concluida'] ?? false)
-                : true;
+            $payload = $request->validate([
+                'visitas' => ['required', 'array', 'max:50'],
+                'visitas.*' => ['array'],
+            ]);
 
-            $existe = Visita::where('fk_usuario_id', $user->use_id)
-                ->where('fk_local_id', $validated['fk_local_id'])
-                ->whereDate('vis_data', $validated['vis_data'])
-                ->where('vis_atividade', $validated['vis_atividade'])
-                ->where('vis_ciclo', $validated['vis_ciclo'] ?? null)
-                ->exists();
-            if ($existe) {
-                $erros[] = [
-                    'index' => $index,
-                    'message' => 'Visita já registrada com estes dados (local, data, atividade e ciclo).',
-                ];
-                continue;
-            }
+            $visitas = $payload['visitas'];
+            $sincronizados = 0;
+            $erros = [];
 
-            try {
-                $visita = Visita::create($validated);
-                $visita->doencas()->sync($doencas);
+            foreach ($visitas as $index => $item) {
+                $item = $this->prepareVisitaPayloadForSync($item, $user);
+                $rules = VisitaRequest::validationRules($user);
 
-                foreach ($tratamentos as $t) {
-                    if (
-                        !empty($t['trat_tipo']) && !empty($t['trat_forma']) &&
-                        (
-                            (strtolower($t['trat_forma'] ?? '') === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
-                            (strtolower($t['trat_forma'] ?? '') === 'perifocal' && !empty($t['qtd_cargas']))
-                        )
-                    ) {
-                        $visita->tratamentos()->create([
-                            'trat_tipo'               => $t['trat_tipo'],
-                            'trat_forma'              => $t['trat_forma'],
-                            'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
-                            'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
-                            'qtd_depositos_tratados'   => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
-                            'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
-                        ]);
-                    }
+                $validator = Validator::make($item, $rules);
+                if ($validator->fails()) {
+                    $erros[] = [
+                        'index' => $index,
+                        'message' => implode(' ', $validator->errors()->all()),
+                    ];
+                    continue;
                 }
 
-                LogHelper::registrar(
-                    'Sincronização offline',
-                    'Visita',
-                    'create',
-                    'Visita sincronizada no local ID ' . $visita->fk_local_id . ', data ' . $visita->vis_data
-                );
+                $validated = $validator->validated();
+                $doencas = $validated['doencas'] ?? [];
+                unset($validated['doencas']);
+                $tratamentos = $validated['tratamentos'] ?? [];
+                unset($validated['tratamentos']);
 
-                $sincronizados++;
-            } catch (\Throwable $e) {
-                $erros[] = [
-                    'index' => $index,
-                    'message' => 'Erro ao salvar: ' . $e->getMessage(),
-                ];
+                $validated['fk_usuario_id'] = $user->use_id;
+                $validated['vis_coleta_amostra'] = (bool) ($item['vis_coleta_amostra'] ?? false);
+                $validated['vis_pendencias'] = (bool) ($item['vis_pendencias'] ?? false);
+                $validated['vis_concluida'] = ($validated['vis_pendencias'] ?? false)
+                    ? (bool) ($item['vis_concluida'] ?? false)
+                    : true;
+
+                $existe = Visita::where('fk_usuario_id', $user->use_id)
+                    ->where('fk_local_id', $validated['fk_local_id'])
+                    ->whereDate('vis_data', $validated['vis_data'])
+                    ->where('vis_atividade', $validated['vis_atividade'])
+                    ->where('vis_ciclo', $validated['vis_ciclo'] ?? null)
+                    ->exists();
+                if ($existe) {
+                    $erros[] = [
+                        'index' => $index,
+                        'message' => 'Visita já registrada com estes dados (local, data, atividade e ciclo).',
+                    ];
+                    continue;
+                }
+
+                try {
+                    $visita = Visita::create($validated);
+                    $visita->doencas()->sync($doencas);
+
+                    foreach ($tratamentos as $t) {
+                        if (
+                            !empty($t['trat_tipo']) && !empty($t['trat_forma']) &&
+                            (
+                                (strtolower($t['trat_forma'] ?? '') === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
+                                (strtolower($t['trat_forma'] ?? '') === 'perifocal' && !empty($t['qtd_cargas']))
+                            )
+                        ) {
+                            $visita->tratamentos()->create([
+                                'trat_tipo'               => $t['trat_tipo'],
+                                'trat_forma'              => $t['trat_forma'],
+                                'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                                'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                                'qtd_depositos_tratados'   => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                                'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
+                            ]);
+                        }
+                    }
+
+                    LogHelper::registrar(
+                        'Sincronização offline',
+                        'Visita',
+                        'create',
+                        'Visita sincronizada no local ID ' . $visita->fk_local_id . ', data ' . $visita->vis_data
+                    );
+
+                    $sincronizados++;
+                } catch (\Throwable $e) {
+                    $erros[] = [
+                        'index' => $index,
+                        'message' => 'Erro ao salvar: ' . $e->getMessage(),
+                    ];
+                }
             }
-        }
 
-        return response()->json([
-            'sincronizados' => $sincronizados,
-            'erros' => $erros,
-        ]);
+            return response()->json([
+                'sincronizados' => $sincronizados,
+                'erros' => $erros,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Log::error('syncStore: ' . $e->getMessage(), ['exception' => $e]);
+            return response()->json([
+                'sincronizados' => 0,
+                'erros' => [['index' => 0, 'message' => 'Erro no servidor: ' . $e->getMessage()]],
+            ], 500);
+        }
     }
 
     /**
@@ -377,6 +389,13 @@ class VisitaController extends Controller
                     return !empty($t['trat_forma']) || !empty($t['trat_tipo'])
                         || !empty($t['linha']) || !empty($t['qtd_gramas'])
                         || !empty($t['qtd_depositos_tratados']) || !empty($t['qtd_cargas']);
+                })->map(function ($t) {
+                    $t['trat_tipo'] = isset($t['trat_tipo']) ? ucfirst(strtolower($t['trat_tipo'])) : null;
+                    $t['trat_forma'] = isset($t['trat_forma']) ? ucfirst(strtolower($t['trat_forma'])) : null;
+                    if (array_key_exists('linha', $t) && $t['linha'] !== null && $t['linha'] !== '') {
+                        $t['linha'] = (int) $t['linha'];
+                    }
+                    return $t;
                 })->values()->toArray();
             }
         }

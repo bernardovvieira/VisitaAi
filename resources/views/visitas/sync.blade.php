@@ -41,7 +41,7 @@
                 Enviar todas agora
             </button>
             <button type="button" id="sync-clear-btn"
-                    class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                 Apagar todas do dispositivo
             </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
@@ -168,7 +168,12 @@
                 })
                 .then(function(r) {
                     if (r.status === 419) throw new Error('Sessão expirada. Recarregue a página e tente novamente.');
-                    if (!r.ok) throw new Error('Rede: ' + r.status);
+                    if (!r.ok) {
+                        return r.json().then(function(data) {
+                            var msg = (data.erros && data.erros[0] && data.erros[0].message) ? data.erros[0].message : ('Rede: ' + r.status);
+                            throw new Error(msg);
+                        }).catch(function() { throw new Error('Rede: ' + r.status); });
+                    }
                     return r.json();
                 })
                 .then(function(data) {
