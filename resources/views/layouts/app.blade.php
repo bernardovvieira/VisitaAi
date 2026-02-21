@@ -176,6 +176,7 @@
                     var p = (window.location.pathname || '').replace(/\/$/, '') || '/';
                     var allowed = window.visitaOfflineAllowedPaths;
                     var ok = allowed.some(function(a) { return a === p; });
+                    if (!ok && p.indexOf('/agente/locais') === 0) ok = true;
                     if (!ok) {
                         if (wasOnline) showConnectionToast('Conexão perdida. Redirecionando para Visitas.', true);
                         window.location.href = window.visitaOfflineRedirect;

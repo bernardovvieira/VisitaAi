@@ -3,7 +3,7 @@
  * Permite uso offline das telas de visitas e locais (após carregá-las uma vez com internet).
  * Estratégia: network-first; em caso de falha, usa cache (exato ou por pathname).
  */
-const CACHE_NAME = 'visitaai-v3';
+const CACHE_NAME = 'visitaai-v4';
 
 var CACHEABLE_PATHS = [
     '/', '/agente/dashboard', '/saude/dashboard',
