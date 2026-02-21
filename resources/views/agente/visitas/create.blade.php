@@ -394,19 +394,16 @@
 
             <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Com internet:</strong> use o botão verde para registrar na hora.<br>
-                    <strong>Sem internet (em campo):</strong> use o botão amarelo para guardar no dispositivo; depois, quando tiver conexão, vá em Visitas e clique em "Enviar visitas salvas no dispositivo".
+                    O sistema detecta se você está com internet. Ao clicar no botão, a visita será <span id="visita-online-desc">registrada na hora</span> ou guardada no dispositivo para enviar depois.
                 </p>
                 <div class="flex flex-wrap items-center gap-3">
-                    <button type="submit"
-                            x-bind:disabled="carregando"
-                            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        Registrar visita agora (com internet)
+                    <button type="button" id="btn-registrar-visita"
+                            class="px-6 py-2 font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            data-online-class="bg-green-600 hover:bg-green-700 text-white"
+                            data-offline-class="bg-amber-500 hover:bg-amber-600 text-amber-900">
+                        Registrar visita
                     </button>
-                    <button type="button" id="btn-save-draft"
-                            class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
-                        Guardar no dispositivo para enviar depois
-                    </button>
+                    <span id="visita-online-status" class="text-sm text-gray-500 dark:text-gray-400"></span>
                 </div>
             </div>
         </form>
@@ -495,50 +492,83 @@
         }
     });
 
-    document.getElementById('btn-save-draft').addEventListener('click', function() {
-        var form = document.querySelector('form[action="{{ route('agente.visitas.store') }}"]');
-        if (!form) return;
-        var localId = form.querySelector('input[name="fk_local_id"]');
-        var localIdVal = localId ? parseInt(localId.value, 10) : 0;
-        if (!localIdVal) {
-            alert('Selecione o local visitado antes de salvar para enviar depois.');
-            return;
+    (function() {
+        var btn = document.getElementById('btn-registrar-visita');
+        var desc = document.getElementById('visita-online-desc');
+        var statusEl = document.getElementById('visita-online-status');
+        if (!btn || !desc || !statusEl) return;
+
+        function updateVisitaOnlineUI() {
+            var online = navigator.onLine;
+            var baseClass = 'px-6 py-2 font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed ';
+            if (online) {
+                btn.textContent = 'Registrar visita';
+                btn.className = baseClass + (btn.getAttribute('data-online-class') || 'bg-green-600 hover:bg-green-700 text-white');
+                desc.textContent = 'registrada na hora';
+                statusEl.textContent = 'Com internet';
+            } else {
+                btn.textContent = 'Guardar visita';
+                btn.className = baseClass + (btn.getAttribute('data-offline-class') || 'bg-amber-500 hover:bg-amber-600 text-amber-900');
+                desc.textContent = 'guardada no dispositivo para enviar depois';
+                statusEl.textContent = 'Sem internet — será guardado no dispositivo';
+            }
         }
-        var payload = {
-            vis_data: (form.querySelector('input[name="vis_data"]') || {}).value || '',
-            vis_ciclo: (form.querySelector('input[name="vis_ciclo"]') || {}).value || '',
-            fk_local_id: localIdVal,
-            vis_atividade: (form.querySelector('select[name="vis_atividade"]') || {}).value || '',
-            vis_visita_tipo: (form.querySelector('select[name="vis_visita_tipo"]') || {}).value || '',
-            vis_observacoes: (form.querySelector('textarea[name="vis_observacoes"]') || {}).value || '',
-            vis_pendencias: (form.querySelector('input[name="vis_pendencias"]') || {}).checked ? 1 : 0,
-            vis_coleta_amostra: (form.querySelector('input[name="vis_coleta_amostra"]') || {}).checked ? 1 : 0,
-            vis_amos_inicial: parseInt((form.querySelector('input[name="vis_amos_inicial"]') || {}).value || 0, 10) || null,
-            vis_amos_final: parseInt((form.querySelector('input[name="vis_amos_final"]') || {}).value || 0, 10) || null,
-            vis_qtd_tubitos: parseInt((form.querySelector('input[name="vis_qtd_tubitos"]') || {}).value || 0, 10) || null,
-            vis_depositos_eliminados: parseInt((form.querySelector('input[name="vis_depositos_eliminados"]') || {}).value || 0, 10) || null
-        };
-        ['insp_a1','insp_a2','insp_b','insp_c','insp_d1','insp_d2','insp_e'].forEach(function(name) {
-            var el = form.querySelector('input[name="' + name + '"]');
-            payload[name] = el ? (parseInt(el.value, 10) || null) : null;
-        });
-        var doencas = [];
-        form.querySelectorAll('input[name="doencas[]"]:checked').forEach(function(cb) { doencas.push(parseInt(cb.value, 10)); });
-        payload.doencas = doencas;
-        var tratInput = form.querySelector('input[name="tratamentos"]');
-        if (tratInput && tratInput.value) {
-            try { payload.tratamentos = JSON.parse(tratInput.value); } catch (e) { payload.tratamentos = []; }
-        } else { payload.tratamentos = []; }
-        if (typeof window.VisitaOfflineSaveDraft !== 'function') {
-            alert('Recurso de offline não disponível. Tente recarregar a página.');
-            return;
+
+        function saveDraft() {
+            var form = document.querySelector('form[action="{{ route('agente.visitas.store') }}"]');
+            if (!form) return Promise.reject();
+            var localId = form.querySelector('input[name="fk_local_id"]');
+            var localIdVal = localId ? parseInt(localId.value, 10) : 0;
+            if (!localIdVal) {
+                alert('Selecione o local visitado antes de salvar.');
+                return Promise.reject();
+            }
+            var payload = {
+                vis_data: (form.querySelector('input[name="vis_data"]') || {}).value || '',
+                vis_ciclo: (form.querySelector('input[name="vis_ciclo"]') || {}).value || '',
+                fk_local_id: localIdVal,
+                vis_atividade: (form.querySelector('select[name="vis_atividade"]') || {}).value || '',
+                vis_visita_tipo: (form.querySelector('select[name="vis_visita_tipo"]') || {}).value || '',
+                vis_observacoes: (form.querySelector('textarea[name="vis_observacoes"]') || {}).value || '',
+                vis_pendencias: (form.querySelector('input[name="vis_pendencias"]') || {}).checked ? 1 : 0,
+                vis_coleta_amostra: (form.querySelector('input[name="vis_coleta_amostra"]') || {}).checked ? 1 : 0,
+                vis_amos_inicial: parseInt((form.querySelector('input[name="vis_amos_inicial"]') || {}).value || 0, 10) || null,
+                vis_amos_final: parseInt((form.querySelector('input[name="vis_amos_final"]') || {}).value || 0, 10) || null,
+                vis_qtd_tubitos: parseInt((form.querySelector('input[name="vis_qtd_tubitos"]') || {}).value || 0, 10) || null,
+                vis_depositos_eliminados: parseInt((form.querySelector('input[name="vis_depositos_eliminados"]') || {}).value || 0, 10) || null
+            };
+            ['insp_a1','insp_a2','insp_b','insp_c','insp_d1','insp_d2','insp_e'].forEach(function(name) {
+                var el = form.querySelector('input[name="' + name + '"]');
+                payload[name] = el ? (parseInt(el.value, 10) || null) : null;
+            });
+            payload.doencas = [];
+            form.querySelectorAll('input[name="doencas[]"]:checked').forEach(function(cb) { payload.doencas.push(parseInt(cb.value, 10)); });
+            var tratInput = form.querySelector('input[name="tratamentos"]');
+            payload.tratamentos = (tratInput && tratInput.value) ? (function(){ try { return JSON.parse(tratInput.value); } catch (e) { return []; } })() : [];
+            if (typeof window.VisitaOfflineSaveDraft !== 'function') {
+                alert('Recurso de offline não disponível. Tente recarregar a página.');
+                return Promise.reject();
+            }
+            return window.VisitaOfflineSaveDraft('agente', payload);
         }
-        window.VisitaOfflineSaveDraft('agente', payload).then(function() {
-            alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
-            if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
-        }).catch(function() {
-            alert('Não foi possível salvar no dispositivo. Verifique se o navegador permite armazenamento local.');
+
+        updateVisitaOnlineUI();
+        window.addEventListener('online', updateVisitaOnlineUI);
+        window.addEventListener('offline', updateVisitaOnlineUI);
+
+        btn.addEventListener('click', function() {
+            if (btn.disabled) return;
+            if (navigator.onLine) {
+                btn.disabled = true;
+                document.querySelector('form[action="{{ route('agente.visitas.store') }}"]').submit();
+            } else {
+                btn.disabled = true;
+                saveDraft().then(function() {
+                    alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
+                    if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
+                }).catch(function() {}).finally(function() { btn.disabled = false; });
+            }
         });
-    });
+    })();
 </script>
 @endsection
