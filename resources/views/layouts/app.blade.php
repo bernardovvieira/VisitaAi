@@ -54,7 +54,12 @@
             $u = auth()->user();
             if ($u->isAgenteEndemias()) {
                 $visitaOfflineRedirect = route('agente.visitas.index');
-                $visitaOfflineAllowed = [parse_url(route('agente.visitas.index'), PHP_URL_PATH), parse_url(route('agente.visitas.create'), PHP_URL_PATH)];
+                $visitaOfflineAllowed = [
+                    parse_url(route('agente.visitas.index'), PHP_URL_PATH),
+                    parse_url(route('agente.visitas.create'), PHP_URL_PATH),
+                    parse_url(route('agente.locais.index'), PHP_URL_PATH),
+                    parse_url(route('agente.locais.create'), PHP_URL_PATH),
+                ];
             } elseif ($u->isAgenteSaude()) {
                 $visitaOfflineRedirect = route('saude.visitas.index');
                 $visitaOfflineAllowed = [parse_url(route('saude.visitas.index'), PHP_URL_PATH), parse_url(route('saude.visitas.create'), PHP_URL_PATH)];
