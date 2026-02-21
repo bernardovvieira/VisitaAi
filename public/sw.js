@@ -111,6 +111,11 @@ self.addEventListener('fetch', function (event) {
                     if (isAppPagePath(pathname)) {
                         return matchCacheByPathname(cache, pathname).then(function (r) {
                             if (r) return r;
+                            if (pathname.indexOf('/visitas/create') !== -1) {
+                                var indexPath = pathname.indexOf('/agente/') === 0 ? '/agente/visitas' : '/saude/visitas';
+                                var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline</title></head><body style="font-family:sans-serif;max-width:420px;margin:2rem auto;padding:1.5rem;text-align:center;background:#fef3c7;color:#92400e;border-radius:8px;"><p style="margin:0 0 1rem;">Esta p&aacute;gina (Registrar visita) ainda n&atilde;o foi guardada para uso offline.</p><p style="margin:0 0 1rem;font-size:0.9em;">Abra <strong>Registrar visita</strong> uma vez com internet para poder us&aacute;-la sem conex&atilde;o.</p><a href="' + indexPath + '" style="display:inline-block;padding:0.5rem 1rem;background:#d97706;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;">Voltar para Visitas</a></body></html>';
+                                return new Response(html, { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+                            }
                             return matchAnyAppPage(cache).then(function (r) {
                                 return r || new Response('Sem conexão.', { status: 503, statusText: 'Service Unavailable' });
                             });
