@@ -19,6 +19,7 @@ function pathMatches(a, b) {
 
 function isCacheablePath(pathname) {
     if (pathname.indexOf('/build/') === 0) return true;
+    if (pathname.indexOf('/images/') === 0) return true;
     return CACHEABLE_PATHS.some(function (p) { return pathMatches(pathname, p); });
 }
 
@@ -98,6 +99,11 @@ self.addEventListener('fetch', function (event) {
                 return cache.match(event.request).then(function (cached) {
                     if (cached) return cached;
                     if (pathname.indexOf('/build/') === 0) {
+                        return matchCacheByPathname(cache, pathname).then(function (r) {
+                            return r || new Response('Sem conexão.', { status: 503, statusText: 'Service Unavailable' });
+                        });
+                    }
+                    if (pathname.indexOf('/images/') === 0) {
                         return matchCacheByPathname(cache, pathname).then(function (r) {
                             return r || new Response('Sem conexão.', { status: 503, statusText: 'Service Unavailable' });
                         });

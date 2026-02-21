@@ -435,7 +435,19 @@
             var emptyEl = document.getElementById('sugestoes-doencas-empty');
             var listWrap = document.getElementById('sugestoes-doencas-list');
             var buttonsWrap = document.getElementById('sugestoes-doencas-buttons');
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var localId = (document.querySelector('input[name="fk_local_id"]') || {}).value || '';
+                if (!localId) {
+                    erroEl.textContent = 'Selecione o local visitado antes de buscar sugestões.';
+                    erroEl.style.display = '';
+                    result.style.display = '';
+                    loading.style.display = 'none';
+                    listWrap.style.display = 'none';
+                    emptyEl.style.display = 'none';
+                    return;
+                }
                 result.style.display = '';
                 loading.style.display = '';
                 erroEl.style.display = 'none';
@@ -523,7 +535,7 @@
                 btn.textContent = 'Guardar visita';
                 btn.className = baseClass + (btn.getAttribute('data-offline-class') || 'bg-amber-500 hover:bg-amber-600 text-amber-900');
                 desc.textContent = 'guardada no dispositivo para enviar depois';
-                statusEl.textContent = 'Sem internet — será guardado no dispositivo';
+                statusEl.textContent = 'Sem internet';
             }
         }
 

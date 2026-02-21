@@ -152,15 +152,33 @@
             var pingTimeoutMs = 1200;
             var lastOnline;
 
+            function showConnectionToast(msg, isError) {
+                var el = document.createElement('div');
+                el.setAttribute('role', 'alert');
+                el.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] px-4 py-3 rounded-lg shadow-lg text-sm font-medium text-white ' + (isError ? 'bg-amber-600' : 'bg-green-600');
+                el.textContent = msg;
+                document.body.appendChild(el);
+                setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 7000);
+            }
+
             function setConnectionStatus(o) {
                 if (lastOnline === o) return;
+                var wasOnline = lastOnline === true;
+                var wasOffline = lastOnline === false;
                 lastOnline = o;
                 window.visitaConnectionOnline = o;
                 if (!o && window.visitaOfflineAllowedPaths && window.visitaOfflineRedirect) {
                     var p = (window.location.pathname || '').replace(/\/$/, '') || '/';
                     var allowed = window.visitaOfflineAllowedPaths;
                     var ok = allowed.some(function(a) { return a === p; });
-                    if (!ok) window.location.href = window.visitaOfflineRedirect;
+                    if (!ok) {
+                        if (wasOnline) showConnectionToast('Conexão perdida. Redirecionando para Visitas.', true);
+                        window.location.href = window.visitaOfflineRedirect;
+                        return;
+                    }
+                    if (wasOnline) showConnectionToast('Conexão perdida.', true);
+                } else if (o && wasOffline) {
+                    showConnectionToast('Conexão reestabelecida.', false);
                 }
                 var ev = new CustomEvent('visita-connection-change', { detail: { online: o }, bubbles: true });
                 document.dispatchEvent(ev);

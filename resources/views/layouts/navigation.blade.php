@@ -5,8 +5,9 @@
        document.addEventListener('visita-connection-change', updateOnline);
        window.addEventListener('visita-connection-change', updateOnline);
        $nextTick(() => { online = typeof window.visitaConnectionOnline !== 'undefined' ? window.visitaConnectionOnline : (typeof navigator !== 'undefined' ? navigator.onLine : true); });
-       setInterval(() => { if (typeof window.visitaConnectionOnline === 'boolean' && online !== window.visitaConnectionOnline) online = window.visitaConnectionOnline; }, 1500);
+       setInterval(() => { if (typeof window.visitaConnectionOnline === 'boolean' && online !== window.visitaConnectionOnline) online = window.visitaConnectionOnline; }, 400);
      "
+     x-effect="if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline"
      class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
