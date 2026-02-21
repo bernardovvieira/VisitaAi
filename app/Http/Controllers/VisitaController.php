@@ -390,8 +390,10 @@ class VisitaController extends Controller
                         || !empty($t['linha']) || !empty($t['qtd_gramas'])
                         || !empty($t['qtd_depositos_tratados']) || !empty($t['qtd_cargas']);
                 })->map(function ($t) {
-                    $t['trat_tipo'] = isset($t['trat_tipo']) ? ucfirst(strtolower($t['trat_tipo'])) : null;
-                    $t['trat_forma'] = isset($t['trat_forma']) ? ucfirst(strtolower($t['trat_forma'])) : null;
+                    $tipo = isset($t['trat_tipo']) ? trim(ucfirst(strtolower((string) $t['trat_tipo']))) : null;
+                    $forma = isset($t['trat_forma']) ? trim(ucfirst(strtolower((string) $t['trat_forma']))) : null;
+                    $t['trat_tipo'] = ($tipo !== '' && in_array($tipo, ['Larvicida', 'Adulticida'], true)) ? $tipo : null;
+                    $t['trat_forma'] = ($forma !== '' && in_array($forma, ['Focal', 'Perifocal'], true)) ? $forma : null;
                     if (array_key_exists('linha', $t) && $t['linha'] !== null && $t['linha'] !== '') {
                         $t['linha'] = (int) $t['linha'];
                     }
@@ -402,6 +404,17 @@ class VisitaController extends Controller
 
         if (isset($item['fk_local_id']) && !is_int($item['fk_local_id'])) {
             $item['fk_local_id'] = (int) $item['fk_local_id'];
+        }
+
+        $vvt = $item['vis_visita_tipo'] ?? null;
+        if ($vvt === '' || ($vvt !== null && !in_array((string) $vvt, ['N', 'R'], true))) {
+            $item['vis_visita_tipo'] = null;
+        }
+        if (isset($item['vis_atividade']) && $item['vis_atividade'] === '') {
+            $item['vis_atividade'] = null;
+        }
+        if (array_key_exists('vis_ciclo', $item) && $item['vis_ciclo'] === '') {
+            $item['vis_ciclo'] = null;
         }
 
         return $item;

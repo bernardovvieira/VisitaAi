@@ -589,8 +589,9 @@
             } else {
                 btn.disabled = true;
                 saveDraft().then(function() {
-                    alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
                     if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
+                    alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
+                    window.location.href = '{{ route('agente.visitas.index') }}';
                 }).catch(function() {}).finally(function() { btn.disabled = false; });
             }
         });
