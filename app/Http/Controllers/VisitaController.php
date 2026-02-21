@@ -17,6 +17,18 @@ class VisitaController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        if ($request->has('enviadas')) {
+            $n = (int) $request->input('enviadas');
+            $erros = (int) $request->input('erros', 0);
+            $msg = $n . ' visita(s) enviada(s) com sucesso.';
+            if ($erros > 0) {
+                $msg .= ' ' . $erros . ' não enviada(s) (verifique os dados).';
+            }
+            session()->flash('success', $msg);
+            return redirect()->to($request->url());
+        }
+
         $busca = trim((string) $request->input('busca'));
 
         $query = Visita::with(['local', 'doencas', 'usuario']);

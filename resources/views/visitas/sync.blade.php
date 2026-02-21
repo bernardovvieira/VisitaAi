@@ -21,7 +21,8 @@
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
              data-csrf-token="{{ csrf_token() }}"
-             data-perfil="{{ $perfil }}">
+             data-perfil="{{ $perfil }}"
+             data-index-url="{{ $visitasIndexRoute }}">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas guardadas no dispositivo</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-status">
             Carregando…
@@ -210,6 +211,15 @@
                 return getAllDrafts();
             })
             .then(function(remaining) {
+                if (syncedIds.length > 0) {
+                    var indexUrl = SECTION.getAttribute('data-index-url') || '';
+                    if (indexUrl) {
+                        var q = '?enviadas=' + syncedIds.length;
+                        if (errors.length > 0) q += '&erros=' + errors.length;
+                        window.location.replace(indexUrl + q);
+                        return;
+                    }
+                }
                 renderList(remaining);
                 if (syncedIds.length > 0) {
                     RESULT.textContent = syncedIds.length + ' visita(s) enviada(s) com sucesso.';
