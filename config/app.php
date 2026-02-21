@@ -15,15 +15,15 @@ return [
     |
     */
 
-    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade} - Sistema de Apoio à Vigilância Epidemiológica Municipal
+    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade} - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal
     // Sobrescrito pelo middleware SetAppDisplayName em requests web (usa cidade do 1º Local quando aplicável)
     'name' => env('APP_DISPLAY_NAME') ?: match (strtolower(trim((string) (env('APP_INSTANCE_TYPE') ?? '')))) {
-        'base' => 'Visita Aí - Base - Sistema de Apoio à Vigilância Epidemiológica Municipal',
-        'demo' => 'Visita Aí - Demo - Sistema de Apoio à Vigilância Epidemiológica Municipal',
+        'base' => 'Visita Aí - Base - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal',
+        'demo' => 'Visita Aí - Demo - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal',
         default => 'Visita Aí - ' . (function () {
             $n = trim((string) env('APP_NAME', ''));
             return ($n !== '' && stripos($n, 'Visita Aí') !== 0) ? $n : 'Local';
-        })() . ' - Sistema de Apoio à Vigilância Epidemiológica Municipal',
+        })() . ' - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal',
     },
 
     /*

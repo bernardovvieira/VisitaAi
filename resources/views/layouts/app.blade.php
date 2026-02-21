@@ -5,13 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Epidemiológica Municipal') }}</title>
+        <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal') }}</title>
 
         @php
             $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));
             $ogTitle = $ogTitle ?: config('app.name');
             $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
-            $ogDescription = $ogDescription ?: 'Sistema de apoio à vigilância epidemiológica municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.';
+            $ogDescription = $ogDescription ?: 'Sistema de apoio à vigilância entomológica e controle vetorial municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.';
             $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
             $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai.png';
             $ogUrl = url()->current();

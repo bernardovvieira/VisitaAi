@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Epidemiológica Municipal') }}</title>
+        <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal') }}</title>
 
         @php
             $authMeta = match (request()->route()?->getName()) {
@@ -15,7 +15,7 @@
                 'password.reset' => ['title' => config('app.name') . ' — Redefinir Senha', 'desc' => 'Defina uma nova senha para sua conta no Visita Aí.'],
                 'verification.notice' => ['title' => config('app.name') . ' — Verificar E-mail', 'desc' => 'Confirme seu e-mail para ativar sua conta no Visita Aí.'],
                 'pendente' => ['title' => config('app.name') . ' — Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
-                default => ['title' => config('app.name') . ' — Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância epidemiológica municipal.'],
+                default => ['title' => config('app.name') . ' — Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'],
             };
             $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai.png';
             $ogUrl = url()->current();

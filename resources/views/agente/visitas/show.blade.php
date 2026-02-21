@@ -17,7 +17,7 @@
 
     {{-- Cabeçalho --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detalhes da Visita Epidemiológica</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detalhes da visita</h1>
         <p class="text-sm text-gray-600 dark:text-gray-300">Informações completas da visita registrada no sistema.</p>
     </section>
 

@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' — Consulta Pública')
-@section('og_description', 'Consulte o histórico de visitas epidemiológicas do seu imóvel pelo código único fornecido pelo profissional (ACE/ACS).')
+@section('og_description', 'Consulte o histórico de visitas de vigilância entomológica e controle vetorial do seu imóvel pelo código único fornecido pelo profissional (ACE/ACS).')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-10">

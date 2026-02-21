@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name'))
-@section('og_description', 'Sistema de apoio à vigilância epidemiológica municipal, 100% em conformidade com as recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes ACE/ACS, Arboviroses e PNCD). Acesso para gestores, ACE, ACS e consulta pública.')
+@section('og_description', 'Sistema de apoio à vigilância entomológica e controle vetorial municipal, em conformidade com as recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes ACE/ACS, Arboviroses). Acesso para gestores, ACE, ACS e consulta pública.')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12 min-w-full">
@@ -29,7 +29,7 @@
                     </p>
                 @endif
                 <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed max-w-md">
-                    Sistema de apoio à vigilância epidemiológica municipal.<br>
+                    Sistema de apoio à vigilância entomológica e controle vetorial municipal.<br>
                     Acompanhe, consulte e controle visitas de forma ágil e segura.
                 </p>
             </div>
@@ -61,7 +61,7 @@
                     Conformidade com o Ministério da Saúde
                 </p>
                 <p class="text-xs text-green-700 dark:text-green-400 mt-1 leading-relaxed">
-                    Este sistema está <strong>100% em conformidade</strong> com as recomendações do MS: Lei nº 11.350/2006 (ACE e ACS), Diretriz Nacional para Atuação Integrada dos ACE e ACS, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas e PNCD.
+                    Este sistema está <strong>em conformidade</strong> com as recomendações do MS: Lei nº 11.350/2006 (ACE e ACS), Diretriz Nacional para Atuação Integrada dos ACE e ACS, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas e PNCD.
                 </p>
             </div>
 

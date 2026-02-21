@@ -288,7 +288,7 @@
         if (navigator.share && typeof navigator.share === 'function') {
             navigator.share({
                 title: title,
-                text: 'Resultado da consulta epidemiológica — Visita Aí',
+                text: 'Resultado da consulta — Visita Aí',
                 url: url
             }).then(function () {
                 if (span) {

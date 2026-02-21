@@ -19,8 +19,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'sistema' => [
-        'nome_subtitulo' => 'Sistema de Apoio à Vigilância Epidemiológica Municipal',
-        'nota_ms'        => 'Alinhado às diretrizes do Ministério da Saúde para Vigilância em Saúde e ao PNCD (Programa Nacional de Controle da Dengue).',
+        'nome_subtitulo' => 'Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal',
+        'nota_ms'        => 'Alinhado às diretrizes do Ministério da Saúde para Vigilância em Saúde e controle de arboviroses (vigilância entomológica e controle vetorial).',
     ],
 
     /*

@@ -13,7 +13,7 @@
     <section class="mb-8 p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a), {{ Auth::user()->use_nome }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Aqui você pode registrar suas visitas epidemiológicas, gerenciar locais e acompanhar o histórico das inspeções realizadas.
+            Aqui você pode registrar suas visitas de vigilância entomológica e controle vetorial, gerenciar locais e acompanhar o histórico das inspeções realizadas.
         </p>
         <br>
         <!-- Relógio -->

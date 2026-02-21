@@ -68,7 +68,7 @@ class DoencaController extends Controller
      */
     public function create()
     {
-        // Lista completa de opções para vigilância epidemiológica
+        // Lista completa de opções para vigilância entomológica e doenças
         $optionsSintomas = [
             'Febre alta', 'Febre baixa', 'Dor de cabeça', 'Dor atrás dos olhos',
             'Dor muscular', 'Dor nas articulações', 'Manchas vermelhas na pele',
@@ -151,7 +151,7 @@ class DoencaController extends Controller
             'Distanciamento físico', 'Ventilação adequada',
             'Limpeza e desinfecção', 'Controle de vetores',
             'Vacinação', 'WASH (água, saneamento e higiene)',
-            'Educação em saúde', 'Vigilância epidemiológica'
+            'Educação em saúde', 'Vigilância entomológica'
         ];
 
         return view('gestor.doencas.edit', compact(

@@ -1,6 +1,6 @@
-# Visita Aí - Controle de Visitas Epidemiológicas
+# Visita Aí - Controle de Visitas (Vigilância Entomológica e Controle Vetorial)
 
-Sistema desenvolvido para a gestão de visitas epidemiológicas, utilizando o framework Laravel.
+Sistema desenvolvido para a gestão de visitas de vigilância entomológica e controle vetorial, utilizando o framework Laravel.
 
 **Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde) — Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
 
@@ -105,7 +105,7 @@ php artisan migrate:fresh --force && php artisan db:seed --force                
 
 #### Nome da aplicação
 
-Formato: `Visita Aí - {prefixo} - Sistema de Apoio à Vigilância Epidemiológica Municipal`
+Formato: `Visita Aí - {prefixo} - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal`
 
 | Instância | APP_INSTANCE_TYPE | Prefixo exibido |
 |-----------|-------------------|-----------------|

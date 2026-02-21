@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' — Locais')
-@section('og_description', 'Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação epidemiológica.')
+@section('og_description', 'Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação (vigilância entomológica e controle vetorial).')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">

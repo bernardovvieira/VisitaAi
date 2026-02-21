@@ -22,7 +22,7 @@ class ResumoVisitaCidadaoService
             ? Carbon::parse($visita->vis_data)->locale('pt_BR')->translatedFormat('d \d\e F \d\e Y')
             : 'Data não informada';
 
-        $frase = "Em {$data} foi realizada uma visita de vigilância epidemiológica neste endereço. ";
+        $frase = "Em {$data} foi realizada uma visita de vigilância entomológica e controle vetorial neste endereço. ";
 
         $frase .= "Foram realizadas ações de monitoramento e orientação conforme protocolo. ";
         $frase .= "Recomenda-se manter medidas de prevenção, como eliminar água parada e manter recipientes cobertos, e seguir as orientações repassadas pela equipe de saúde.";

@@ -49,7 +49,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Registra login na auditoria
-        LogHelper::registrar('login', 'sessão', 'login', 'Login realizado', $request);
+        LogHelper::registrar('login', 'Sessão', 'acesso', 'Acesso ao sistema', $request);
 
         // Redireciona conforme o perfil
         if ($user->isGestor()) {

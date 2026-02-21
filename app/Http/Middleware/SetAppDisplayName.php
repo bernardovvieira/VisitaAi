@@ -9,7 +9,7 @@ use App\Models\Local;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Define o nome da aplicação para exibição: Visita Aí - {prefixo} - Sistema de Apoio à Vigilância Epidemiológica Municipal
+ * Define o nome da aplicação para exibição: Visita Aí - {prefixo} - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal
  * - APP_NAME=Base ou APP_INSTANCE_TYPE=base → Base
  * - APP_NAME=Demo ou APP_INSTANCE_TYPE=demo → Demo
  * - Local com cidade cadastrada → loc_cidade do primeiro Local
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class SetAppDisplayName
 {
-    private const SUFIXO = ' - Sistema de Apoio à Vigilância Epidemiológica Municipal';
+    private const SUFIXO = ' - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal';
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -32,7 +32,7 @@ class SetAppDisplayName
         $tipo = strtolower(trim((string) env('APP_INSTANCE_TYPE', '')));
         $appName = trim((string) env('APP_NAME', ''));
 
-        // Ignora APP_NAME no formato antigo (ex.: "Visita Aí - Sistema de Visitas Epidemiológicas")
+        // Ignora APP_NAME no formato antigo (ex.: "Visita Aí - Sistema de Visitas")
         if ($appName !== '' && stripos($appName, 'Visita Aí') === 0) {
             $appName = '';
         }

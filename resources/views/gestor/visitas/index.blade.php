@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' — Visitas')
-@section('og_description', 'Visitas epidemiológicas registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).')
+@section('og_description', 'Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).')
 
 @section('content')
 <div class="space-y-6">
@@ -16,7 +16,7 @@
     @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas epidemiológicas</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize e busque visitas registradas pelos profissionais de campo (ACE/ACS).
         </p>

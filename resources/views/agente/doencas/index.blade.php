@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' — Doenças')
-@section('og_description', 'Doenças monitoradas. Consulte as doenças que você pode registrar nas visitas epidemiológicas.')
+@section('og_description', 'Doenças monitoradas. Consulte as doenças que você pode registrar nas visitas de vigilância entomológica e controle vetorial.')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
