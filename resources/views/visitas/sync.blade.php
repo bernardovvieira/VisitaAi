@@ -4,58 +4,55 @@
 @section('og_description', 'Envie as visitas salvas no dispositivo quando estiver sem internet.')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="max-w-3xl mx-auto space-y-5">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => $visitasIndexRoute], ['label' => 'Enviar visitas salvas']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Enviar visitas salvas no dispositivo</h1>
+    <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">Enviar visitas salvas no dispositivo</h1>
 
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">O que é esta tela?</h2>
-        <p class="text-gray-600 dark:text-gray-400">
-            Quando você está <strong>sem internet</strong> (em campo), pode guardar a visita no dispositivo e enviar depois.
-            Esta tela serve para <strong>enviar</strong> essas visitas guardadas quando você estiver com conexão.
+    <section class="p-5 bg-white dark:bg-gray-700 rounded-lg shadow space-y-3">
+        <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200">O que é esta tela?</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            Quando você está sem internet (em campo), pode guardar a visita no dispositivo e enviar depois.
+            Esta tela serve para enviar essas visitas guardadas quando você estiver com conexão.
         </p>
-        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-4">Como usar</h3>
-        <ol class="list-decimal list-inside text-gray-600 dark:text-gray-400 space-y-2">
-            <li><strong>Na unidade (com internet):</strong> Abra o sistema e entre em «Visitas» e em «Registrar nova visita» pelo menos uma vez. Assim o dispositivo guarda a tela para usar sem rede.</li>
-            <li><strong>Em campo (sem internet):</strong> Preencha a visita e use o botão <strong>«Guardar no dispositivo para enviar depois»</strong>. A visita fica só no seu dispositivo.</li>
-            <li><strong>Quando tiver internet de novo:</strong> Entre em «Visitas» e clique em <strong>«Enviar visitas salvas no dispositivo»</strong>. Aqui você verá a lista e o botão para enviar tudo.</li>
+        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 pt-2">Como usar</h3>
+        <ol class="list-decimal list-inside text-sm text-gray-600 dark:text-gray-400 space-y-2 pl-1">
+            <li><strong>Na unidade (com internet):</strong> Abra Visitas e a tela de registrar visita pelo menos uma vez. O dispositivo guarda a tela para usar sem rede.</li>
+            <li><strong>Em campo (sem internet):</strong> Preencha a visita e use o botão "Guardar no dispositivo para enviar depois". A visita fica só no seu dispositivo.</li>
+            <li><strong>Com internet de novo:</strong> Em Visitas, clique em "Enviar visitas salvas no dispositivo". Aqui você vê a lista e o botão para enviar tudo.</li>
         </ol>
     </section>
 
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4"
+    <section class="p-5 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4"
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
              data-csrf-token="{{ csrf_token() }}"
              data-perfil="{{ $perfil }}">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas guardadas no aparelho</h2>
+        <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200">Visitas guardadas no dispositivo</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400" id="sync-status">
             Carregando…
         </p>
-        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1" id="sync-empty-hint">
-            Quando você usar «Guardar no dispositivo para enviar depois» na tela de registrar visita, as visitas aparecerão aqui para você enviar.
+        <p class="text-sm text-gray-500 dark:text-gray-400" id="sync-empty-hint">
+            Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.
         </p>
-        <div id="sync-list" class="space-y-2">
+        <div id="sync-list" class="space-y-2 min-h-[2rem]">
             <!-- Preenchido via JS a partir do IndexedDB -->
         </div>
-        <p id="sync-offline-warning" class="hidden text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
+        <p id="sync-offline-warning" class="hidden text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-4 py-3 rounded-lg">
             Você está sem internet. Conecte o dispositivo à internet (Wi‑Fi ou dados) para poder enviar as visitas.
         </p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center">
             <button type="button" id="sync-btn"
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-green-600 hover:bg-green-700 text-white shadow transition disabled:opacity-50 disabled:cursor-not-allowed">
                 Enviar todas agora
             </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
         </div>
-        <div class="flex flex-wrap gap-3 mt-4">
-            <a href="{{ $visitasIndexRoute }}" class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
+        <div class="pt-2 border-t border-gray-200 dark:border-gray-600">
+            <a href="{{ $visitasIndexRoute }}" class="inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-lg bg-gray-500 hover:bg-gray-600 text-white shadow transition">
                 Voltar para Visitas
             </a>
-            <a href="{{ $visitasCreateRoute }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow transition">
-                Registrar nova visita
-            </a>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        <p class="text-sm text-gray-500 dark:text-gray-400">
             Depois de enviar, as visitas saem da lista e passam a aparecer na sua lista de visitas normalmente.
         </p>
     </section>
@@ -140,7 +137,7 @@
         RESULT.textContent = '';
         drafts.forEach(function(d) {
             var div = document.createElement('div');
-            div.className = 'p-3 bg-gray-100 dark:bg-gray-600 rounded text-sm text-gray-800 dark:text-gray-200';
+            div.className = 'p-4 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
             div.textContent = formatDraftLabel(d);
             div.setAttribute('data-draft-id', d.id);
             LIST.appendChild(div);

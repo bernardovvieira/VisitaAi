@@ -22,7 +22,10 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Registrar visita</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Preencha os dados da visita e dos tratamentos realizados. Se estiver <strong>sem internet</strong>, você pode guardar a visita no dispositivo e enviar depois pela tela «Visitas» → «Enviar visitas salvas no dispositivo».
+            Preencha os dados da visita e dos tratamentos realizados.
+        </p>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            <strong>Sem internet?</strong> Use o botão "Guardar no dispositivo para enviar depois" no final do formulário. A visita fica salva só no seu aparelho. Quando tiver conexão, abra o menu Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar todas de uma vez. Antes de ir a campo, abra a tela de registrar visita pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.
         </p>
     </section>
 
@@ -419,7 +422,7 @@
 
             <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Com internet:</strong> use o botão verde para registrar na hora. <strong>Sem internet (em campo):</strong> use o botão amarelo para guardar no dispositivo; depois, quando tiver conexão, vá em Visitas e clique em «Enviar visitas salvas no dispositivo».
+                    <strong>Com internet:</strong> use o botão verde para registrar na hora. <strong>Sem internet (em campo):</strong> use o botão amarelo para guardar no dispositivo; depois, quando tiver conexão, vá em Visitas e clique em "Enviar visitas salvas no dispositivo".
                 </p>
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="submit"
@@ -504,7 +507,7 @@
             return;
         }
         window.VisitaOfflineSaveDraft('agente', payload).then(function() {
-            alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em «Enviar visitas salvas no dispositivo» para enviar.');
+            alert('Visita guardada no dispositivo. Quando tiver internet, vá em Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
             if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
         }).catch(function() {
             alert('Não foi possível salvar no dispositivo. Verifique se o navegador permite armazenamento local.');

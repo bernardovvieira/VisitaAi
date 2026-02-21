@@ -26,14 +26,10 @@
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Veja as visitas que você já registrou, busque, edite ou cadastre novas.
         </p>
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            <strong>Lançamento offline:</strong> Se você estiver sem internet em campo, pode registrar a visita normalmente e usar o botão "Guardar no dispositivo para enviar depois" no formulário. A visita fica salva só no seu aparelho. Quando tiver conexão de novo, use o botão abaixo para enviar todas de uma vez.
+        </p>
         <div class="flex flex-wrap gap-3 mt-4">
-            <a href="{{ route('agente.visitas.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Registrar nova visita
-            </a>
             <a href="{{ route('agente.visitas.sync') }}"
                class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,7 +39,7 @@
             </a>
         </div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            Use «Enviar visitas salvas no dispositivo» quando tiver internet para mandar as visitas que você guardou sem conexão.
+            Use o botão acima quando tiver internet para enviar as visitas que você guardou sem conexão.
         </p>
     </section>
 
