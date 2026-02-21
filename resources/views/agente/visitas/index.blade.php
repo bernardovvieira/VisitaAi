@@ -16,12 +16,14 @@
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
-        <div class="flex flex-wrap gap-3 mt-2">
-            @if(session('created_visita_id'))
+        @if(session('created_visita_id'))
+            <div class="flex flex-wrap gap-3 mt-2">
                 <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver visita registrada</a>
-            @endif
-            <a href="{{ route('agente.visitas.create') }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Registrar outra visita</a>
-        </div>
+            </div>
+        @endif
+    @endif
+    @if(session('warning'))
+        <x-alert type="warning" :message="session('warning')" />
     @endif
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />

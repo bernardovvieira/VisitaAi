@@ -29,6 +29,11 @@ class VisitaController extends Controller
             return redirect()->to($request->url());
         }
 
+        if ($request->has('guardada')) {
+            session()->flash('warning', 'Visita guardada no dispositivo. Será sincronizada quando a conexão for estabelecida.');
+            return redirect()->to($request->url());
+        }
+
         $busca = trim((string) $request->input('busca'));
 
         $query = Visita::with(['local', 'doencas', 'usuario']);

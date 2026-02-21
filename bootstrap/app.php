@@ -49,6 +49,14 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->view('errors.404', [], 404);
         });
 
+        // 401 em rotas que pedem JSON (ex.: sugestões no celular): retornar JSON em vez de redirect para login
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+            if ($request->expectsJson() || $request->is('agente/sugestoes-doencas', 'saude/sugestoes-doencas')) {
+                return response()->json(['message' => 'Sessão expirada. Recarregue a página.'], 401);
+            }
+            return null;
+        });
+
         // Erros 500 em rotas de sync: retornar JSON para o front exibir a mensagem
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
             if ($request->is('agente/visitas-sync', 'saude/visitas-sync') && $request->isMethod('POST')) {

@@ -457,7 +457,7 @@
                 var localId = (document.querySelector('input[name="fk_local_id"]') || {}).value || '';
                 var obs = (document.getElementById('vis_observacoes') || {}).value || '';
                 var fullUrl = url + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs);
-                fetch(fullUrl, { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+                fetch(fullUrl, { credentials: 'same-origin', headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
                     .then(function(r) {
                         return r.text().then(function(text) {
                             if (!r.ok) {
@@ -600,8 +600,7 @@
                 saveDraft().then(function() {
                     if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
                     var indexUrl = '{{ route('saude.visitas.index') }}';
-                    alert('Visita guardada no dispositivo. Quando tiver internet, vá em Minhas visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
-                    setTimeout(function() { window.location.replace(indexUrl); }, 100);
+                    setTimeout(function() { window.location.replace(indexUrl + '?guardada=1'); }, 100);
                 }).catch(function() {}).finally(function() { btn.disabled = false; });
             }
         });
