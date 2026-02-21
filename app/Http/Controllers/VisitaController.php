@@ -276,7 +276,7 @@ class VisitaController extends Controller
 
             foreach ($visitas as $index => $item) {
                 $item = $this->prepareVisitaPayloadForSync($item, $user);
-                $rules = VisitaRequest::validationRules($user);
+                $rules = VisitaRequest::rulesForUser($user);
 
                 $validator = Validator::make($item, $rules);
                 if ($validator->fails()) {

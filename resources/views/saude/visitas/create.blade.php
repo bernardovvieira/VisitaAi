@@ -466,12 +466,14 @@
                                 else if (text && text.trim().startsWith('{')) try { var d = JSON.parse(text); if (d.message) msg = d.message; } catch(e) {}
                                 throw new Error(msg);
                             }
-                            if (!text || !text.trim().startsWith('{')) throw new Error('Resposta inválida. Tente novamente.');
-                            return JSON.parse(text);
+                            if (!text || typeof text !== 'string') throw new Error('Resposta inválida. Tente novamente.');
+                            var trim = text.trim();
+                            if (trim.charAt(0) !== '{') throw new Error(trim.indexOf('<!') !== -1 ? 'Resposta em HTML (sessão ou servidor). Recarregue a página.' : 'Resposta inválida. Tente novamente.');
+                            try { return JSON.parse(text); } catch (e) { throw new Error('Resposta inválida. Tente novamente.'); }
                         });
                     })
                     .then(function(data) {
-                        var sugestoes = data.sugestoes || [];
+                        var sugestoes = (data && data.sugestoes) ? data.sugestoes : [];
                         loading.style.display = 'none';
                         if (sugestoes.length === 0) {
                             emptyEl.style.display = '';
@@ -599,7 +601,7 @@
                     if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
                     var indexUrl = '{{ route('saude.visitas.index') }}';
                     alert('Visita guardada no dispositivo. Quando tiver internet, vá em Minhas visitas e clique em "Enviar visitas salvas no dispositivo" para enviar.');
-                    setTimeout(function() { window.location.href = indexUrl; }, 0);
+                    setTimeout(function() { window.location.replace(indexUrl); }, 100);
                 }).catch(function() {}).finally(function() { btn.disabled = false; });
             }
         });

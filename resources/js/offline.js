@@ -96,7 +96,10 @@ function isOnline() {
 }
 
 function showPendingBanner(count, syncPageUrl) {
-    if (count === 0 || !isOnline()) return;
+    if (count === 0 || !isOnline()) {
+        hidePendingBanner();
+        return;
+    }
     let el = document.getElementById('visita-offline-pending-banner');
     if (el) {
         const msg = el.querySelector('[data-pending-msg]');
@@ -160,13 +163,17 @@ if ('serviceWorker' in navigator) {
 }
 
 window.addEventListener('load', () => {
-    if (!isOnline()) {
-        hidePendingBanner();
-        return;
-    }
-    if (window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) {
-        updatePendingBanner();
-    }
+    hidePendingBanner();
+    // Só mostrar banner após breve delay, para o app ter tempo de setar visitaConnectionOnline (ping)
+    setTimeout(() => {
+        if (!isOnline()) {
+            hidePendingBanner();
+            return;
+        }
+        if (window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) {
+            updatePendingBanner();
+        }
+    }, 800);
 });
 
 window.addEventListener('online', () => {

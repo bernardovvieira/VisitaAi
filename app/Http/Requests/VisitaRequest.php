@@ -14,11 +14,12 @@ class VisitaRequest extends FormRequest
 
     /**
      * Regras de validação para uma visita (uso em formulário e em sync offline).
+     * Nome diferente de validationRules() para não conflitar com FormRequest em Laravel 12+.
      *
-     * @param \App\Models\User|null $user Usuário logado (para regra de atividade ACS)
+     * @param \Illuminate\Contracts\Auth\Authenticatable|null $user Usuário logado (para regra de atividade ACS)
      * @return array<string, array<int, string>>
      */
-    public static function validationRules(?\Illuminate\Contracts\Auth\Authenticatable $user = null): array
+    public static function rulesForUser(?\Illuminate\Contracts\Auth\Authenticatable $user = null): array
     {
         $regraAtividade = ['nullable', 'in:1,2,3,4,5,6,7,8'];
         if ($user && $user->use_perfil === 'agente_saude') {
@@ -65,7 +66,7 @@ class VisitaRequest extends FormRequest
 
     public function rules()
     {
-        return static::validationRules($this->user());
+        return static::rulesForUser($this->user());
     }
 
     protected function prepareForValidation()
