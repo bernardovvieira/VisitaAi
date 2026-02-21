@@ -6,6 +6,7 @@ use App\Models\Local;
 use App\Http\Requests\LocalRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Helpers\LogHelper;
 
 use Endroid\QrCode\QrCode;
@@ -23,6 +24,12 @@ class LocalController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        if ($request->has('guardada')) {
+            session()->flash('warning', 'Local cadastrado no dispositivo com sucesso. Sincronize quando se reconectar.');
+            return redirect()->to($request->url());
+        }
+
         $search = strtolower(trim($request->input('search')));
 
         $query = Local::query();
@@ -229,5 +236,85 @@ class LocalController extends Controller
         return redirect()
             ->route('agente.locais.index')
             ->with('success', 'Local excluído com sucesso.');
+    }
+
+    /**
+     * Recebe locais salvos offline e persiste no servidor.
+     * Retorna JSON: { "criados": int, "erros": [ { "index", "message" } ], "ids": [ loc_id, ... ] }
+     */
+    public function syncStore(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user->isAgenteEndemias() && !$user->isGestor()) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+        $this->authorize('create', Local::class);
+
+        $payload = $request->validate([
+            'locais' => ['required', 'array', 'max:50'],
+            'locais.*' => ['array'],
+        ]);
+
+        $locais = $payload['locais'];
+        $ids = [];
+        $erros = [];
+        $rules = $this->localSyncRules();
+
+        foreach ($locais as $index => $item) {
+            $validator = Validator::make($item, $rules);
+            if ($validator->fails()) {
+                $erros[] = ['index' => $index, 'message' => implode(' ', $validator->errors()->all())];
+                continue;
+            }
+            $data = $validator->validated();
+            if (Local::where('loc_endereco', $data['loc_endereco'])->exists()) {
+                $erros[] = ['index' => $index, 'message' => 'Já existe um local com este endereço.'];
+                continue;
+            }
+            do {
+                $codigo = mt_rand(10000000, 99999999);
+            } while (Local::where('loc_codigo_unico', $codigo)->exists());
+            $data['loc_codigo_unico'] = $codigo;
+            $data['loc_numero'] = $data['loc_numero'] ?? 'N/A';
+            try {
+                $local = Local::create($data);
+                $ids[] = $local->loc_id;
+                LogHelper::registrar('Sincronização offline', 'Local', 'create', 'Local sincronizado: ' . $local->loc_endereco);
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Local syncStore: ' . $e->getMessage());
+                $erros[] = ['index' => $index, 'message' => $e->getMessage()];
+            }
+        }
+
+        return response()->json([
+            'criados' => count($ids),
+            'erros' => $erros,
+            'ids' => $ids,
+        ]);
+    }
+
+    /** Regras de validação para sync de locais (sem ViaCEP). */
+    private function localSyncRules(): array
+    {
+        return [
+            'loc_cep' => ['required', 'string', 'max:20'],
+            'loc_tipo' => ['required', 'string', 'in:R,C,T'],
+            'loc_zona' => ['required', 'string', 'max:10'],
+            'loc_endereco' => ['required', 'string', 'max:255'],
+            'loc_numero' => ['nullable', 'string', 'max:20'],
+            'loc_bairro' => ['required', 'string', 'max:100'],
+            'loc_cidade' => ['required', 'string', 'max:100'],
+            'loc_estado' => ['required', 'string', 'max:2'],
+            'loc_pais' => ['required', 'string', 'max:100'],
+            'loc_latitude' => ['required', 'string', 'max:20'],
+            'loc_longitude' => ['required', 'string', 'max:20'],
+            'loc_codigo' => ['required', 'string', 'max:50'],
+            'loc_quarteirao' => ['nullable', 'string', 'max:50'],
+            'loc_complemento' => ['nullable', 'string', 'max:255'],
+            'loc_categoria' => ['nullable', 'string', 'max:100'],
+            'loc_sequencia' => ['nullable', 'integer'],
+            'loc_lado' => ['nullable', 'integer'],
+            'loc_responsavel_nome' => ['nullable', 'string', 'max:255'],
+        ];
     }
 }

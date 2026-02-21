@@ -76,23 +76,37 @@
                         open: false,
                         search: '',
                         selectedId: {{ old('fk_local_id') ?? 'null' }},
+                        selectedDraftId: '',
                         locais: {{ Js::from($locais) }},
+                        locaisDraft: [],
                         limparSelecao() {
-                            if (!this.selectedId) return;
                             this.selectedId = '';
+                            this.selectedDraftId = '';
                             this.search = '';
                             this.open = true;
-                            this.$nextTick(() => this.$refs.input.focus());
+                            this.$nextTick(() => this.$refs.input && this.$refs.input.focus());
                         }
                     }"
                     x-init="
                         $watch('search', () => open = true);
+                        if (typeof window.VisitaOfflineGetLocalDrafts === 'function') {
+                            window.VisitaOfflineGetLocalDrafts('agente').then(function(drafts) {
+                                $el.dispatchEvent(new CustomEvent('local-drafts-loaded', { detail: drafts || [], bubbles: false }));
+                            });
+                            $el.addEventListener('local-drafts-loaded', function(e) { locaisDraft = e.detail || []; });
+                        }
                         window.addEventListener('visita-apply-draft-local', function(e) {
                             var p = e.detail;
-                            if (p && p.fk_local_id && locais && locais.length) {
+                            if (p && p.local_draft_id) {
+                                selectedDraftId = p.local_draft_id;
+                                selectedId = '';
+                                search = '(Dispositivo) Local a sincronizar';
+                                open = false;
+                            } else if (p && p.fk_local_id && locais && locais.length) {
                                 var loc = locais.find(function(l) { return l.loc_id == p.fk_local_id; });
                                 if (loc) {
                                     selectedId = loc.loc_id;
+                                    selectedDraftId = '';
                                     search = 'Cód. ' + (loc.loc_codigo_unico || '') + ' - ' + (loc.loc_endereco || '') + ', ' + (loc.loc_numero ?? 'S/N') + ' - ' + (loc.loc_bairro || '') + ', ' + (loc.loc_cidade || '') + '/' + (loc.loc_estado || '');
                                     open = false;
                                 }
@@ -107,6 +121,20 @@
 
                         <ul x-show="open" @click.away="open = false" x-cloak class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto"
                             x-transition>
+                            <template x-if="locaisDraft && locaisDraft.length">
+                                <li class="px-2 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300 border-b border-gray-200 dark:border-gray-600">Locais no dispositivo</li>
+                            </template>
+                            <template x-for="d in locaisDraft" :key="d.id">
+                                <li>
+                                    <button type="button" @click="selectedDraftId = d.id; selectedId = ''; search = '(Dispositivo) ' + (d.payload && d.payload.loc_endereco || d.id); open = false"
+                                            class="block text-left w-full px-3 py-2 text-sm text-amber-800 dark:text-amber-200 hover:bg-amber-50 dark:hover:bg-amber-900/30">
+                                        <span x-text="(d.payload && d.payload.loc_endereco) || d.id"></span>
+                                    </button>
+                                </li>
+                            </template>
+                            <template x-if="locais && locais.length">
+                                <li class="px-2 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-600">Locais cadastrados</li>
+                            </template>
                             <template x-for="local in locais.filter(l => {
                                 const q = (search || '').toLowerCase();
                                 if (!q) return true;
@@ -117,7 +145,7 @@
                                 return end.includes(q) || bairro.includes(q) || cidade.includes(q) || cod.includes(q);
                             })" :key="local.loc_id">
                                 <li>
-                                    <button type="button" @click="selectedId = Number(local.loc_id); search = 'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || ''); open = false"
+                                    <button type="button" @click="selectedId = Number(local.loc_id); selectedDraftId = ''; search = 'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || ''); open = false"
                                             class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                         <span x-text="'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || '')">
                                         </span>
@@ -126,7 +154,8 @@
                             </template>
                         </ul>
                     </div>
-                    <input type="hidden" name="fk_local_id" x-bind:value="selectedId"> 
+                    <input type="hidden" name="fk_local_id" x-bind:value="selectedDraftId ? '' : selectedId">
+                    <input type="hidden" name="local_draft_id" x-bind:value="selectedDraftId"> 
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Se o local visitado não estiver na lista, você pode adicioná-lo na seção de <a href="{{ route('agente.locais.create') }}" class="text-gray-800 hover:underline">locais</a>.
@@ -553,16 +582,18 @@
         function saveDraft() {
             var form = document.querySelector('form[action="{{ route('agente.visitas.store') }}"]');
             if (!form) return Promise.reject();
-            var localId = form.querySelector('input[name="fk_local_id"]');
-            var localIdVal = localId ? parseInt(localId.value, 10) : 0;
-            if (!localIdVal) {
+            var localIdEl = form.querySelector('input[name="fk_local_id"]');
+            var localDraftIdEl = form.querySelector('input[name="local_draft_id"]');
+            var localIdVal = localIdEl ? parseInt(localIdEl.value, 10) : 0;
+            var localDraftIdVal = localDraftIdEl ? (localDraftIdEl.value || '').trim() : '';
+            if (!localIdVal && !localDraftIdVal) {
                 alert('Selecione o local visitado antes de salvar.');
                 return Promise.reject();
             }
             var payload = {
                 vis_data: (form.querySelector('input[name="vis_data"]') || {}).value || '',
                 vis_ciclo: (form.querySelector('input[name="vis_ciclo"]') || {}).value || '',
-                fk_local_id: localIdVal,
+                fk_local_id: localIdVal || null,
                 vis_atividade: (form.querySelector('select[name="vis_atividade"]') || {}).value || '',
                 vis_visita_tipo: (form.querySelector('select[name="vis_visita_tipo"]') || {}).value || '',
                 vis_observacoes: (form.querySelector('textarea[name="vis_observacoes"]') || {}).value || '',
@@ -573,6 +604,7 @@
                 vis_qtd_tubitos: parseInt((form.querySelector('input[name="vis_qtd_tubitos"]') || {}).value || 0, 10) || null,
                 vis_depositos_eliminados: parseInt((form.querySelector('input[name="vis_depositos_eliminados"]') || {}).value || 0, 10) || null
             };
+            if (localDraftIdVal) payload.local_draft_id = localDraftIdVal;
             ['insp_a1','insp_a2','insp_b','insp_c','insp_d1','insp_d2','insp_e'].forEach(function(name) {
                 var el = form.querySelector('input[name="' + name + '"]');
                 payload[name] = el ? (parseInt(el.value, 10) || null) : null;

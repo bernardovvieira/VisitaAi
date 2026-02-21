@@ -226,7 +226,7 @@
         if (typeof window.VisitaOfflineGetPendingCount !== 'function') return;
         window.VisitaOfflineGetPendingCount(perfil).then(function(count) {
             if (count > 0) {
-                msgEl.textContent = 'Você tem ' + count + ' visita(s) guardada(s) no dispositivo. Será(ão) sincronizada(s) quando houver conexão.';
+                msgEl.textContent = 'Você tem ' + count + ' visita(s) guardada(s) no dispositivo. Sincronize quando se reconectar.';
                 alertEl.classList.remove('hidden');
             } else {
                 alertEl.classList.add('hidden');

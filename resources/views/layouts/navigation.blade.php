@@ -43,9 +43,11 @@
                         <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
                         <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-nav-link></span>
                         <x-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">{{ __('Visitas') }}</x-nav-link>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('agente.sincronizar')" :active="request()->routeIs('agente.sincronizar')">{{ __('Sincronizar') }}</x-nav-link></span>
                     @elseif(Auth::user()->isAgenteSaude())
                         <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">{{ __('Doenças') }}</x-nav-link></span>
                         <x-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">{{ __('Minhas Visitas') }}</x-nav-link>
+                        <span x-show="online" x-cloak class="inline-flex"><x-nav-link :href="route('saude.sincronizar')" :active="request()->routeIs('saude.sincronizar')">{{ __('Sincronizar') }}</x-nav-link></span>
                     @endif
                 </div>
             </div>
@@ -91,7 +93,7 @@
                                 {{ __('Meu Perfil') }}
                             </x-dropdown-link>
                         </div>
-                        <p x-show="!online" x-cloak class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">Offline — apenas Visitas disponível. Sair bloqueado.</p>
+                        <p x-show="!online" x-cloak class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">Opções desabilitadas ao estar desconectado.</p>
                         <div x-show="online" x-cloak>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -150,9 +152,11 @@
                 <div x-show="online" x-cloak><x-responsive-nav-link :href="route('agente.doencas.index')" :active="request()->routeIs('agente.doencas.*')">{{ __('Doenças') }}</x-responsive-nav-link></div>
                 <div x-show="online" x-cloak><x-responsive-nav-link :href="route('agente.locais.index')" :active="request()->routeIs('agente.locais.*')">{{ __('Locais') }}</x-responsive-nav-link></div>
                 <x-responsive-nav-link :href="route('agente.visitas.index')" :active="request()->routeIs('agente.visitas.*')">{{ __('Visitas') }}</x-responsive-nav-link>
+                <div x-show="online" x-cloak><x-responsive-nav-link :href="route('agente.sincronizar')" :active="request()->routeIs('agente.sincronizar')">{{ __('Sincronizar') }}</x-responsive-nav-link></div>
             @elseif(Auth::user()->isAgenteSaude())
                 <div x-show="online" x-cloak><x-responsive-nav-link :href="route('saude.doencas.index')" :active="request()->routeIs('saude.doencas.*')">{{ __('Doenças') }}</x-responsive-nav-link></div>
                 <x-responsive-nav-link :href="route('saude.visitas.index')" :active="request()->routeIs('saude.visitas.*')">{{ __('Minhas Visitas') }}</x-responsive-nav-link>
+                <div x-show="online" x-cloak><x-responsive-nav-link :href="route('saude.sincronizar')" :active="request()->routeIs('saude.sincronizar')">{{ __('Sincronizar') }}</x-responsive-nav-link></div>
             @endif
         </div>
 
@@ -176,7 +180,7 @@
                         </x-responsive-nav-link>
                     </form>
                 </div>
-                <p x-show="!online" x-cloak class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">Offline — Sair bloqueado.</p>
+                <p x-show="!online" x-cloak class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">Opções desabilitadas ao estar desconectado.</p>
             </div>
         </div>
     </div>

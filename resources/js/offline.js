@@ -6,17 +6,22 @@
  * - Expõe window.VisitaOfflineSaveDraft(perfil, payload) para o formulário de visita.
  */
 const DB_NAME = 'VisitaAiOffline';
+const DB_VERSION = 2;
 const STORE_NAME = 'visitas_rascunho';
+const LOCAIS_STORE_NAME = 'locais_rascunho';
 
 function openDB() {
     return new Promise((resolve, reject) => {
-        const r = indexedDB.open(DB_NAME, 1);
+        const r = indexedDB.open(DB_NAME, DB_VERSION);
         r.onerror = () => reject(r.error);
         r.onsuccess = () => resolve(r.result);
         r.onupgradeneeded = (e) => {
             const db = e.target.result;
             if (!db.objectStoreNames.contains(STORE_NAME)) {
                 db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains(LOCAIS_STORE_NAME)) {
+                db.createObjectStore(LOCAIS_STORE_NAME, { keyPath: 'id' });
             }
         };
     });
@@ -200,3 +205,66 @@ window.VisitaOfflineUpdateBanner = updatePendingBanner;
 window.VisitaOfflineGetDrafts = getDrafts;
 window.VisitaOfflineGetDraft = getDraft;
 window.VisitaOfflineDeleteDraft = deleteDraft;
+
+// Locais offline (rascunhos para sync)
+function getLocalDrafts(perfil) {
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(LOCAIS_STORE_NAME, 'readonly');
+            const store = t.objectStore(LOCAIS_STORE_NAME);
+            const req = store.getAll();
+            req.onsuccess = () => {
+                const all = req.result || [];
+                resolve(all.filter((d) => d.perfil === perfil));
+            };
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+function saveLocalDraft(perfil, payload) {
+    const id = 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+    const record = { id, perfil, payload, createdAt: new Date().toISOString() };
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(LOCAIS_STORE_NAME, 'readwrite');
+            const store = t.objectStore(LOCAIS_STORE_NAME);
+            store.put(record);
+            t.oncomplete = () => resolve(id);
+            t.onerror = () => reject(t.error);
+        });
+    });
+}
+
+function removeLocalDrafts(ids) {
+    if (!ids.length) return Promise.resolve();
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(LOCAIS_STORE_NAME, 'readwrite');
+            const store = t.objectStore(LOCAIS_STORE_NAME);
+            ids.forEach((id) => store.delete(id));
+            t.oncomplete = () => resolve();
+            t.onerror = () => reject(t.error);
+        });
+    });
+}
+
+function getLocalPendingCount(perfil) {
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(LOCAIS_STORE_NAME, 'readonly');
+            const store = t.objectStore(LOCAIS_STORE_NAME);
+            const req = store.getAll();
+            req.onsuccess = () => {
+                const all = req.result || [];
+                resolve(all.filter((d) => d.perfil === perfil).length);
+            };
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+window.VisitaOfflineGetLocalDrafts = getLocalDrafts;
+window.VisitaOfflineSaveLocalDraft = saveLocalDraft;
+window.VisitaOfflineRemoveLocalDrafts = removeLocalDrafts;
+window.VisitaOfflineGetLocalPendingCount = getLocalPendingCount;

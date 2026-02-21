@@ -16,9 +16,16 @@
             </div>
         @endif
     @endif
+    @if(session('warning'))
+        <x-alert type="warning" :message="session('warning')" />
+    @endif
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />
     @endif
+
+    <div id="locais-offline-pending-alert" class="hidden p-3 mb-4 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800" role="alert">
+        <span id="locais-offline-pending-alert-msg"></span>
+    </div>
 
     <!-- Card introdutório -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
@@ -188,4 +195,28 @@
         <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
     </section>
 </div>
+<script>
+(function() {
+    var alertEl = document.getElementById('locais-offline-pending-alert');
+    var msgEl = document.getElementById('locais-offline-pending-alert-msg');
+    if (!alertEl || !msgEl) return;
+    function isOnline() {
+        if (typeof window.visitaConnectionOnline === 'boolean') return window.visitaConnectionOnline;
+        return navigator.onLine;
+    }
+    function update() {
+        if (isOnline()) { alertEl.classList.add('hidden'); return; }
+        if (typeof window.VisitaOfflineGetLocalPendingCount !== 'function') return;
+        window.VisitaOfflineGetLocalPendingCount('agente').then(function(count) {
+            if (count > 0) {
+                msgEl.textContent = 'Você tem ' + count + ' local(is) guardado(s) no dispositivo. Sincronize quando se reconectar.';
+                alertEl.classList.remove('hidden');
+            } else { alertEl.classList.add('hidden'); }
+        }).catch(function() { alertEl.classList.add('hidden'); });
+    }
+    window.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) update(); else alertEl.classList.add('hidden'); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { setTimeout(update, 300); });
+    else setTimeout(update, 300);
+})();
+</script>
 @endsection

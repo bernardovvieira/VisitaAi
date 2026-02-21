@@ -71,7 +71,7 @@
             window.VisitaThemePreference = @json($u->use_tema ?? 'light');
             window.VisitaThemeSyncUrl = @json(route('profile.tema.update'));
             @if($u->isAgenteEndemias() || $u->isAgenteSaude())
-            window.VisitaOfflineSyncPageUrl = @json($u->isAgenteSaude() ? route('saude.visitas.sync') : route('agente.visitas.sync'));
+            window.VisitaOfflineSyncPageUrl = @json($u->isAgenteSaude() ? route('saude.sincronizar') : route('agente.sincronizar'));
             window.VisitaOfflineProfile = @json($u->isAgenteSaude() ? 'saude' : 'agente');
             @endif
             window.visitaOfflineRedirect = @json($visitaOfflineRedirect);

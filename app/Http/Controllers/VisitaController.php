@@ -264,7 +264,10 @@ class VisitaController extends Controller
         $syncSubmitUrl = $user->isAgenteSaude() ? route('saude.visitas.sync.submit') : route('agente.visitas.sync.submit');
         $perfil = $user->isAgenteSaude() ? 'saude' : 'agente';
 
-        return view('visitas.sync', compact('visitasIndexRoute', 'visitasCreateRoute', 'syncSubmitUrl', 'perfil'));
+        $locaisSyncSubmitUrl = $user->isAgenteEndemias() ? route('agente.locais.sync.submit') : null;
+        $locaisIndexRoute = $user->isAgenteEndemias() ? route('agente.locais.index') : null;
+
+        return view('visitas.sync', compact('visitasIndexRoute', 'visitasCreateRoute', 'syncSubmitUrl', 'perfil', 'locaisSyncSubmitUrl', 'locaisIndexRoute'));
     }
 
     /**

@@ -218,7 +218,7 @@
             </fieldset>
 
             <div class="flex justify-end">
-                <button type="submit"
+                <button type="submit" id="btn-cadastrar-local"
                         x-bind:disabled="carregando"
                         class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                     Cadastrar
@@ -265,7 +265,44 @@ document.addEventListener('DOMContentLoaded', function() {
     var formEl = document.getElementById('form_local');
     if (formEl) formEl.addEventListener('submit', function(e) {
         if (!checkCepLive()) { e.preventDefault(); return false; }
+        if (!navigator.onLine && typeof window.VisitaOfflineSaveLocalDraft === 'function') {
+            e.preventDefault();
+            var names = ['loc_cep','loc_tipo','loc_zona','loc_endereco','loc_numero','loc_bairro','loc_cidade','loc_estado','loc_pais','loc_latitude','loc_longitude','loc_codigo','loc_quarteirao','loc_complemento','loc_categoria','loc_sequencia','loc_lado','loc_responsavel_nome'];
+            var payload = {};
+            names.forEach(function(n) {
+                var el = document.querySelector('[name="' + n + '"]');
+                var v = el ? (el.value || '').trim() : '';
+                if (n === 'loc_sequencia' || n === 'loc_lado') payload[n] = v === '' ? null : (parseInt(v, 10) || null);
+                else payload[n] = v || null;
+            });
+            if (!payload.loc_endereco || !payload.loc_cidade || !payload.loc_estado) {
+                alert('Preencha pelo menos endereço, cidade e estado antes de guardar.');
+                return false;
+            }
+            var btn = document.getElementById('btn-cadastrar-local');
+            if (btn) btn.disabled = true;
+            window.VisitaOfflineSaveLocalDraft('agente', payload).then(function() {
+                setTimeout(function() { window.location.replace('{{ route('agente.locais.index') }}?guardada=1'); }, 100);
+            }).catch(function() { if (btn) btn.disabled = false; });
+            return false;
+        }
     });
+    function updateLocalBtnOffline() {
+        var btn = document.getElementById('btn-cadastrar-local');
+        if (!btn) return;
+        if (!navigator.onLine) {
+            btn.textContent = 'Guardar local';
+            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            btn.classList.add('bg-amber-500', 'hover:bg-amber-600', 'text-amber-900');
+        } else {
+            btn.textContent = 'Cadastrar';
+            btn.classList.remove('bg-amber-500', 'hover:bg-amber-600', 'text-amber-900');
+            btn.classList.add('bg-green-600', 'hover:bg-green-700');
+        }
+    }
+    updateLocalBtnOffline();
+    document.addEventListener('visita-connection-change', updateLocalBtnOffline);
+    window.addEventListener('visita-connection-change', updateLocalBtnOffline);
 
     $('#loc_cep').mask('00000-000');
 

@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Sincronizar visitas')
-@section('og_description', 'Envie as visitas salvas no dispositivo quando estiver sem internet.')
+@section('og_title', config('app.name') . ' — Sincronizar')
+@section('og_description', 'Envie locais e visitas salvos no dispositivo quando estiver sem internet.')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => $visitasIndexRoute], ['label' => 'Enviar visitas salvas']]" />
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => $visitasIndexRoute], ['label' => 'Sincronizar']]" />
     <div>
         <a href="{{ $visitasIndexRoute }}"
            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
@@ -15,11 +15,22 @@
             Voltar
         </a>
     </div>
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Enviar visitas salvas no dispositivo</h1>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Sincronizar</h1>
+    <p class="text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
+
+    @if(!empty($locaisSyncSubmitUrl))
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow" id="sync-locais-section"
+             data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais guardados no dispositivo</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">Carregando…</p>
+        <div id="sync-locais-list" class="space-y-2 mt-4"></div>
+    </section>
+    @endif
 
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow"
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
+             data-locais-sync-url="{{ $locaisSyncSubmitUrl ?? '' }}"
              data-csrf-token="{{ csrf_token() }}"
              data-perfil="{{ $perfil }}"
              data-index-url="{{ $visitasIndexRoute }}">
@@ -53,7 +64,9 @@
 <script>
 (function() {
     const DB_NAME = 'VisitaAiOffline';
+    const DB_VERSION = 2;
     const STORE_NAME = 'visitas_rascunho';
+    const LOCAIS_STORE_NAME = 'locais_rascunho';
     const SECTION = document.getElementById('sync-section');
     if (!SECTION) return;
     const STATUS = document.getElementById('sync-status');
@@ -62,14 +75,18 @@
     const SYNC_BTN = document.getElementById('sync-btn');
     const CLEAR_BTN = document.getElementById('sync-clear-btn');
     const RESULT = document.getElementById('sync-result');
+    const locaisSection = document.getElementById('sync-locais-section');
+    const locaisListEl = document.getElementById('sync-locais-list');
+    const locaisStatusEl = document.getElementById('sync-locais-status');
 
     const syncUrl = SECTION.getAttribute('data-sync-url');
+    const locaisSyncUrl = SECTION.getAttribute('data-locais-sync-url') || '';
     const csrfToken = SECTION.getAttribute('data-csrf-token');
     const perfil = SECTION.getAttribute('data-perfil') || 'agente';
 
     function openDB() {
         return new Promise(function(resolve, reject) {
-            const r = indexedDB.open(DB_NAME, 1);
+            const r = indexedDB.open(DB_NAME, DB_VERSION);
             r.onerror = function() { reject(r.error); };
             r.onsuccess = function() { resolve(r.result); };
             r.onupgradeneeded = function(e) {
@@ -77,7 +94,38 @@
                 if (!db.objectStoreNames.contains(STORE_NAME)) {
                     db.createObjectStore(STORE_NAME, { keyPath: 'id' });
                 }
+                if (!db.objectStoreNames.contains(LOCAIS_STORE_NAME)) {
+                    db.createObjectStore(LOCAIS_STORE_NAME, { keyPath: 'id' });
+                }
             };
+        });
+    }
+
+    function getAllLocalDrafts() {
+        return openDB().then(function(db) {
+            return new Promise(function(resolve, reject) {
+                var t = db.transaction(LOCAIS_STORE_NAME, 'readonly');
+                var store = t.objectStore(LOCAIS_STORE_NAME);
+                var req = store.getAll();
+                req.onsuccess = function() {
+                    var all = req.result || [];
+                    resolve(all.filter(function(d) { return d.perfil === perfil; }));
+                };
+                req.onerror = function() { reject(req.error); };
+            });
+        });
+    }
+
+    function removeLocalDrafts(ids) {
+        if (!ids.length) return Promise.resolve();
+        return openDB().then(function(db) {
+            return new Promise(function(resolve, reject) {
+                var t = db.transaction(LOCAIS_STORE_NAME, 'readwrite');
+                var store = t.objectStore(LOCAIS_STORE_NAME);
+                ids.forEach(function(id) { store.delete(id); });
+                t.oncomplete = function() { resolve(); };
+                t.onerror = function() { reject(t.error); };
+            });
         });
     }
 
@@ -138,30 +186,101 @@
         });
     }
 
-    function doSync() {
-        getAllDrafts().then(function(drafts) {
-            if (drafts.length === 0) {
-                renderList([]);
-                return;
-            }
-            SYNC_BTN.disabled = true;
-            RESULT.textContent = 'Enviando…';
+    function renderLocaisList(locais) {
+        if (!locaisStatusEl || !locaisListEl) return;
+        locaisListEl.innerHTML = '';
+        if (!locais || locais.length === 0) {
+            locaisStatusEl.textContent = 'Nenhum local pendente de envio.';
+            return;
+        }
+        locaisStatusEl.textContent = 'Você tem ' + locais.length + ' local(is) guardado(s) no dispositivo.';
+        locais.forEach(function(d, i) {
+            var p = d.payload || {};
+            var end = p.loc_endereco || '';
+            var div = document.createElement('div');
+            div.className = 'p-3 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
+            div.textContent = (i + 1) + '. ' + end;
+            locaisListEl.appendChild(div);
+        });
+    }
 
-            // Um mesmo local na mesma data: prioridade para a primeira, demais são removidas do dispositivo
-            var seen = {};
+    function doSync() {
+        var locaisSyncUrlVal = locaisSyncUrl;
+        SYNC_BTN.disabled = true;
+        RESULT.textContent = 'Enviando…';
+
+        function runSyncLocaisThenVisitas() {
+            if (!locaisSyncUrlVal || typeof getAllLocalDrafts !== 'function') {
+                return Promise.resolve({ syncedLocalIds: [], draftIdToLocId: {} });
+            }
+            return getAllLocalDrafts().then(function(localDrafts) {
+                if (localDrafts.length === 0) return Promise.resolve({ syncedLocalIds: [], draftIdToLocId: {} });
+                var body = JSON.stringify({ locais: localDrafts.map(function(d) { return d.payload; }) });
+                return fetch(locaisSyncUrlVal, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+                    body: body
+                }).then(function(r) {
+                    return r.text().then(function(text) {
+                        if (!r.ok) throw new Error(text && text.trim().startsWith('{') ? (JSON.parse(text).message || 'Erro ' + r.status) : 'Erro ' + r.status);
+                        return JSON.parse(text);
+                    });
+                }).then(function(data) {
+                    var ids = data.ids || [];
+                    var draftIdToLocId = {};
+                    localDrafts.forEach(function(d, i) {
+                        if (ids[i] != null) draftIdToLocId[d.id] = ids[i];
+                    });
+                    var syncedLocalIds = localDrafts.filter(function(d, i) { return ids[i] != null; }).map(function(d) { return d.id; });
+                    return { syncedLocalIds: syncedLocalIds, draftIdToLocId: draftIdToLocId };
+                }).catch(function(err) {
+                    RESULT.textContent = 'Erro ao sincronizar locais: ' + (err.message || '');
+                    throw err;
+                });
+            });
+        }
+
+        runSyncLocaisThenVisitas().then(function(result) {
+            var draftIdToLocId = result.draftIdToLocId || {};
+            var syncedLocalIds = result.syncedLocalIds || [];
+            return removeLocalDrafts(syncedLocalIds).then(function() {
+                return getAllDrafts();
+            }).then(function(drafts) {
+                return { drafts: drafts, draftIdToLocId: draftIdToLocId };
+            });
+        }).then(function(data) {
+            var drafts = data.drafts;
+            var draftIdToLocId = data.draftIdToLocId || {};
             var toSend = [];
             var duplicateIds = [];
+            var seen = {};
             drafts.forEach(function(d) {
-                var localId = d.payload && (d.payload.fk_local_id != null) ? String(d.payload.fk_local_id) : '';
-                var data = d.payload && d.payload.vis_data ? String(d.payload.vis_data).trim() : '';
-                var key = localId + '|' + data;
+                var payload = d.payload || {};
+                var fk = payload.fk_local_id;
+                if (payload.local_draft_id && draftIdToLocId[payload.local_draft_id] != null) {
+                    payload = Object.assign({}, payload);
+                    payload.fk_local_id = draftIdToLocId[payload.local_draft_id];
+                    delete payload.local_draft_id;
+                }
+                var localId = (fk != null) ? String(fk) : '';
+                var dataStr = payload.vis_data ? String(payload.vis_data).trim() : '';
+                var key = localId + '|' + dataStr;
                 if (!seen[key]) {
                     seen[key] = true;
-                    toSend.push(d);
+                    toSend.push({ id: d.id, payload: payload });
                 } else {
                     duplicateIds.push(d.id);
                 }
             });
+
+            if (toSend.length === 0) {
+                renderList([]);
+                if (locaisSection && getAllLocalDrafts) getAllLocalDrafts().then(renderLocaisList);
+                RESULT.textContent = 'Nada a enviar.';
+                SYNC_BTN.disabled = !navigator.onLine;
+                if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
+                return;
+            }
 
             var syncedIds = [];
             var errors = [];
@@ -256,6 +375,9 @@
                 RESULT.textContent = 'Falha: ' + (err.message || 'sem conexão ou servidor indisponível.');
                 SYNC_BTN.disabled = !navigator.onLine;
             });
+        }).catch(function(err) {
+            RESULT.textContent = 'Falha: ' + (err.message || '');
+            SYNC_BTN.disabled = !navigator.onLine;
         });
     }
 
@@ -309,6 +431,11 @@
     getAllDrafts().then(renderList).catch(function() {
         STATUS.textContent = 'Não foi possível carregar as visitas salvas. Verifique se o navegador permite armazenamento local.';
     });
+    if (locaisSection && locaisListEl && locaisStatusEl) {
+        getAllLocalDrafts().then(renderLocaisList).catch(function() {
+            locaisStatusEl.textContent = 'Não foi possível carregar os locais.';
+        });
+    }
 })();
 </script>
 @endsection
