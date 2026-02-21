@@ -149,7 +149,7 @@
         <script>
         (function() {
             var pingUrl = "{{ url(route('ping')) }}";
-            var pingTimeoutMs = 3000;
+            var pingTimeoutMs = 2000;
             var lastOnline;
 
             function setConnectionStatus(o) {
@@ -162,7 +162,9 @@
                     var ok = allowed.some(function(a) { return a === p; });
                     if (!ok) window.location.href = window.visitaOfflineRedirect;
                 }
-                document.dispatchEvent(new CustomEvent('visita-connection-change', { detail: { online: o } }));
+                var ev = new CustomEvent('visita-connection-change', { detail: { online: o }, bubbles: true });
+                document.dispatchEvent(ev);
+                window.dispatchEvent(ev);
             }
 
             function checkConnection() {
@@ -183,13 +185,12 @@
                     });
             }
 
-            function updateConnection() {
-                checkConnection();
-            }
-
             setConnectionStatus(typeof navigator !== 'undefined' ? navigator.onLine : true);
             window.addEventListener('online', function() { checkConnection(); });
             window.addEventListener('offline', function() { setConnectionStatus(false); });
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') checkConnection();
+            });
             function startPingInterval() {
                 checkConnection();
                 setInterval(checkConnection, 1000);

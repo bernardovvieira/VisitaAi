@@ -83,6 +83,9 @@
                                 <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
                                     #{{ $local->loc_codigo_unico }}
                                 </span>
+                                @if($local->isPrimary())
+                                    <span class="block mt-1 text-xs text-gray-500 dark:text-gray-400" title="Local primário do município">Primário</span>
+                                @endif
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 @if ($local->loc_zona == 'U')
@@ -117,9 +120,6 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="p-4 text-center">
                                 <div class="flex justify-center items-center gap-3 flex-wrap">
-                                    @if($local->isPrimary())
-                                        <span class="text-xs text-gray-500 dark:text-gray-400" title="Local primário do município">Primário</span>
-                                    @endif
                                     <a href="{{ route('agente.locais.show', $local) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
                                        aria-label="Visualizar local">

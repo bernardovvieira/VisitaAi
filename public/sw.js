@@ -55,6 +55,7 @@ self.addEventListener('fetch', function (event) {
 
 function isCacheable(url) {
     var p = url.pathname;
+    if (p.indexOf('/build/') === 0) return true;
     if (p === '/' || p === '/agente/dashboard' || p === '/saude/dashboard') return true;
     if (p === '/agente/visitas' || p === '/agente/visitas/create' || p === '/agente/visitas-sync') return true;
     if (p === '/saude/visitas' || p === '/saude/visitas/create' || p === '/saude/visitas-sync') return true;
