@@ -50,13 +50,32 @@
         @endif
         <!-- Preferência de tema do usuário (quando logado); ao criar conta o padrão é modo claro -->
         @auth
+        @php
+            $u = auth()->user();
+            if ($u->isAgenteEndemias()) {
+                $visitaOfflineRedirect = route('agente.visitas.index');
+                $visitaOfflineAllowed = [parse_url(route('agente.visitas.index'), PHP_URL_PATH), parse_url(route('agente.visitas.create'), PHP_URL_PATH)];
+            } elseif ($u->isAgenteSaude()) {
+                $visitaOfflineRedirect = route('saude.visitas.index');
+                $visitaOfflineAllowed = [parse_url(route('saude.visitas.index'), PHP_URL_PATH), parse_url(route('saude.visitas.create'), PHP_URL_PATH)];
+            } elseif ($u->isGestor()) {
+                $visitaOfflineRedirect = route('gestor.visitas.index');
+                $visitaOfflineAllowed = [parse_url(route('gestor.visitas.index'), PHP_URL_PATH)];
+            } else {
+                $visitaOfflineRedirect = route('dashboard');
+                $visitaOfflineAllowed = [parse_url(route('dashboard'), PHP_URL_PATH)];
+            }
+            $visitaOfflineAllowed = array_values(array_map(function ($p) { return rtrim($p ?: '', '/') ?: '/'; }, $visitaOfflineAllowed));
+        @endphp
         <script>
-            window.VisitaThemePreference = @json(auth()->user()->use_tema ?? 'light');
+            window.VisitaThemePreference = @json($u->use_tema ?? 'light');
             window.VisitaThemeSyncUrl = @json(route('profile.tema.update'));
-            @if(auth()->user()->isAgenteEndemias() || auth()->user()->isAgenteSaude())
-            window.VisitaOfflineSyncPageUrl = @json(auth()->user()->isAgenteSaude() ? route('saude.visitas.sync') : route('agente.visitas.sync'));
-            window.VisitaOfflineProfile = @json(auth()->user()->isAgenteSaude() ? 'saude' : 'agente');
+            @if($u->isAgenteEndemias() || $u->isAgenteSaude())
+            window.VisitaOfflineSyncPageUrl = @json($u->isAgenteSaude() ? route('saude.visitas.sync') : route('agente.visitas.sync'));
+            window.VisitaOfflineProfile = @json($u->isAgenteSaude() ? 'saude' : 'agente');
             @endif
+            window.visitaOfflineRedirect = @json($visitaOfflineRedirect);
+            window.visitaOfflineAllowedPaths = @json($visitaOfflineAllowed);
         </script>
         @endauth
         <!-- Tema claro/escuro: aplicado antes da pintura para evitar flash. Em todas as páginas (incl. públicas) respeita localStorage; fallback: preferência do sistema ou claro. -->
@@ -129,23 +148,56 @@
         @endif
         <script>
         (function() {
-            function updateConnection() {
-                var o = typeof navigator !== 'undefined' && navigator.onLine;
+            var pingUrl = "{{ url(route('ping')) }}";
+            var pingTimeoutMs = 5000;
+            var lastOnline;
+
+            function setConnectionStatus(o) {
+                if (lastOnline === o) return;
+                lastOnline = o;
                 window.visitaConnectionOnline = o;
+                if (!o && window.visitaOfflineAllowedPaths && window.visitaOfflineRedirect) {
+                    var p = (window.location.pathname || '').replace(/\/$/, '') || '/';
+                    var allowed = window.visitaOfflineAllowedPaths;
+                    var ok = allowed.some(function(a) { return a === p; });
+                    if (!ok) window.location.href = window.visitaOfflineRedirect;
+                }
                 document.dispatchEvent(new CustomEvent('visita-connection-change', { detail: { online: o } }));
             }
+
+            function checkConnection() {
+                if (typeof navigator !== 'undefined' && !navigator.onLine) {
+                    setConnectionStatus(false);
+                    return;
+                }
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, pingTimeoutMs);
+                fetch(pingUrl + '?t=' + Date.now(), { method: 'GET', cache: 'no-store', signal: controller.signal })
+                    .then(function() {
+                        clearTimeout(timeoutId);
+                        setConnectionStatus(true);
+                    })
+                    .catch(function() {
+                        clearTimeout(timeoutId);
+                        setConnectionStatus(false);
+                    });
+            }
+
+            function updateConnection() {
+                checkConnection();
+            }
+
+            setConnectionStatus(typeof navigator !== 'undefined' ? navigator.onLine : true);
+            window.addEventListener('online', function() { checkConnection(); });
+            window.addEventListener('offline', function() { setConnectionStatus(false); });
+            function startPingInterval() {
+                checkConnection();
+                setInterval(checkConnection, 2000);
+            }
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    updateConnection();
-                    window.addEventListener('online', updateConnection);
-                    window.addEventListener('offline', updateConnection);
-                    setInterval(updateConnection, 1000);
-                });
+                document.addEventListener('DOMContentLoaded', startPingInterval);
             } else {
-                updateConnection();
-                window.addEventListener('online', updateConnection);
-                window.addEventListener('offline', updateConnection);
-                setInterval(updateConnection, 1000);
+                startPingInterval();
             }
         })();
         document.addEventListener('DOMContentLoaded', function() {

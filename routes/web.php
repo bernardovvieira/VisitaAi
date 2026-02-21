@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Auth;
 |--------------------------------------------------------------------------
 */
 
+// Ping para detecção de conexão (Windows/macOS/iOS/Android) — retorna 204
+Route::get('/ping', function () {
+    return response('', 204);
+})->name('ping');
+
 // Página pública
 Route::get('/', [PublicController::class, 'welcome']);
 
