@@ -25,7 +25,8 @@
             Preencha os dados da visita.
         </p>
         <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            <strong>Sem internet?</strong> Use o botão "Guardar no dispositivo para enviar depois" no final do formulário. A visita fica só no seu aparelho. Com conexão de novo, abra Minhas visitas e clique em "Enviar visitas salvas no dispositivo" para enviar todas. Antes de ir a campo, abra esta tela pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.
+            <strong>Sem internet?</strong> Use o botão "Guardar no dispositivo para enviar depois" no final do formulário. A visita fica só no seu aparelho. Quando tiver conexão, abra Minhas visitas e clique em "Enviar visitas salvas no dispositivo" para enviar todas de uma vez.<br>
+            <b>Nota:</b> Antes de ir a campo, abra a tela de registrar visita pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.
         </p>
     </section>
 
@@ -324,19 +325,28 @@
             @if($sugestoesDisponiveis ?? false)
             {{-- Sugestões (só aparece quando já há dados para sugerir) --}}
             <div class="space-y-2"
+                 data-sugestoes-url="{{ route('saude.sugestoes-doencas') }}"
                  x-data="{
                      sugestoes: [],
                      carregandoSugestoes: false,
-                     urlSugestoes: '{{ route('saude.sugestoes-doencas') }}',
+                     mostrouResultado: false,
+                     erro: null,
                      carregarSugestoes() {
+                         this.erro = null;
+                         this.mostrouResultado = true;
                          this.carregandoSugestoes = true;
                          this.sugestoes = [];
+                         var baseUrl = this.$el.getAttribute('data-sugestoes-url') || '';
                          var localId = document.querySelector('input[name=\"fk_local_id\"]')?.value || '';
                          var obs = document.querySelector('#vis_observacoes')?.value || '';
-                         fetch(this.urlSugestoes + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs))
-                             .then(r => r.json())
+                         var url = baseUrl + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs);
+                         fetch(url)
+                             .then(r => {
+                                 if (!r.ok) throw new Error('Erro ' + r.status);
+                                 return r.json();
+                             })
                              .then(data => { this.sugestoes = data.sugestoes || []; })
-                             .catch(() => {})
+                             .catch(e => { this.erro = e.message || 'Falha ao carregar.'; })
                              .finally(() => { this.carregandoSugestoes = false; });
                      },
                      marcarSugestao(doeId) {
@@ -350,16 +360,18 @@
                         Ver sugestões de doenças para este imóvel
                     </button>
                 </div>
-                <div x-show="carregandoSugestoes || sugestoes.length > 0" x-cloak class="space-y-2">
+                <div x-show="mostrouResultado" x-cloak class="space-y-2">
                     <div x-show="carregandoSugestoes" class="text-sm text-gray-500 dark:text-gray-400">Buscando…</div>
-                    <div x-show="sugestoes.length > 0" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
+                    <div x-show="erro" class="text-sm text-red-600 dark:text-red-400" x-text="erro"></div>
+                    <div x-show="!carregandoSugestoes && !erro && sugestoes.length === 0" class="text-sm text-gray-500 dark:text-gray-400">Nenhuma sugestão para este imóvel.</div>
+                    <div x-show="!carregandoSugestoes && !erro && sugestoes.length > 0" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3">
                         <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados já cadastrados</p>
                         <p class="text-xs text-gray-600 dark:text-gray-400">
                             O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.
                         </p>
                         <div class="flex flex-wrap gap-2 items-center">
                             <template x-for="s in sugestoes" :key="s.doe_id">
-                                <button type="button" x-show="s.nome" @click="marcarSugestao(s.doe_id)"
+                                <button type="button" @click="marcarSugestao(s.doe_id)"
                                         class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
                                         :title="s.motivo">
                                     <span x-text="s.nome"></span>
@@ -420,7 +432,8 @@
 
             <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Com internet:</strong> use o botão verde para registrar na hora. <strong>Sem internet (em campo):</strong> use o botão amarelo para guardar no dispositivo; depois, quando tiver conexão, vá em Minhas visitas e clique em "Enviar visitas salvas no dispositivo".
+                    <strong>Com internet:</strong> use o botão verde para registrar na hora.<br>
+                    <strong>Sem internet (em campo):</strong> use o botão amarelo para guardar no dispositivo; depois, quando tiver conexão, vá em Minhas visitas e clique em "Enviar visitas salvas no dispositivo".
                 </p>
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="submit"
