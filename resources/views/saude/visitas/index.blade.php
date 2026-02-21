@@ -4,7 +4,13 @@
 @section('og_description', 'Minhas visitas realizadas. Visualize, busque, edite ou remova suas visitas registradas.')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="max-w-7xl mx-auto space-y-6"
+     x-data="{ online: true }"
+     x-init="
+       $nextTick(function() { online = typeof window.visitaConnectionOnline === 'boolean' ? window.visitaConnectionOnline : true; });
+       window.addEventListener('visita-connection-change', function(e) { online = e.detail.online; });
+       setInterval(function() { if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline; }, 1500);
+     ">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Visitas']]" />
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Minhas Visitas</h1>
 
@@ -37,13 +43,15 @@
                 </svg>
                 Cadastrar visita
             </a>
-            <a href="{{ route('saude.visitas.sync') }}"
-               class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Enviar visitas salvas no dispositivo
-            </a>
+            <span x-show="online">
+                <a href="{{ route('saude.visitas.sync') }}"
+                   class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-amber-900 font-semibold text-sm rounded-lg shadow-md transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Enviar visitas salvas no dispositivo
+                </a>
+            </span>
         </div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
             Use o botão acima quando tiver internet para enviar as visitas que você guardou sem conexão.
@@ -168,7 +176,7 @@
                                 </div>
                             </td>
                             <td class="p-4 text-center">
-                                <div class="flex justify-center gap-3">
+                                <div x-show="online" class="flex justify-center gap-3">
                                     <a href="{{ route('saude.visitas.show', $visita) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition">
                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,6 +188,7 @@
                                         Visualizar
                                     </a>
                                 </div>
+                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline — só listagem</p>
                             </td>
                         </tr>
                     @empty
@@ -191,6 +200,56 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
+
+        <section x-show="!online" x-cloak class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg shadow border border-amber-200 dark:border-amber-800 mt-6">
+            <h2 class="text-lg font-semibold text-amber-900 dark:text-amber-200">Rascunhos no dispositivo</h2>
+            <p class="mt-1 text-sm text-amber-800 dark:text-amber-300">Quando estiver offline, você pode editar ou remover apenas as visitas que foram guardadas neste aparelho e ainda não enviadas.</p>
+            <div id="visita-offline-drafts-list-saude" class="mt-3 space-y-2"></div>
+        </section>
     </section>
 </div>
+<script>
+(function() {
+    var createUrl = @json(route('saude.visitas.create'));
+    var listEl = document.getElementById('visita-offline-drafts-list-saude');
+    if (!listEl) return;
+    function renderDrafts(drafts) {
+        listEl.innerHTML = '';
+        if (!drafts || drafts.length === 0) {
+            listEl.innerHTML = '<p class="text-sm text-gray-600 dark:text-gray-400">Nenhum rascunho guardado.</p>';
+            return;
+        }
+        drafts.forEach(function(d) {
+            var p = d.payload || {};
+            var label = 'Visita em ' + (p.vis_data || '?') + ' (local ' + (p.fk_local_id || '?') + ')';
+            var row = document.createElement('div');
+            row.className = 'flex flex-wrap items-center gap-2 py-2 border-b border-amber-200 dark:border-amber-700 last:border-0';
+            row.innerHTML = '<span class="text-sm text-gray-700 dark:text-gray-300">' + label + '</span>' +
+                '<a href="' + createUrl + '?draft=' + encodeURIComponent(d.id) + '" class="inline-flex items-center gap-1 px-2 py-1 bg-gray-700 hover:bg-gray-800 text-white text-xs font-medium rounded">Editar</a>' +
+                '<button type="button" class="inline-flex items-center gap-1 px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded" data-draft-id="' + d.id + '" aria-label="Remover rascunho">Remover</button>';
+            listEl.appendChild(row);
+            var btn = row.querySelector('button[data-draft-id]');
+            if (btn && typeof window.VisitaOfflineDeleteDraft === 'function') {
+                btn.addEventListener('click', function() {
+                    if (!confirm('Remover este rascunho do dispositivo?')) return;
+                    window.VisitaOfflineDeleteDraft(btn.getAttribute('data-draft-id')).then(function() {
+                        if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
+                        if (typeof window.VisitaOfflineGetDrafts === 'function') {
+                            window.VisitaOfflineGetDrafts('saude').then(renderDrafts);
+                        }
+                    });
+                });
+            }
+        });
+    }
+    function updateDraftsWhenOffline() {
+        if (typeof window.visitaConnectionOnline !== 'undefined' && window.visitaConnectionOnline) return;
+        if (typeof window.VisitaOfflineGetDrafts !== 'function') return;
+        window.VisitaOfflineGetDrafts('saude').then(renderDrafts).catch(function() { listEl.innerHTML = '<p class="text-sm text-gray-500">Erro ao carregar rascunhos.</p>'; });
+    }
+    document.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateDraftsWhenOffline(); });
+    window.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateDraftsWhenOffline(); });
+    if (typeof window.visitaConnectionOnline !== 'undefined' && !window.visitaConnectionOnline) updateDraftsWhenOffline();
+})();
+</script>
 @endsection

@@ -1,8 +1,11 @@
 @auth
 <nav x-data="{ open: false, online: typeof navigator !== 'undefined' ? navigator.onLine : true }"
      x-init="
-       document.addEventListener('visita-connection-change', (e) => online = e.detail.online);
-       $nextTick(() => { online = typeof navigator !== 'undefined' ? navigator.onLine : true; });
+       function updateOnline(e) { online = e.detail.online; }
+       document.addEventListener('visita-connection-change', updateOnline);
+       window.addEventListener('visita-connection-change', updateOnline);
+       $nextTick(() => { online = typeof window.visitaConnectionOnline !== 'undefined' ? window.visitaConnectionOnline : (typeof navigator !== 'undefined' ? navigator.onLine : true); });
+       setInterval(() => { if (typeof window.visitaConnectionOnline === 'boolean' && online !== window.visitaConnectionOnline) online = window.visitaConnectionOnline; }, 1500);
      "
      class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

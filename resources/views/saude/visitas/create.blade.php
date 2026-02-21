@@ -85,7 +85,20 @@
                             this.$nextTick(() => this.$refs.input.focus());
                         }
                     }"
-                    x-init="$watch('search', () => open = true)">
+                    x-init="
+                        $watch('search', () => open = true);
+                        window.addEventListener('visita-apply-draft-local', function(e) {
+                            var p = e.detail;
+                            if (p && p.fk_local_id && locais && locais.length) {
+                                var loc = locais.find(function(l) { return l.loc_id == p.fk_local_id; });
+                                if (loc) {
+                                    selectedId = loc.loc_id;
+                                    search = 'Cód. ' + (loc.loc_codigo_unico || '') + ' - ' + (loc.loc_endereco || '') + ', ' + (loc.loc_numero ?? 'S/N') + ' - ' + (loc.loc_bairro || '') + ', ' + (loc.loc_cidade || '') + '/' + (loc.loc_estado || '');
+                                    open = false;
+                                }
+                            }
+                        });
+                    ">
 
                     <label for="fk_local_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Local Visitado <span class="text-red-500">*</span></label>
                     <div class="relative mt-1">
@@ -218,7 +231,9 @@
             </fieldset>
 
             {{-- Tratamentos --}}
-            <div x-data="{ exibirTratamentos: {{ old('tratamentos') ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', '[]') }} }" class="space-y-4">
+            <div x-data="{ exibirTratamentos: {{ old('tratamentos') ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', '[]') }} }"
+                 x-init="window.addEventListener('visita-apply-draft-tratamentos', function(e) { tratamentos = (e.detail && Array.isArray(e.detail)) ? e.detail : []; exibirTratamentos = tratamentos.length > 0; })"
+                 class="space-y-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tratamentos Realizados</label>
 
                 <div x-show="tratamentos.length === 0" class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
@@ -566,6 +581,46 @@
                 }).catch(function() {}).finally(function() { btn.disabled = false; });
             }
         });
+    })();
+
+    (function loadDraftFromUrl() {
+        var params = new URLSearchParams(window.location.search || '');
+        var draftId = params.get('draft');
+        if (!draftId || typeof window.VisitaOfflineGetDraft !== 'function') return;
+        function apply() {
+        window.VisitaOfflineGetDraft(draftId).then(function(d) {
+            if (!d || !d.payload) return;
+            var p = d.payload;
+            var form = document.querySelector('form[action="{{ route('saude.visitas.store') }}"]');
+            if (!form) return;
+            function setVal(name, val, isCheckbox) {
+                var el = form.querySelector('[name="' + name + '"]');
+                if (!el) return;
+                if (isCheckbox) { el.checked = !!val; return; }
+                el.value = val != null ? String(val) : '';
+            }
+            setVal('vis_data', p.vis_data);
+            setVal('vis_ciclo', p.vis_ciclo);
+            setVal('vis_atividade', p.vis_atividade);
+            setVal('vis_visita_tipo', p.vis_visita_tipo);
+            setVal('vis_observacoes', p.vis_observacoes);
+            setVal('vis_pendencias', p.vis_pendencias, true);
+            setVal('vis_coleta_amostra', p.vis_coleta_amostra, true);
+            setVal('vis_amos_inicial', p.vis_amos_inicial);
+            setVal('vis_amos_final', p.vis_amos_final);
+            setVal('vis_qtd_tubitos', p.vis_qtd_tubitos);
+            setVal('vis_depositos_eliminados', p.vis_depositos_eliminados);
+            ['insp_a1','insp_a2','insp_b','insp_c','insp_d1','insp_d2','insp_e'].forEach(function(name) { setVal(name, p[name]); });
+            (p.doencas || []).forEach(function(doeId) {
+                var cb = form.querySelector('input[name="doencas[]"][value="' + doeId + '"]');
+                if (cb) cb.checked = true;
+            });
+            window.dispatchEvent(new CustomEvent('visita-apply-draft-local', { detail: p }));
+            window.dispatchEvent(new CustomEvent('visita-apply-draft-tratamentos', { detail: p.tratamentos || [] }));
+        }).catch(function() {});
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { setTimeout(apply, 80); });
+        else setTimeout(apply, 80);
     })();
 </script>
 @endsection

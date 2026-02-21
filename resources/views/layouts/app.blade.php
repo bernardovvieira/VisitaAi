@@ -149,7 +149,7 @@
         <script>
         (function() {
             var pingUrl = "{{ url(route('ping')) }}";
-            var pingTimeoutMs = 2000;
+            var pingTimeoutMs = 1200;
             var lastOnline;
 
             function setConnectionStatus(o) {
@@ -191,9 +191,10 @@
             document.addEventListener('visibilitychange', function() {
                 if (document.visibilityState === 'visible') checkConnection();
             });
+            window.addEventListener('focus', function() { checkConnection(); });
             function startPingInterval() {
                 checkConnection();
-                setInterval(checkConnection, 1000);
+                setInterval(checkConnection, 800);
             }
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', startPingInterval);

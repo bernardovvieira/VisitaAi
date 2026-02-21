@@ -37,6 +37,45 @@ export function getPendingCount(perfil) {
     });
 }
 
+export function getDrafts(perfil) {
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(STORE_NAME, 'readonly');
+            const store = t.objectStore(STORE_NAME);
+            const req = store.getAll();
+            req.onsuccess = () => {
+                const all = req.result || [];
+                resolve(all.filter((d) => d.perfil === perfil));
+            };
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+export function getDraft(id) {
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(STORE_NAME, 'readonly');
+            const store = t.objectStore(STORE_NAME);
+            const req = store.get(id);
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+export function deleteDraft(id) {
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(STORE_NAME, 'readwrite');
+            const store = t.objectStore(STORE_NAME);
+            const req = store.delete(id);
+            req.onsuccess = () => resolve();
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
 export function saveDraft(perfil, payload) {
     const id = 'draft-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
     const record = { id, perfil, payload, createdAt: new Date().toISOString() };
@@ -129,3 +168,6 @@ window.VisitaOfflineSaveDraft = function (perfil, payload) {
 
 window.VisitaOfflineGetPendingCount = getPendingCount;
 window.VisitaOfflineUpdateBanner = updatePendingBanner;
+window.VisitaOfflineGetDrafts = getDrafts;
+window.VisitaOfflineGetDraft = getDraft;
+window.VisitaOfflineDeleteDraft = deleteDraft;
