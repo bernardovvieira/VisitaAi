@@ -54,18 +54,19 @@
             window.VisitaThemeSyncUrl = @json(route('profile.tema.update'));
         </script>
         @endauth
-        <!-- Tema claro/escuro: aplicado antes da pintura para evitar flash -->
+        <!-- Tema claro/escuro: aplicado antes da pintura para evitar flash. Em todas as páginas (incl. públicas) respeita localStorage; fallback: preferência do sistema ou claro. -->
         <script>
             (function(){
                 var t;
-                if (window.VisitaPublicPage) {
-                    t = 'light';
-                } else if (typeof window.VisitaThemePreference !== 'undefined' && window.VisitaThemePreference) {
+                if (typeof window.VisitaThemePreference !== 'undefined' && window.VisitaThemePreference) {
                     t = window.VisitaThemePreference;
                     try { localStorage.setItem('theme', t); } catch (e) {}
                 } else {
-                    t = localStorage.getItem('theme');
-                    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    t = null;
+                    try { t = localStorage.getItem('theme'); } catch (e) {}
+                    if (t !== 'dark' && t !== 'light') {
+                        t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    }
                 }
                 document.documentElement.classList.toggle('dark', t === 'dark');
             })();

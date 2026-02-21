@@ -5,7 +5,6 @@
             <p class="text-sm text-gray-700 dark:text-gray-300">
                 Utilizamos cookies para melhorar sua experiência, lembrar suas preferências (como tema claro/escuro) e garantir o funcionamento do sistema.
                 Ao continuar, você concorda com o uso de cookies essenciais.
-                <a href="{{ url('/') }}" class="underline text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">Saiba mais</a>.
             </p>
             <div class="flex-shrink-0">
                 <button type="button"
