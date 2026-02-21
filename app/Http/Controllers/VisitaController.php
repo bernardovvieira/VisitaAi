@@ -29,8 +29,9 @@ class VisitaController extends Controller
             return redirect()->to($request->url());
         }
 
+        // Visita cadastrada offline: mensagem de sucesso (amarelo) na listagem
         if ($request->has('guardada')) {
-            session()->flash('warning', 'Visita guardada no dispositivo. Será sincronizada quando a conexão for estabelecida.');
+            session()->flash('warning', 'Visita cadastrada no dispositivo com sucesso. Será sincronizada quando a conexão for estabelecida.');
             return redirect()->to($request->url());
         }
 

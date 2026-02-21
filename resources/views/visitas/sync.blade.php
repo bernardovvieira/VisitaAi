@@ -147,15 +147,31 @@
             SYNC_BTN.disabled = true;
             RESULT.textContent = 'Enviando…';
 
+            // Um mesmo local na mesma data: prioridade para a primeira, demais são removidas do dispositivo
+            var seen = {};
+            var toSend = [];
+            var duplicateIds = [];
+            drafts.forEach(function(d) {
+                var localId = d.payload && (d.payload.fk_local_id != null) ? String(d.payload.fk_local_id) : '';
+                var data = d.payload && d.payload.vis_data ? String(d.payload.vis_data).trim() : '';
+                var key = localId + '|' + data;
+                if (!seen[key]) {
+                    seen[key] = true;
+                    toSend.push(d);
+                } else {
+                    duplicateIds.push(d.id);
+                }
+            });
+
             var syncedIds = [];
             var errors = [];
             var index = 0;
 
             function sendNext() {
-                if (index >= drafts.length) {
+                if (index >= toSend.length) {
                     return Promise.resolve();
                 }
-                var d = drafts[index];
+                var d = toSend[index];
                 var body = JSON.stringify({ visitas: [d.payload] });
                 return fetch(syncUrl, {
                     method: 'POST',
@@ -205,7 +221,9 @@
 
             sendNext()
             .then(function() {
-                return removeDrafts(syncedIds);
+                var idsToRemove = syncedIds.slice();
+                duplicateIds.forEach(function(id) { idsToRemove.push(id); });
+                return removeDrafts(idsToRemove);
             })
             .then(function() {
                 return getAllDrafts();

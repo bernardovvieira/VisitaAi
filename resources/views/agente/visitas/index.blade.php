@@ -29,6 +29,10 @@
         <x-alert type="error" :message="session('error')" />
     @endif
 
+    <div id="visita-offline-pending-alert" class="hidden p-3 mb-4 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800" role="alert">
+        <span id="visita-offline-pending-alert-msg"></span>
+    </div>
+
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
@@ -243,4 +247,35 @@
         <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
     </section>
 </div>
+<script>
+(function() {
+    var alertEl = document.getElementById('visita-offline-pending-alert');
+    var msgEl = document.getElementById('visita-offline-pending-alert-msg');
+    if (!alertEl || !msgEl) return;
+    function isOnline() {
+        if (typeof window.visitaConnectionOnline === 'boolean') return window.visitaConnectionOnline;
+        return navigator.onLine;
+    }
+    function updateOfflinePendingAlert() {
+        if (isOnline()) {
+            alertEl.classList.add('hidden');
+            return;
+        }
+        var perfil = window.VisitaOfflineProfile || 'agente';
+        if (typeof window.VisitaOfflineGetPendingCount !== 'function') return;
+        window.VisitaOfflineGetPendingCount(perfil).then(function(count) {
+            if (count > 0) {
+                msgEl.textContent = 'Você tem ' + count + ' visita(s) guardada(s) no dispositivo. Será(ão) sincronizada(s) quando houver conexão.';
+                alertEl.classList.remove('hidden');
+            } else {
+                alertEl.classList.add('hidden');
+            }
+        }).catch(function() { alertEl.classList.add('hidden'); });
+    }
+    window.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateOfflinePendingAlert(); else alertEl.classList.add('hidden'); });
+    document.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateOfflinePendingAlert(); else alertEl.classList.add('hidden'); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { setTimeout(updateOfflinePendingAlert, 300); });
+    else setTimeout(updateOfflinePendingAlert, 300);
+})();
+</script>
 @endsection

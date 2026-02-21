@@ -468,7 +468,7 @@
                             }
                             if (!text || typeof text !== 'string') throw new Error('Resposta inválida. Tente novamente.');
                             var trim = text.trim();
-                            if (trim.charAt(0) !== '{') throw new Error(trim.indexOf('<!') !== -1 ? 'Resposta em HTML (sessão ou servidor). Recarregue a página.' : 'Resposta inválida. Tente novamente.');
+                            if (trim.charAt(0) !== '{') throw new Error(trim.indexOf('<!') !== -1 ? 'Não foi possível carregar sugestões. Verifique a conexão e recarregue a página.' : 'Resposta inválida. Tente novamente.');
                             try { return JSON.parse(text); } catch (e) { throw new Error('Resposta inválida. Tente novamente.'); }
                         });
                     })
