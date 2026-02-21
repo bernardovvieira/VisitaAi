@@ -90,12 +90,17 @@ export function saveDraft(perfil, payload) {
     });
 }
 
+function isOnline() {
+    if (typeof window.visitaConnectionOnline === 'boolean') return window.visitaConnectionOnline;
+    return typeof navigator !== 'undefined' && navigator.onLine;
+}
+
 function showPendingBanner(count, syncPageUrl) {
-    if (count === 0) return;
+    if (count === 0 || !isOnline()) return;
     let el = document.getElementById('visita-offline-pending-banner');
     if (el) {
         const msg = el.querySelector('[data-pending-msg]');
-        if (msg) msg.textContent = count === 1 ? '1 visita' : count + ' visitas';
+        if (msg) msg.textContent = (count === 1 ? '1 visita guardada' : count + ' visitas guardadas') + ' no dispositivo. ';
         const link = el.querySelector('a[data-sync-link]');
         if (link && syncPageUrl) link.setAttribute('href', syncPageUrl);
         return;
@@ -106,7 +111,7 @@ function showPendingBanner(count, syncPageUrl) {
     el.className = 'bg-amber-500 text-amber-900 px-4 py-3 flex flex-wrap items-center justify-center gap-3 text-sm font-medium shadow';
     const span = document.createElement('span');
     span.setAttribute('data-pending-msg', '');
-    span.textContent = (count === 1 ? '1 visita' : count + ' visitas') + ' guardada(s) no dispositivo para enviar. ';
+    span.textContent = (count === 1 ? '1 visita guardada' : count + ' visitas guardadas') + ' no dispositivo. ';
     const a = document.createElement('a');
     a.setAttribute('data-sync-link', '');
     a.setAttribute('href', syncPageUrl || '#');
@@ -136,6 +141,10 @@ function updatePendingBanner() {
         hidePendingBanner();
         return;
     }
+    if (!isOnline()) {
+        hidePendingBanner();
+        return;
+    }
     getPendingCount(perfil)
         .then((count) => {
             if (count > 0) showPendingBanner(count, syncPageUrl);
@@ -160,6 +169,15 @@ window.addEventListener('online', () => {
     if (window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) {
         updatePendingBanner();
     }
+});
+
+document.addEventListener('visita-connection-change', (e) => {
+    if (!e.detail.online) hidePendingBanner();
+    else if (window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) updatePendingBanner();
+});
+window.addEventListener('visita-connection-change', (e) => {
+    if (!e.detail.online) hidePendingBanner();
+    else if (window.VisitaOfflineSyncPageUrl && window.VisitaOfflineProfile) updatePendingBanner();
 });
 
 window.VisitaOfflineSaveDraft = function (perfil, payload) {

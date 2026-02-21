@@ -187,6 +187,10 @@
                 return removeDrafts(syncedIds);
             })
             .then(function() {
+                return getAllDrafts();
+            })
+            .then(function(remaining) {
+                renderList(remaining);
                 if (syncedIds.length > 0) {
                     RESULT.textContent = syncedIds.length + ' visita(s) enviada(s) com sucesso.';
                     if (errors.length > 0) {
@@ -195,10 +199,6 @@
                 } else {
                     RESULT.textContent = errors.length > 0 ? (errors[0].message || 'Erro ao sincronizar.') : 'Nenhuma visita foi enviada.';
                 }
-                return getAllDrafts();
-            })
-            .then(function(remaining) {
-                renderList(remaining);
                 SYNC_BTN.disabled = !navigator.onLine;
                 if (typeof window.VisitaOfflineUpdateBanner === 'function') {
                     window.VisitaOfflineUpdateBanner();

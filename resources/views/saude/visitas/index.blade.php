@@ -188,7 +188,7 @@
                                         Visualizar
                                     </a>
                                 </div>
-                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline — só listagem</p>
+                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline — visualização só com internet</p>
                             </td>
                         </tr>
                     @empty

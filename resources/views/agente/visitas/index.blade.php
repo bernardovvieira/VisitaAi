@@ -213,7 +213,7 @@
                                         </button>
                                     </form>
                                 </div>
-                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline — só listagem</p>
+                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline — edição e exclusão não disponíveis</p>
                             </td>
                         </tr>
                     @empty
