@@ -184,7 +184,7 @@
             ACTIONS.classList.add('hidden');
             return;
         }
-        STATUS.textContent = 'Você tem ' + drafts.length + ' visita(s) guardada(s) no dispositivo. Clique no botão abaixo para enviar.';
+        STATUS.textContent = 'Você tem ' + drafts.length + ' visita(s) guardada(s) no dispositivo.';
         if (emptyHint) emptyHint.classList.add('hidden');
         ACTIONS.classList.remove('hidden');
         RESULT.textContent = '';
