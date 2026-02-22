@@ -154,9 +154,9 @@
     function formatDraftLabel(draft, index) {
         var p = draft.payload || {};
         var data = p.vis_data || '';
-        var localId = p.fk_local_id || '';
-        var num = index != null ? ' — nº ' + (index + 1) : '';
-        return 'Visita em ' + data + ' (local ' + localId + ')' + num;
+        var localId = p.fk_local_id || (p.local_draft_id ? '(local no dispositivo)' : '');
+        var prefix = index != null ? (index + 1) + '. ' : '';
+        return prefix + 'Visita em ' + data + (localId ? ' (local ' + localId + ')' : '');
     }
 
     var emptyHint = document.getElementById('sync-empty-hint');
@@ -181,6 +181,28 @@
         });
     }
 
+    function formatLocalLabel(p, index) {
+        var parts = [];
+        var logr = (p.loc_endereco || '').trim();
+        var num = (p.loc_numero || '').trim();
+        if (logr) {
+            parts.push(num ? logr + ', ' + num : logr);
+        } else if (num) {
+            parts.push('Nº ' + num);
+        }
+        var bairro = (p.loc_bairro || '').trim();
+        var cidade = (p.loc_cidade || '').trim();
+        var uf = (p.loc_estado || '').trim();
+        if (bairro || cidade || uf) {
+            var loc = [bairro, cidade].filter(Boolean).join(' — ');
+            if (uf) loc = loc ? loc + '/' + uf : uf;
+            parts.push(loc);
+        }
+        var line = parts.join(' — ');
+        if (!line) line = 'Local sem endereço informado';
+        return (index + 1) + '. ' + line;
+    }
+
     function renderLocaisList(locais) {
         if (!locaisStatusEl || !locaisListEl) return;
         locaisListEl.innerHTML = '';
@@ -191,10 +213,9 @@
         locaisStatusEl.textContent = 'Você tem ' + locais.length + ' local(is) guardado(s) no dispositivo.';
         locais.forEach(function(d, i) {
             var p = d.payload || {};
-            var end = p.loc_endereco || '';
             var div = document.createElement('div');
             div.className = 'p-3 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
-            div.textContent = (i + 1) + '. ' + end;
+            div.textContent = formatLocalLabel(p, i);
             locaisListEl.appendChild(div);
         });
     }
