@@ -299,7 +299,7 @@ class LocalController extends Controller
         ]);
 
         $locais = $payload['locais'];
-        $ids = [];
+        $ids = array_fill(0, count($locais), null);
         $erros = [];
         $rules = $this->localSyncRules();
 
@@ -321,7 +321,7 @@ class LocalController extends Controller
             $data['loc_numero'] = $data['loc_numero'] ?? 'N/A';
             try {
                 $local = Local::create($data);
-                $ids[] = $local->loc_id;
+                $ids[$index] = $local->loc_id;
                 LogHelper::registrar('Sincronização offline', 'Local', 'create', 'Local sincronizado: ' . $local->loc_endereco);
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::warning('Local syncStore: ' . $e->getMessage());
@@ -330,7 +330,7 @@ class LocalController extends Controller
         }
 
         return response()->json([
-            'criados' => count($ids),
+            'criados' => count(array_filter($ids)),
             'erros' => $erros,
             'ids' => $ids,
         ]);

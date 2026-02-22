@@ -240,12 +240,13 @@
         SYNC_BTN.disabled = true;
         RESULT.textContent = 'Enviando…';
 
+        // Sempre enviar locais primeiro quando houver pendentes; só depois as visitas (que podem depender do local criado).
         function runSyncLocaisThenVisitas() {
             if (!locaisSyncUrlVal || typeof getAllLocalDrafts !== 'function') {
-                return Promise.resolve({ syncedLocalIds: [], draftIdToLocId: {} });
+                return Promise.resolve({ syncedLocalIds: [], draftIdToLocId: {}, errosLocais: [] });
             }
             return getAllLocalDrafts().then(function(localDrafts) {
-                if (localDrafts.length === 0) return Promise.resolve({ syncedLocalIds: [], draftIdToLocId: {} });
+                if (localDrafts.length === 0) return Promise.resolve({ syncedLocalIds: [], draftIdToLocId: {}, errosLocais: [] });
                 var body = JSON.stringify({ locais: localDrafts.map(function(d) { return d.payload; }) });
                 return fetch(locaisSyncUrlVal, {
                     method: 'POST',
@@ -258,12 +259,19 @@
                     });
                 }).then(function(data) {
                     var ids = data.ids || [];
+                    var errosLocais = data.erros || [];
                     var draftIdToLocId = {};
                     localDrafts.forEach(function(d, i) {
                         if (ids[i] != null) draftIdToLocId[d.id] = ids[i];
                     });
                     var syncedLocalIds = localDrafts.filter(function(d, i) { return ids[i] != null; }).map(function(d) { return d.id; });
-                    return { syncedLocalIds: syncedLocalIds, draftIdToLocId: draftIdToLocId };
+                    if (errosLocais.length > 0 && syncedLocalIds.length === 0) {
+                        var msg = errosLocais[0].message || 'Erro ao validar local.';
+                        RESULT.textContent = 'Local não enviado: ' + msg;
+                        SYNC_BTN.disabled = false;
+                        throw new Error(msg);
+                    }
+                    return { syncedLocalIds: syncedLocalIds, draftIdToLocId: draftIdToLocId, errosLocais: errosLocais };
                 }).catch(function(err) {
                     RESULT.textContent = 'Erro ao sincronizar locais: ' + (err.message || '');
                     throw err;
@@ -277,21 +285,29 @@
             return removeLocalDrafts(syncedLocalIds).then(function() {
                 return getAllDrafts();
             }).then(function(drafts) {
-                return { drafts: drafts, draftIdToLocId: draftIdToLocId };
+                return { drafts: drafts, draftIdToLocId: draftIdToLocId, errosLocais: result.errosLocais || [] };
             });
         }).then(function(data) {
+            // Locais já foram enviados acima; agora enviamos apenas as visitas (com fk_local_id já resolvido).
             var drafts = data.drafts;
             var draftIdToLocId = data.draftIdToLocId || {};
+            var errosLocaisSync = data.errosLocais || [];
             var toSend = [];
             var duplicateIds = [];
             var seen = {};
+            var visitasSemLocal = 0;
             drafts.forEach(function(d) {
                 var payload = d.payload || {};
                 var fk = payload.fk_local_id;
-                if (payload.local_draft_id && draftIdToLocId[payload.local_draft_id] != null) {
-                    payload = Object.assign({}, payload);
-                    payload.fk_local_id = draftIdToLocId[payload.local_draft_id];
-                    delete payload.local_draft_id;
+                if (payload.local_draft_id) {
+                    if (draftIdToLocId[payload.local_draft_id] != null) {
+                        payload = Object.assign({}, payload);
+                        payload.fk_local_id = draftIdToLocId[payload.local_draft_id];
+                        delete payload.local_draft_id;
+                    } else {
+                        visitasSemLocal++;
+                        return;
+                    }
                 }
                 var localId = (fk != null) ? String(fk) : '';
                 var dataStr = payload.vis_data ? String(payload.vis_data).trim() : '';
@@ -305,9 +321,12 @@
             });
 
             if (toSend.length === 0) {
-                renderList([]);
+                renderList(drafts);
                 if (locaisSection && getAllLocalDrafts) getAllLocalDrafts().then(renderLocaisList);
-                RESULT.textContent = 'Nada a enviar.';
+                var msg = 'Nada a enviar.';
+                if (visitasSemLocal > 0) msg = visitasSemLocal + ' visita(s) dependem de local que não foi enviado. Envie o local primeiro (verifique os dados do local).';
+                else if (drafts.length === 0) msg = 'Nada a enviar.';
+                RESULT.textContent = msg;
                 SYNC_BTN.disabled = !navigator.onLine;
                 if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
                 return;
@@ -389,13 +408,20 @@
                     }
                 }
                 renderList(remaining);
+                if (locaisSection && getAllLocalDrafts) getAllLocalDrafts().then(renderLocaisList);
                 if (syncedIds.length > 0) {
                     RESULT.textContent = syncedIds.length + ' visita(s) enviada(s) com sucesso.';
                     if (errors.length > 0) {
                         RESULT.textContent += ' ' + errors.length + ' não enviada(s) (verifique os dados).';
                     }
+                    if (typeof errosLocaisSync !== 'undefined' && errosLocaisSync.length > 0) {
+                        RESULT.textContent += ' Local não enviado: ' + (errosLocaisSync[0].message || 'verifique os dados.');
+                    }
                 } else {
                     RESULT.textContent = errors.length > 0 ? (errors[0].message || 'Erro ao sincronizar.') : 'Nenhuma visita foi enviada.';
+                    if (typeof errosLocaisSync !== 'undefined' && errosLocaisSync.length > 0) {
+                        RESULT.textContent += (RESULT.textContent ? ' ' : '') + 'Local não enviado: ' + (errosLocaisSync[0].message || 'verifique os dados.');
+                    }
                 }
                 SYNC_BTN.disabled = !navigator.onLine;
                 if (typeof window.VisitaOfflineUpdateBanner === 'function') {
