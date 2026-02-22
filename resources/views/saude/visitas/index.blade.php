@@ -71,7 +71,7 @@
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                        data-live-url="{{ route('saude.visitas.index') }}" data-live-param="busca"
-                       placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data (ex: 30/05/25)..."
+                       placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data..."
                        class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
             </div>
         </div>

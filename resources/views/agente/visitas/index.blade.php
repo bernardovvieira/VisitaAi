@@ -73,7 +73,7 @@
                     <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                            data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading"
-                           placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data (ex: 30/05/25)..."
+                           placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data..."
                            class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
                     <span id="search-loading" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
