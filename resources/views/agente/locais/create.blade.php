@@ -218,6 +218,9 @@
                     <p class="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
                         Você pode ajustar a posição arrastando o marcador no mapa ou preenchendo latitude e longitude manualmente.
                     </p>
+                    <p id="map-offline-aviso" class="hidden mt-2 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded border border-amber-200 dark:border-amber-800">
+                        Como não há internet, será necessário ajustar o pin do mapa posteriormente com conexão para assegurar que tudo seja exato.
+                    </p>
                 </div>
             </fieldset>
 
@@ -361,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var ids = ['loc_endereco', 'loc_bairro', 'loc_cidade', 'loc_estado', 'loc_pais'];
         ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
     }
-    function applyCepData(data, msgEl) {
+    function applyCepData(data, msgEl, skipLogradouroBairro) {
         if (!data || data.erro) return false;
         var inp = document.getElementById('loc_cep');
         if (cidadeEstado) {
@@ -376,9 +379,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (msgEl) { msgEl.classList.add('hidden'); }
         if (inp) inp.classList.remove('border-red-500', 'dark:border-red-400');
-        var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
-        el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
-        el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
+        if (!skipLogradouroBairro) {
+            var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
+            el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
+        }
+        var el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
         el = document.getElementById('loc_estado'); if (el) el.value = data.uf || '';
         el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
         var cepNorm = normCep((document.getElementById('loc_cep') && document.getElementById('loc_cep').value) || '');
@@ -419,8 +424,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (cep.length !== 8) return;
             if (isCepOffline()) {
                 var fromSistema = getCepFromCadastrados(cep);
-                if (fromSistema && applyCepData(fromSistema, msg)) {
-                    if (msg) { msg.textContent = 'Endereço preenchido por local já cadastrado no sistema.'; msg.classList.remove('hidden'); msg.classList.remove('text-red-600', 'dark:text-red-400'); msg.classList.add('text-gray-600', 'dark:text-gray-400'); }
+                if (fromSistema && applyCepData(fromSistema, msg, true)) {
+                    if (msg) { msg.textContent = 'Cidade/estado e posição do mapa preenchidos por local já cadastrado. Preencha endereço e bairro.'; msg.classList.remove('hidden'); msg.classList.remove('text-red-600', 'dark:text-red-400'); msg.classList.add('text-gray-600', 'dark:text-gray-400'); }
                     setTimeout(function() { if (msg) { msg.classList.add('hidden'); msg.classList.remove('text-gray-600', 'dark:text-gray-400'); msg.classList.add('text-red-600', 'dark:text-red-400'); } }, 3000);
                     return;
                 }
@@ -461,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
             script.onerror = function() {
                 window._viacepCallback = prev;
                 var fromSistema = getCepFromCadastrados(cep);
-                if (fromSistema && applyCepData(fromSistema, msg)) return;
+                if (fromSistema && applyCepData(fromSistema, msg, true)) return;
                 if (typeof window.VisitaOfflineGetCepCache === 'function') {
                     window.VisitaOfflineGetCepCache(cep).then(function(cached) {
                         if (cached && applyCepData(cached, msg)) return;
@@ -481,6 +486,16 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             document.body.appendChild(script);
         });
+    }
+    var mapOfflineAviso = document.getElementById('map-offline-aviso');
+    if (mapOfflineAviso) {
+        function updateMapOfflineAviso() {
+            var off = typeof window.visitaConnectionOnline === 'boolean' ? !window.visitaConnectionOnline : !navigator.onLine;
+            if (off) mapOfflineAviso.classList.remove('hidden'); else mapOfflineAviso.classList.add('hidden');
+        }
+        updateMapOfflineAviso();
+        document.addEventListener('visita-connection-change', updateMapOfflineAviso);
+        window.addEventListener('visita-connection-change', updateMapOfflineAviso);
     }
 });
 
