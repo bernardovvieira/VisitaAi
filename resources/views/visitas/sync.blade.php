@@ -175,6 +175,16 @@
         return prefix + 'Visita em ' + data + localPart;
     }
 
+    function trashIconSvg() {
+        var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        s.setAttribute('class', 'w-5 h-5');
+        s.setAttribute('fill', 'none');
+        s.setAttribute('stroke', 'currentColor');
+        s.setAttribute('viewBox', '0 0 24 24');
+        s.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>';
+        return s;
+    }
+
     var emptyHint = document.getElementById('sync-empty-hint');
     function renderList(drafts) {
         LIST.innerHTML = '';
@@ -189,11 +199,31 @@
         ACTIONS.classList.remove('hidden');
         RESULT.textContent = '';
         drafts.forEach(function(d, i) {
-            var div = document.createElement('div');
-            div.className = 'p-4 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
-            div.textContent = formatDraftLabel(d, i);
-            div.setAttribute('data-draft-id', d.id);
-            LIST.appendChild(div);
+            var row = document.createElement('div');
+            row.className = 'flex items-center justify-between gap-2 p-4 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
+            row.setAttribute('data-draft-id', d.id);
+            var label = document.createElement('span');
+            label.className = 'flex-1 min-w-0';
+            label.textContent = formatDraftLabel(d, i);
+            row.appendChild(label);
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'shrink-0 p-1.5 rounded text-gray-500 hover:text-red-600 hover:bg-red-100 dark:hover:text-red-400 dark:hover:bg-red-900/30 transition';
+            btn.setAttribute('title', 'Excluir esta visita do dispositivo');
+            btn.setAttribute('aria-label', 'Excluir');
+            btn.appendChild(trashIconSvg());
+            btn.addEventListener('click', function() {
+                var id = d.id;
+                removeDrafts([id]).then(function() {
+                    return getAllDrafts().then(renderList);
+                }).then(function() {
+                    if (locaisSection && typeof getAllLocalDrafts === 'function') return getAllLocalDrafts().then(renderLocaisList);
+                }).catch(function(err) {
+                    RESULT.textContent = 'Erro ao excluir: ' + (err.message || '');
+                });
+            });
+            row.appendChild(btn);
+            LIST.appendChild(row);
         });
     }
 
@@ -228,10 +258,29 @@
         locaisStatusEl.textContent = 'Você tem ' + locais.length + ' local(is) guardado(s) no dispositivo.';
         locais.forEach(function(d, i) {
             var p = d.payload || {};
-            var div = document.createElement('div');
-            div.className = 'p-3 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
-            div.textContent = formatLocalLabel(p, i);
-            locaisListEl.appendChild(div);
+            var row = document.createElement('div');
+            row.className = 'flex items-center justify-between gap-2 p-3 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
+            row.setAttribute('data-draft-id', d.id);
+            var label = document.createElement('span');
+            label.className = 'flex-1 min-w-0';
+            label.textContent = formatLocalLabel(p, i);
+            row.appendChild(label);
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'shrink-0 p-1.5 rounded text-gray-500 hover:text-red-600 hover:bg-red-100 dark:hover:text-red-400 dark:hover:bg-red-900/30 transition';
+            btn.setAttribute('title', 'Excluir este local do dispositivo');
+            btn.setAttribute('aria-label', 'Excluir');
+            btn.appendChild(trashIconSvg());
+            btn.addEventListener('click', function() {
+                var id = d.id;
+                removeLocalDrafts([id]).then(function() {
+                    return getAllLocalDrafts().then(renderLocaisList);
+                }).catch(function(err) {
+                    if (RESULT) RESULT.textContent = 'Erro ao excluir: ' + (err.message || '');
+                });
+            });
+            row.appendChild(btn);
+            locaisListEl.appendChild(row);
         });
     }
 

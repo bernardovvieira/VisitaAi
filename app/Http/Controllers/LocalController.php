@@ -155,16 +155,15 @@ class LocalController extends Controller
         } while (Local::where('loc_codigo_unico', $codigo)->exists());
 
         $data['loc_codigo_unico'] = $codigo;
+        $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
 
         $local = Local::create($data);
-
-        $local->loc_numero = $local->loc_numero ?: 'N/A';
 
         LogHelper::registrar(
             'Cadastro de local',
             'Local',
             'create',
-            'Local cadastrado: ' . $local->loc_endereco . ', ' . $local->loc_numero
+            'Local cadastrado: ' . $local->loc_endereco . ', ' . ($local->loc_numero ?? 'S/N')
         );
 
         $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
@@ -235,15 +234,15 @@ class LocalController extends Controller
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
                 ->with('error', 'O local primário não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.');
         }
-        $local->update($request->validated());
-
-        $local->loc_numero = $local->loc_numero ?: 'N/A';
+        $data = $request->validated();
+        $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
+        $local->update($data);
 
         LogHelper::registrar(
             'Atualização de local',
             'Local',
             'update',
-            'Local atualizado: ' . $local->loc_endereco . ', nº ' . $local->loc_numero
+            'Local atualizado: ' . $local->loc_endereco . ', nº ' . ($local->loc_numero ?? 'S/N')
         );
 
         return redirect()
@@ -264,8 +263,7 @@ class LocalController extends Controller
                 ->with('error', 'Erro: este local possui visitas cadastradas e não pode ser excluído.');
         }
 
-        $local->loc_numero = $local->loc_numero ?: 'N/A';
-        $descricao = $local->loc_endereco . ', ' . $local->loc_numero;
+        $descricao = $local->loc_endereco . ', ' . ($local->loc_numero ?? 'S/N');
 
         $local->delete();
 
@@ -318,7 +316,7 @@ class LocalController extends Controller
                 $codigo = mt_rand(10000000, 99999999);
             } while (Local::where('loc_codigo_unico', $codigo)->exists());
             $data['loc_codigo_unico'] = $codigo;
-            $data['loc_numero'] = $data['loc_numero'] ?? 'N/A';
+            $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
             try {
                 $local = Local::create($data);
                 $ids[$index] = $local->loc_id;
@@ -334,6 +332,19 @@ class LocalController extends Controller
             'erros' => $erros,
             'ids' => $ids,
         ]);
+    }
+
+    /** Converte valor de número do local para integer ou null (coluna é integer). */
+    private function normalizeLocNumero(mixed $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        $s = is_string($value) ? trim($value) : (string) $value;
+        if ($s === '' || strtoupper($s) === 'N/A' || strtoupper($s) === 'S/N') {
+            return null;
+        }
+        return is_numeric($s) ? (int) $s : null;
     }
 
     /** Regras de validação para sync de locais (sem ViaCEP). */
