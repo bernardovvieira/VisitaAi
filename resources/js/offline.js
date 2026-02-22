@@ -6,9 +6,10 @@
  * - Expõe window.VisitaOfflineSaveDraft(perfil, payload) para o formulário de visita.
  */
 const DB_NAME = 'VisitaAiOffline';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STORE_NAME = 'visitas_rascunho';
 const LOCAIS_STORE_NAME = 'locais_rascunho';
+const CEP_CACHE_STORE = 'cep_cache';
 
 function openDB() {
     return new Promise((resolve, reject) => {
@@ -22,6 +23,9 @@ function openDB() {
             }
             if (!db.objectStoreNames.contains(LOCAIS_STORE_NAME)) {
                 db.createObjectStore(LOCAIS_STORE_NAME, { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains(CEP_CACHE_STORE)) {
+                db.createObjectStore(CEP_CACHE_STORE, { keyPath: 'cep' });
             }
         };
     });
@@ -268,3 +272,36 @@ window.VisitaOfflineGetLocalDrafts = getLocalDrafts;
 window.VisitaOfflineSaveLocalDraft = saveLocalDraft;
 window.VisitaOfflineRemoveLocalDrafts = removeLocalDrafts;
 window.VisitaOfflineGetLocalPendingCount = getLocalPendingCount;
+
+// Cache de CEP (ViaCEP) para uso offline
+function getCepCache(cep) {
+    const key = String(cep).replace(/\D/g, '').slice(0, 8);
+    if (key.length !== 8) return Promise.resolve(null);
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(CEP_CACHE_STORE, 'readonly');
+            const store = t.objectStore(CEP_CACHE_STORE);
+            const req = store.get(key);
+            req.onsuccess = () => resolve(req.result ? req.result.data : null);
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+function setCepCache(cep, data) {
+    const key = String(cep).replace(/\D/g, '').slice(0, 8);
+    if (key.length !== 8 || !data) return Promise.resolve();
+    const record = { cep: key, data, cachedAt: new Date().toISOString() };
+    return openDB().then((db) => {
+        return new Promise((resolve, reject) => {
+            const t = db.transaction(CEP_CACHE_STORE, 'readwrite');
+            const store = t.objectStore(CEP_CACHE_STORE);
+            store.put(record);
+            t.oncomplete = () => resolve();
+            t.onerror = () => reject(t.error);
+        });
+    });
+}
+
+window.VisitaOfflineGetCepCache = getCepCache;
+window.VisitaOfflineSetCepCache = setCepCache;

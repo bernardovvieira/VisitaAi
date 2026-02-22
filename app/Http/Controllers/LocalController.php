@@ -129,12 +129,14 @@ class LocalController extends Controller
         $isPrimario = $primario === null;
         $cepPermitido = null;
         $cidadeEstado = null;
+        $cepsCadastrados = [];
         if ($primario) {
             $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
+            $cepsCadastrados = $this->buildCepsCadastrados($primario->loc_cidade, $primario->loc_estado);
         }
         $storeRoute = Auth::user()->isGestor() ? 'gestor.locais.store' : 'agente.locais.store';
         $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
-        return view('agente.locais.create', compact('cepPermitido', 'cidadeEstado', 'isPrimario', 'storeRoute', 'indexRoute'));
+        return view('agente.locais.create', compact('cepPermitido', 'cidadeEstado', 'cepsCadastrados', 'isPrimario', 'storeRoute', 'indexRoute'));
     }
 
     public function store(LocalRequest $request)
@@ -179,10 +181,40 @@ class LocalController extends Controller
         $primario = Local::orderBy('loc_id')->first();
         $cepPermitido = null;
         $cidadeEstado = null;
+        $cepsCadastrados = [];
         if ($primario) {
             $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
+            $cepsCadastrados = $this->buildCepsCadastrados($primario->loc_cidade, $primario->loc_estado);
         }
-        return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado'));
+        return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado', 'cepsCadastrados'));
+    }
+
+    /**
+     * Retorna lista de endereços por CEP já cadastrados no sistema (mesmo município), no formato ViaCEP.
+     */
+    private function buildCepsCadastrados(?string $cidade, ?string $estado): array
+    {
+        if (!$cidade || !$estado) {
+            return [];
+        }
+        $locais = Local::where('loc_cidade', $cidade)
+            ->where('loc_estado', $estado)
+            ->get();
+        $out = [];
+        foreach ($locais as $loc) {
+            $cepNorm = preg_replace('/\D/', '', $loc->loc_cep ?? '');
+            if (strlen($cepNorm) >= 8) {
+                $cepNorm = substr($cepNorm, 0, 8);
+                $out[] = [
+                    'cep' => $cepNorm,
+                    'logradouro' => $loc->loc_endereco ?? '',
+                    'bairro' => $loc->loc_bairro ?? '',
+                    'localidade' => $loc->loc_cidade ?? '',
+                    'uf' => $loc->loc_estado ?? '',
+                ];
+            }
+        }
+        return $out;
     }
 
     public function update(LocalRequest $request, Local $local)

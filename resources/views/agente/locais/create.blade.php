@@ -247,7 +247,15 @@ document.addEventListener('DOMContentLoaded', function() {
     var cepPermitidoNorm = cepPermitido ? cepPermitido.replace(/\D/g, '') : '';
     var cidadeEstadoRaw = (cepInput && cepInput.getAttribute('data-cidade-estado')) || '';
     var cidadeEstado = cidadeEstadoRaw ? (function() { try { return JSON.parse(cidadeEstadoRaw); } catch(e) { return null; } })() : null;
+    var cepsCadastrados = @json($cepsCadastrados ?? []);
     var cepValidouMunicipio = false;
+    function getCepFromCadastrados(cepNorm) {
+        if (!cepsCadastrados || !cepsCadastrados.length) return null;
+        var key = String(cepNorm).replace(/\D/g, '').slice(0, 8);
+        if (key.length !== 8) return null;
+        for (var i = 0; i < cepsCadastrados.length; i++) { if (cepsCadastrados[i].cep === key) return cepsCadastrados[i]; }
+        return null;
+    }
 
     function normStr(s) { if (!s || typeof s !== 'string') return ''; return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim(); }
     function normCep(v) { return (v || '').replace(/\D/g, ''); }
@@ -353,6 +361,33 @@ document.addEventListener('DOMContentLoaded', function() {
         var ids = ['loc_endereco', 'loc_bairro', 'loc_cidade', 'loc_estado', 'loc_pais'];
         ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
     }
+    function applyCepData(data, msgEl) {
+        if (!data || data.erro) return false;
+        var inp = document.getElementById('loc_cep');
+        if (cidadeEstado) {
+            var ok = normStr((data.localidade||'')) === normStr(cidadeEstado.cidade||'') && (data.uf||'').toUpperCase() === (cidadeEstado.estado||'').toUpperCase();
+            window._setCepValidouMunicipio && window._setCepValidouMunicipio(ok);
+            if (!ok) {
+                if (msgEl) { msgEl.textContent = 'O CEP informado não pertence ao município ' + (cidadeEstado.cidade||'') + '/' + (cidadeEstado.estado||'') + '.'; msgEl.classList.remove('hidden'); }
+                if (inp) inp.classList.add('border-red-500', 'dark:border-red-400');
+                setTimeout(function() { if (cepInput) cepInput.focus(); }, 0);
+                return false;
+            }
+        }
+        if (msgEl) { msgEl.classList.add('hidden'); }
+        if (inp) inp.classList.remove('border-red-500', 'dark:border-red-400');
+        var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
+        el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
+        el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
+        el = document.getElementById('loc_estado'); if (el) el.value = data.uf || '';
+        el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
+        if (typeof window.geocodeEndereco === 'function') window.geocodeEndereco(function() {});
+        return true;
+    }
+    function isCepOffline() {
+        if (typeof window.visitaConnectionOnline === 'boolean') return !window.visitaConnectionOnline;
+        return !navigator.onLine;
+    }
     if (cepInput) {
         cepInput.addEventListener('input', function() { checkCepLive(); });
         cepInput.addEventListener('blur', function() {
@@ -372,24 +407,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             if (cep.length !== 8) return;
+            if (isCepOffline()) {
+                var fromSistema = getCepFromCadastrados(cep);
+                if (fromSistema && applyCepData(fromSistema, msg)) {
+                    if (msg) { msg.textContent = 'Endereço preenchido por local já cadastrado no sistema.'; msg.classList.remove('hidden'); msg.classList.remove('text-red-600', 'dark:text-red-400'); msg.classList.add('text-gray-600', 'dark:text-gray-400'); }
+                    setTimeout(function() { if (msg) { msg.classList.add('hidden'); msg.classList.remove('text-gray-600', 'dark:text-gray-400'); msg.classList.add('text-red-600', 'dark:text-red-400'); } }, 3000);
+                    return;
+                }
+                if (typeof window.VisitaOfflineGetCepCache !== 'function') {
+                    if (msg) { msg.textContent = 'Sem conexão. Preencha o endereço manualmente.'; msg.classList.remove('hidden'); }
+                    cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                    return;
+                }
+                window.VisitaOfflineGetCepCache(cep).then(function(data) {
+                    if (data && applyCepData(data, msg)) {
+                        if (msg) { msg.textContent = 'Endereço preenchido pelo cache (consulta anterior).'; msg.classList.remove('hidden'); msg.classList.remove('text-red-600', 'dark:text-red-400'); msg.classList.add('text-gray-600', 'dark:text-gray-400'); }
+                        setTimeout(function() { if (msg) { msg.classList.add('hidden'); msg.classList.remove('text-gray-600', 'dark:text-gray-400'); msg.classList.add('text-red-600', 'dark:text-red-400'); } }, 3000);
+                    } else {
+                        if (msg) { msg.textContent = 'Sem conexão. Este CEP não está em cache. Preencha o endereço manualmente.'; msg.classList.remove('hidden'); }
+                        cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                    }
+                }).catch(function() {
+                    if (msg) { msg.textContent = 'Sem conexão. Preencha o endereço manualmente.'; msg.classList.remove('hidden'); }
+                    cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                });
+                return;
+            }
             var prev = window._viacepCallback;
             window._viacepCallback = function(data) {
                 window._viacepCallback = prev;
                 if (data && !data.erro) {
-                    var inp = document.getElementById('loc_cep');
-                    var msgEl = document.getElementById('loc_cep_erro');
-                    if (cidadeEstado) {
-                        var ok = normStr((data.localidade||'')) === normStr(cidadeEstado.cidade||'') && (data.uf||'').toUpperCase() === (cidadeEstado.estado||'').toUpperCase();
-                        window._setCepValidouMunicipio && window._setCepValidouMunicipio(ok);
-                        if (ok) { msgEl.classList.add('hidden'); inp.classList.remove('border-red-500', 'dark:border-red-400'); }
-                        else { msgEl.textContent = 'O CEP informado não pertence ao município ' + (cidadeEstado.cidade||'') + '/' + (cidadeEstado.estado||'') + '.'; msgEl.classList.remove('hidden'); inp.classList.add('border-red-500', 'dark:border-red-400'); setTimeout(function() { cepInput.focus(); }, 0); return; }
-                    }
-                    var el = document.getElementById('loc_endereco'); if (el) el.value = data.logradouro || '';
-                    el = document.getElementById('loc_bairro'); if (el) el.value = data.bairro || '';
-                    el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
-                    el = document.getElementById('loc_estado'); if (el) el.value = data.uf || '';
-                    el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
-                    window.geocodeEndereco(function(ok) { if (ok) {} });
+                    if (typeof window.VisitaOfflineSetCepCache === 'function') window.VisitaOfflineSetCepCache(cep, data);
+                    applyCepData(data, msg);
                 } else {
                     if (window._setCepValidouMunicipio) window._setCepValidouMunicipio(false);
                     if (msg) { msg.textContent = 'CEP não encontrado. Informe um CEP válido ou deixe em branco.'; msg.classList.remove('hidden'); }
@@ -401,9 +450,24 @@ document.addEventListener('DOMContentLoaded', function() {
             script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=_viacepCallback';
             script.onerror = function() {
                 window._viacepCallback = prev;
-                if (msg) { msg.textContent = 'Erro ao buscar CEP. Verifique a conexão ou deixe em branco.'; msg.classList.remove('hidden'); }
-                cepInput.classList.add('border-red-500', 'dark:border-red-400');
-                setTimeout(function() { cepInput.focus(); }, 0);
+                var fromSistema = getCepFromCadastrados(cep);
+                if (fromSistema && applyCepData(fromSistema, msg)) return;
+                if (typeof window.VisitaOfflineGetCepCache === 'function') {
+                    window.VisitaOfflineGetCepCache(cep).then(function(cached) {
+                        if (cached && applyCepData(cached, msg)) return;
+                        if (msg) { msg.textContent = 'Erro ao buscar CEP. Verifique a conexão ou preencha manualmente.'; msg.classList.remove('hidden'); }
+                        cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                        setTimeout(function() { cepInput.focus(); }, 0);
+                    }).catch(function() {
+                        if (msg) { msg.textContent = 'Erro ao buscar CEP. Verifique a conexão ou preencha manualmente.'; msg.classList.remove('hidden'); }
+                        cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                        setTimeout(function() { cepInput.focus(); }, 0);
+                    });
+                } else {
+                    if (msg) { msg.textContent = 'Erro ao buscar CEP. Verifique a conexão ou deixe em branco.'; msg.classList.remove('hidden'); }
+                    cepInput.classList.add('border-red-500', 'dark:border-red-400');
+                    setTimeout(function() { cepInput.focus(); }, 0);
+                }
             };
             document.body.appendChild(script);
         });
