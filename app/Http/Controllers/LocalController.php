@@ -81,11 +81,18 @@ class LocalController extends Controller
 
         $locais = $query->orderByDesc('loc_id')->paginate(10)->appends(['search' => $search]);
 
+        $coordenadasDuplicadas = Local::whereNotNull('loc_latitude')
+            ->whereNotNull('loc_longitude')
+            ->selectRaw('loc_latitude, loc_longitude, COUNT(*) as qtd')
+            ->groupBy('loc_latitude', 'loc_longitude')
+            ->having('qtd', '>', 1)
+            ->exists();
+
         $view = $user->isAgente()
             ? 'agente.locais.index'
             : 'gestor.locais.index';
 
-        return view($view, compact('locais', 'search'));
+        return view($view, compact('locais', 'search', 'coordenadasDuplicadas'));
     }
 
     public function show(Local $local)

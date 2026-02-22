@@ -27,6 +27,12 @@
         <span id="locais-offline-pending-alert-msg"></span>
     </div>
 
+    @if(!empty($coordenadasDuplicadas))
+    <div class="p-3 mb-4 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800" role="alert">
+        Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.
+    </div>
+    @endif
+
     <!-- Card introdutório -->
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais de visitação</h2>
