@@ -331,7 +331,17 @@ document.addEventListener('DOMContentLoaded', function() {
         el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
         el = document.getElementById('loc_estado'); if (el) el.value = data.uf || '';
         el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
-        if (typeof window.geocodeEndereco === 'function') window.geocodeEndereco(function() {});
+        var cepNorm = normCep((document.getElementById('loc_cep') && document.getElementById('loc_cep').value) || '');
+        if (data.latitude != null && data.longitude != null && !isNaN(parseFloat(data.latitude)) && !isNaN(parseFloat(data.longitude))) {
+            if (typeof window.setMapPosition === 'function') window.setMapPosition(parseFloat(data.latitude), parseFloat(data.longitude));
+        } else if (typeof window.geocodeEndereco === 'function') {
+            window.geocodeEndereco(function(ok) {
+                if (!ok && cepNorm.length === 8) {
+                    var fromCad = getCepFromCadastrados(cepNorm);
+                    if (fromCad && fromCad.latitude != null && fromCad.longitude != null && typeof window.setMapPosition === 'function') window.setMapPosition(parseFloat(fromCad.latitude), parseFloat(fromCad.longitude));
+                }
+            });
+        }
         return true;
     }
     function isCepOffline() {

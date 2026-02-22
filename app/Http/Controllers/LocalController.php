@@ -205,12 +205,16 @@ class LocalController extends Controller
             $cepNorm = preg_replace('/\D/', '', $loc->loc_cep ?? '');
             if (strlen($cepNorm) >= 8) {
                 $cepNorm = substr($cepNorm, 0, 8);
+                $lat = $loc->loc_latitude !== null && $loc->loc_latitude !== '' ? (float) $loc->loc_latitude : null;
+                $lng = $loc->loc_longitude !== null && $loc->loc_longitude !== '' ? (float) $loc->loc_longitude : null;
                 $out[] = [
                     'cep' => $cepNorm,
                     'logradouro' => $loc->loc_endereco ?? '',
                     'bairro' => $loc->loc_bairro ?? '',
                     'localidade' => $loc->loc_cidade ?? '',
                     'uf' => $loc->loc_estado ?? '',
+                    'latitude' => $lat,
+                    'longitude' => $lng,
                 ];
             }
         }
