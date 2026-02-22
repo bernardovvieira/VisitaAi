@@ -55,9 +55,10 @@
 <script>
 (function() {
     const DB_NAME = 'VisitaAiOffline';
-    const DB_VERSION = 2;
+    const DB_VERSION = 3;
     const STORE_NAME = 'visitas_rascunho';
     const LOCAIS_STORE_NAME = 'locais_rascunho';
+    const CEP_CACHE_STORE = 'cep_cache';
     const SECTION = document.getElementById('sync-section');
     if (!SECTION) return;
     const STATUS = document.getElementById('sync-status');
@@ -87,6 +88,9 @@
                 }
                 if (!db.objectStoreNames.contains(LOCAIS_STORE_NAME)) {
                     db.createObjectStore(LOCAIS_STORE_NAME, { keyPath: 'id' });
+                }
+                if (!db.objectStoreNames.contains(CEP_CACHE_STORE)) {
+                    db.createObjectStore(CEP_CACHE_STORE, { keyPath: 'cep' });
                 }
             };
         });

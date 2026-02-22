@@ -112,7 +112,7 @@ function showPendingBanner(count, syncPageUrl) {
     let el = document.getElementById('visita-offline-pending-banner');
     if (el) {
         const msg = el.querySelector('[data-pending-msg]');
-        if (msg) msg.textContent = (count === 1 ? '1 visita guardada' : count + ' visitas guardadas') + ' no dispositivo. ';
+        if (msg) msg.textContent = 'Há pendências a serem sincronizadas para o sistema. ';
         const link = el.querySelector('a[data-sync-link]');
         if (link && syncPageUrl) link.setAttribute('href', syncPageUrl);
         return;
@@ -123,7 +123,7 @@ function showPendingBanner(count, syncPageUrl) {
     el.className = 'bg-amber-500 text-amber-900 px-4 py-3 flex flex-wrap items-center justify-center gap-3 text-sm font-medium shadow';
     const span = document.createElement('span');
     span.setAttribute('data-pending-msg', '');
-    span.textContent = (count === 1 ? '1 visita guardada' : count + ' visitas guardadas') + ' no dispositivo. ';
+    span.textContent = 'Há pendências a serem sincronizadas para o sistema. ';
     const a = document.createElement('a');
     a.setAttribute('data-sync-link', '');
     a.setAttribute('href', syncPageUrl || '#');
