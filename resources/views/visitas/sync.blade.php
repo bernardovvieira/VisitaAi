@@ -151,9 +151,19 @@
         });
     }
 
+    function formatDataDdMmAaaa(str) {
+        if (!str || typeof str !== 'string') return str || '';
+        str = str.trim();
+        var m = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (m) return m[3] + '/' + m[2] + '/' + m[1];
+        m = str.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (m) return str;
+        return str;
+    }
+
     function formatDraftLabel(draft, index) {
         var p = draft.payload || {};
-        var data = p.vis_data || '';
+        var data = formatDataDdMmAaaa(p.vis_data || '');
         var localPart = '';
         if (p.fk_local_id) localPart = ', local ' + p.fk_local_id;
         else if (p.local_draft_id) localPart = ', local a sincronizar';
