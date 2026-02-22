@@ -447,24 +447,12 @@
                 return getAllDrafts();
             })
             .then(function(remaining) {
-                if (syncedIds.length > 0) {
-                    var indexUrl = SECTION.getAttribute('data-index-url') || '';
-                    if (indexUrl) {
-                        var q = '?enviadas=' + syncedIds.length;
-                        if (errors.length > 0) q += '&erros=' + errors.length;
-                        window.location.replace(indexUrl + q);
-                        return;
-                    }
-                }
                 renderList(remaining);
                 if (locaisSection && getAllLocalDrafts) getAllLocalDrafts().then(renderLocaisList);
                 if (syncedIds.length > 0) {
-                    RESULT.textContent = syncedIds.length + ' visita(s) enviada(s) com sucesso.';
-                    if (errors.length > 0) {
-                        RESULT.textContent += ' ' + errors.length + ' não enviada(s) (verifique os dados).';
-                    }
-                    if (typeof errosLocaisSync !== 'undefined' && errosLocaisSync.length > 0) {
-                        RESULT.textContent += ' Local não enviado: ' + (errosLocaisSync[0].message || 'verifique os dados.');
+                    RESULT.textContent = 'Os dados foram sincronizados.';
+                    if (errors.length > 0 || (typeof errosLocaisSync !== 'undefined' && errosLocaisSync.length > 0)) {
+                        RESULT.textContent += ' Alguns itens não puderam ser enviados (verifique os dados).';
                     }
                 } else {
                     RESULT.textContent = errors.length > 0 ? (errors[0].message || 'Erro ao sincronizar.') : 'Nenhuma visita foi enviada.';
@@ -503,7 +491,7 @@
             RESULT.textContent = 'Apagando…';
             removeDrafts(ids)
                 .then(function() {
-                    RESULT.textContent = drafts.length + ' visita(s) apagada(s) do dispositivo.';
+                    RESULT.textContent = 'Dados apagados do dispositivo.';
                     renderList([]);
                     if (typeof window.VisitaOfflineUpdateBanner === 'function') {
                         window.VisitaOfflineUpdateBanner();
