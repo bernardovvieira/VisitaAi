@@ -7,7 +7,22 @@
 <div class="max-w-7xl mx-auto space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Sincronizar']]" />
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Sincronizar</h1>
-    <p class="text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
+
+    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enviar dados guardados offline</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
+        <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
+            <button type="button" id="sync-btn"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                Enviar todas agora
+            </button>
+            <button type="button" id="sync-clear-btn"
+                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                Apagar todas do dispositivo
+            </button>
+            <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
+        </div>
+    </section>
 
     @if(!empty($locaisSyncSubmitUrl))
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow" id="sync-locais-section"
@@ -38,17 +53,6 @@
         <p id="sync-offline-warning" class="hidden mt-4 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
             Você está sem internet. Conecte o dispositivo à internet (Wi‑Fi ou dados) para poder enviar as visitas.
         </p>
-        <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
-            <button type="button" id="sync-btn"
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
-                Enviar todas agora
-            </button>
-            <button type="button" id="sync-clear-btn"
-                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
-                Apagar todas do dispositivo
-            </button>
-            <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
-        </div>
     </section>
 </div>
 
