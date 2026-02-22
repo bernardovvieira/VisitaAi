@@ -154,9 +154,11 @@
     function formatDraftLabel(draft, index) {
         var p = draft.payload || {};
         var data = p.vis_data || '';
-        var localId = p.fk_local_id || (p.local_draft_id ? '(local no dispositivo)' : '');
+        var localPart = '';
+        if (p.fk_local_id) localPart = ', local ' + p.fk_local_id;
+        else if (p.local_draft_id) localPart = ', local a sincronizar';
         var prefix = index != null ? (index + 1) + '. ' : '';
-        return prefix + 'Visita em ' + data + (localId ? ' (local ' + localId + ')' : '');
+        return prefix + 'Visita em ' + data + localPart;
     }
 
     var emptyHint = document.getElementById('sync-empty-hint');
@@ -193,12 +195,11 @@
         var bairro = (p.loc_bairro || '').trim();
         var cidade = (p.loc_cidade || '').trim();
         var uf = (p.loc_estado || '').trim();
-        if (bairro || cidade || uf) {
-            var loc = [bairro, cidade].filter(Boolean).join(' — ');
-            if (uf) loc = loc ? loc + '/' + uf : uf;
-            parts.push(loc);
+        if (bairro) parts.push(bairro);
+        if (cidade || uf) {
+            parts.push(uf ? (cidade ? cidade + '/' + uf : uf) : cidade);
         }
-        var line = parts.join(' — ');
+        var line = parts.join(', ');
         if (!line) line = 'Local sem endereço informado';
         return (index + 1) + '. ' + line;
     }
