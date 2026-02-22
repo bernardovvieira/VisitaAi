@@ -11,6 +11,7 @@
     <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enviar dados guardados offline</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.</p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
             <button type="button" id="sync-btn"
                     class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
@@ -43,9 +44,6 @@
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas guardadas no dispositivo</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-status">
             Carregando…
-        </p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" id="sync-empty-hint">
-            Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.
         </p>
         <div id="sync-list" class="space-y-2 mt-4">
             <!-- Preenchido via JS a partir do IndexedDB -->
