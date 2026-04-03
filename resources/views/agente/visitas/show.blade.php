@@ -28,7 +28,7 @@
             <div>
                 <dt class="font-medium">Código Único do Imóvel</dt>
                 <dd class="mt-1">
-                    <span class="inline-block bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-semibold">
+                    <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">
                         {{ $visita->local->loc_codigo_unico }}
                     </span>
                 </dd>
@@ -101,7 +101,7 @@
             <div>
                 <dt class="font-medium">Código da Visita</dt>
                 <dd class="mt-1">
-                    <span class="inline-block bg-green-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs font-semibold">
+                    <span class="inline-block rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">
                         #{{ $visita->vis_id }}
                     </span>
                 </dd>
@@ -128,7 +128,7 @@
                 <dt class="font-medium">Tipo de Visita</dt>
                 <dd>
                     @if ($visita->vis_visita_tipo === 'N')
-                        <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">{{ \App\Helpers\MsTerminologia::visitaTipoLabel('N') }}</span>
+                        <span class="inline-block rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ \App\Helpers\MsTerminologia::visitaTipoLabel('N') }}</span>
                     @elseif ($visita->vis_visita_tipo === 'R')
                         <span class="inline-block bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200 px-2 py-1 rounded text-xs font-semibold">{{ \App\Helpers\MsTerminologia::visitaTipoLabel('R') }}</span>
                     @else
@@ -142,7 +142,7 @@
                     @if ($visita->vis_pendencias)
                         <span class="inline-block bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200 px-2 py-1 rounded text-xs font-semibold">Houve pendência</span>
                     @else
-                        <span class="inline-block bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200 px-2 py-1 rounded text-xs font-semibold">Nenhuma pendência</span>   
+                        <span class="inline-block bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200 px-2 py-1 rounded text-xs font-semibold">Nenhuma pendência</span>   
                     @endif
                 </dd>
             </div>
@@ -169,7 +169,7 @@
                             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Sintomas:</p>
                             <div class="flex flex-wrap gap-2 mt-1">
                                 @foreach ($doenca->doe_sintomas as $sintoma)
-                                    <span class="inline-block bg-blue-200 dark:bg-blue-700 text-blue-900 dark:text-blue-100 text-xs font-medium px-2 py-0.5 rounded">
+                                    <span class="inline-block rounded bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-900 dark:bg-slate-600 dark:text-slate-100">
                                         {{ $sintoma }}
                                     </span>
                                 @endforeach
@@ -195,7 +195,7 @@
                             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Medidas de Controle:</p>
                             <div class="flex flex-wrap gap-2 mt-1">
                                 @foreach ($doenca->doe_medidas_controle as $medida)
-                                    <span class="inline-block bg-green-200 dark:bg-green-700 text-green-900 dark:text-green-100 text-xs font-medium px-2 py-0.5 rounded">
+                                    <span class="inline-block rounded bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-900 dark:bg-slate-600 dark:text-slate-100">
                                         {{ $medida }}
                                     </span>
                                 @endforeach
@@ -221,7 +221,7 @@
                     <p class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $visita->{'insp_'.$tipo} ?? 0 }}</p>
                 </div>
             @endforeach
-            <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 col-span-2 sm:col-span-4 p-4 rounded-lg text-center font-bold text-lg shadow">
+            <div class="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 col-span-2 sm:col-span-4 p-4 rounded-lg text-center font-bold text-lg shadow">
                 Eliminados: {{ $visita->vis_depositos_eliminados ?? 0 }}
             </div>
         </div>

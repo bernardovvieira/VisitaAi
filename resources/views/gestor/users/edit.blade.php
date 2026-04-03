@@ -59,7 +59,7 @@
                 <label for="use_nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome <span class="text-red-500">*</span></label>
                 <input type="text" id="use_nome" name="use_nome" value="{{ old('use_nome', $user->use_nome) }}" 
                        required autofocus
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_nome') border-red-500 dark:border-red-400 border @enderror">
+                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 @error('use_nome') border-red-500 dark:border-red-400 border @enderror">
                 <x-input-error :messages="$errors->get('use_nome')" class="mt-1" />
             </div>
 
@@ -71,7 +71,7 @@
                        name="cpf_mascarado"
                        value="{{ old('cpf_mascarado', preg_replace('/\d(?=(?:.*\d){2})/', '*', $user->use_cpf)) }}" 
                        readonly
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Não é possível alterar o CPF. Caso precise, entre em contato com a Bitwise Technologies (suporte).</p>
             </div>
 
@@ -80,7 +80,7 @@
                 <label for="use_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail <span class="text-red-500">*</span></label>
                 <input type="email" id="use_email" name="use_email" value="{{ old('use_email', $user->use_email) }}"
                        required
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_email') border-red-500 dark:border-red-400 border @enderror">
+                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 @error('use_email') border-red-500 dark:border-red-400 border @enderror">
                 <x-input-error :messages="$errors->get('use_email')" class="mt-1" />
             </div>
 
@@ -88,7 +88,7 @@
             <div>
                 <label for="use_perfil" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Perfil <span class="text-red-500">*</span></label>
                 <select id="use_perfil" name="use_perfil"
-                        class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_perfil') border-red-500 dark:border-red-400 border @enderror" required>
+                        class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 @error('use_perfil') border-red-500 dark:border-red-400 border @enderror" required>
                     <option value="gestor" {{ old('use_perfil', $user->use_perfil) == 'gestor' ? 'selected' : '' }}>{{ \App\Models\User::perfilLabel('gestor') }}</option>
                     <option value="agente_endemias" {{ old('use_perfil', $user->use_perfil) == 'agente_endemias' ? 'selected' : '' }}>{{ \App\Models\User::perfilLabel('agente_endemias') }}</option>
                     <option value="agente_saude" {{ old('use_perfil', $user->use_perfil) == 'agente_saude' ? 'selected' : '' }}>{{ \App\Models\User::perfilLabel('agente_saude') }}</option>
@@ -101,7 +101,7 @@
                 <label for="data_cadastro_display" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de Cadastro</label>
                 <input type="text" id="data_cadastro_display" value="{{ $user->use_data_criacao->format('d/m/Y') }}" 
                        readonly
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border-0">
+                       class="mt-1 block w-full cursor-default rounded-lg border-0 bg-gray-100 px-3 py-2 text-gray-900 shadow-sm focus:outline-none dark:bg-gray-800 dark:text-gray-100">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Data em que o usuário se cadastrou.</p>
             </div>
 
@@ -109,7 +109,7 @@
             <div>
                 <label for="use_senha" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nova Senha</label>
                 <input type="password" id="use_senha" name="use_senha" autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha') border border-red-500 dark:border-red-400 @enderror">
+                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 @error('use_senha') border border-red-500 dark:border-red-400 @enderror">
                 <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
                     <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
                 </div>
@@ -121,7 +121,7 @@
             <div>
                 <label for="use_senha_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmar Nova Senha</label>
                 <input type="password" id="use_senha_confirmation" name="use_senha_confirmation" autocomplete="new-password"
-                       class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm @error('use_senha_confirmation') border-red-500 dark:border-red-400 border @enderror">
+                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 @error('use_senha_confirmation') border-red-500 dark:border-red-400 border @enderror">
                 <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
                 <x-input-error :messages="$errors->get('use_senha_confirmation')" class="mt-1" />
             </div>

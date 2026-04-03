@@ -26,7 +26,7 @@
             <div>
                 <dt class="font-medium">Código Único do Imóvel</dt>
                 <dd class="mt-1">
-                    <span class="inline-block bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-semibold">
+                    <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">
                         {{ $local->loc_codigo_unico }}
                     </span>
                     @if($local->isPrimary())

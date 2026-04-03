@@ -6,28 +6,30 @@
     <title>{{ config('app.name') }} — Página não encontrada</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center px-4">
-    <div class="max-w-md w-full text-center">
-        <div class="mb-6">
-            <span class="text-8xl font-bold text-gray-300 dark:text-gray-600">404</span>
+<body class="flex min-h-screen items-center justify-center bg-gray-100 px-4 font-sans antialiased dark:bg-gray-900">
+    <div class="w-full max-w-md text-center">
+        <div class="mb-8">
+            <span class="text-8xl font-black tabular-nums text-gray-200 dark:text-gray-700">404</span>
         </div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Página não encontrada</h1>
-        <p class="text-gray-600 dark:text-gray-400 mb-8">
-            O endereço que você acessou não existe ou foi movido.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-            @auth
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 font-semibold rounded-lg shadow hover:bg-gray-700 dark:hover:bg-gray-300 transition">
-                    Ir para o painel
+        <div class="rounded-2xl border border-gray-200/80 bg-white p-8 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+            <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">Página não encontrada</h1>
+            <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                O endereço que você acessou não existe ou foi movido.
+            </p>
+            <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800">
+                        Ir para o painel
+                    </a>
+                @else
+                    <a href="{{ url('/') }}" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2">
+                        Voltar ao início
+                    </a>
+                @endauth
+                <a href="javascript:history.back()" class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
+                    Voltar
                 </a>
-            @else
-                <a href="{{ url('/') }}" class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
-                    Voltar ao início
-                </a>
-            @endauth
-            <a href="javascript:history.back()" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                Voltar
-            </a>
+            </div>
         </div>
     </div>
 </body>

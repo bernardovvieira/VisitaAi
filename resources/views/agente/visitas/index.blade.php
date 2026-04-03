@@ -18,7 +18,7 @@
         <x-alert type="success" :message="session('success')" />
         @if(session('created_visita_id'))
             <div class="flex flex-wrap gap-3 mt-2">
-                <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver visita registrada</a>
+                <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline">Ver visita registrada</a>
             </div>
         @endif
     @endif
@@ -159,7 +159,7 @@
                                         </div>
                                     @endif
                                 @else
-                                    <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-emerald-900 dark:text-emerald-300">
                                         Concluída
                                     </span>
                                 @endif
@@ -233,7 +233,7 @@
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma visita registrada.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Registre a primeira visita para começar.</p>
-                                    <a href="{{ route('agente.visitas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                    <a href="{{ route('agente.visitas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow transition">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                         Registrar visita
                                     </a>

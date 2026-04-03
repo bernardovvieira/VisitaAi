@@ -5,7 +5,7 @@
     ? 'theme-toggle-float fixed z-[100]'
     : 'inline-flex items-center';
   $btnClass = $floating
-    ? 'theme-toggle-circle w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 flex items-center justify-center'
+    ? 'theme-toggle-circle w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 dark:focus:ring-offset-gray-900 flex items-center justify-center'
     : 'inline-flex items-center p-2 rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition';
 @endphp
 

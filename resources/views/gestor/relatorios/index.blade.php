@@ -21,7 +21,7 @@
         </div>
     @endif
     @if(session('info'))
-        <div class="bg-blue-100 border border-blue-400 text-blue-800 px-4 py-3 rounded relative mb-4">
+        <div class="relative mb-4 rounded-lg border border-slate-300 bg-slate-100 px-4 py-3 text-slate-900 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100">
             {{ session('info') }}
         </div>
     @endif
@@ -92,7 +92,7 @@
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo <span class="text-red-500">*</span></label>
-                    <select name="tipo_relatorio" x-model="tipo" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600">
+                    <select name="tipo_relatorio" x-model="tipo" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                         <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>Completo</option>
                         <option value="diario">Diário</option>
                         <option value="semanal">Por período</option>
@@ -101,17 +101,17 @@
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data <span class="text-red-500">*</span></label>
-                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-600 dark:focus:ring-emerald-600" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-600 dark:focus:ring-emerald-600" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600" />
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-600 dark:focus:ring-emerald-600" />
                         </div>
                     </div>
                 </template>
@@ -160,11 +160,11 @@
                     @click.outside="open = false">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Local(is) <span class="text-red-500">*</span></label>
                     <div class="relative">
-                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-1.5 cursor-pointer">
+                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 flex flex-wrap items-center gap-1.5 cursor-pointer">
                             <template x-for="item in selected" :key="item.id">
-                                <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded px-2 py-0.5 text-sm">
+                                <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="item.label" class="truncate max-w-[200px]"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="Remover">×</button>
                                 </span>
                             </template>
                             <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar local..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
@@ -176,9 +176,9 @@
                             <template x-for="opt in filtered" :key="opt.id">
                                 <div @click="toggle(opt)" role="option"
                                      class="flex items-center justify-between w-full px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                                     :class="{ 'bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200': isSelected(opt.id) }">
+                                     :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': isSelected(opt.id) }">
                                     <span x-text="opt.label" class="truncate flex-1"></span>
-                                    <span x-show="isSelected(opt.id)" class="text-blue-600 dark:text-blue-400 ml-2">✓</span>
+                                    <span x-show="isSelected(opt.id)" class="ml-2 text-slate-600 dark:text-slate-300">✓</span>
                                 </div>
                             </template>
                             <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Nenhum local encontrado</div>
@@ -226,11 +226,11 @@
                     @click.outside="open = false">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bairro(s)</label>
                     <div class="relative">
-                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm border border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-1.5 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-0">
+                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 flex flex-wrap items-center gap-1.5 cursor-pointer focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">
-                                <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded px-2 py-0.5 text-sm">
+                                <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="val"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="hover:text-blue-600 dark:hover:text-blue-100 leading-none" aria-label="Remover">×</button>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="Remover">×</button>
                                 </span>
                             </template>
                             <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar bairro..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
@@ -242,9 +242,9 @@
                             <template x-for="opt in filtered" :key="opt">
                                 <div @click="toggle(opt)" role="option" :aria-selected="selected.includes(opt)"
                                      class="px-3 py-2 cursor-pointer text-sm flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700"
-                                     :class="{ 'bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200': selected.includes(opt) }">
+                                     :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': selected.includes(opt) }">
                                     <span x-text="opt"></span>
-                                    <span x-show="selected.includes(opt)" class="text-blue-600 dark:text-blue-400">✓</span>
+                                    <span x-show="selected.includes(opt)" class="text-slate-600 dark:text-slate-300">✓</span>
                                 </div>
                             </template>
                             <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" x-text="options.length === 0 ? 'Nenhum bairro cadastrado nos locais.' : 'Nenhum bairro encontrado para a busca.'"></div>
@@ -288,7 +288,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <svg class="mr-2 h-6 w-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Total de visitas</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalVisitas }}</p>
@@ -309,14 +309,14 @@
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-teal-500 dark:text-teal-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <svg class="h-6 w-6 text-emerald-500 dark:text-emerald-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com tratamento</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $visitasComTratamento }}</p>
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    <svg class="h-6 w-6 text-emerald-500 dark:text-emerald-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Coletas realizadas</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalComColeta }}</p>
@@ -428,7 +428,7 @@
                                     </div>
                                 @endif
                             @else
-                                <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-emerald-900 dark:text-emerald-300">
                                     Concluída
                                 </span>
                             @endif

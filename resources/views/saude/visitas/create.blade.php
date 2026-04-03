@@ -54,12 +54,12 @@
                     <div>
                         <label for="vis_data" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data da Visita <span class="text-red-500">*</span></label>
                         <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required
-                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="vis_ciclo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ciclo/Ano <span class="text-red-500">*</span></label>
                         <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required
-                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600"
                             placeholder="mm/aa">
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                     <label for="fk_local_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Local Visitado <span class="text-red-500">*</span></label>
                     <div class="relative mt-1">
                         <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="Buscar local..." required
-                                class="block w-full px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                                class="block w-full px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
 
                         <ul x-show="open" @click.away="open = false" x-cloak class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto"
                             x-transition>
@@ -168,7 +168,7 @@
                     <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade <span class="text-red-500">*</span></label>
                     @php $at7 = config('ms_terminologia.atividades_pncd.7', ['codigo' => '7-LIRAa', 'nome' => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)']); @endphp
                     <select id="vis_atividade" name="vis_atividade" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                         <option value="7" selected>{{ $at7['codigo'] }} — {{ $at7['nome'] }}</option>
                     </select>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -182,7 +182,7 @@
                 <div>
                     <label for="vis_visita_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo da visita</label>
                     <select name="vis_visita_tipo" id="vis_visita_tipo"
-                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                         <option value="">Selecione...</option>
                         @foreach(config('ms_terminologia.visita_tipo') as $tipoVal => $tipoConf)
                             <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo') == $tipoVal ? 'selected' : '' }}>{{ $tipoConf['label'] }}</option>
@@ -199,7 +199,7 @@
                         <div>
                             <label for="insp_{{ $tipo }}" class="block text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Depósito {{ strtoupper($tipo) }}</label>
                             <input id="insp_{{ $tipo }}" name="insp_{{ $tipo }}" type="number" min="0" value="{{ old('insp_' . $tipo) }}"
-                                   class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                                   class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                         </div>
                     @endforeach
                 </div>
@@ -222,7 +222,7 @@
                 <div>
                     <label for="vis_depositos_eliminados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Depósitos Eliminados</label>
                     <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados') }}"
-                           class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                           class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                 </div>
             </fieldset>
             
@@ -231,7 +231,7 @@
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" style="padding-bottom: 1rem;">Coleta de Amostra</legend>
                 <div class="flex items-center mt-6">
                     <input type="checkbox" name="vis_coleta_amostra" id="vis_coleta_amostra" value="1" {{ old('vis_coleta_amostra') ? 'checked' : '' }}
-                        class="mr-2 text-green-600 dark:text-green-400">
+                        class="mr-2 text-emerald-600 dark:text-emerald-400">
                     <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">Houve coleta de amostra?</label>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" style="padding-bottom: 1rem;">
@@ -241,18 +241,18 @@
                     <div>
                         <label for="vis_amos_inicial" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Inicial</label>
                         <input type="number" name="vis_amos_inicial" id="vis_amos_inicial" min="0" value="{{ old('vis_amos_inicial') }}" disabled
-                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="vis_amos_final" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Final</label>
                         <input type="number" name="vis_amos_final" id="vis_amos_final" min="0" value="{{ old('vis_amos_final') }}" disabled
-                            class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                 </div>
                 <div>
                     <label for="vis_qtd_tubitos" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade de Tubitos Utilizados</label>
                     <input type="number" name="vis_qtd_tubitos" id="vis_qtd_tubitos" min="0" value="{{ old('vis_qtd_tubitos') }}" disabled
-                        class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Se a coleta de amostra for realizada, informe os números de amostra inicial e final, além da quantidade de tubitos utilizados.
@@ -305,7 +305,7 @@
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Tipo</label>
                                         <input type="text" :name="`tratamentos[${i}][trat_tipo]`" x-model="t.trat_tipo" readonly
                                             :value="t.trat_tipo.charAt(0).toUpperCase() + t.trat_tipo.slice(1)"
-                                            class="mt-1 block w-full rounded bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm cursor-not-allowed">
+                                            class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-200 text-gray-900 shadow-sm cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
                                     </div>
                                     <div x-show="t.trat_forma === 'Focal'">
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Linha</label>
@@ -370,7 +370,7 @@
             {{-- Sugestões de doenças (JS puro) --}}
             <div id="sugestoes-doencas-wrap" class="space-y-2" data-sugestoes-url="{{ route('saude.sugestoes-doencas') }}">
                 <div class="flex flex-wrap gap-2 items-center">
-                    <button type="button" id="btn-sugestoes-doencas" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                    <button type="button" id="btn-sugestoes-doencas" class="text-sm font-medium text-slate-600 underline decoration-slate-300 underline-offset-2 hover:text-slate-900 dark:text-slate-400 dark:decoration-slate-600 dark:hover:text-slate-200">
                         Ver sugestões de doenças para este imóvel
                     </button>
                 </div>
@@ -399,7 +399,7 @@
                                 name="doencas[]"
                                 value="{{ $doenca->doe_id }}"
                                 {{ in_array($doenca->doe_id, old('doencas', [])) ? 'checked' : '' }}
-                                class="mr-2 text-blue-600 dark:text-blue-400">
+                                class="mr-2 text-emerald-600 dark:text-emerald-400">
                             <label for="doenca_{{ $doenca->doe_id }}" class="text-sm text-gray-700 dark:text-gray-300">
                                 {{ $doenca->doe_nome }}
                             </label>
@@ -417,7 +417,7 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pendências</label>
                 <div class="flex items-center" style="padding-top: 1rem;">
                     <input type="checkbox" name="vis_pendencias" id="vis_pendencias" value="1" {{ old('vis_pendencias') ? 'checked' : '' }}
-                           class="mr-2 text-green-600 dark:text-green-400">
+                           class="mr-2 text-emerald-600 dark:text-emerald-400">
                     <label for="vis_pendencias" class="text-sm text-gray-700 dark:text-gray-300">Houve alguma pendência na visita?</label>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" style="padding-bottom: 1rem;">
@@ -428,7 +428,7 @@
             <div>
                 <label for="vis_observacoes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observações</label>
                 <textarea name="vis_observacoes" id="vis_observacoes" rows="5"
-                          class="mt-1 w-full rounded bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">{{ old('vis_observacoes') }}</textarea>
+                          class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">{{ old('vis_observacoes') }}</textarea>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.
@@ -441,7 +441,7 @@
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="button" id="btn-registrar-visita"
                             class="px-6 py-2 font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-                            data-online-class="bg-green-600 hover:bg-green-700 text-white"
+                            data-online-class="bg-emerald-600 hover:bg-emerald-700 text-white"
                             data-offline-class="bg-amber-500 hover:bg-amber-600 text-amber-900">
                         Registrar visita
                     </button>
@@ -512,7 +512,7 @@
                         sugestoes.forEach(function(s) {
                             var bt = document.createElement('button');
                             bt.type = 'button';
-                            bt.className = 'inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700';
+                            bt.className = 'inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-slate-700';
                             bt.title = s.motivo || '';
                             bt.textContent = s.nome || '';
                             bt.addEventListener('click', function() {
@@ -567,7 +567,7 @@
             var baseClass = 'px-6 py-2 font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed ';
             if (online) {
                 btn.textContent = 'Registrar visita';
-                btn.className = baseClass + (btn.getAttribute('data-online-class') || 'bg-green-600 hover:bg-green-700 text-white');
+                btn.className = baseClass + (btn.getAttribute('data-online-class') || 'bg-emerald-600 hover:bg-emerald-700 text-white');
                 desc.textContent = 'registrada na hora';
                 statusEl.textContent = 'Com internet';
             } else {

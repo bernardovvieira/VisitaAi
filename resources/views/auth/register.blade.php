@@ -87,7 +87,7 @@
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
         Já tem conta?
-        <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+        <a href="{{ route('login') }}" class="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
             Faça login
         </a>
     </p>

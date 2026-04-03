@@ -84,11 +84,11 @@
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 @if ($local->loc_zona == 'U')
-                                    <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">
+                                    <span class="inline-block rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">
                                         Urbana
                                     </span>
                                 @elseif ($local->loc_zona == 'R')
-                                    <span class="inline-block bg-green-100 text-teal-800 dark:bg-teal-800 dark:text-teal-200 px-2 py-1 rounded text-xs font-semibold">
+                                    <span class="inline-block rounded bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-900/70 dark:text-amber-200">
                                         Rural
                                     </span>
                                 @endif

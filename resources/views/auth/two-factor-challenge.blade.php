@@ -24,7 +24,7 @@
                            maxlength="6"
                            autocomplete="one-time-code"
                            placeholder="000000"
-                           class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500"
+                           class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600"
                            required
                            autofocus>
                 </div>
@@ -32,7 +32,7 @@
                     <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-md transition">
                         Voltar ao login
                     </a>
-                    <button type="submit" id="two-factor-submit-btn" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:ring-2 focus:ring-green-500 transition">
+                    <button type="submit" id="two-factor-submit-btn" class="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                         Verificar
                     </button>
                 </div>

@@ -24,7 +24,7 @@
             @endif
             @for ($page = $start; $page <= $end; $page++)
                 @if ($page == $current)
-                    <span class="min-w-[2.25rem] px-3 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold text-center" aria-current="page">{{ $page }}</span>
+                    <span class="min-w-[2.25rem] px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold text-center" aria-current="page">{{ $page }}</span>
                 @else
                     <a href="{{ $paginator->url($page) }}" class="min-w-[2.25rem] px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-sm font-medium text-center hover:bg-gray-300 dark:hover:bg-gray-500 transition">{{ $page }}</a>
                 @endif

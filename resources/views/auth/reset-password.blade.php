@@ -6,7 +6,7 @@
         </h1>
 
         <!-- Session Status (link enviado com sucesso) -->
-        <x-auth-session-status class="mb-4 text-green-600 dark:text-green-400" :status="session('status')" />
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
         <form method="POST" action="{{ route('password.store') }}" id="reset-password-form">
             @csrf
@@ -74,7 +74,7 @@
 
         <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Já lembra da senha?
-            <a href="{{ route('login') }}" class="underline text-blue-600 hover:text-blue-800 dark:text-blue-400">
+            <a href="{{ route('login') }}" class="underline text-emerald-600 hover:text-emerald-800 dark:text-emerald-400">
                 Entrar
             </a>
         </p>

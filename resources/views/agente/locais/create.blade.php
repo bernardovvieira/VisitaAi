@@ -69,7 +69,7 @@
                     <div>
                         <label for="loc_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Imóvel <span class="text-red-500">*</span></label>
                         <select id="loc_tipo" name="loc_tipo" required
-                                class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                                class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                             <option value="" disabled selected>Selecione o tipo de imóvel</option>
                             <option value="R" {{ old('loc_tipo') == 'R' ? 'selected' : '' }}>Residencial (R)</option>
                             <option value="C" {{ old('loc_tipo') == 'C' ? 'selected' : '' }}>Comercial (C)</option>
@@ -79,7 +79,7 @@
                     <div>
                         <label for="loc_zona" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Zona <span class="text-red-500">*</span></label>
                         <select id="loc_zona" name="loc_zona" required
-                                class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                                class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                             <option value="" disabled selected>Selecione a zona</option>
                             <option value="U" {{ old('loc_zona') == 'U' ? 'selected' : '' }}>Urbana (U)</option>
                             <option value="R" {{ old('loc_zona') == 'R' ? 'selected' : '' }}>Rural (R)</option>
@@ -96,7 +96,7 @@
                     <div id="wrap_loc_cep">
                         <label for="cep" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP <span class="text-red-500">*</span></label>
                         <input id="loc_cep" name="loc_cep" type="text" maxlength="9" placeholder="00000-000" required
-                            class="cep mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                            class="cep mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600"
                             data-cep-permitido="{{ $cepPermitido ?? '' }}"
                             data-cidade-estado="{{ isset($cidadeEstado) ? json_encode($cidadeEstado) : '' }}">
                         <p id="loc_cep_erro" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></p>
@@ -104,12 +104,12 @@
                     <div>
                         <label for="loc_endereco" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Logradouro <span class="text-red-500">*</span></label>
                         <input id="loc_endereco" name="loc_endereco" type="text" value="{{ old('loc_endereco') }}" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="numero" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número</label>
                         <input id="loc_numero" name="loc_numero" type="number"
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                 </div>
 
@@ -117,27 +117,27 @@
                     <div>
                         <label for="loc_bairro" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bairro/Localidade <span class="text-red-500">*</span></label>
                         <input id="loc_bairro" name="loc_bairro" type="text" value="{{ old('loc_bairro') }}" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="loc_complemento" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Complemento</label>
                         <input id="loc_complemento" name="loc_complemento" type="text" value="{{ old('loc_complemento') }}"
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <label for="cidade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade <span class="text-red-500">*</span></label>
-                        <input id="loc_cidade" required readonly name="loc_cidade" type="text" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        <input id="loc_cidade" required readonly name="loc_cidade" type="text" class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado <span class="text-red-500">*</span></label>
-                        <input id="loc_estado" required readonly name="loc_estado" type="text" class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        <input id="loc_estado" required readonly name="loc_estado" type="text" class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="pais" class="block text-sm font-medium text-gray-700 dark:text-gray-300">País <span class="text-red-500">*</span></label>
-                        <input id="loc_pais" name="loc_pais" type="text" required readonly class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                        <input id="loc_pais" name="loc_pais" type="text" required readonly class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                 </div>
             </fieldset>
@@ -151,7 +151,7 @@
                 <div>
                     <label for="loc_responsavel_nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome completo (morador, locatário ou proprietário)</label>
                     <input id="loc_responsavel_nome" name="loc_responsavel_nome" type="text" value="{{ old('loc_responsavel_nome') }}" maxlength="255"
-                           class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
+                           class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600"
                            placeholder="Opcional">
                 </div>
             </fieldset>
@@ -162,12 +162,12 @@
                     <div>
                         <label for="loc_codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código da Localidade <span class="text-red-500">*</span></label>
                         <input id="loc_codigo" name="loc_codigo" type="number" value="{{ old('loc_codigo') }}" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="loc_categoria" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria da Localidade</label>
                         <input id="loc_categoria" name="loc_categoria" type="text" value="{{ old('loc_categoria') }}"
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                 </div>
 
@@ -175,17 +175,17 @@
                     <div>
                         <label for="loc_quarteirao" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quarteirão</label>
                         <input id="loc_quarteirao" name="loc_quarteirao" type="number" value="{{ old('loc_quarteirao') }}"
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="loc_sequencia" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sequência</label>
                         <input id="loc_sequencia" name="loc_sequencia" type="number" value="{{ old('loc_sequencia') }}"
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="loc_lado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lado</label>
                         <input id="loc_lado" name="loc_lado" type="number" value="{{ old('loc_lado') }}"
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>  
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 italic">
@@ -198,16 +198,16 @@
                     <div>
                         <label for="latitude" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Latitude <span class="text-red-500">*</span></label>
                         <input id="loc_latitude" name="loc_latitude" type="text" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div>
                         <label for="longitude" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Longitude <span class="text-red-500">*</span></label>
                         <input id="loc_longitude" name="loc_longitude" type="text" required
-                            class="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm">
+                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
                     </div>
                     <div class="flex justify-end">
                         <button type="button" id="btn-minha-localizacao" onclick="obterMinhaLocalizacao()"
-                                class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow transition">
                             Minha Localização
                         </button>
                     </div>
@@ -227,7 +227,7 @@
             <div class="flex justify-end">
                 <button type="submit" id="btn-cadastrar-local"
                         x-bind:disabled="carregando"
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
                     Cadastrar
                 </button>
             </div>
@@ -307,12 +307,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!btn) return;
         if (!navigator.onLine) {
             btn.textContent = 'Guardar local';
-            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
             btn.classList.add('bg-amber-500', 'hover:bg-amber-600', 'text-amber-900');
         } else {
             btn.textContent = 'Cadastrar';
             btn.classList.remove('bg-amber-500', 'hover:bg-amber-600', 'text-amber-900');
-            btn.classList.add('bg-green-600', 'hover:bg-green-700');
+            btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
         }
     }
     updateLocalBtnOffline();

@@ -23,7 +23,7 @@
             Visualize, edite e exclua doenças do sistema. Para adicionar novas, clique no botão abaixo.
         </p>
         <a href="{{ route('gestor.doencas.create') }}"
-           class="inline-flex items-center px-4 py-2 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+           class="inline-flex items-center px-4 py-2 mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -41,7 +41,7 @@
                            data-live-url="{{ route('gestor.doencas.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-doencas"
                            placeholder="Nome, sintomas, transmissão ou medidas..."
-                           class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 px-4 py-2">
                     <span id="search-loading-doencas" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma doença cadastrada.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre as doenças monitoradas no município.</p>
-                                    <a href="{{ route('gestor.doencas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                    <a href="{{ route('gestor.doencas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow transition">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                         Cadastrar doença
                                     </a>

@@ -23,7 +23,7 @@
         <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                data-live-url="{{ route('agente.doencas.index') }}" data-live-param="search"
                placeholder="Nome, sintomas, transmissão ou medidas..."
-               class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+               class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 px-4 py-2">
       </div>
     </div>
   </section>

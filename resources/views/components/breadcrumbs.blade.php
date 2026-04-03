@@ -16,7 +16,7 @@
                             {{ $item['label'] }}
                         </a>
                     @else
-                        <span class="truncate rounded-md bg-gray-100 px-2 py-0.5 font-medium text-gray-900 dark:bg-gray-800 dark:text-gray-100">{{ $item['label'] }}</span>
+                        <span class="truncate rounded-lg bg-gray-100 px-2 py-0.5 font-medium text-gray-900 dark:bg-gray-800 dark:text-gray-100">{{ $item['label'] }}</span>
                     @endif
                 </li>
             @endforeach

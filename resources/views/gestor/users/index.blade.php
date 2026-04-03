@@ -35,7 +35,7 @@
                            data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-users"
                            placeholder="Nome, e-mail ou perfil (ex.: ACE, ACS, gestor)..."
-                           class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 px-4 py-2">
                     <span id="search-loading-users" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                             </td>
                             <td class="p-4">
                                 @if(method_exists($usuario, 'hasEnabledTwoFactorAuthentication') && $usuario->hasEnabledTwoFactorAuthentication())
-                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400">Ativo</span>
+                                    <span class="inline-flex items-center rounded px-2 py-1 text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800/80 dark:text-slate-300">Ativo</span>
                                 @else
                                     <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-500 dark:text-gray-400">—</span>
                                 @endif

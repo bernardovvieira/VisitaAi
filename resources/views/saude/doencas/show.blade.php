@@ -53,7 +53,7 @@
     @if(count($doenca->doe_sintomas))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_sintomas as $s)
-          <span class="inline-block bg-blue-200 dark:bg-blue-700 text-blue-900 dark:text-blue-100 text-xs font-medium px-2 py-0.5 rounded">{{ $s }}</span>
+          <span class="inline-block rounded bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-900 dark:bg-slate-600 dark:text-slate-100">{{ $s }}</span>
         @endforeach
       </div>
     @else
@@ -81,7 +81,7 @@
     @if(count($doenca->doe_medidas_controle))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_medidas_controle as $m)
-          <span class="inline-block bg-green-200 dark:bg-green-700 text-green-900 dark:text-green-100 text-xs font-medium px-2 py-0.5 rounded">{{ $m }}</span>
+          <span class="inline-block rounded bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-900 dark:bg-slate-600 dark:text-slate-100">{{ $m }}</span>
         @endforeach
       </div>
     @else

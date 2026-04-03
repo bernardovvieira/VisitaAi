@@ -69,7 +69,7 @@
                                 <form method="POST" action="{{ route('gestor.approve', $u) }}">
                                     @csrf
                                     <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')" 
-                                        class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-md shadow-md transition">
+                                        class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-md shadow-md transition">
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
