@@ -59,6 +59,9 @@ return [
         'titulo_secao_escolaridade' => 'Escolaridade informada (agregado)',
         'titulo_secao_renda' => 'Renda informada (agregado)',
         'sem_bairro_label' => '(Sem bairro informado)',
+        'export_csv_label' => 'Exportar CSV (apenas agregados)',
+        'csv_titulo' => 'Indicadores agregados — ocupantes (Visita Aí)',
+        'csv_suprimido_label' => 'suprimido',
         'colunas_faixas' => [
             '0-11' => '0–11 anos',
             '12-17' => '12–17 anos',

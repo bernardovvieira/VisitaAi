@@ -20,8 +20,19 @@
     ]" />
 
     <header class="space-y-2">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $cfgInd['titulo_pagina'] ?? 'Indicadores municipais' }}</h1>
-        <p class="text-gray-600 dark:text-gray-400">{{ $cfgInd['subtitulo'] ?? '' }}</p>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $cfgInd['titulo_pagina'] ?? 'Indicadores municipais' }}</h1>
+                <p class="text-gray-600 dark:text-gray-400">{{ $cfgInd['subtitulo'] ?? '' }}</p>
+            </div>
+            <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
+               class="inline-flex shrink-0 items-center justify-center rounded-lg border border-emerald-600 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm hover:bg-emerald-100 dark:border-emerald-500 dark:bg-emerald-950/50 dark:text-emerald-100 dark:hover:bg-emerald-900/40">
+                <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
+            </a>
+        </div>
         <div class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-100">
             <p>{{ $cfgInd['aviso'] ?? '' }}</p>
             <p class="mt-1 font-medium">{{ $cfgInd['aviso_privacidade'] ?? '' }}<span class="ms-1">({{ __('mínimo: :n registros por bairro', ['n' => $painel['minimo_aplicado']]) }})</span></p>

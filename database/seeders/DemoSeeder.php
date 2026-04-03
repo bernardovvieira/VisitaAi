@@ -161,6 +161,41 @@ class DemoSeeder extends Seeder
                 'mor_escolaridade' => 'fundamental_incompleto',
                 'mor_renda_faixa' => null,
             ]);
+            for ($i = 0; $i < 3; $i++) {
+                Morador::create([
+                    'fk_local_id' => $localCentro->loc_id,
+                    'mor_nome' => 'Ocupante Demo Centro '.($i + 1),
+                    'mor_data_nascimento' => now()->subYears(25 + $i)->format('Y-m-d'),
+                    'mor_escolaridade' => 'superior_completo',
+                    'mor_renda_faixa' => 'ate_1_sm',
+                ]);
+            }
+        }
+
+        $localFarroupilha = Local::where('loc_codigo_unico', '85121055')->first();
+        if ($localFarroupilha) {
+            for ($i = 0; $i < 5; $i++) {
+                Morador::create([
+                    'fk_local_id' => $localFarroupilha->loc_id,
+                    'mor_nome' => 'Ocupante Demo Farroupilha '.($i + 1),
+                    'mor_data_nascimento' => now()->subYears(8 + $i * 7)->format('Y-m-d'),
+                    'mor_escolaridade' => $i % 2 === 0 ? 'medio_completo' : 'fundamental_completo',
+                    'mor_renda_faixa' => 'ate_3_sm',
+                ]);
+            }
+        }
+
+        $localBotucarai = Local::where('loc_codigo_unico', '12345678')->first();
+        if ($localBotucarai) {
+            for ($i = 0; $i < 5; $i++) {
+                Morador::create([
+                    'fk_local_id' => $localBotucarai->loc_id,
+                    'mor_nome' => 'Ocupante Demo Botucaraí '.($i + 1),
+                    'mor_data_nascimento' => $i === 0 ? null : now()->subYears(45 + $i)->format('Y-m-d'),
+                    'mor_escolaridade' => 'nao_informado',
+                    'mor_renda_faixa' => 'nao_informado',
+                ]);
+            }
         }
 
         // Visitas e Tratamentos (fk_usuario_id => 2 = Agente Um)

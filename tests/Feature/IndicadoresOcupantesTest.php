@@ -50,4 +50,41 @@ class IndicadoresOcupantesTest extends TestCase
             ->get(route('gestor.indicadores.ocupantes'))
             ->assertForbidden();
     }
+
+    #[Test]
+    public function gestor_baixa_csv_indicadores(): void
+    {
+        $user = $this->gestorAprovado();
+        $tituloCsv = (string) config('visitaai_municipio.indicadores.csv_titulo');
+        $local = Local::factory()->create(['loc_bairro' => 'Bairro Teste']);
+        Morador::factory()->count(5)->create(['fk_local_id' => $local->loc_id]);
+
+        $response = $this->actingAs($user)->get(route('gestor.indicadores.ocupantes.export'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'text/csv; charset=UTF-8');
+        $cd = $response->headers->get('Content-Disposition');
+        $this->assertStringContainsString('attachment', (string) $cd);
+        $this->assertStringContainsString('.csv', (string) $cd);
+
+        $body = $response->streamedContent();
+        $this->assertStringStartsWith("\xEF\xBB\xBF", $body);
+        $this->assertStringContainsString($tituloCsv, $body);
+        $this->assertStringContainsString('Bairro Teste', $body);
+        $this->assertStringContainsString('Resumo global', $body);
+    }
+
+    #[Test]
+    public function ace_nao_exporta_csv_indicadores(): void
+    {
+        Local::factory()->create();
+        $ace = User::factory()->create([
+            'use_perfil' => 'agente_endemias',
+            'use_aprovado' => 1,
+        ]);
+
+        $this->actingAs($ace)
+            ->get(route('gestor.indicadores.ocupantes.export'))
+            ->assertForbidden();
+    }
 }
