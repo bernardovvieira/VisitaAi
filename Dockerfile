@@ -8,7 +8,8 @@ COPY resources ./resources
 RUN mkdir -p public && npm run build
 
 # ---- Stage 2: app PHP ----
-FROM php:8.3-fpm AS app
+# Symfony 8.x (via Laravel 12) exige PHP ≥ 8.4; 8.3 faz composer install falhar (exit 2).
+FROM php:8.4-fpm AS app
 
 # Menos pacotes e --no-install-recommends para reduzir tempo e uso de memória no build
 RUN apt-get update && apt-get install -y --no-install-recommends \
