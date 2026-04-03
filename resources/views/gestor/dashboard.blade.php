@@ -28,42 +28,40 @@
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
 
-    <header class="v-page-header">
-        <h1 class="v-page-title">{{ __('Painel do gestor') }}</h1>
-        <p class="v-page-lead">
-            {{ __('Olá, :nome. Visão geral do município e atalhos para o dia a dia.', ['nome' => Auth::user()->use_nome]) }}
+    <x-page-header :eyebrow="__('Console municipal')" :title="__('Painel do gestor')">
+        <x-slot name="lead">
+            <p>{{ __('Olá, :nome. Visão geral do município e atalhos para o dia a dia.', ['nome' => Auth::user()->use_nome]) }}</p>
             <span class="mt-1 block text-xs text-slate-500 dark:text-slate-500">{{ now()->translatedFormat('l, j \d\e F \d\e Y') }}</span>
-        </p>
-    </header>
+        </x-slot>
+    </x-page-header>
 
-    <div class="v-panel">
-        @if($pendentesCount > 0 || $visitasComPendencia > 0)
-            <div class="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white p-4 dark:border-slate-700 dark:from-slate-800/40 dark:to-slate-900/30 sm:p-5">
-                <p class="v-toolbar-label mb-2">{{ __('Requer atenção') }}</p>
-                <ul class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                    @if($pendentesCount > 0)
-                        <li>
-                            <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100 dark:hover:bg-amber-950/55">
-                                <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
-                                {{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}
-                                <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
-                            </a>
-                        </li>
-                    @endif
-                    @if($visitasComPendencia > 0)
-                        <li>
-                            <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-950 transition hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/35 dark:text-rose-100 dark:hover:bg-rose-950/50">
-                                <x-heroicon-o-clock class="h-5 w-5 shrink-0" aria-hidden="true" />
-                                {{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}
-                                <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
-                            </a>
-                        </li>
-                    @endif
-                </ul>
-            </div>
-        @endif
+    @if($pendentesCount > 0 || $visitasComPendencia > 0)
+        <div class="v-card v-alert-erp v-card--muted border-amber-200/50 dark:border-amber-900/50">
+            <p class="v-toolbar-label mb-2">{{ __('Requer atenção') }}</p>
+            <ul class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                @if($pendentesCount > 0)
+                    <li>
+                        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100 dark:hover:bg-amber-950/55">
+                            <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
+                            {{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}
+                            <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                        </a>
+                    </li>
+                @endif
+                @if($visitasComPendencia > 0)
+                    <li>
+                        <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-950 transition hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/35 dark:text-rose-100 dark:hover:bg-rose-950/50">
+                            <x-heroicon-o-clock class="h-5 w-5 shrink-0" aria-hidden="true" />
+                            {{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}
+                            <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                        </a>
+                    </li>
+                @endif
+            </ul>
+        </div>
+    @endif
 
-        <div class="v-panel-section">
+        <div class="v-card">
             <h2 class="v-toolbar-label mb-3">{{ __('Indicadores') }}</h2>
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 <div class="v-dashboard-kpi">
@@ -130,7 +128,7 @@
             </div>
         </div>
 
-        <div class="v-panel-section-muted">
+        <div class="v-card v-card--muted">
             <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</h2>
@@ -169,14 +167,14 @@
         </div>
 
         @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-            <div class="v-panel-section border-l-4 border-l-blue-500/80">
+            <div class="v-card border-l-4 border-l-blue-500/80">
                 <p class="v-toolbar-label">{{ __('Monitoramento no mês corrente') }}</p>
                 <p class="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
                 <p class="mt-1 text-sm tabular-nums text-slate-600 dark:text-slate-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro em monitoradas') : __('registros em monitoradas') }}</p>
             </div>
         @endif
 
-        <div class="v-panel-section">
+        <div class="v-card">
             <h2 class="v-toolbar-label mb-3">{{ __('Ações rápidas') }}</h2>
             <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <a href="{{ route('gestor.pendentes') }}" class="v-dashboard-action {{ $pendentesCount > 0 ? 'v-dashboard-action--primary' : '' }}">
@@ -214,6 +212,5 @@
                 </a>
             </div>
         </div>
-    </div>
 </div>
 @endsection

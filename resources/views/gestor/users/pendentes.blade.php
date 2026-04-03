@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Usuários', 'url' => route('gestor.users.index')], ['label' => 'Pendentes']]" />
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Usuários'), 'url' => route('gestor.users.index')], ['label' => __('Pendentes')]]" />
 
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Usuários Pendentes</h1>
+    <x-page-header :eyebrow="__('Aprovações')" :title="__('Usuários pendentes')" />
 
     @if(session('status'))
         <x-alert type="success" :message="session('status')" />
     @endif
 
     <!-- Card introdutório -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
+    <section class="v-card space-y-2 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Gerenciamento de Aprovação</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Nesta tela, você pode visualizar usuários que aguardam aprovação para acessar o sistema.
@@ -20,7 +20,7 @@
     </section>
 
     <!-- Tabela de Pendentes -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
+    <section class="v-card space-y-2 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             @if($pendentes->total() > 0)
                 Exibindo {{ $pendentes->count() }} de {{ $pendentes->total() }} usuário(s) pendente(s).

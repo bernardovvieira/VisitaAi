@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-10">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => route('agente.visitas.index')], ['label' => 'Visualizar']]" />
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Visitas'), 'url' => route('agente.visitas.index')], ['label' => __('Visualizar')]]" />
 
-    {{-- Cabeçalho --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detalhes da visita</h1>
-        <p class="text-sm text-gray-600 dark:text-gray-300">Informações completas da visita registrada no sistema.</p>
-    </section>
+    <x-page-header :eyebrow="__('Detalhe do registro')" :title="__('Detalhes da visita')">
+        <x-slot name="lead">
+            <p>{{ __('Informações completas da visita registrada no sistema.') }}</p>
+        </x-slot>
+    </x-page-header>
 
     {{-- Local --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
+    <section class="v-card dark:bg-gray-800 space-y-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Local Visitado</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -84,7 +84,7 @@
     </section>
 
     {{-- Dados da Visita --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
+    <section class="v-card dark:bg-gray-800 space-y-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Dados da Visita</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -139,13 +139,13 @@
     </section>
 
     {{-- Observações --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
+    <section class="v-card dark:bg-gray-800 space-y-2">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Observações</h2>
         <p class="text-sm text-gray-900 dark:text-gray-100">{{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}</p>
     </section>
 
     {{-- Doenças --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+    <section class="v-card dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Doenças Monitoradas na Visita</h2>
 
         @if ($visita->doencas->count())
@@ -201,7 +201,7 @@
     </section>
 
     {{-- Depósitos Inspecionados --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
+    <section class="v-card dark:bg-gray-800 space-y-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Depósitos Inspecionados</h2>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
             @foreach (['a1','a2','b','c','d1','d2','e'] as $tipo)
@@ -218,7 +218,7 @@
 
     {{-- Coleta de Amostra --}}
     @if ($visita->vis_coleta_amostra)
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+    <section class="v-card dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Coleta de Amostra</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -237,7 +237,7 @@
     </section>
     @endif
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+    <section class="v-card dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Tratamentos Realizados</h2>
 
         @if ($visita->tratamentos && count($visita->tratamentos))

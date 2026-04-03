@@ -42,44 +42,49 @@
         <p class="text-[9px] text-gray-400 mt-5">{{ __('Bitwise Technologies') }}</p>
     </div>
 
-    {{-- Endereço e mapa --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div class="space-y-3 text-sm text-gray-800 dark:text-gray-100">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ __('Imóvel consultado') }}</h2>
-            <p>
-                <strong>{{ __('Zona') }}:</strong>
-                @if ($local->loc_zona === 'U')
-                    <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ __('Urbana') }}</span>
-                @elseif ($local->loc_zona === 'R')
-                    <span class="inline-block bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-200 px-2 py-0.5 rounded text-xs font-semibold">{{ __('Rural') }}</span>
-                @else
-                    {{ __('N/D') }}
-                @endif
-            </p>
-            <p>
-                <strong>{{ __('Tipo de imóvel') }}:</strong>
-                @if ($local->loc_tipo === 'R')
-                    <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ __('Residencial') }}</span>
-                @elseif ($local->loc_tipo === 'C')
-                    <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ __('Comercial') }}</span>
-                @else
-                    <span class="inline-block bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-2 py-0.5 rounded text-xs font-semibold">{{ __('Terreno baldio') }}</span>
-                @endif
-            </p>
-            <p><strong>{{ __('Quarteirão') }}:</strong> <span class="inline-block bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200 px-2 py-0.5 rounded text-xs font-medium">{{ $local->loc_quarteirao ?? __('N/D') }}</span></p>
-            <p><strong>{{ __('Endereço') }}:</strong> {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else {{ __('N/D') }} @endif</p>
-            <p><strong>{{ __('Bairro') }}:</strong> <span class="inline-block bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200 px-2 py-0.5 rounded text-xs font-medium">{{ $local->loc_bairro }}</span></p>
-            <p><strong>{{ __('Cidade') }}:</strong> <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_cidade }}/{{ $local->loc_estado }}</span></p>
-            <p>
-                <strong>{{ __('Código do imóvel') }}:</strong>
-                <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_codigo_unico }}</span>
-            </p>
-        </div>
-        <div class="w-full h-64 rounded-lg overflow-hidden border" id="mapa-local"></div>
-    </section>
+    {{-- Imóvel consultado --}}
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-start">
+        <section class="v-card dark:bg-gray-800">
+            <div class="space-y-3 text-sm text-gray-800 dark:text-gray-100">
+                <h2 class="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('Imóvel consultado') }}</h2>
+                <p>
+                    <strong>{{ __('Zona') }}:</strong>
+                    @if ($local->loc_zona === 'U')
+                        <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ __('Urbana') }}</span>
+                    @elseif ($local->loc_zona === 'R')
+                        <span class="inline-block bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-200 px-2 py-0.5 rounded text-xs font-semibold">{{ __('Rural') }}</span>
+                    @else
+                        {{ __('N/D') }}
+                    @endif
+                </p>
+                <p>
+                    <strong>{{ __('Tipo de imóvel') }}:</strong>
+                    @if ($local->loc_tipo === 'R')
+                        <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ __('Residencial') }}</span>
+                    @elseif ($local->loc_tipo === 'C')
+                        <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ __('Comercial') }}</span>
+                    @else
+                        <span class="inline-block bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-2 py-0.5 rounded text-xs font-semibold">{{ __('Terreno baldio') }}</span>
+                    @endif
+                </p>
+                <p><strong>{{ __('Quarteirão') }}:</strong> <span class="inline-block bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200 px-2 py-0.5 rounded text-xs font-medium">{{ $local->loc_quarteirao ?? __('N/D') }}</span></p>
+                <p><strong>{{ __('Endereço') }}:</strong> {{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else {{ __('N/D') }} @endif</p>
+                <p><strong>{{ __('Bairro') }}:</strong> <span class="inline-block bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200 px-2 py-0.5 rounded text-xs font-medium">{{ $local->loc_bairro }}</span></p>
+                <p><strong>{{ __('Cidade') }}:</strong> <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_cidade }}/{{ $local->loc_estado }}</span></p>
+                <p>
+                    <strong>{{ __('Código do imóvel') }}:</strong>
+                    <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_codigo_unico }}</span>
+                </p>
+            </div>
+        </section>
+        <section class="v-card dark:bg-gray-800" aria-label="{{ __('Mapa do imóvel') }}">
+            <h2 class="mb-3 text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h2>
+            <div class="h-64 w-full overflow-hidden rounded-lg border" id="mapa-local"></div>
+        </section>
+    </div>
 
     {{-- Histórico de Visitas (sem doenças) --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <section class="v-card dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ __('Histórico de visitas') }}</h2>
         <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">{{ __('Lista ordenada pela data da visita. “Pendente” indica que havia ação em aberto naquela data; “Concluída” indica encerramento sem pendência naquele registro.') }}</p>
 
@@ -134,7 +139,7 @@
 
     {{-- Resumos para o cidadão (texto neutro, sem dados sensíveis) --}}
     @if (!empty($resumos) && count($resumos) > 0)
-    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <section class="v-card dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ __('Resumo em linguagem simples') }}</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
             {{ __('Texto gerado a partir do registro da visita, sem dados pessoais sensíveis. Para dúvidas ou reclamações, procure a Secretaria Municipal de Saúde.') }}
@@ -160,7 +165,7 @@
     @endif
 
     {{-- Informativo institucional --}}
-    <section class="rounded-xl border border-amber-300/90 bg-amber-50 p-6 text-sm text-amber-950 shadow-sm space-y-2 dark:border-amber-700 dark:bg-amber-950/35 dark:text-amber-100">
+    <section class="v-card border-amber-300/90 bg-amber-50 text-sm text-amber-950 shadow-sm space-y-2 dark:border-amber-700 dark:bg-amber-950/35 dark:text-amber-100">
         <h2 class="text-base font-semibold">{{ __('Limites desta consulta') }}</h2>
         <p>
             {{ __('A consulta pública mostra somente o que está vinculado ao código do imóvel: endereço cadastrado, datas de visita e status (pendente ou concluída). Não exibe diagnósticos, nomes de moradores ou outros dados protegidos.') }}

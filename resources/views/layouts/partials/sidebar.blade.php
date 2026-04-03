@@ -10,7 +10,7 @@
 <aside id="app-sidebar" role="navigation"
        aria-label="{{ __('Menu principal') }}"
        x-bind:aria-hidden="!sidebarOpen && !isLg"
-       class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col border-r border-slate-800/80 bg-slate-950 text-slate-200 shadow-2xl transition-[transform,width] duration-200 ease-out lg:static lg:z-30 lg:shadow-none"
+       class="v-sidebar-rail fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col transition-[transform,width] duration-200 ease-out lg:static lg:z-30"
        x-bind:class="{
             'translate-x-0': sidebarOpen,
             '-translate-x-full lg:translate-x-0': !sidebarOpen,
@@ -23,9 +23,9 @@
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
            class="sidebar-header-brand flex max-w-full flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-2">
             <img src="{{ asset('images/visitaai_rembg.png') }}"
-                 alt="{{ config('app.name', 'Visita Aí') }}"
+                 alt="{{ __('Visita Aí') }}"
                  class="h-10 w-auto shrink-0 lg:h-9" />
-            <span class="sidebar-brand-text text-sm font-semibold leading-tight tracking-tight text-white">{{ config('app.name', 'Visita Aí') }}</span>
+            <span class="sidebar-brand-text whitespace-nowrap text-sm font-semibold leading-tight tracking-tight text-white">{{ __('Visita Aí') }}</span>
         </a>
         <button type="button"
                 class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"

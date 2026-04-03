@@ -4,8 +4,9 @@
 @section('og_description', 'Registros de auditoria. Histórico de ações realizadas pelos usuários no sistema.')
 
 @section('content')
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Auditoria</h1>
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Auditoria')]]" />
+    <x-page-header :eyebrow="__('Governança')" :title="__('Auditoria')" />
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />

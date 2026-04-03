@@ -1,5 +1,5 @@
-{{-- Barra superior: menu (mobile), indicador de ligação, tema, conta. --}}
-<header class="sticky top-0 z-20 flex h-12 shrink-0 items-center justify-end gap-1 border-b border-slate-200/90 bg-white/95 px-2 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95 sm:h-14 sm:justify-between sm:px-4">
+{{-- Barra superior (ERP): contexto global, estado, conta. --}}
+<header class="v-topbar h-12 text-slate-800 dark:text-slate-100 sm:h-14">
     <div class="flex min-w-0 flex-1 items-center gap-0.5 sm:flex-none sm:gap-1">
         <button type="button"
                 class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 lg:hidden"

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Meu Perfil</h1>
+<div class="v-page space-y-5">
+    <x-page-header :eyebrow="__('Conta e segurança')" :title="__('Meu perfil')" />
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -17,7 +17,7 @@
     @endif
 
     <!-- Mensagem de Contexto -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
+    <section class="v-card space-y-2 dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Olá, {{ Auth::user()->use_nome }}!</h2>
         <p class="text-gray-600 dark:text-gray-400">
             Aqui você pode atualizar seus dados pessoais, como nome e e-mail. Algumas informações, como CPF e perfil, são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se precisar de ajuda, entre em contato com a Bitwise Technologies (suporte técnico).
@@ -29,7 +29,7 @@
         {{-- Coluna esquerda: Informações pessoais + Acesso e status --}}
         <div class="space-y-6">
             {{-- Card: Informações pessoais --}}
-            <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+            <div class="v-card space-y-4 dark:bg-gray-800">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                     <x-heroicon-o-user class="mr-2 mt-px h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                     Informações pessoais
@@ -43,7 +43,7 @@
             </div>
 
             {{-- Card: Acesso e status --}}
-            <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+            <div class="v-card space-y-4 dark:bg-gray-800">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                     <x-heroicon-o-shield-check class="mr-2 mt-px h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                     Acesso e status
@@ -57,7 +57,7 @@
         </div>
 
         {{-- Coluna direita: Atualizar Dados --}}
-        <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
+        <div class="v-card space-y-6 dark:bg-gray-800">
             <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                 <x-heroicon-o-pencil-square class="mr-2 h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                 Atualizar Dados
@@ -111,7 +111,7 @@
     </div>
 
     {{-- Card: Autenticação em dois fatores (2FA) --}}
-    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+    <div class="v-card space-y-4 dark:bg-gray-800">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
             <x-heroicon-o-lock-closed class="mr-2 h-6 w-6 shrink-0 text-amber-500" />
             Autenticação em dois fatores (2FA)
@@ -141,7 +141,7 @@
     </div>
 
     <!-- Texto de Informação -->
-    <div class="mb-6 rounded-lg border border-slate-200 bg-slate-100 p-6 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-100" role="alert">
+    <div class="v-card v-card--muted text-sm text-slate-900 dark:text-slate-100" role="alert">
         <h4 class="text-base font-semibold mb-2">Informações Importantes</h4>
         <ul class="list-disc list-inside space-y-2">
             <li>Algumas informações são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se necessário, entre em contato com a Bitwise Technologies (suporte).</li>
@@ -151,7 +151,7 @@
     </div>
 
     {{-- Card: Anonimizar Conta --}}
-    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
+    <div class="v-card space-y-4 dark:bg-gray-800">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
             <x-heroicon-o-shield-exclamation class="mr-2 h-6 w-6 shrink-0 text-red-500" />
             Anonimizar Conta

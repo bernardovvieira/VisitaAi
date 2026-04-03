@@ -5,9 +5,9 @@
 @section('og_description', 'Usuários cadastrados no sistema. Visualize, edite e gerencie permissões.')
 
 @section('content')
-<div class="space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Usuários']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Usuários</h1>
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Usuários')]]" />
+    <x-page-header :eyebrow="__('Gestão de acesso')" :title="__('Usuários')" />
 
     @if(session('status'))
         <x-alert type="success" :message="session('status')" />

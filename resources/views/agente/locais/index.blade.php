@@ -4,9 +4,9 @@
 @section('og_description', 'Locais de visitação. Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Locais']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Locais</h1>
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Locais')]]" />
+    <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')" />
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />

@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Design system — padrão ERP / console operacional:
+ * canvas neutro, superfícies elevadas, hierarquia tipográfica (eyebrow → título → corpo),
+ * KPIs densos, tabelas com cabeçalho fixo visual, acento azul para ação primária.
+ */
+@layer base {
+    :root {
+        --v-canvas: 241 245 249; /* slate-100 */
+        --v-surface: 255 255 255;
+        --v-surface-muted: 248 250 252; /* slate-50 */
+        --v-border: 226 232 240; /* slate-200 */
+        --v-border-strong: 203 213 225; /* slate-300 */
+        --v-text: 15 23 42; /* slate-900 */
+        --v-text-muted: 100 116 139; /* slate-500 */
+        --v-accent: 37 99 235; /* blue-600 */
+        --v-sidebar: 2 6 23; /* slate-950 */
+        --v-radius-lg: 0.75rem;
+        --v-radius-md: 0.5rem;
+    }
+
+    .dark {
+        --v-canvas: 3 7 18;
+        --v-surface: 15 23 42; /* slate-900 */
+        --v-surface-muted: 15 23 42;
+        --v-border: 51 65 85; /* slate-700 */
+        --v-border-strong: 71 85 105;
+        --v-text: 241 245 249;
+        --v-text-muted: 148 163 184;
+        --v-accent: 59 130 246;
+        --v-sidebar: 2 6 23;
+    }
+}
+
 /* Alpine.js: hide elements until Alpine has run (e.g. dropdown menu) */
 [x-cloak] {
     display: none !important;
@@ -90,27 +123,105 @@
     }
 }
 
-/* Área autenticada: largura e ritmo consistentes (canvas) */
+/* Área autenticada: layout tipo ERP */
 @layer components {
+    .v-app-main {
+        @apply min-h-0 flex-1 overflow-y-auto;
+        background-color: rgb(var(--v-canvas) / 1);
+    }
+
+    .v-app-main-inner {
+        @apply mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
+    }
+
+    .v-topbar {
+        @apply sticky top-0 z-20 flex h-14 shrink-0 items-center justify-end gap-1 border-b px-2 backdrop-blur-md sm:justify-between sm:px-4;
+        border-color: rgb(var(--v-border) / 0.92);
+        background-color: rgb(var(--v-surface) / 0.92);
+        box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.35);
+    }
+
+    .dark .v-topbar {
+        background-color: rgb(var(--v-surface) / 0.88);
+        box-shadow: 0 1px 0 0 rgb(0 0 0 / 0.25);
+    }
+
     .v-page {
-        @apply mx-auto max-w-7xl space-y-5;
+        @apply mx-auto max-w-7xl space-y-6;
     }
 
     .v-page-header {
-        @apply border-b border-slate-200/90 pb-4 dark:border-slate-700;
+        @apply border-b pb-5;
+        border-color: rgb(var(--v-border) / 0.85);
+    }
+
+    .v-page-eyebrow {
+        @apply mb-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-400;
     }
 
     .v-page-title {
-        @apply text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-[1.65rem];
+        @apply text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl;
+        letter-spacing: -0.02em;
     }
 
     .v-page-lead {
-        @apply mt-1 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-400;
+        @apply mt-2 max-w-3xl text-sm leading-relaxed;
+        color: rgb(var(--v-text-muted) / 1);
     }
 
-    /* Painel único: menos caixas empilhadas, mais hierarquia */
+    .v-section-title {
+        @apply text-sm font-semibold text-slate-900 dark:text-slate-100;
+    }
+
+    /* Superfície de trabalho (cartão ERP) */
+    .v-card {
+        @apply overflow-hidden p-4 shadow-sm sm:p-5;
+        border-radius: var(--v-radius-lg);
+        border: 1px solid rgb(var(--v-border) / 0.95);
+        background-color: rgb(var(--v-surface) / 1);
+        box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+    }
+
+    .dark .v-card {
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.35);
+    }
+
+    .v-card--muted {
+        background-color: rgb(var(--v-surface-muted) / 0.85);
+    }
+
+    .dark .v-card--muted {
+        @apply bg-slate-900/50;
+    }
+
+    .v-card--flush {
+        @apply p-0 sm:p-0;
+    }
+
+    .v-card--tight {
+        @apply p-3 sm:p-3;
+    }
+
+    /* Faixa de exceção / SLA (alertas operacionais) */
+    .v-alert-erp {
+        @apply border-l-4 border-l-amber-500 bg-amber-50/95 dark:border-l-amber-500 dark:bg-amber-950/30;
+    }
+
+    /* Legado: painel único com secções (preferir vários .v-card) */
     .v-panel {
-        @apply overflow-hidden rounded-2xl border border-slate-200/85 bg-white shadow-sm ring-1 ring-slate-100/90 dark:border-slate-700 dark:bg-slate-900/45 dark:ring-white/5;
+        @apply overflow-hidden border bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/50;
+        border-radius: var(--v-radius-lg);
+        border-color: rgb(var(--v-border) / 0.95);
+        box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+    }
+
+    .dark .v-panel {
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.35);
+    }
+
+    /* Navegação lateral — trilho fixo tipo ERP */
+    .v-sidebar-rail {
+        @apply border-r border-slate-800/90 bg-slate-950 text-slate-200 shadow-2xl dark:shadow-none;
     }
 
     .v-panel-section {
@@ -122,11 +233,14 @@
     }
 
     .v-toolbar-label {
-        @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400;
+        @apply mb-1 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400;
     }
 
     .v-input {
-        @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20;
+        @apply w-full border px-3 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:ring-blue-400/15;
+        border-radius: var(--v-radius-md);
+        border-color: rgb(var(--v-border) / 1);
+        background-color: rgb(var(--v-surface) / 1);
     }
 
     /* Tabela densa e legível */
@@ -139,15 +253,15 @@
     }
 
     .v-data-table thead {
-        @apply bg-slate-50 dark:bg-slate-800/90;
+        @apply bg-slate-100/90 dark:bg-slate-800;
     }
 
     .v-data-table th {
-        @apply px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300;
+        @apply px-3 py-2.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300;
     }
 
     .v-data-table tbody tr {
-        @apply border-b border-slate-100 transition-colors hover:bg-slate-50/90 dark:border-slate-800 dark:hover:bg-slate-800/40;
+        @apply border-b border-slate-100 bg-white transition-colors hover:bg-slate-50/80 dark:border-slate-800 dark:bg-slate-900/40 dark:hover:bg-slate-800/50;
     }
 
     .v-data-table td {
@@ -155,16 +269,31 @@
     }
 
     .v-table-meta {
-        @apply flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/40 px-4 py-2.5 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800/20 dark:text-slate-400;
+        @apply flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 text-xs;
+        border-color: rgb(var(--v-border) / 1);
+        background-color: rgb(var(--v-surface-muted) / 0.65);
+        color: rgb(var(--v-text-muted) / 1);
     }
 
-    /* Dashboard: cartões de indicador */
+    .dark .v-table-meta {
+        @apply bg-slate-800/60;
+    }
+
+    /* KPI / métrica — estilo painel ERP (denso, valor em destaque) */
     .v-dashboard-kpi {
-        @apply flex gap-3 rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm dark:border-slate-600 dark:bg-slate-900/55;
+        @apply relative flex min-h-[5.25rem] gap-3 overflow-hidden p-4;
+        border-radius: var(--v-radius-md);
+        border: 1px solid rgb(var(--v-border) / 0.9);
+        background-color: rgb(var(--v-surface) / 1);
+        box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6);
+    }
+
+    .dark .v-dashboard-kpi {
+        box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
     }
 
     .v-dashboard-kpi__icon {
-        @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300;
+        @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300;
     }
 
     .v-dashboard-kpi__icon--blue {
@@ -187,13 +316,26 @@
         @apply bg-violet-100 text-violet-900 dark:bg-violet-950 dark:text-violet-200;
     }
 
-    /* Dashboard: atalhos */
+    /* Atalhos — lista de tarefas ERP */
     .v-dashboard-action {
-        @apply flex items-center gap-3 rounded-xl border border-slate-200/90 bg-white px-4 py-3 text-left text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-800/60;
+        @apply flex items-center gap-3 border px-3.5 py-2.5 text-left text-sm font-semibold text-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
+        border-radius: var(--v-radius-md);
+        border-color: rgb(var(--v-border) / 1);
+        background-color: rgb(var(--v-surface) / 1);
+        box-shadow: 0 1px 1px 0 rgb(15 23 42 / 0.03);
+    }
+
+    .v-dashboard-action:hover {
+        @apply border-slate-300 bg-slate-50 dark:border-slate-500 dark:bg-slate-800/70;
+    }
+
+    .dark .v-dashboard-action {
+        @apply text-slate-100;
     }
 
     .v-dashboard-action--primary {
-        @apply border-blue-600/90 bg-blue-600 text-white hover:border-blue-700 hover:bg-blue-700 dark:border-blue-500 dark:bg-blue-600 dark:hover:border-blue-400 dark:hover:bg-blue-500;
+        @apply border-blue-700 bg-blue-600 text-white hover:border-blue-800 hover:bg-blue-700 dark:border-blue-600 dark:bg-blue-600 dark:hover:border-blue-500 dark:hover:bg-blue-500;
+        box-shadow: 0 1px 2px rgb(37 99 235 / 0.35);
     }
 
     .v-dashboard-action__chevron {

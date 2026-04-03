@@ -19,7 +19,7 @@
         <x-alert type="error" :message="session('error')" />
     @endif
 
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+    <div class="v-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <a href="{{ route($profile . '.locais.moradores.create', $local) }}"
            class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900">
             <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
@@ -27,18 +27,19 @@
         </a>
     </div>
 
-    <section class="space-y-3 rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card space-y-3 dark:bg-gray-800">
         <h1 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{{ config('visitaai_municipio.ocupantes.titulo_listagem') }}</h1>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             {{ __('Código do imóvel') }}: <span class="font-mono font-semibold text-gray-900 dark:text-gray-100">{{ $local->loc_codigo_unico }}</span>
             · {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}
         </p>
-        <p class="rounded-lg border border-amber-200/90 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
-            {{ config('visitaai_municipio.ocupantes.disclaimer') }}
-        </p>
     </section>
 
-    <div class="overflow-hidden rounded-xl border border-gray-200/80 bg-white shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card border-amber-200/90 bg-amber-50 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
+        {{ config('visitaai_municipio.ocupantes.disclaimer') }}
+    </section>
+
+    <div class="v-card v-card--flush overflow-hidden dark:bg-gray-800">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900/80">

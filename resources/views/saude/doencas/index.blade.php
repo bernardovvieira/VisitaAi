@@ -1,14 +1,13 @@
-<!-- resources/views/agente/doencas/index.blade.php -->
+<!-- resources/views/saude/doencas/index.blade.php -->
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · Doenças')
 @section('og_description', 'Doenças monitoradas. Consulte as doenças que você pode registrar nas visitas LIRAa.')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-  <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Doenças']]" />
-
-  <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Doenças</h1>
+<div class="v-page">
+  <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => __('Doenças')]]" />
+  <x-page-header :eyebrow="__('Referência epidemiológica')" :title="__('Doenças')" />
 
   <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</h2>

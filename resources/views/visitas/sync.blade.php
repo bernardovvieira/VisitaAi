@@ -4,9 +4,13 @@
 @section('og_description', 'Envie locais e visitas salvos no dispositivo quando estiver sem internet.')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Sincronizar']]" />
-    <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Sincronizar</h1>
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Sincronizar')]]" />
+    <x-page-header :eyebrow="__('Dispositivo')" :title="__('Sincronizar')">
+        <x-slot name="lead">
+            <p>{{ __('Envie locais e visitas guardados no aparelho quando voltar a ter conexão.') }}</p>
+        </x-slot>
+    </x-page-header>
 
     <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enviar dados guardados offline</h2>

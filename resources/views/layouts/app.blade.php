@@ -150,7 +150,7 @@
         @else
             @auth
                 <div id="authenticated-shell"
-                     class="flex min-h-screen bg-slate-50 dark:bg-gray-950"
+                     class="flex min-h-screen bg-slate-100 dark:bg-[rgb(3,7,18)]"
                      x-data="{
                         sidebarOpen: false,
                         sidebarDesktop: (function () {
@@ -217,8 +217,8 @@
                                 </div>
                             </header>
                         @endisset
-                        <main class="flex-1 overflow-y-auto text-slate-800 dark:text-slate-100" x-bind:inert="sidebarOpen">
-                            <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+                        <main class="v-app-main text-slate-800 dark:text-slate-100" x-bind:inert="sidebarOpen">
+                            <div class="v-app-main-inner">
                                 @yield('content')
                             </div>
                         </main>

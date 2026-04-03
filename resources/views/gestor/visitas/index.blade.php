@@ -7,10 +7,11 @@
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
 
-    <header class="v-page-header">
-        <h1 class="v-page-title">{{ __('Visitas') }}</h1>
-        <p class="v-page-lead">{{ __('Visualize e busque visitas registradas pelos profissionais de campo (ACE e ACS).') }}</p>
-    </header>
+    <x-page-header :eyebrow="__('Vigilância em campo')" :title="__('Visitas')">
+        <x-slot name="lead">
+            <p>{{ __('Visualize e busque visitas registradas pelos profissionais de campo (ACE e ACS).') }}</p>
+        </x-slot>
+    </x-page-header>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -22,28 +23,27 @@
         <x-alert type="error" :message="session('error')" />
     @endif
 
-    <div class="v-panel">
-        @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-            <div class="border-b border-amber-200/80 bg-amber-50/90 p-4 sm:p-5 dark:border-amber-800/60 dark:bg-amber-950/35">
-                <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Pendências sem revisita') }}</h2>
-                <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada e sem visita posterior.') }}</p>
-                <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
-                    @foreach ($locaisComPendenciasNaoRevisitadas as $local)
-                        @php
-                            $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
-                        @endphp
-                        <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-baseline sm:justify-between">
-                            <span>{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
-                            @if($ultimaPendencia)
-                                <span class="text-xs font-medium text-amber-800 dark:text-amber-300">{{ __('Última pendência: :d', ['d' => \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y')]) }}</span>
-                            @endif
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
+        <div class="v-card border-amber-200/70 bg-amber-50/90 dark:border-amber-800/60 dark:bg-amber-950/30">
+            <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Pendências sem revisita') }}</h2>
+            <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada e sem visita posterior.') }}</p>
+            <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
+                @foreach ($locaisComPendenciasNaoRevisitadas as $local)
+                    @php
+                        $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
+                    @endphp
+                    <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-baseline sm:justify-between">
+                        <span>{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
+                        @if($ultimaPendencia)
+                            <span class="text-xs font-medium text-amber-800 dark:text-amber-300">{{ __('Última pendência: :d', ['d' => \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y')]) }}</span>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <div class="v-panel-section-muted">
+        <div class="v-card v-card--muted">
             <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
             <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
@@ -55,6 +55,7 @@
             </div>
         </div>
 
+        <div class="v-card v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}
@@ -149,9 +150,9 @@
             </table>
         </div>
 
-        <div class="v-panel-section border-t border-slate-100 dark:border-slate-700/80">
+        <div class="border-t border-slate-100 px-4 py-3 dark:border-slate-700/80 sm:px-5">
             <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
         </div>
-    </div>
+        </div>
 </div>
 @endsection

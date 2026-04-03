@@ -8,12 +8,17 @@
 <div id="overlayCarregando" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
     <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
-        <p class="text-white text-lg font-semibold">Gerando relatório, aguarde...</p>
+        <p class="text-white text-lg font-semibold">{{ __('Gerando relatório, aguarde…') }}</p>
     </div>
 </div>
 
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Relatórios</h1>
+<div class="v-page">
+    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
+    <x-page-header :eyebrow="__('Inteligência municipal')" :title="__('Relatórios')">
+        <x-slot name="lead">
+            <p>{{ __('Gere PDFs e indicadores do período; use os filtros abaixo após aplicar.') }}</p>
+        </x-slot>
+    </x-page-header>
 
     @if(session('error'))
         <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded relative mb-4">

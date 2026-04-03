@@ -13,17 +13,15 @@
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
 
-    <header class="v-page-header">
-        <h1 class="v-page-title">{{ __('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_saude')]) }}</h1>
-        <p class="v-page-lead">
-            {{ __('Olá, :nome. Central LIRAa — visitas de levantamento e cadastro de imóveis.', ['nome' => Auth::user()->use_nome]) }}
+    <x-page-header :eyebrow="__('Central LIRAa')" :title="__('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_saude')])">
+        <x-slot name="lead">
+            <p>{{ __('Olá, :nome. Central LIRAa — visitas de levantamento e cadastro de imóveis.', ['nome' => Auth::user()->use_nome]) }}</p>
             <span class="mt-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">LIRAa</span>
             <span class="mt-1 block text-xs text-slate-500 dark:text-slate-500">{{ now()->translatedFormat('l, j \d\e F \d\e Y') }}</span>
-        </p>
-    </header>
+        </x-slot>
+    </x-page-header>
 
-    <div class="v-panel">
-        <div class="v-panel-section">
+        <div class="v-card">
             <h2 class="v-toolbar-label mb-3">{{ __('Resumo') }}</h2>
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div class="v-dashboard-kpi">
@@ -49,13 +47,13 @@
             </div>
         </div>
 
-        <div class="v-panel-section-muted">
+        <div class="v-card v-card--muted">
             <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                 {{ __('Sem internet, guarde a visita no dispositivo e envie tudo quando voltar a ficar online pela página de sincronização.') }}
             </p>
         </div>
 
-        <div class="v-panel-section">
+        <div class="v-card">
             <h2 class="v-toolbar-label mb-3">{{ __('Ações rápidas') }}</h2>
             <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <a href="{{ route('saude.visitas.create') }}" class="v-dashboard-action v-dashboard-action--primary">
@@ -80,6 +78,5 @@
                 </a>
             </div>
         </div>
-    </div>
 </div>
 @endsection

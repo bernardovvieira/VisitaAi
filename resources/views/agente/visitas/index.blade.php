@@ -13,10 +13,11 @@
      ">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
 
-    <header class="v-page-header">
-        <h1 class="v-page-title">{{ __('Visitas') }}</h1>
-        <p class="v-page-lead">{{ __('Veja as visitas que você registrou, busque, edite ou cadastre novas. Em campo sem internet, salve no dispositivo e envie depois pela sincronização.') }}</p>
-    </header>
+    <x-page-header :eyebrow="__('Registro em campo')" :title="__('Visitas')">
+        <x-slot name="lead">
+            <p>{{ __('Veja as visitas que você registrou, busque, edite ou cadastre novas. Em campo sem internet, salve no dispositivo e envie depois pela sincronização.') }}</p>
+        </x-slot>
+    </x-page-header>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -37,8 +38,7 @@
         <span id="visita-offline-pending-alert-msg"></span>
     </div>
 
-    <div class="v-panel">
-        <div class="v-panel-section flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div class="v-card flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <div class="min-w-0 flex-1">
                 <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Ações rápidas') }}</h2>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Cadastrar visita ou enviar rascunhos guardados no aparelho.') }}</p>
@@ -60,7 +60,7 @@
         </div>
 
         @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-            <div class="border-b border-amber-200/80 bg-amber-50/90 p-4 sm:p-5 dark:border-amber-800/60 dark:bg-amber-950/35">
+            <div class="v-card border-amber-200/70 bg-amber-50/90 dark:border-amber-800/60 dark:bg-amber-950/30">
                 <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Pendências sem revisita') }}</h2>
                 <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
                     @foreach ($locaisComPendenciasNaoRevisitadas as $local)
@@ -78,7 +78,7 @@
             </div>
         @endif
 
-        <div class="v-panel-section-muted">
+        <div class="v-card v-card--muted">
             <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
             <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
@@ -90,6 +90,7 @@
             </div>
         </div>
 
+        <div class="v-card v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}
@@ -201,10 +202,10 @@
             </table>
         </div>
 
-        <div class="v-panel-section border-t border-slate-100 dark:border-slate-700/80">
+        <div class="border-t border-slate-100 px-4 py-3 dark:border-slate-700/80 sm:px-5">
             <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
         </div>
-    </div>
+        </div>
 </div>
 <script>
 (function() {
