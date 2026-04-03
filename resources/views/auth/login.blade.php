@@ -30,7 +30,7 @@
                     name="password"
                     required
                     autocomplete="current-password"
-                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-blue-500 focus:ring-blue-500 rounded-lg dark:focus:border-blue-600 dark:focus:ring-blue-600 shadow-sm block w-full pr-10 @error('password') border-red-500 @enderror"
+                    class="v-input pr-10 @error('password') border-red-500 dark:border-red-500/60 @enderror"
                 />
 
                 <button

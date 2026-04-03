@@ -1,6 +1,6 @@
 <!-- resources/views/auth/reset-password.blade.php -->
 <x-guest-layout>
-    <div class="max-w-md mx-auto mt-8 rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <div class="v-card mx-auto mt-6 max-w-md">
         <h1 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
             Redefinir Senha
         </h1>

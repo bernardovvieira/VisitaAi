@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Usuários'), 'url' => route('gestor.users.index')], ['label' => __('Pendentes')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Usuários'), 'url' => route('gestor.users.index')], ['label' => __('Pendentes')]]" />
 
     <x-page-header :eyebrow="__('Aprovações')" :title="__('Usuários pendentes')" />
 

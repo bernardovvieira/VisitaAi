@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Configurar autenticador</h1>
+<div class="v-page space-y-5">
+    <x-page-header title="Configurar autenticador" />
 
     @if($errors->any())
         <x-alert type="error" :message="$errors->first() ?: optional($errors->confirmTwoFactorAuthentication)->first('code')" />
     @endif
 
-    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
-        <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <x-heroicon-o-lock-closed class="mr-2 h-6 w-6 shrink-0 text-amber-500" />
+    <div class="v-card space-y-4">
+        <h3 class="v-section-title flex items-center gap-2">
+            <x-heroicon-o-lock-closed class="h-5 w-5 shrink-0 text-amber-500" />
             Adicione a conta no seu app
         </h3>
         <p class="text-gray-600 dark:text-gray-400">
@@ -19,7 +19,7 @@
 
         {{-- Chave manual --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Chave manual</label>
+            <label class="v-toolbar-label">Chave manual</label>
             <div class="mt-1 flex gap-2">
                 <input type="text"
                        value="{{ $secretKeyFormatted }}"
@@ -29,7 +29,7 @@
                 <button type="button"
                         id="btn-copy-secret"
                         data-secret="{{ $secretKey }}"
-                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-md transition">
+                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-1.5 text-[13px] font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
                     Copiar
                 </button>
             </div>
@@ -38,7 +38,7 @@
 
         {{-- QR code (gerado em 192x192px; container no mesmo tamanho para não cortar) --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">QR code</label>
+            <label class="v-toolbar-label mb-1">QR code</label>
             <div class="p-4 rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 inline-block">
                 <div class="w-[192px] h-[192px] flex items-center justify-center [&>svg]:shrink-0 [&>svg]:block">
                     {!! $qrCodeSvg !!}
@@ -50,7 +50,7 @@
         <form method="POST" action="{{ url(route('two-factor.confirm')) }}" class="space-y-4">
             @csrf
             <div>
-                <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código do autenticador <span class="text-red-500">*</span></label>
+                <label for="code" class="v-toolbar-label">Código do autenticador <span class="text-red-500">*</span></label>
                 <input type="text"
                        id="code"
                        name="code"
@@ -59,7 +59,7 @@
                        maxlength="6"
                        autocomplete="one-time-code"
                        placeholder="000000"
-                       class="mt-1 block w-full max-w-xs rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"
+                       class="v-input mt-1 max-w-xs"
                        required>
                 @error('code', 'confirmTwoFactorAuthentication')
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -67,11 +67,11 @@
             </div>
             <div class="flex flex-wrap gap-3">
                 <button type="submit"
-                        class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-md shadow transition">
+                        class="inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 dark:bg-slate-600 dark:hover:bg-slate-500">
                     Confirmar e ativar 2FA
                 </button>
                 <a href="{{ route('profile.edit') }}"
-                   class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-md shadow transition">
+                   class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40">
                     Cancelar
                 </a>
             </div>

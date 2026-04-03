@@ -16,7 +16,7 @@
     </div>
     <div>
         <x-input-label for="mor_escolaridade" value="Escolaridade" />
-        <select id="mor_escolaridade" name="mor_escolaridade" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
+        <select id="mor_escolaridade" name="mor_escolaridade" class="v-select mt-1">
             <option value="">{{ __('Selecionar') }}</option>
             @foreach($esc as $k => $label)
                 <option value="{{ $k }}" @selected(old('mor_escolaridade', $morador->mor_escolaridade) === $k)>{{ $label }}</option>
@@ -26,7 +26,7 @@
     </div>
     <div>
         <x-input-label for="mor_renda_faixa" value="Faixa de renda (referência salário mínimo)" />
-        <select id="mor_renda_faixa" name="mor_renda_faixa" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
+        <select id="mor_renda_faixa" name="mor_renda_faixa" class="v-select mt-1">
             <option value="">{{ __('Selecionar') }}</option>
             @foreach($renda as $k => $label)
                 <option value="{{ $k }}" @selected(old('mor_renda_faixa', $morador->mor_renda_faixa) === $k)>{{ $label }}</option>
@@ -36,7 +36,7 @@
     </div>
     <div>
         <x-input-label for="mor_observacao" value="Observações (opcional)" />
-        <textarea id="mor_observacao" name="mor_observacao" rows="3" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">{{ old('mor_observacao', $morador->mor_observacao) }}</textarea>
+        <textarea id="mor_observacao" name="mor_observacao" rows="3" class="v-input mt-1">{{ old('mor_observacao', $morador->mor_observacao) }}</textarea>
         <x-input-error :messages="$errors->get('mor_observacao')" class="mt-2" />
     </div>
 </div>

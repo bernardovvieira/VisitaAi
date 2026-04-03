@@ -2,7 +2,7 @@
 @php
     $rp = request()->routeIs('gestor.*') ? 'gestor' : 'agente';
 @endphp
-<section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-3">
+<section class="v-card space-y-3">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ config('visitaai_municipio.ocupantes.titulo_secao_local') }}</h2>

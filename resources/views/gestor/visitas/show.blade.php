@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Visitas'), 'url' => route('gestor.visitas.index')], ['label' => __('Visualizar')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas'), 'url' => route('gestor.visitas.index')], ['label' => __('Visualizar')]]" />
 
     <x-page-header :eyebrow="__('Detalhe do registro')" :title="__('Detalhes da visita')">
         <x-slot name="lead">

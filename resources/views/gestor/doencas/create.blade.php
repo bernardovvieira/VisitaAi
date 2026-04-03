@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Doenças', 'url' => route('gestor.doencas.index')], ['label' => 'Cadastrar']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças'), 'url' => route('gestor.doencas.index')], ['label' => __('Cadastrar')]]" />
 
     <!-- Card introdutório -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Cadastrar Doença</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Selecione as opções relevantes para esta doença.
@@ -13,7 +13,7 @@
     </section>
 
     <!-- Formulário de Cadastro -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
+    <section class="v-card space-y-4">
         @if(session('success'))
             <x-alert type="success" :message="session('success')" />
         @endif
@@ -23,18 +23,18 @@
 
             <!-- Nome -->
             <div>
-                <label for="doe_nome" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="doe_nome" class="v-toolbar-label">
                     Nome <span class="text-red-500">*</span>
                 </label>
                 <input id="doe_nome" name="doe_nome" type="text" value="{{ old('doe_nome') }}"
                        required autofocus
-                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                       class="v-input mt-1">
                 @error('doe_nome')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
             </div>
 
             <!-- Sintomas (checkbox grid) -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="v-toolbar-label mb-1">
                     Sintomas <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
@@ -58,7 +58,7 @@
 
             <!-- Modos de Transmissão -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="v-toolbar-label mb-1">
                     Modos de Transmissão <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
@@ -82,7 +82,7 @@
 
             <!-- Medidas de Controle -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="v-toolbar-label mb-1">
                     Medidas de Controle <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">

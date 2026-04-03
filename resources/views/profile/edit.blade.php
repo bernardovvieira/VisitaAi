@@ -31,7 +31,7 @@
             {{-- Card: Informações pessoais --}}
             <div class="v-card space-y-4 dark:bg-gray-800">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                    <x-heroicon-o-user class="mr-2 mt-px h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <x-heroicon-o-user class="mr-2 mt-px h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                     Informações pessoais
                 </h3>
                 <dl class="text-gray-700 dark:text-gray-300 space-y-2">
@@ -45,7 +45,7 @@
             {{-- Card: Acesso e status --}}
             <div class="v-card space-y-4 dark:bg-gray-800">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                    <x-heroicon-o-shield-check class="mr-2 mt-px h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <x-heroicon-o-shield-check class="mr-2 mt-px h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                     Acesso e status
                 </h3>
                 <dl class="text-gray-700 dark:text-gray-300 space-y-2">
@@ -59,7 +59,7 @@
         {{-- Coluna direita: Atualizar Dados --}}
         <div class="v-card space-y-6 dark:bg-gray-800">
             <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                <x-heroicon-o-pencil-square class="mr-2 h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
+                <x-heroicon-o-pencil-square class="mr-2 h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                 Atualizar Dados
             </h3>
             <form method="POST" action="{{ route('profile.update') }}" class="space-y-4" id="profile-update-form">
@@ -67,26 +67,26 @@
                 @method('patch')
 
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome <span class="text-red-500">*</span></label>
+                    <label for="name" class="v-toolbar-label">Nome <span class="text-red-500">*</span></label>
                     <input id="name" name="name" type="text"
                         value="{{ old('name', Auth::user()->use_nome) }}"
-                        class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"
+                        class="v-input mt-1"
                         required>
                     @error('name')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail <span class="text-red-500">*</span></label>
+                    <label for="email" class="v-toolbar-label">E-mail <span class="text-red-500">*</span></label>
                     <input id="email" name="email" type="email" autocapitalize="off"
                         value="{{ old('email', Auth::user()->use_email) }}"
-                        class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"
+                        class="v-input mt-1"
                         required>
                     @error('email')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
                 </div>
 
                 <div>
-                    <label for="tema" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferência de tema <span class="text-red-500">*</span></label>
-                    <select id="tema" name="tema" class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                    <label for="tema" class="v-toolbar-label">Preferência de tema <span class="text-red-500">*</span></label>
+                    <select id="tema" name="tema" class="v-select mt-1">
                         <option value="light" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'light' ? 'selected' : '' }}>Modo claro</option>
                         <option value="dark" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'dark' ? 'selected' : '' }}>Modo escuro</option>
                     </select>
@@ -95,9 +95,7 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" id="profile-update-btn" class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Aplicar Alterações
-                    </button>
+                    <x-primary-button type="submit" id="profile-update-btn">Aplicar Alterações</x-primary-button>
                 </div>
             </form>
             <script>
@@ -113,7 +111,7 @@
     {{-- Card: Autenticação em dois fatores (2FA) --}}
     <div class="v-card space-y-4 dark:bg-gray-800">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <x-heroicon-o-lock-closed class="mr-2 h-6 w-6 shrink-0 text-amber-500" />
+            <x-heroicon-o-lock-closed class="mr-2 h-5 w-5 shrink-0 text-amber-500" />
             Autenticação em dois fatores (2FA)
         </h3>
         <p class="text-gray-600 dark:text-gray-400">
@@ -153,7 +151,7 @@
     {{-- Card: Anonimizar Conta --}}
     <div class="v-card space-y-4 dark:bg-gray-800">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <x-heroicon-o-shield-exclamation class="mr-2 h-6 w-6 shrink-0 text-red-500" />
+            <x-heroicon-o-shield-exclamation class="mr-2 h-5 w-5 shrink-0 text-red-500" />
             Anonimizar Conta
         </h3>
         <p class="text-gray-600 dark:text-gray-400">

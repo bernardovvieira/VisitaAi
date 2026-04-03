@@ -35,8 +35,8 @@
     @endif
 
     <!-- Card introdutório -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais de visitação</h2>
+    <section class="v-card">
+        <h2 class="v-section-title">Locais de visitação</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.
         </p>
@@ -44,23 +44,23 @@
             <strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.
         </p>
         <a href="{{ route('agente.locais.create') }}"
-           class="inline-flex items-center px-4 py-2 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
-            <x-heroicon-o-plus class="mr-2 h-5 w-5 shrink-0" />
+           class="mt-4 inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40">
+            <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
             Cadastrar Local
         </a>
     </section>
 
     <!-- Busca (filtra ao digitar) -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
-                <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
+                <label for="search" class="v-toolbar-label mb-1">Busca inteligente</label>
                 <div class="flex items-center gap-2">
                     <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                            data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-locais"
                            placeholder="Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600 px-4 py-2">
+                           class="v-input">
                     <span id="search-loading-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -68,7 +68,7 @@
     </section>
 
     <!-- Tabela de Locais -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $locais->count() }} de {{ $locais->total() }} local(is) cadastrados.
             @if(request('search'))
@@ -185,7 +185,7 @@
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
     </section>
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
         <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
     </section>

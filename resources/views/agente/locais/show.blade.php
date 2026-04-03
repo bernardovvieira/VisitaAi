@@ -2,16 +2,16 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Locais', 'url' => route('agente.locais.index')], ['label' => 'Visualizar']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Visualizar')]]" />
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Detalhes do Local</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Detalhes do local selecionado, incluindo informações de localização, tipo e categoria.
         </p>
     </section>
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-8">
+    <section class="v-card space-y-5">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Informações do Local</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -97,7 +97,7 @@
     @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 
     {{-- Adesivo --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4 mt-10">
+    <section class="v-card mt-6 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
             <div id="adesivo" class="w-[300px] bg-white p-6 text-center shadow-sm text-gray-800">

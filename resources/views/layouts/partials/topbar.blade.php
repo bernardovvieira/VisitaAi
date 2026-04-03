@@ -1,5 +1,5 @@
 {{-- Barra superior (ERP): contexto global, estado, conta. --}}
-<header class="v-topbar h-12 text-slate-800 dark:text-slate-100 sm:h-14">
+<header class="v-topbar h-12 text-slate-800 dark:text-slate-100">
     <div class="flex min-w-0 flex-1 items-center gap-0.5 sm:flex-none sm:gap-1">
         <button type="button"
                 class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 lg:hidden"
@@ -7,7 +7,7 @@
                 x-bind:aria-expanded="sidebarOpen"
                 aria-controls="app-sidebar"
                 aria-label="{{ __('Abrir menu') }}">
-            <x-heroicon-o-bars-3 class="h-6 w-6" aria-hidden="true" />
+            <x-heroicon-o-bars-3 class="h-5 w-5" aria-hidden="true" />
         </button>
         <button type="button"
                 class="hidden items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 lg:inline-flex"
@@ -16,7 +16,7 @@
                 x-bind:aria-expanded="sidebarDesktop === 'expanded'"
                 x-bind:aria-label="sidebarDesktop === 'expanded' ? @js(__('Recolher menu (só ícones)')) : @js(__('Expandir menu'))"
                 x-bind:title="sidebarDesktop === 'expanded' ? @js(__('Recolher menu (só ícones)')) : @js(__('Expandir menu'))">
-            <x-heroicon-o-chevron-double-left class="h-6 w-6 shrink-0 transition-transform duration-200" x-bind:class="{ 'rotate-180': sidebarDesktop === 'collapsed' }" aria-hidden="true" />
+            <x-heroicon-o-bars-3-center-left class="h-5 w-5 shrink-0 transition-transform duration-200" x-bind:class="{ 'scale-x-[-1]': sidebarDesktop === 'collapsed' }" aria-hidden="true" />
         </button>
     </div>
 
@@ -36,11 +36,11 @@
             <x-slot name="trigger">
                 <button type="button"
                         class="inline-flex max-w-[min(100vw-8rem,14rem)] items-center gap-2 rounded-lg py-1.5 pl-1 pr-1.5 text-left transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:hover:bg-slate-800 sm:max-w-[16rem]">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white dark:bg-blue-500"
+                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white dark:bg-blue-500"
                           aria-hidden="true">
                         {{ strtoupper(mb_substr(auth()->user()->use_nome, 0, 1)) }}
                     </span>
-                    <span class="min-w-0 truncate text-sm font-medium text-slate-900 dark:text-slate-100" title="{{ auth()->user()->use_nome }}">
+                    <span class="min-w-0 truncate text-[13px] font-medium text-slate-900 dark:text-slate-100" title="{{ auth()->user()->use_nome }}">
                         {{ auth()->user()->use_nome }}
                     </span>
                     <x-heroicon-o-chevron-down class="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />

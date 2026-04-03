@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Usuários')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Usuários')]]" />
     <x-page-header :eyebrow="__('Gestão de acesso')" :title="__('Usuários')" />
 
     @if(session('status'))
@@ -18,7 +18,7 @@
     @endif
 
     <!-- Card introdutório -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Usuários do sistema</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize, edite e exclua usuários cadastrados. Novos usuários devem se registrar pela tela de login.
@@ -26,16 +26,16 @@
     </section>
 
     <!-- Busca (atualiza ao digitar) -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
-                <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
+                <label for="search" class="v-toolbar-label mb-1">Busca inteligente</label>
                 <div class="flex items-center gap-2">
                     <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                            data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-users"
                            placeholder="Nome, e-mail ou perfil (ex.: ACE, ACS, gestor)..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600 px-4 py-2">
+                           class="v-input">
                     <span id="search-loading-users" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -43,7 +43,7 @@
     </section>
 
     <!-- Tabela de Usuários -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $usuarios->count() }} de {{ $usuarios->total() }} usuário(s) cadastrado(s).
             @if(request('search'))
@@ -142,12 +142,12 @@
     </section>
 
     <!-- Card de Acesso a Pendentes -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-3">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Usuários Pendentes</h2>
+    <section class="v-card space-y-3">
+        <h2 class="v-section-title">{{ __('Usuários pendentes') }}</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Visualize e aprove usuários que aguardam liberação para acessar o sistema.
         </p>
-        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
+        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 rounded-md border border-transparent bg-slate-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 dark:bg-slate-600 dark:hover:bg-slate-500">
             <x-heroicon-o-chevron-right class="h-4 w-4 shrink-0" />
             Ver usuários pendentes
         </a>

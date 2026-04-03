@@ -131,11 +131,11 @@
     }
 
     .v-app-main-inner {
-        @apply mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
+        @apply mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-5 lg:px-6;
     }
 
     .v-topbar {
-        @apply sticky top-0 z-20 flex h-14 shrink-0 items-center justify-end gap-1 border-b px-2 backdrop-blur-md sm:justify-between sm:px-4;
+        @apply sticky top-0 z-20 flex h-12 shrink-0 items-center justify-end gap-1 border-b px-2 backdrop-blur-md sm:justify-between sm:px-3;
         border-color: rgb(var(--v-border) / 0.92);
         background-color: rgb(var(--v-surface) / 0.92);
         box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.35);
@@ -147,35 +147,35 @@
     }
 
     .v-page {
-        @apply mx-auto max-w-7xl space-y-6;
+        @apply mx-auto max-w-7xl space-y-4;
     }
 
     .v-page-header {
-        @apply border-b pb-5;
+        @apply border-b pb-4;
         border-color: rgb(var(--v-border) / 0.85);
     }
 
     .v-page-eyebrow {
-        @apply mb-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-400;
+        @apply mb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-blue-600 dark:text-blue-400;
     }
 
     .v-page-title {
-        @apply text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl;
+        @apply text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-xl;
         letter-spacing: -0.02em;
     }
 
     .v-page-lead {
-        @apply mt-2 max-w-3xl text-sm leading-relaxed;
+        @apply mt-1.5 max-w-3xl text-xs leading-relaxed sm:text-[13px];
         color: rgb(var(--v-text-muted) / 1);
     }
 
     .v-section-title {
-        @apply text-sm font-semibold text-slate-900 dark:text-slate-100;
+        @apply text-[13px] font-semibold text-slate-900 dark:text-slate-100;
     }
 
     /* Superfície de trabalho (cartão ERP) */
     .v-card {
-        @apply overflow-hidden p-4 shadow-sm sm:p-5;
+        @apply overflow-hidden p-3 shadow-sm sm:p-4;
         border-radius: var(--v-radius-lg);
         border: 1px solid rgb(var(--v-border) / 0.95);
         background-color: rgb(var(--v-surface) / 1);
@@ -233,11 +233,11 @@
     }
 
     .v-toolbar-label {
-        @apply mb-1 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400;
+        @apply mb-0.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400;
     }
 
     .v-input {
-        @apply w-full border px-3 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:ring-blue-400/15;
+        @apply w-full border px-2.5 py-1.5 text-[13px] leading-snug text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500/25 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-500 dark:focus:ring-blue-400/20;
         border-radius: var(--v-radius-md);
         border-color: rgb(var(--v-border) / 1);
         background-color: rgb(var(--v-surface) / 1);
@@ -249,7 +249,7 @@
     }
 
     .v-data-table {
-        @apply min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-700;
+        @apply min-w-full divide-y divide-slate-200 text-[13px] dark:divide-slate-700;
     }
 
     .v-data-table thead {
@@ -257,7 +257,7 @@
     }
 
     .v-data-table th {
-        @apply px-3 py-2.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300;
+        @apply px-2.5 py-2 text-left text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300;
     }
 
     .v-data-table tbody tr {
@@ -265,11 +265,11 @@
     }
 
     .v-data-table td {
-        @apply px-3 py-3 align-top text-slate-800 dark:text-slate-100;
+        @apply px-2.5 py-2 align-top text-slate-800 dark:text-slate-100;
     }
 
     .v-table-meta {
-        @apply flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2.5 text-xs;
+        @apply flex flex-wrap items-center justify-between gap-2 border-b px-3 py-2 text-[11px] leading-snug;
         border-color: rgb(var(--v-border) / 1);
         background-color: rgb(var(--v-surface-muted) / 0.65);
         color: rgb(var(--v-text-muted) / 1);
@@ -281,7 +281,7 @@
 
     /* KPI / métrica — estilo painel ERP (denso, valor em destaque) */
     .v-dashboard-kpi {
-        @apply relative flex min-h-[5.25rem] gap-3 overflow-hidden p-4;
+        @apply relative flex min-h-[4.25rem] gap-2.5 overflow-hidden p-3;
         border-radius: var(--v-radius-md);
         border: 1px solid rgb(var(--v-border) / 0.9);
         background-color: rgb(var(--v-surface) / 1);
@@ -293,7 +293,7 @@
     }
 
     .v-dashboard-kpi__icon {
-        @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300;
+        @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300;
     }
 
     .v-dashboard-kpi__icon--blue {
@@ -318,7 +318,7 @@
 
     /* Atalhos — lista de tarefas ERP */
     .v-dashboard-action {
-        @apply flex items-center gap-3 border px-3.5 py-2.5 text-left text-sm font-semibold text-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
+        @apply flex items-center gap-2 border px-3 py-2 text-left text-[13px] font-semibold text-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
         border-radius: var(--v-radius-md);
         border-color: rgb(var(--v-border) / 1);
         background-color: rgb(var(--v-surface) / 1);
@@ -348,7 +348,7 @@
 
     /* Select alinhado ao v-input */
     .v-select {
-        @apply w-full border px-3 py-2.5 text-sm text-slate-900 shadow-sm transition focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-400/15;
+        @apply w-full border px-2.5 py-1.5 text-[13px] leading-snug text-slate-900 shadow-sm transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500/25 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-400/20;
         border-radius: var(--v-radius-md);
         border-color: rgb(var(--v-border) / 1);
         background-color: rgb(var(--v-surface) / 1);
@@ -356,19 +356,19 @@
 
     /* Estado vazio em tabelas */
     .v-empty-state {
-        @apply mx-auto flex max-w-md flex-col items-center py-8 text-center;
+        @apply mx-auto flex max-w-md flex-col items-center py-6 text-center;
     }
 
     .v-empty-state__icon {
-        @apply mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500;
+        @apply mb-2 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500;
     }
 
     .v-empty-state__title {
-        @apply font-semibold text-slate-800 dark:text-slate-100;
+        @apply text-sm font-semibold text-slate-800 dark:text-slate-100;
     }
 
     .v-empty-state__text {
-        @apply mt-1 max-w-sm text-sm leading-relaxed text-slate-500 dark:text-slate-400;
+        @apply mt-1 max-w-sm text-xs leading-relaxed text-slate-500 dark:text-slate-400 sm:text-[13px];
     }
 
     /* Rodapé de página: ajuda contextual */

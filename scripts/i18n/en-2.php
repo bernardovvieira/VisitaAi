@@ -91,6 +91,7 @@ return [
     'Sair' => 'Log out',
     'Sair do Sistema' => 'Sign out',
     'Salvar' => 'Save',
+    'Salvar alterações' => 'Save changes',
     'Selecionar' => 'Select',
     'Sem conexão à internet' => 'No internet connection',
     'Sem dados.' => 'No data.',

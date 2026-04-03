@@ -11,7 +11,7 @@
        window.addEventListener('visita-connection-change', function(e) { online = e.detail.online; });
        setInterval(function() { if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline; }, 1500);
      ">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas')]]" />
 
     <x-page-header :eyebrow="__('Registro em campo')" :title="__('Visitas')">
         <x-slot name="lead">
@@ -190,7 +190,7 @@
                                     </div>
                                     <p class="font-medium text-slate-700 dark:text-slate-200">{{ __('Nenhuma visita registrada.') }}</p>
                                     <p class="mt-1 text-sm text-slate-500">{{ __('Registre a primeira visita para começar.') }}</p>
-                                    <a href="{{ route('agente.visitas.create') }}" class="mt-5 inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">
+                                    <a href="{{ route('agente.visitas.create') }}" class="mt-5 inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40">
                                         <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
                                         {{ __('Registrar visita') }}
                                     </a>

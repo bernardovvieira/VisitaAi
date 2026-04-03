@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="w-full max-w-md mx-auto mt-8 sm:mt-12 px-4">
-        <div class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
+        <div class="v-card">
             <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Código de autenticação</h1>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 Digite o código de 6 dígitos gerado pelo seu aplicativo autenticador.
@@ -15,7 +15,7 @@
             <form method="POST" action="{{ route('two-factor.login.store') }}" id="two-factor-form">
                 @csrf
                 <div class="mb-4">
-                    <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Código <span class="text-red-500">*</span></label>
+                    <label for="code" class="v-toolbar-label">Código <span class="text-red-500">*</span></label>
                     <input type="text"
                            id="code"
                            name="code"
@@ -24,17 +24,15 @@
                            maxlength="6"
                            autocomplete="one-time-code"
                            placeholder="000000"
-                           class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"
+                           class="v-input mt-1"
                            required
                            autofocus>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-md transition">
+                    <a href="{{ route('login') }}" class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-1.5 text-[13px] font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
                         Voltar ao login
                     </a>
-                    <button type="submit" id="two-factor-submit-btn" class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Verificar
-                    </button>
+                    <x-primary-button type="submit" id="two-factor-submit-btn">Verificar</x-primary-button>
                 </div>
             </form>
             <script>

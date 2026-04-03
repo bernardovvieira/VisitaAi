@@ -5,14 +5,14 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Sincronizar')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Sincronizar')]]" />
     <x-page-header :eyebrow="__('Dispositivo')" :title="__('Sincronizar')">
         <x-slot name="lead">
             <p>{{ __('Envie locais e visitas guardados no aparelho quando voltar a ter conexão.') }}</p>
         </x-slot>
     </x-page-header>
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+    <section class="v-card">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enviar dados guardados offline</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.</p>
@@ -30,7 +30,7 @@
     </section>
 
     @if(!empty($locaisSyncSubmitUrl))
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800" id="sync-locais-section"
+    <section class="v-card" id="sync-locais-section"
              data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais guardados no dispositivo</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">Carregando…</p>
@@ -38,7 +38,7 @@
     </section>
     @endif
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800"
+    <section class="v-card"
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
              data-locais-sync-url="{{ $locaisSyncSubmitUrl ?? '' }}"

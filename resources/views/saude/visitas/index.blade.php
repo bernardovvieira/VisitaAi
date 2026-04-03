@@ -11,7 +11,7 @@
        window.addEventListener('visita-connection-change', function(e) { online = e.detail.online; });
        setInterval(function() { if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline; }, 1500);
      ">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Visitas']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Visitas')]]" />
 
     <x-page-header :eyebrow="__('Levantamento LIRAa')" :title="__('Minhas visitas')">
         <x-slot name="lead">

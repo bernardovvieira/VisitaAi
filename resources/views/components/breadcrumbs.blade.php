@@ -12,8 +12,8 @@
         $lastIndex = count($items) - 1;
     @endphp
     @if($valid)
-        <nav aria-label="{{ __('Navegação estrutural') }}" class="mb-5">
-            <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px]">
+        <nav aria-label="{{ __('Navegação estrutural') }}" class="mb-3">
+            <ol class="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs sm:text-[13px]">
                 @foreach($items as $i => $item)
                     @if($i > 0)
                         <li class="flex items-center text-slate-400 dark:text-slate-500" aria-hidden="true">

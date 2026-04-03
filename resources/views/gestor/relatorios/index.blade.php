@@ -90,8 +90,8 @@
             <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo <span class="text-red-500">*</span></label>
-                    <select name="tipo_relatorio" x-model="tipo" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                    <label class="v-toolbar-label mb-1">Tipo <span class="text-red-500">*</span></label>
+                    <select name="tipo_relatorio" x-model="tipo" class="v-select">
                         <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>Completo</option>
                         <option value="diario">Diário</option>
                         <option value="semanal">Por período</option>
@@ -99,18 +99,18 @@
                     </select>
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data <span class="text-red-500">*</span></label>
-                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-600 dark:focus:ring-blue-600" />
+                    <label class="v-toolbar-label mb-1">Data <span class="text-red-500">*</span></label>
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="v-input" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Início <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-600 dark:focus:ring-blue-600" />
+                            <label class="v-toolbar-label mb-1">Início <span class="text-red-500">*</span></label>
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="v-input" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fim <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="block w-full px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-600 dark:focus:ring-blue-600" />
+                            <label class="v-toolbar-label mb-1">Fim <span class="text-red-500">*</span></label>
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="v-input" />
                         </div>
                     </div>
                 </template>
@@ -157,9 +157,9 @@
                         }, (array) request('local_id', [])))
                     )) }}"
                     @click.outside="open = false">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Local(is) <span class="text-red-500">*</span></label>
+                    <label class="v-toolbar-label mb-1">Local(is) <span class="text-red-500">*</span></label>
                     <div class="relative">
-                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-600 dark:focus:ring-blue-600 flex flex-wrap items-center gap-1.5 cursor-pointer">
+                        <div @click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
                             <template x-for="item in selected" :key="item.id">
                                 <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="item.label" class="truncate max-w-[200px]"></span>
@@ -223,9 +223,9 @@
                     data-options="{{ e(json_encode($bairros ?? [])) }}"
                     data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
                     @click.outside="open = false">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bairro(s)</label>
+                    <label class="v-toolbar-label mb-1">Bairro(s)</label>
                     <div class="relative">
-                        <div @click="open = !open" class="block w-full min-h-[2.5rem] px-3 py-2 rounded-lg bg-gray-50 text-gray-900 shadow-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-600 dark:focus:ring-blue-600 flex flex-wrap items-center gap-1.5 cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-0">
+                        <div @click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">
                                 <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="val"></span>
@@ -290,42 +290,42 @@
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             <div class="v-card v-card--tight">
                 <div class="flex items-center gap-2">
-                    <x-heroicon-o-clipboard-document-list class="h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Total de visitas') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalVisitas }}</p>
+                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalVisitas }}</p>
             </div>
             <div class="v-card v-card--tight">
                 <div class="flex items-center gap-2">
-                    <x-heroicon-o-clock class="h-6 w-6 shrink-0 text-amber-500 dark:text-amber-400" />
+                    <x-heroicon-o-clock class="h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Visitas com pendência') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $percentualPendencias }}% <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ $totalComPendencia }})</span></p>
+                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $percentualPendencias }}% <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ $totalComPendencia }})</span></p>
             </div>
             <div class="v-card v-card--tight">
                 <div class="flex items-center gap-2">
-                    <x-heroicon-o-building-office-2 class="h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <x-heroicon-o-building-office-2 class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Depósitos eliminados') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalDepEliminados }}</p>
+                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalDepEliminados }}</p>
             </div>
             <div class="v-card v-card--tight">
                 <div class="flex items-center gap-2">
-                    <x-heroicon-o-check-circle class="h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <x-heroicon-o-check-circle class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Visitas com tratamento') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComTratamento }}</p>
+                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComTratamento }}</p>
             </div>
             <div class="v-card v-card--tight">
                 <div class="flex items-center gap-2">
-                    <x-heroicon-o-beaker class="h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <x-heroicon-o-beaker class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Coletas realizadas') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalComColeta }}</p>
+                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalComColeta }}</p>
             </div>
             <div class="v-card v-card--tight">
                 <div class="flex items-center gap-2">
-                    <x-heroicon-o-map-pin class="h-6 w-6 shrink-0 text-slate-500 dark:text-slate-400" />
+                    <x-heroicon-o-map-pin class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Bairro com mais ocorrências') }}</h3>
                 </div>
                 <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{{ $bairroMaisFrequente ?: '—' }}</p>

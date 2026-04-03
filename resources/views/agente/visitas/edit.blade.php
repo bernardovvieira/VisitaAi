@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="v-page space-y-5">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => route('agente.visitas.index')], ['label' => 'Editar']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas'), 'url' => route('agente.visitas.index')], ['label' => __('Editar')]]" />
 
     <section class="v-card dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Editar Visita</h2>
@@ -32,17 +32,17 @@
             @method('PUT')
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Dados Básicos</legend>
+                <legend class="v-section-title mb-2">Dados Básicos</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="vis_data" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data da Visita <span class="text-red-500">*</span></label>
+                        <label for="vis_data" class="v-toolbar-label">Data da Visita <span class="text-red-500">*</span></label>
                         <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', optional($visita)->vis_data) }}" required
-                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                            class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="vis_ciclo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ciclo/Ano <span class="text-red-500">*</span></label>
+                        <label for="vis_ciclo" class="v-toolbar-label">Ciclo/Ano <span class="text-red-500">*</span></label>
                         <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo', optional($visita)->vis_ciclo) }}" required
-                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"
+                            class="v-input mt-1"
                             placeholder="mm/aa">
                     </div>
                 </div>
@@ -52,7 +52,7 @@
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Localização</legend>
+                <legend class="v-section-title mb-2">Localização</legend>
                 <div class="col-span-1 sm:col-span-2"
                     x-data="{
                         open: false,
@@ -69,10 +69,10 @@
                     }"
                     x-init="$watch('search', () => open = true)">
 
-                    <label for="fk_local_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Local Visitado <span class="text-red-500">*</span></label>
+                    <label for="fk_local_id" class="v-toolbar-label">Local Visitado <span class="text-red-500">*</span></label>
                     <div class="relative mt-1">
                         <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="Buscar local..." required
-                            class="block w-full px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                            class="v-input">
 
                         <ul x-show="open" @click.away="open = false" x-cloak class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto"
                             x-transition>
@@ -103,11 +103,11 @@
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Atividades</legend>
+                <legend class="v-section-title mb-2">Atividades</legend>
                 <div>
-                    <label for="vis_atividade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Atividade <span class="text-red-500">*</span></label>
+                    <label for="vis_atividade" class="v-toolbar-label">Atividade <span class="text-red-500">*</span></label>
                     <select id="vis_atividade" name="vis_atividade" required
-                            class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                            class="v-select mt-1">
                         <option value="">Selecione...</option>
                         @foreach(config('ms_terminologia.atividades_pncd') as $cod => $at)
                             <option value="{{ $cod }}" {{ old('vis_atividade', $visita->vis_atividade ?? '') == $cod ? 'selected' : '' }}>{{ $at['codigo'] }} | {{ $at['nome'] }}</option>
@@ -121,9 +121,9 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
                 <div>
-                    <label for="vis_visita_tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo da visita</label>
+                    <label for="vis_visita_tipo" class="v-toolbar-label">Tipo da visita</label>
                     <select name="vis_visita_tipo" id="vis_visita_tipo"
-                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                            class="v-select mt-1">
                         <option value="">Selecione...</option>
                         @foreach(config('ms_terminologia.visita_tipo') as $tipoVal => $tipoConf)
                             <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo', $visita->vis_visita_tipo ?? '') == $tipoVal ? 'selected' : '' }}>{{ $tipoConf['label'] }}</option>
@@ -133,13 +133,13 @@
             </div>
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Depósitos Inspecionados</legend>
+                <legend class="v-section-title mb-2">Depósitos Inspecionados</legend>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     @foreach (['a1', 'a2', 'b', 'c', 'd1', 'd2', 'e'] as $tipo)
                         <div>
                             <label for="insp_{{ $tipo }}" class="block text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Depósito {{ strtoupper($tipo) }}</label>
                             <input id="insp_{{ $tipo }}" name="insp_{{ $tipo }}" type="number" min="0" value="{{ old('insp_' . $tipo, optional($visita)->{'insp_' . $tipo}) }}"
-                                class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                                class="v-input mt-1">
                         </div>
                     @endforeach
                 </div>
@@ -160,14 +160,14 @@
                     </div>
                 </div>
                 <div>
-                    <label for="vis_depositos_eliminados" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Depósitos Eliminados</label>
+                    <label for="vis_depositos_eliminados" class="v-toolbar-label">Depósitos Eliminados</label>
                     <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados', optional($visita)->vis_depositos_eliminados) }}"
-                        class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                        class="v-input mt-1">
                 </div>
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Coleta de Amostra</legend>
+                <legend class="v-section-title mb-2">Coleta de Amostra</legend>
                 <div class="flex items-center mt-6">
                     <input type="checkbox" name="vis_coleta_amostra" id="vis_coleta_amostra" value="1" {{ old('vis_coleta_amostra', optional($visita)->vis_coleta_amostra) ? 'checked' : '' }}
                         class="mr-2 text-blue-600 dark:text-blue-400">
@@ -178,26 +178,26 @@
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="vis_amos_inicial" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Inicial</label>
+                        <label for="vis_amos_inicial" class="v-toolbar-label">Número de Amostra Inicial</label>
                         <input type="number" name="vis_amos_inicial" id="vis_amos_inicial" min="0" value="{{ old('vis_amos_inicial', optional($visita)->vis_amos_inicial) }}"
-                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                            class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="vis_amos_final" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número de Amostra Final</label>
+                        <label for="vis_amos_final" class="v-toolbar-label">Número de Amostra Final</label>
                         <input type="number" name="vis_amos_final" id="vis_amos_final" min="0" value="{{ old('vis_amos_final', optional($visita)->vis_amos_final) }}"
-                            class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                            class="v-input mt-1">
                     </div>
                 </div>
                 <div>
-                    <label for="vis_qtd_tubitos" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade de Tubitos Utilizados</label>
+                    <label for="vis_qtd_tubitos" class="v-toolbar-label">Quantidade de Tubitos Utilizados</label>
                     <input type="number" name="vis_qtd_tubitos" id="vis_qtd_tubitos" min="0" value="{{ old('vis_qtd_tubitos', optional($visita)->vis_qtd_tubitos) }}"
-                        class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                        class="v-input mt-1">
                 </div>
             </fieldset>
 
             {{-- Tratamentos --}}
             <div x-data="{ exibirTratamentos: {{ old('tratamentos') || ($visita->tratamentos && count($visita->tratamentos)) ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', json_encode($visita->tratamentos ?? [])) }} }" class="space-y-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tratamentos Realizados</label>
+                <label class="v-toolbar-label">Tratamentos Realizados</label>
 
                 <template x-if="tratamentos.length === 0">
                     <div class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
@@ -240,7 +240,7 @@
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Tipo</label>
                                         <input type="text" :name="`tratamentos[${i}][trat_tipo]`" x-model="t.trat_tipo" readonly
-                                            class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-200 text-gray-900 shadow-sm cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                                            class="v-input mt-1 cursor-not-allowed bg-slate-200/90 opacity-90 dark:bg-slate-800 dark:text-slate-100">
                                     </div>
                                     <div x-show="t.trat_forma === 'Focal'">
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Linha</label>
@@ -256,12 +256,12 @@
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade (gramas)</label>
                                         <input type="number" min="0" :name="`tratamentos[${i}][qtd_gramas]`" x-model="t.qtd_gramas"
-                                            class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                            class="v-input mt-1">
                                     </div>
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Depósitos Tratados</label>
                                         <input type="number" min="0" :name="`tratamentos[${i}][qtd_depositos_tratados]`" x-model="t.qtd_depositos_tratados"
-                                            class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                            class="v-input mt-1">
                                     </div>
                                 </div>
 
@@ -269,7 +269,7 @@
                                     <div>
                                         <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade de Cargas</label>
                                         <input type="number" min="0" :name="`tratamentos[${i}][qtd_cargas]`" x-model="t.qtd_cargas"
-                                            class="mt-1 block w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
+                                            class="v-input mt-1">
                                     </div>
                                 </div>
 
@@ -325,7 +325,7 @@
 
             {{-- Doenças Monitoradas --}}
             <fieldset class="space-y-3">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Possíveis doenças</legend>
+                <legend class="v-section-title mb-2">Possíveis doenças</legend>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     @foreach ($doencas as $doenca)
@@ -349,7 +349,7 @@
             </fieldset>
 
             <div class="space-y-3">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pendências</label>
+                <label class="v-toolbar-label">Pendências</label>
                 <div class="flex items-center pt-4">
                     <input type="checkbox" name="vis_pendencias" id="vis_pendencias" value="1" {{ old('vis_pendencias', optional($visita)->vis_pendencias) ? 'checked' : '' }}
                         class="mr-2 text-blue-600 dark:text-blue-400">
@@ -361,9 +361,9 @@
             </div>
 
             <div>
-                <label for="vis_observacoes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observações</label>
+                <label for="vis_observacoes" class="v-toolbar-label">Observações</label>
                 <textarea name="vis_observacoes" id="vis_observacoes" rows="5"
-                        class="mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">{{ old('vis_observacoes', optional($visita)->vis_observacoes) }}</textarea>
+                        class="v-input mt-1">{{ old('vis_observacoes', optional($visita)->vis_observacoes) }}</textarea>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.

@@ -15,7 +15,7 @@
             <img src="{{ asset('images/visitaai_rembg.png') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
             <div>
                 <p class="text-xs font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">{{ __('Consulta pública') }}</p>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">{{ __('Visitas registradas neste endereço') }}</h1>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">{{ __('Visitas registradas neste endereço') }}</h1>
             </div>
         </div>
         <p class="max-w-2xl text-sm leading-relaxed text-gray-600 dark:text-gray-400">

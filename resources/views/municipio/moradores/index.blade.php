@@ -3,9 +3,9 @@
 @section('content')
 <div class="mx-auto max-w-7xl space-y-6">
     <x-breadcrumbs :items="array_filter([
-        ['label' => 'Página Inicial', 'url' => route('dashboard')],
-        ['label' => 'Locais', 'url' => route($profile . '.locais.index')],
-        ['label' => 'Visualizar', 'url' => route($profile . '.locais.show', $local)],
+        ['label' => __('Página Inicial'), 'url' => route('dashboard')],
+        ['label' => __('Locais'), 'url' => route($profile . '.locais.index')],
+        ['label' => __('Visualizar'), 'url' => route($profile . '.locais.show', $local)],
         ['label' => 'Moradores'],
     ])" />
 

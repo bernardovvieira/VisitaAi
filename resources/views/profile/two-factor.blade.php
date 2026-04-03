@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Ativar autenticação em dois fatores (2FA)</h1>
+<div class="v-page space-y-5">
+    <x-page-header title="Ativar autenticação em dois fatores (2FA)" />
 
     @if($errors->any())
         <x-alert type="error" :message="implode(' ', $errors->all())" />
     @endif
 
-    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
-        <h2 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <x-heroicon-o-lock-closed class="mr-2 h-6 w-6 shrink-0 text-amber-500" />
+    <div class="v-card space-y-4">
+        <h2 class="v-section-title flex items-center gap-2">
+            <x-heroicon-o-lock-closed class="h-5 w-5 shrink-0 text-amber-500" />
             O que você precisa saber
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
@@ -24,7 +24,7 @@
             @csrf
             <div class="flex gap-3">
                 <button type="submit" id="btn-enable-2fa" name="enable_2fa" value="1"
-                        class="inline-flex flex-1 justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition disabled:opacity-70">
+                        class="inline-flex flex-1 items-center justify-center gap-2 rounded-md border border-transparent bg-slate-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 disabled:opacity-70 dark:bg-slate-600 dark:hover:bg-slate-500">
                     <x-heroicon-o-lock-closed class="h-4 w-4 shrink-0" />
                     Ativar 2FA
                 </button>

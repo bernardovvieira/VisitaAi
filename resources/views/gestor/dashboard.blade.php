@@ -31,29 +31,28 @@
     <x-page-header :eyebrow="__('Console municipal')" :title="__('Painel do gestor')">
         <x-slot name="lead">
             <p>{{ __('Olá, :nome. Visão geral do município e atalhos para o dia a dia.', ['nome' => Auth::user()->use_nome]) }}</p>
-            <span class="mt-1 block text-xs text-slate-500 dark:text-slate-500">{{ now()->translatedFormat('l, j \d\e F \d\e Y') }}</span>
         </x-slot>
     </x-page-header>
 
     @if($pendentesCount > 0 || $visitasComPendencia > 0)
-        <div class="v-card v-alert-erp v-card--muted border-amber-200/50 dark:border-amber-900/50">
+        <div class="v-card bg-slate-50/90 dark:border-slate-700 dark:bg-slate-900/50">
             <p class="v-toolbar-label mb-2">{{ __('Requer atenção') }}</p>
-            <ul class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <ul class="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
                 @if($pendentesCount > 0)
                     <li>
-                        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100 dark:hover:bg-amber-950/55">
-                            <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
+                        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60">
+                            <x-heroicon-o-exclamation-triangle class="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                             {{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}
-                            <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                            <x-heroicon-o-arrow-right class="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
                         </a>
                     </li>
                 @endif
                 @if($visitasComPendencia > 0)
                     <li>
-                        <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-950 transition hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/35 dark:text-rose-100 dark:hover:bg-rose-950/50">
-                            <x-heroicon-o-clock class="h-5 w-5 shrink-0" aria-hidden="true" />
+                        <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="inline-flex items-center gap-1.5 rounded-md border border-rose-300 bg-rose-50 px-2.5 py-1.5 text-xs font-semibold text-rose-950 transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-100 dark:hover:bg-rose-950/55">
+                            <x-heroicon-o-clock class="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden="true" />
                             {{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}
-                            <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                            <x-heroicon-o-arrow-right class="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
                         </a>
                     </li>
                 @endif
@@ -62,67 +61,67 @@
     @endif
 
         <div class="v-card">
-            <h2 class="v-toolbar-label mb-3">{{ __('Indicadores') }}</h2>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
+            <h2 class="v-toolbar-label mb-2">{{ __('Indicadores') }}</h2>
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-3">
                 <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-user-group class="h-6 w-6 shrink-0" />
+                        <x-heroicon-o-user-group class="h-5 w-5 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais de campo') }}</p>
-                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $profissionaisAprovados }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais de campo') }}</p>
+                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $profissionaisAprovados }}</p>
                         <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ __('Aprovados no sistema') }}</p>
                     </div>
                 </div>
 
-                <div class="v-dashboard-kpi {{ $pendentesCount > 0 ? 'border-amber-300/70 ring-1 ring-amber-200/80 dark:border-amber-700 dark:ring-amber-900/40' : '' }}">
+                <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--amber" aria-hidden="true">
-                        <x-heroicon-o-exclamation-triangle class="h-6 w-6 shrink-0" />
+                        <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Cadastros pendentes') }}</p>
-                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $pendentesCount }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Cadastros pendentes') }}</p>
+                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $pendentesCount }}</p>
                         <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ __('ACE/ACS sem aprovação') }}</p>
                     </div>
                 </div>
 
                 <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-user-circle class="h-6 w-6 shrink-0" />
+                        <x-heroicon-o-user-circle class="h-5 w-5 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Gestores') }}</p>
-                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $gestoresCount }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Gestores') }}</p>
+                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $gestoresCount }}</p>
                     </div>
                 </div>
 
                 <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-beaker class="h-6 w-6 shrink-0" />
+                        <x-heroicon-o-beaker class="h-5 w-5 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Doenças monitoradas') }}</p>
-                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $doencasCount }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Doenças monitoradas') }}</p>
+                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $doencasCount }}</p>
                     </div>
                 </div>
 
                 <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-clipboard-document-list class="h-6 w-6 shrink-0" />
+                        <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas registradas') }}</p>
-                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasCount }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas registradas') }}</p>
+                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasCount }}</p>
                     </div>
                 </div>
 
-                <div class="v-dashboard-kpi {{ $visitasComPendencia > 0 ? 'border-rose-300/70 ring-1 ring-rose-200/80 dark:border-rose-800 dark:ring-rose-900/35' : '' }}">
+                <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--rose" aria-hidden="true">
-                        <x-heroicon-o-clock class="h-6 w-6 shrink-0" />
+                        <x-heroicon-o-clock class="h-5 w-5 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas com pendência') }}</p>
-                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComPendencia }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas com pendência') }}</p>
+                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComPendencia }}</p>
                     </div>
                 </div>
             </div>
@@ -136,7 +135,7 @@
                         <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
                     @endif
                 </div>
-                <p class="text-3xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalOcupantesVisitaAi }}</p>
+                <p class="text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalOcupantesVisitaAi }}</p>
             </div>
             @if($ocupantesPorBairroTop->isNotEmpty())
                 <p class="v-toolbar-label mt-4 mb-2">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
@@ -159,7 +158,7 @@
                     </table>
                 </div>
                 <p class="mt-3 text-center">
-                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver painel completo de indicadores') }}</a>
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-xs font-semibold text-blue-600 hover:underline sm:text-[13px] dark:text-blue-400">{{ __('Ver painel completo de indicadores') }}</a>
                 </p>
             @else
                 <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>
@@ -175,40 +174,40 @@
         @endif
 
         <div class="v-card">
-            <h2 class="v-toolbar-label mb-3">{{ __('Ações rápidas') }}</h2>
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
+            <h2 class="v-toolbar-label mb-2">{{ __('Ações rápidas') }}</h2>
+            <div class="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3">
                 <a href="{{ route('gestor.pendentes') }}" class="v-dashboard-action {{ $pendentesCount > 0 ? 'v-dashboard-action--primary' : '' }}">
-                    <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <x-heroicon-o-exclamation-triangle class="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Usuários pendentes') }}</span>
                     @if($pendentesCount > 0)
-                        <span class="ml-1 inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white/25 px-1.5 text-xs font-bold tabular-nums">{{ $pendentesCount }}</span>
+                        <span class="ml-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-white/25 px-1 text-[11px] font-bold tabular-nums">{{ $pendentesCount }}</span>
                     @endif
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
                 </a>
                 <a href="{{ route('gestor.users.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <x-heroicon-o-users class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Gerenciar usuários') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
                 </a>
                 <a href="{{ route('gestor.visitas.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Visitas realizadas') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
                 </a>
                 <a href="{{ route('gestor.doencas.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-beaker class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <x-heroicon-o-beaker class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Doenças monitoradas') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
                 </a>
                 <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dashboard-action">
-                    <x-heroicon-o-chart-bar class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Indicadores') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
                 </a>
                 <a href="{{ route('gestor.relatorios.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-document-text class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <x-heroicon-o-document-text class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Relatórios') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
                 </a>
             </div>
         </div>

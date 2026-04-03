@@ -15,7 +15,7 @@
             <img src="{{ asset('images/visitaai_rembg.png') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
             <div>
                 <p class="text-xs font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">{{ __('Consulta pública') }}</p>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">{{ __('Verificar visitas no imóvel') }}</h1>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">{{ __('Verificar visitas no imóvel') }}</h1>
             </div>
         </div>
         <p class="mt-4 max-w-2xl text-sm leading-relaxed text-gray-600 dark:text-gray-400">
@@ -29,9 +29,9 @@
 
     {{-- Busca por código --}}
     <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
-          class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm space-y-4">
-        <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ __('Código do imóvel') }}</h2>
-        <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          class="v-card space-y-4">
+        <h2 class="v-section-title">{{ __('Código do imóvel') }}</h2>
+        <label for="codigo" class="v-toolbar-label">
             {!! __('Informe o <strong>código numérico</strong> que consta no comprovante ou foi passado pelo ACE ou ACS na visita.') !!} <span class="text-red-500" aria-hidden="true">*</span>
         </label>
         <div class="flex gap-4 flex-col md:flex-row">
@@ -45,10 +45,10 @@
                 inputmode="numeric"
                 pattern="[0-9]*"
                 autocomplete="off"
-                class="w-full rounded-md p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600"
+                class="v-input md:flex-1"
                 aria-describedby="codigo-ajuda">
             <button type="submit" id="consulta-codigo-btn"
-                    class="btn-acesso-principal px-4 py-2 text-white font-semibold rounded-md shadow transition inline-flex items-center justify-center min-w-[120px]">
+                    class="btn-acesso-principal inline-flex min-w-[120px] items-center justify-center rounded-md px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition">
                 {{ __('Consultar agora') }}
             </button>
         </div>
@@ -84,7 +84,7 @@
     @endif
 
     {{-- Doenças monitoradas --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm space-y-4" aria-labelledby="consulta-doencas-titulo">
+    <section class="v-card space-y-4" aria-labelledby="consulta-doencas-titulo">
         <h2 id="consulta-doencas-titulo" class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('Doenças monitoradas no município') }}</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             @if($doencas->isEmpty())

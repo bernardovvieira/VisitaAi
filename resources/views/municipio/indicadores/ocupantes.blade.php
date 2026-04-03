@@ -36,7 +36,7 @@
 @section('content')
 <div class="v-page space-y-5">
     <x-breadcrumbs :items="[
-        ['label' => 'Página Inicial', 'url' => route('dashboard')],
+        ['label' => __('Página Inicial'), 'url' => route('dashboard')],
         ['label' => $cfgInd['titulo_pagina'] ?? 'Indicadores'],
     ]" />
 
@@ -47,42 +47,46 @@
         <x-alert type="success" :message="session('success')" />
     @endif
 
-    <section class="v-card space-y-3">
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div class="min-w-0 flex-1">
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">{{ $cfgInd['titulo_pagina'] ?? __('Indicadores') }}</h1>
-                <p class="mt-1 max-w-3xl text-gray-600 dark:text-gray-400">{{ $cfgInd['subtitulo'] ?? '' }}</p>
-                @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
-                    <p class="mt-1 max-w-3xl text-xs leading-relaxed text-slate-500/90 dark:text-slate-400/85">{{ $cfgInd['subtitulo_detalhe'] }}</p>
-                @endif
-            </div>
-            <div class="flex shrink-0 flex-col items-stretch gap-1 sm:items-end">
-                @if($canExportCsv)
-                    <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-                       class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-950 shadow-sm transition hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:border-blue-500 dark:bg-blue-950/45 dark:text-blue-100 dark:hover:bg-blue-900/50 dark:focus-visible:ring-offset-gray-900">
-                        <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                        {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
-                    </a>
-                    @if(filled($cfgInd['export_csv_legenda'] ?? ''))
-                        <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500/80 dark:text-slate-400/75">{{ $cfgInd['export_csv_legenda'] }}</p>
-                    @endif
-                @else
-                    <span class="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-dashed border-blue-300/80 bg-blue-50/50 px-3 py-2 text-xs font-medium text-blue-800/70 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-200/50"
-                          title="{{ $csvHintDisabled }}"
-                          aria-disabled="true">
-                        <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
-                        {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
-                    </span>
-                    @if(filled($cfgInd['export_csv_legenda'] ?? ''))
-                        <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500/70 dark:text-slate-400/60">{{ $cfgInd['export_csv_legenda'] }}</p>
-                    @endif
-                @endif
-            </div>
+    <x-page-header :eyebrow="__('Gestão municipal')" :title="$cfgInd['titulo_pagina'] ?? __('Indicadores')">
+        <x-slot name="lead">
+            @if(filled($cfgInd['subtitulo'] ?? ''))
+                <p class="text-sm text-slate-600 dark:text-slate-400">{{ $cfgInd['subtitulo'] }}</p>
+            @endif
+            @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
+                <p class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $cfgInd['subtitulo_detalhe'] }}</p>
+            @endif
+        </x-slot>
+    </x-page-header>
+
+    <div class="v-card v-card--muted v-card--tight flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0 flex-1">
+            @if(! $canExportCsv && $csvHintDisabled !== '')
+                <p class="text-xs text-slate-600 dark:text-slate-400">{{ $csvHintDisabled }}</p>
+            @endif
         </div>
-        @if(! $canExportCsv && $csvHintDisabled !== '')
-            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $csvHintDisabled }}</p>
-        @endif
-    </section>
+        <div class="flex shrink-0 flex-col items-stretch gap-1 sm:items-end">
+            @if($canExportCsv)
+                <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
+                   class="inline-flex items-center justify-center rounded-md border border-blue-600 bg-blue-50 px-3 py-1.5 text-[13px] font-semibold text-blue-950 shadow-sm transition hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:border-blue-500 dark:bg-blue-950/45 dark:text-blue-100 dark:hover:bg-blue-900/50">
+                    <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                    {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
+                </a>
+                @if(filled($cfgInd['export_csv_legenda'] ?? ''))
+                    <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500 dark:text-slate-400">{{ $cfgInd['export_csv_legenda'] }}</p>
+                @endif
+            @else
+                <span class="inline-flex cursor-not-allowed items-center justify-center rounded-md border border-dashed border-blue-300/80 bg-blue-50/50 px-3 py-1.5 text-[13px] font-medium text-blue-800/70 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-200/50"
+                      title="{{ $csvHintDisabled }}"
+                      aria-disabled="true">
+                    <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
+                    {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
+                </span>
+                @if(filled($cfgInd['export_csv_legenda'] ?? ''))
+                    <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500/70 dark:text-slate-400/60">{{ $cfgInd['export_csv_legenda'] }}</p>
+                @endif
+            @endif
+        </div>
+    </div>
 
     <section class="v-card border-amber-200/90 bg-amber-50/95 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
         <p><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
@@ -94,11 +98,11 @@
     <section class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none">
             <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ __('Total de ocupantes') }}</p>
-            <p class="mt-0.5 text-2xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ number_format($R['total_ocupantes'], 0, ',', '.') }}</p>
+            <p class="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ number_format($R['total_ocupantes'], 0, ',', '.') }}</p>
         </div>
         <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none">
             <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ __('Imóveis com ocupante') }}</p>
-            <p class="mt-0.5 text-2xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ number_format($R['total_imoveis_com_ocupante'], 0, ',', '.') }}</p>
+            <p class="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ number_format($R['total_imoveis_com_ocupante'], 0, ',', '.') }}</p>
         </div>
         <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none sm:col-span-2 lg:col-span-2">
             <div class="flex flex-wrap items-end justify-between gap-2">
@@ -185,7 +189,7 @@
 
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ $cfgInd['titulo_secao_escolaridade'] ?? 'Escolaridade' }}</h2>
+            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_escolaridade'] ?? 'Escolaridade' }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['escolaridade'] as $codigo => $qtd)
                     <li class="flex justify-between gap-2 border-b border-slate-100 pb-1.5 dark:border-slate-700">
@@ -199,7 +203,7 @@
             @endif
         </section>
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ $cfgInd['titulo_secao_renda'] ?? 'Renda' }}</h2>
+            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_renda'] ?? 'Renda' }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['renda'] as $codigo => $qtd)
                     <li class="flex justify-between gap-2 border-b border-slate-100 pb-1.5 dark:border-slate-700">

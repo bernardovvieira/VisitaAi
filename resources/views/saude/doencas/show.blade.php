@@ -3,10 +3,10 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-8">
-  <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Doenças', 'url' => route('saude.doencas.index')], ['label' => 'Visualizar']]" />
+  <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Doenças'), 'url' => route('saude.doencas.index')], ['label' => __('Visualizar')]]" />
 
   <!-- Introdução -->
-  <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+  <section class="v-card">
     <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Visão Geral da Doença</h2>
     <p class="mt-2 text-gray-600 dark:text-gray-400">
       Esta seção apresenta os detalhes completos de uma doença monitorada no sistema: nome, sintomas, formas de transmissão e medidas de controle.
@@ -14,7 +14,7 @@
   </section>
 
   <!-- Dados Básicos -->
-  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+  <section class="v-card">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Dados Básicos</h3>
     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
       <div>
@@ -37,7 +37,7 @@
   </section>
 
   <!-- Sintomas -->
-  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+  <section class="v-card">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Sintomas</h3>
     @if(count($doenca->doe_sintomas))
       <div class="flex flex-wrap gap-2">
@@ -51,7 +51,7 @@
   </section>
 
   <!-- Transmissão -->
-  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+  <section class="v-card">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Modos de Transmissão</h3>
     @if(count($doenca->doe_transmissao))
       <div class="flex flex-wrap gap-2">
@@ -65,7 +65,7 @@
   </section>
 
   <!-- Medidas de Controle -->
-  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+  <section class="v-card">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Medidas de Controle</h3>
     @if(count($doenca->doe_medidas_controle))
       <div class="flex flex-wrap gap-2">

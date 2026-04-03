@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Confirme sua senha</h1>
+<div class="v-page space-y-5">
+    <x-page-header title="Confirme sua senha" />
 
-    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
-        <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="v-card space-y-4">
+        <h3 class="v-section-title flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             Área segura do aplicativo
@@ -21,26 +21,23 @@
                 <input type="hidden" name="return_action" value="{{ request('return_action') }}">
             @endif
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha <span class="text-red-500">*</span></label>
+                <label for="password" class="v-toolbar-label">Senha <span class="text-red-500">*</span></label>
                 <input id="password"
                        type="password"
                        name="password"
                        required
                        autocomplete="current-password"
-                       class="mt-1 block w-full max-w-xs rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
+                       class="v-input mt-1 max-w-xs">
                 @error('password')
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
             </div>
             <div class="flex flex-wrap gap-3">
                 <a href="{{ route('dashboard') }}"
-                   class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-md shadow transition">
+                   class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40">
                     Voltar ao painel
                 </a>
-                <button type="submit" id="confirm-password-submit-btn"
-                        class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    Confirmar
-                </button>
+                <x-primary-button type="submit" id="confirm-password-submit-btn">Confirmar</x-primary-button>
             </div>
         </form>
     </div>
