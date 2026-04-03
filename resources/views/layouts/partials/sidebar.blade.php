@@ -6,7 +6,7 @@
         ? route('agente.visitas.index')
         : ($u->isAgenteSaude() ? route('saude.visitas.index') : route('gestor.visitas.index'));
     $yearEnd = (int) now()->format('Y');
-    $copyRight = $yearEnd <= 2025 ? '2025' : '2025-'.$yearEnd;
+    $copyrightYears = $yearEnd <= 2025 ? '2025' : '2025–'.$yearEnd;
 @endphp
 
 <aside id="app-sidebar" role="navigation" aria-label="{{ __('Menu principal') }}"
@@ -181,9 +181,12 @@
         @endif
     </nav>
 
-    <div class="shrink-0 border-t border-slate-800/80 px-4 py-3 text-center">
-        <p class="text-[10px] leading-snug text-slate-500">
-            © {{ $copyRight }} {{ config('app.name', 'Visita Aí') }}
+    <div class="shrink-0 border-t border-slate-800/80 px-3 py-3 text-center">
+        <p class="text-[10px] leading-relaxed text-slate-500">
+            © {{ $copyrightYears }} Visita Aí · Bitwise Technologies
+        </p>
+        <p class="mt-1 text-[10px] leading-relaxed text-slate-500/90">
+            {{ __('Todos os direitos reservados.') }}
         </p>
     </div>
 </aside>

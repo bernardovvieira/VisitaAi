@@ -63,7 +63,7 @@
         <h2 id="heading-quick-agente" class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Ações rápidas</h2>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <a href="{{ route('agente.visitas.create') }}" class="{{ $actionBase }}">
-                <x-heroicon-o-plus-circle class="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                <x-heroicon-o-plus-circle class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
                 Registrar visita
             </a>
             <a href="{{ route('agente.visitas.index') }}" class="{{ $actionBase }}">
@@ -84,9 +84,9 @@
     <section class="border-t border-slate-200/90 pt-6 dark:border-slate-700" aria-label="Suporte">
         <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
             <span class="font-medium text-slate-600 dark:text-slate-300">Apoio</span>
-            <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-emerald-700 underline decoration-emerald-700/30 underline-offset-2 hover:decoration-emerald-700 dark:text-emerald-400">bitwise.dev.br</a>
+            <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 hover:decoration-blue-700 dark:text-blue-400">bitwise.dev.br</a>
             <span class="text-slate-300 dark:text-slate-600" aria-hidden="true">·</span>
-            <a href="mailto:bernardo@bitwise.dev.br" class="font-medium text-emerald-700 underline decoration-emerald-700/30 underline-offset-2 hover:decoration-emerald-700 dark:text-emerald-400">bernardo@bitwise.dev.br</a>
+            <a href="mailto:bernardo@bitwise.dev.br" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 hover:decoration-blue-700 dark:text-blue-400">bernardo@bitwise.dev.br</a>
         </p>
     </section>
 </div>
