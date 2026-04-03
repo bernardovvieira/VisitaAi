@@ -4,64 +4,46 @@
 @section('og_description', 'Painel do ' . \App\Helpers\MsTerminologia::perfilLabel('agente_saude') . '. Registre visitas LIRAa e consulte doenças monitoradas. Conforme Lei 11.350/2006 e Diretriz MS.')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+@php
+    $card = 'rounded-xl border border-gray-200/80 bg-white p-4 shadow-sm dark:border-gray-600 dark:bg-gray-800';
+@endphp
+<div class="mx-auto max-w-7xl space-y-8">
     <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
-    <h1 class="mb-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Painel do {{ \App\Helpers\MsTerminologia::perfilLabel('agente_saude') }}</h1>
 
-    <!-- Mensagem de boas-vindas -->
-    <section class="mb-8 rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a), {{ Auth::user()->use_nome }}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Este painel é exclusivo para registro e acompanhamento de visitas do tipo <strong>LIRAa</strong>.
-        </p>
-        <div class="mt-4 flex items-center border-t border-gray-100 pt-4 dark:border-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 dark:text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l4 2M12 4a8 8 0 100 16 8 8 0 000-16z" />
-            </svg>
-            <span id="clock" class="text-gray-700 dark:text-gray-300"></span>
+    <header class="flex flex-col gap-2 border-b border-gray-100 pb-6 dark:border-gray-800 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl">Painel do {{ \App\Helpers\MsTerminologia::perfilLabel('agente_saude') }}</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->use_nome }} · <span class="font-medium text-gray-700 dark:text-gray-300">LIRAa</span></p>
         </div>
-    </section>
+        <p id="clock" class="text-xs tabular-nums text-gray-400 dark:text-gray-500"></p>
+    </header>
 
-    <!-- Estatísticas Pessoais -->
-    <section class="space-y-4">
-        <header>
-            <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Estatísticas</h2>
-        </header>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Minhas visitas -->
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z" />
-                    </svg>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Minhas Visitas LIRAa</h3>
+    <section class="space-y-3" aria-labelledby="heading-stats-saude">
+        <h2 id="heading-stats-saude" class="sr-only">Estatísticas</h2>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="{{ $card }}">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Visitas LIRAa (suas)</p>
+                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ \App\Models\Visita::where('fk_usuario_id', Auth::user()->use_id)->where('vis_atividade', '7')->count() }}</p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z"/></svg>
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    {{ \App\Models\Visita::where('fk_usuario_id', Auth::user()->use_id)->where('vis_atividade', '7')->count() }}
-                </p>
             </div>
-
-            <!-- Doenças Monitoradas -->
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 dark:text-red-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M9 17v-6m4 6v-10m4 10v-4" />
-                    </svg>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Doenças Monitoradas</h3>
+            <div class="{{ $card }}">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Doenças monitoradas</p>
+                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ \App\Models\Doenca::count() }}</p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17v-6m4 6v-10m4 10v-4"/></svg>
                 </div>
-                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">
-                    {{ \App\Models\Doenca::count() }}
-                </p>
             </div>
         </div>
     </section>
 
-    <!-- Ações Rápidas -->
-    <section class="mt-8 space-y-4">
-        <header>
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Ações Rápidas</h2>
-        </header>
+    <section class="space-y-3" aria-labelledby="heading-quick-saude">
+        <h2 id="heading-quick-saude" class="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Ações rápidas</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <a href="{{ route('saude.doencas.index') }}" class="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded shadow-sm hover:shadow-lg transition dark:hover:bg-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,30 +66,22 @@
         </div>
     </section>
 
-    <!-- Suporte Técnico -->
-    <section class="mt-8">
-        <header>
-            <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Ajuda e Suporte</h2>
-        </header>
-        <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Encontrou algum problema? Contate a <em>Bitwise Technologies</em>:</p>
-            <ul class="mt-2 space-y-1 text-gray-600 dark:text-gray-400">
-                <li><b>Site:</b> <a href="https://bitwise.dev.br" target="_blank" rel="noopener" class="underline text-gray-800 dark:text-gray-100 hover:text-black dark:hover:text-gray-200 transition-colors">bitwise.dev.br</a></li>
-                <li><b>E-mail:</b> <a href="mailto:bernardo@bitwise.dev.br" class="underline text-gray-800 dark:text-gray-100 hover:text-black dark:hover:text-gray-200 transition-colors">bernardo@bitwise.dev.br</a></li>
-            </ul>
-        </div>
+    <section class="border-t border-gray-100 pt-6 dark:border-gray-800" aria-label="Suporte">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+            Apoio —
+            <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 hover:decoration-blue-700 dark:text-blue-400">bitwise.dev.br</a>
+            ·
+            <a href="mailto:bernardo@bitwise.dev.br" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 hover:decoration-blue-700 dark:text-blue-400">bernardo@bitwise.dev.br</a>
+        </p>
     </section>
 </div>
 
-{{-- Scripts --}}
 <script>
     function updateClock() {
+        const el = document.getElementById('clock');
+        if (!el) return;
         const now = new Date();
-        const options = {
-            weekday: 'long', year: 'numeric', month: 'long',
-            day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
-        };
-        document.getElementById('clock').innerText = now.toLocaleDateString('pt-BR', options);
+        el.textContent = now.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
     setInterval(updateClock, 1000);
     updateClock();

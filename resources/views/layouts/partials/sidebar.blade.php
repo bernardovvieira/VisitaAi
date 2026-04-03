@@ -15,9 +15,9 @@
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
            class="flex min-w-0 flex-1 items-center gap-2 rounded-lg outline-none ring-blue-500/40 focus-visible:ring-2">
             <img src="{{ asset('images/visitaai_rembg.png') }}"
-                 alt=""
+                 alt="{{ config('app.name', 'Visita Aí') }}"
                  class="h-9 w-auto shrink-0" width="36" height="36" />
-            <span class="truncate text-sm font-semibold tracking-tight text-white">{{ config('app.name', 'Visita Aí') }}</span>
+            <span class="truncate text-sm font-semibold tracking-tight text-white">Visita Aí</span>
         </a>
         <button type="button"
                 class="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
@@ -29,9 +29,7 @@
         </button>
     </div>
 
-    <nav class="flex-1 space-y-1 overflow-y-auto px-2 py-4" aria-label="{{ __('Navegação') }}">
-        <p class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">{{ __('Acesso rápido') }}</p>
-
+    <nav class="flex-1 space-y-0.5 overflow-y-auto px-2 py-3" aria-label="{{ __('Navegação') }}">
         <x-sidebar-link :href="route('dashboard')"
                         :active="request()->routeIs('*dashboard')"
                         @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -190,10 +188,4 @@
             </div>
         @endif
     </nav>
-
-    <div class="shrink-0 border-t border-slate-800/80 px-4 py-3">
-        <p class="text-[10px] leading-tight text-slate-500">
-            {{ __('Vigilância entomológica e controle vetorial') }}
-        </p>
-    </div>
 </aside>
