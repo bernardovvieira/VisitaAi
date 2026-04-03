@@ -53,23 +53,32 @@
         @auth
         @php
             $u = auth()->user();
+            $dashPath = rtrim(parse_url(route('dashboard'), PHP_URL_PATH) ?: '', '/') ?: '/';
             if ($u->isAgenteEndemias()) {
-                $visitaOfflineRedirect = route('agente.visitas.index');
+                $visitaOfflineRedirect = route('dashboard');
                 $visitaOfflineAllowed = [
+                    $dashPath,
                     parse_url(route('agente.visitas.index'), PHP_URL_PATH),
                     parse_url(route('agente.visitas.create'), PHP_URL_PATH),
                     parse_url(route('agente.locais.index'), PHP_URL_PATH),
                     parse_url(route('agente.locais.create'), PHP_URL_PATH),
                 ];
             } elseif ($u->isAgenteSaude()) {
-                $visitaOfflineRedirect = route('saude.visitas.index');
-                $visitaOfflineAllowed = [parse_url(route('saude.visitas.index'), PHP_URL_PATH), parse_url(route('saude.visitas.create'), PHP_URL_PATH)];
+                $visitaOfflineRedirect = route('dashboard');
+                $visitaOfflineAllowed = [
+                    $dashPath,
+                    parse_url(route('saude.visitas.index'), PHP_URL_PATH),
+                    parse_url(route('saude.visitas.create'), PHP_URL_PATH),
+                ];
             } elseif ($u->isGestor()) {
-                $visitaOfflineRedirect = route('gestor.visitas.index');
-                $visitaOfflineAllowed = [parse_url(route('gestor.visitas.index'), PHP_URL_PATH)];
+                $visitaOfflineRedirect = route('dashboard');
+                $visitaOfflineAllowed = [
+                    $dashPath,
+                    parse_url(route('gestor.visitas.index'), PHP_URL_PATH),
+                ];
             } else {
                 $visitaOfflineRedirect = route('dashboard');
-                $visitaOfflineAllowed = [parse_url(route('dashboard'), PHP_URL_PATH)];
+                $visitaOfflineAllowed = [$dashPath];
             }
             $visitaOfflineAllowed = array_values(array_map(function ($p) { return rtrim($p ?: '', '/') ?: '/'; }, $visitaOfflineAllowed));
         @endphp
@@ -144,9 +153,22 @@
                      class="flex min-h-screen bg-slate-50 dark:bg-gray-950"
                      x-data="{
                         sidebarOpen: false,
+                        sidebarDesktop: (function () {
+                            try {
+                                var v = localStorage.getItem('visita-sidebar-desktop');
+                                if (v === 'collapsed' || v === 'hidden' || v === 'expanded') return v;
+                            } catch (e) {}
+                            return 'expanded';
+                        })(),
+                        isLg: false,
                         online: typeof navigator !== 'undefined' ? navigator.onLine : true,
                      }"
                      x-init="
+                        isLg = typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
+                        if (typeof window !== 'undefined') {
+                            var _mqLg = window.matchMedia('(min-width: 1024px)');
+                            _mqLg.addEventListener('change', function () { isLg = _mqLg.matches; });
+                        }
                         function updateOnline(e) {
                             var d = e && e.detail;
                             online = (d && typeof d.online === 'boolean') ? d.online : (typeof window.visitaConnectionOnline !== 'undefined' ? window.visitaConnectionOnline : (typeof navigator !== 'undefined' ? navigator.onLine : true));
@@ -166,7 +188,10 @@
                         }
                         window.addEventListener('resize', closeSidebarIfDesktop);
                      "
-                     x-effect="if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline"
+                     x-effect="
+                        if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline;
+                        try { localStorage.setItem('visita-sidebar-desktop', sidebarDesktop); } catch (e) {}
+                     "
                      @keydown.escape.window="sidebarOpen = false">
                     @include('layouts.partials.sidebar')
                     <div class="fixed inset-0 z-40 bg-slate-950/55 backdrop-blur-sm transition-opacity lg:hidden"
@@ -250,7 +275,7 @@
                     var ok = allowed.some(function(a) { return a === p; });
                     if (!ok && (p.indexOf('/agente/visitas') === 0 || p.indexOf('/agente/locais') === 0 || p.indexOf('/saude/visitas') === 0)) ok = true;
                     if (!ok) {
-                        if (wasOnline) showConnectionToast('Conexão perdida. Redirecionando para Visitas.', true);
+                        if (wasOnline) showConnectionToast('Conexão perdida. Redirecionando para a página inicial.', true);
                         window.location.href = window.visitaOfflineRedirect;
                         return;
                     }

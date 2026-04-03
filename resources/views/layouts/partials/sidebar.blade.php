@@ -2,25 +2,49 @@
 @php
     $u = auth()->user();
     $logoHrefOnline = route('dashboard');
-    $logoHrefOffline = $u->isAgenteEndemias()
-        ? route('agente.visitas.index')
-        : ($u->isAgenteSaude() ? route('saude.visitas.index') : route('gestor.visitas.index'));
+    $logoHrefOffline = route('dashboard');
     $yearEnd = (int) now()->format('Y');
     $copyrightYears = $yearEnd <= 2025 ? '2025' : '2025-'.$yearEnd;
 @endphp
 
-<aside id="app-sidebar" role="navigation" aria-label="{{ __('Menu principal') }}"
-       class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-800/80 bg-slate-950 text-slate-200 shadow-2xl transition-transform duration-200 ease-out lg:static lg:z-30 lg:w-60 lg:shrink-0 lg:shadow-none"
-       x-bind:class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
-    <div class="relative flex h-[4.5rem] shrink-0 items-center justify-center border-b border-slate-800/80 px-4">
+<aside id="app-sidebar" role="navigation"
+       aria-label="{{ __('Menu principal') }}"
+       x-bind:aria-hidden="(!sidebarOpen && !isLg) || (sidebarDesktop === 'hidden' && isLg)"
+       x-bind:inert="sidebarDesktop === 'hidden' && isLg"
+       class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col border-r border-slate-800/80 bg-slate-950 text-slate-200 shadow-2xl transition-[transform,width,opacity] duration-200 ease-out lg:static lg:z-30 lg:shadow-none"
+       x-bind:class="{
+            'translate-x-0': sidebarOpen,
+            '-translate-x-full lg:translate-x-0': !sidebarOpen,
+            'lg:w-60': sidebarDesktop === 'expanded',
+            'lg:w-[4.25rem]': sidebarDesktop === 'collapsed',
+            'lg:pointer-events-none lg:w-0 lg:min-w-0 lg:max-w-0 lg:overflow-hidden lg:border-r-0 lg:opacity-0': sidebarDesktop === 'hidden',
+            'sidebar-desktop-collapsed': sidebarDesktop === 'collapsed',
+        }">
+    <div class="relative flex h-[4.5rem] shrink-0 items-center border-b border-slate-800/80 px-3 lg:px-2">
         <a :href="online ? @js($logoHrefOnline) : @js($logoHrefOffline)"
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
-           class="flex flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-3">
+           class="sidebar-header-brand mx-auto flex max-w-full flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-2">
             <img src="{{ asset('images/visitaai_rembg.png') }}"
                  alt="{{ config('app.name', 'Visita Aí') }}"
-                 class="h-10 w-auto shrink-0" />
-            <span class="text-sm font-semibold leading-tight tracking-tight text-white">Visita Aí</span>
+                 class="h-10 w-auto shrink-0 lg:h-9" />
+            <span class="sidebar-brand-text text-sm font-semibold leading-tight tracking-tight text-white">{{ config('app.name', 'Visita Aí') }}</span>
         </a>
+        <div class="absolute right-1 top-1/2 hidden -translate-y-1/2 items-center gap-0.5 lg:flex" x-show="sidebarDesktop === 'expanded'" x-cloak>
+            <button type="button"
+                    class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50"
+                    @click="sidebarDesktop = 'collapsed'"
+                    title="{{ __('Recolher menu (só ícones)') }}"
+                    aria-label="{{ __('Recolher menu') }}">
+                <x-heroicon-o-chevron-double-left class="h-5 w-5 shrink-0" aria-hidden="true" />
+            </button>
+            <button type="button"
+                    class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50"
+                    @click="sidebarDesktop = 'hidden'"
+                    title="{{ __('Ocultar menu lateral') }}"
+                    aria-label="{{ __('Ocultar menu lateral') }}">
+                <x-heroicon-o-eye-slash class="h-5 w-5 shrink-0" aria-hidden="true" />
+            </button>
+        </div>
         <button type="button"
                 class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
                 @click="sidebarOpen = false"
@@ -165,7 +189,26 @@
         @endif
     </nav>
 
-    <div class="shrink-0 border-t border-slate-800/80 px-3 py-3 text-center">
+    <div class="sidebar-collapsed-tools flex shrink-0 flex-col gap-1 border-t border-slate-800/80 p-1.5"
+         x-show="sidebarDesktop === 'collapsed' && isLg"
+         x-cloak>
+        <button type="button"
+                class="flex w-full items-center justify-center rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50"
+                @click="sidebarDesktop = 'expanded'"
+                title="{{ __('Expandir menu') }}"
+                aria-label="{{ __('Expandir menu') }}">
+            <x-heroicon-o-chevron-double-right class="h-5 w-5 shrink-0" aria-hidden="true" />
+        </button>
+        <button type="button"
+                class="flex w-full items-center justify-center rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50"
+                @click="sidebarDesktop = 'hidden'"
+                title="{{ __('Ocultar menu lateral') }}"
+                aria-label="{{ __('Ocultar menu lateral') }}">
+            <x-heroicon-o-eye-slash class="h-5 w-5 shrink-0" aria-hidden="true" />
+        </button>
+    </div>
+
+    <div class="sidebar-footer-meta shrink-0 border-t border-slate-800/80 px-3 py-3 text-center">
         <p class="text-[10px] leading-relaxed text-slate-500">
             © {{ $copyrightYears }} Visita Aí · Bitwise Technologies
         </p>

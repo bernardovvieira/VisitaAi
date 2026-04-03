@@ -4,9 +4,13 @@
 @section('og_description', 'Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).')
 
 @section('content')
-<div class="space-y-6">
+<div class="v-page">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
-    <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Visitas</h1>
+
+    <header class="v-page-header">
+        <h1 class="v-page-title">{{ __('Visitas') }}</h1>
+        <p class="v-page-lead">{{ __('Visualize e busque visitas registradas pelos profissionais de campo (ACE e ACS).') }}</p>
+    </header>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -18,154 +22,124 @@
         <x-alert type="error" :message="session('error')" />
     @endif
 
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Visitas</h2>
-        <p class="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            Visualize e busque visitas registradas pelos profissionais de campo (ACE/ACS).
-        </p>
-    </section>
+    <div class="v-panel">
+        @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
+            <div class="border-b border-amber-200/80 bg-amber-50/90 p-4 sm:p-5 dark:border-amber-800/60 dark:bg-amber-950/35">
+                <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Pendências sem revisita') }}</h2>
+                <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada e sem visita posterior.') }}</p>
+                <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
+                    @foreach ($locaisComPendenciasNaoRevisitadas as $local)
+                        @php
+                            $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
+                        @endphp
+                        <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-baseline sm:justify-between">
+                            <span>{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
+                            @if($ultimaPendencia)
+                                <span class="text-xs font-medium text-amber-800 dark:text-amber-300">{{ __('Última pendência: :d', ['d' => \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y')]) }}</span>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    <!-- Busca (atualiza ao digitar) -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div class="flex-1">
-                <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
-                <div class="flex items-center gap-2">
-                    <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
-                           data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
-                           data-live-loading-id="search-loading-gestor-visitas"
-                           placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
-                    <span id="search-loading-gestor-visitas" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
-                </div>
+        <div class="v-panel-section-muted">
+            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+            <div class="flex items-center gap-2">
+                <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
+                       data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
+                       data-live-loading-id="search-loading-gestor-visitas"
+                       placeholder="{{ __('Local, profissional, doença, atividade, pendentes ou data…') }}"
+                       class="v-input" />
+                <span id="search-loading-gestor-visitas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
         </div>
-    </section>
 
-    @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-        <section class="rounded-xl border border-amber-300/90 bg-amber-50 p-5 shadow-sm dark:border-amber-700 dark:bg-amber-950/40">
-            <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                Locais em que há pendências e não foram revisitados
-            </h3>
-            <ul class="space-y-2 text-sm text-yellow-900 dark:text-yellow-100 list-disc list-inside">
-                @foreach ($locaisComPendenciasNaoRevisitadas as $local)
-                    @php
-                        $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
-                    @endphp
-                    <li>
-                        {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}
-                        <span class="text-xs text-yellow-700 dark:text-yellow-300 ml-2 italic">
-                            Última pendência em {{ \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y') }}
-                        </span>
-                    </li>
-                @endforeach
-            </ul>
-        </section>
-    @endif
+        <div class="v-table-meta">
+            <span>
+                {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}
+                @if(request('busca'))
+                    <span class="text-slate-500 dark:text-slate-500">{{ __('Filtro:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('busca') }}</strong></span>
+                @endif
+            </span>
+        </div>
 
-    <!-- Contador de resultados -->
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Exibindo {{ $visitas->count() }} de {{ $visitas->total() }} visita(s) registradas.
-            @if(request('busca'))
-                <span class="text-gray-500">Resultados para: <strong>{{ request('busca') }}</strong></span>
-            @endif
-        </p>
-
-        <div class="overflow-x-auto rounded-lg ring-1 ring-gray-200/80 dark:ring-gray-600">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-900/80">
+        <div class="v-table-wrap">
+            <table class="v-data-table">
+                <thead>
                     <tr>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Local</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Profissional (ACE/ACS)</th>
-                        <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
+                        <th scope="col" class="whitespace-nowrap">{{ __('Código') }}</th>
+                        <th scope="col">{{ __('Data') }}</th>
+                        <th scope="col">{{ __('Pendência') }}</th>
+                        <th scope="col">{{ __('Atividade') }}</th>
+                        <th scope="col" class="min-w-[12rem]">{{ __('Local') }}</th>
+                        <th scope="col" class="align-bottom">
+                            <span class="block leading-tight normal-case tracking-normal">{{ __('Profissional') }}</span>
+                            <span class="mt-0.5 block text-[10px] font-normal normal-case tracking-normal text-slate-500 dark:text-slate-400">{{ __('ACE ou ACS') }}</span>
+                        </th>
+                        <th scope="col" class="w-14 text-center">{{ __('Ações') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody>
                     @forelse($visitas as $visita)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
-                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
-                                    #{{ $visita->vis_id }}
-                                </span>
+                        <tr>
+                            <td class="whitespace-nowrap">
+                                <span class="inline-flex rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold tabular-nums text-slate-800 dark:bg-slate-800 dark:text-slate-200">#{{ $visita->vis_id }}</span>
                             </td>
-                           <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
-                                <div class="font-semibold">
-                                    {{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}
-                                </div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}
-                                </div>
+                            <td class="leading-tight">
+                                <div class="font-semibold text-slate-900 dark:text-slate-100">{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400">{{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}</div>
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                            <td>
                                 @if($visita->vis_pendencias)
-                                    <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                        Pendente
-                                    </span>
-
+                                    <span class="inline-flex rounded-md bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-900 dark:bg-red-950/60 dark:text-red-200">{{ __('Pendente') }}</span>
                                     @php
                                         $revisitaPosterior = $visita->local->visitas()
                                             ->where('vis_data', '>', $visita->vis_data)
                                             ->orderBy('vis_data')
                                             ->first();
                                     @endphp
-
                                     @if($revisitaPosterior)
-                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
-                                            Revisitado em {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }}
-                                        </div>
+                                        <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Revisitado em :d', ['d' => \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y')]) }}</div>
                                     @endif
                                 @else
-                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                        Concluída
-                                    </span>
+                                    <span class="inline-flex rounded-md bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-900 dark:bg-blue-950/50 dark:text-blue-200">{{ __('Concluída') }}</span>
                                 @endif
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
-                                <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: 'Não informado' }}
+                            <td class="text-slate-600 dark:text-slate-300" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
+                                {{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: __('Não informado') }}
+                            </td>
+                            <td class="leading-snug">
+                                <div class="font-semibold text-slate-900 dark:text-slate-100">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
+                                <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                                    {{ $visita->local->loc_bairro }} · {{ __('Cód.') }} {{ $visita->local->loc_codigo_unico }}
+                                    <br>{{ __('Resp.') }} {{ $visita->local->loc_responsavel_nome ?? __('Não informado') }}
                                 </div>
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
-                                <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    Bairro/Localidade: {{ $visita->local->loc_bairro }}<br>
-                                    Cód.: {{ $visita->local->loc_codigo_unico }}<br>
-                                    Resp.: {{ $visita->local->loc_responsavel_nome ?? 'Não informado' }}
-                                </div>
+                            <td>
+                                <div class="font-semibold text-slate-900 dark:text-slate-100">{{ $visita->usuario->use_nome }}</div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400">{{ \App\Models\User::perfilLabel($visita->usuario->use_perfil) }}</div>
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
-                                <div class="font-semibold">{{ $visita->usuario->use_nome }}</div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400">
-                                    {{ \App\Models\User::perfilLabel($visita->usuario->use_perfil) }}
-                                </div>
-                            </td>
-                            <td class="p-4 text-center">
-                                <div class="flex justify-center gap-1.5">
-                                    <a href="{{ route('gestor.visitas.show', $visita) }}"
-                                       class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
-                                       title="{{ __('Visualizar') }}"
-                                       aria-label="{{ __('Visualizar visita') }}">
-                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
-                                    </a>
-                                </div>
+                            <td class="text-center">
+                                <a href="{{ route('gestor.visitas.show', $visita) }}"
+                                   class="btn-acesso-principal inline-flex h-9 w-9 items-center justify-center rounded-xl shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                   title="{{ __('Visualizar') }}"
+                                   aria-label="{{ __('Visualizar visita') }}">
+                                    <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="p-8 text-center">
-                                <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
-                                    <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
+                            <td colspan="7" class="p-10 text-center">
+                                <div class="mx-auto flex max-w-md flex-col items-center">
+                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
                                     </div>
-                                    <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma visita registrada.</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">As visitas aparecerão aqui quando os profissionais (ACE/ACS) as registrarem.</p>
-                                    <a href="{{ route('gestor.locais.index') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white text-sm font-semibold rounded-lg shadow transition">
-                                        Ver locais cadastrados
+                                    <p class="font-medium text-slate-700 dark:text-slate-200">{{ __('Nenhuma visita registrada.') }}</p>
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('As visitas aparecem aqui quando ACE ou ACS as registrarem.') }}</p>
+                                    <a href="{{ route('gestor.locais.index') }}" class="mt-5 inline-flex items-center rounded-xl bg-slate-800 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
+                                        {{ __('Ver locais cadastrados') }}
                                     </a>
                                 </div>
                             </td>
@@ -174,7 +148,10 @@
                 </tbody>
             </table>
         </div>
-        <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
-    </section>
+
+        <div class="v-panel-section border-t border-slate-100 dark:border-slate-700/80">
+            <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
+        </div>
+    </div>
 </div>
 @endsection

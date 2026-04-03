@@ -1,4 +1,3 @@
-<!-- resources/views/gestor/dashboard.blade.php -->
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · Painel do Gestor')
@@ -20,159 +19,201 @@
         ->groupBy('doencas.doe_id', 'doencas.doe_nome')
         ->orderByDesc('total')
         ->first();
-
-    $card = 'rounded-xl border border-slate-200/80 bg-white p-4 shadow-md shadow-slate-200/30 ring-1 ring-slate-100/90 dark:border-slate-600 dark:bg-slate-800/90 dark:shadow-none dark:ring-white/5';
-    $actionBase = 'flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900';
+    $profissionaisAprovados = \App\Models\User::where(function ($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count();
+    $gestoresCount = \App\Models\User::where('use_perfil', 'gestor')->count();
+    $doencasCount = \App\Models\Doenca::count();
+    $visitasCount = \App\Models\Visita::count();
 @endphp
 
-<div class="mx-auto max-w-7xl space-y-5">
+<div class="v-page">
     <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
 
-    <header class="border-b border-slate-200/90 pb-4 dark:border-slate-700">
-        <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-[1.65rem]">{{ __('Painel do Gestor') }}</h1>
-        <p class="mt-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">{{ Auth::user()->use_nome }}</p>
+    <header class="v-page-header">
+        <h1 class="v-page-title">{{ __('Painel do gestor') }}</h1>
+        <p class="v-page-lead">
+            {{ __('Olá, :nome. Visão geral do município e atalhos para o dia a dia.', ['nome' => Auth::user()->use_nome]) }}
+            <span class="mt-1 block text-xs text-slate-500 dark:text-slate-500">{{ now()->translatedFormat('l, j \d\e F \d\e Y') }}</span>
+        </p>
     </header>
 
-    <section class="rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white to-slate-50/90 p-3 shadow-sm dark:border-slate-700 dark:from-slate-900/40 dark:to-slate-900/20" aria-labelledby="heading-stats">
-        <h2 id="heading-stats" class="sr-only">{{ __('Estatísticas principais') }}</h2>
-        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="{{ $card }}">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais de campo') }}</p>
-                        <p class="mt-0.5 text-[10px] font-medium leading-snug text-slate-400/90 dark:text-slate-500">{{ __('Somente usuários aprovados no sistema.') }}</p>
-                        <p class="mt-1.5 text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-slate-100">{{ \App\Models\User::where(function ($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count() }}</p>
-                    </div>
-                    <x-heroicon-o-user-group class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
-                </div>
+    <div class="v-panel">
+        @if($pendentesCount > 0 || $visitasComPendencia > 0)
+            <div class="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white p-4 dark:border-slate-700 dark:from-slate-800/40 dark:to-slate-900/30 sm:p-5">
+                <p class="v-toolbar-label mb-2">{{ __('Requer atenção') }}</p>
+                <ul class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    @if($pendentesCount > 0)
+                        <li>
+                            <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100 dark:hover:bg-amber-950/55">
+                                <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
+                                {{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}
+                                <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                            </a>
+                        </li>
+                    @endif
+                    @if($visitasComPendencia > 0)
+                        <li>
+                            <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-950 transition hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/35 dark:text-rose-100 dark:hover:bg-rose-950/50">
+                                <x-heroicon-o-clock class="h-5 w-5 shrink-0" aria-hidden="true" />
+                                {{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}
+                                <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                            </a>
+                        </li>
+                    @endif
+                </ul>
             </div>
+        @endif
 
-            <div class="{{ $card }} {{ $pendentesCount > 0 ? 'border-amber-300/80 ring-1 ring-amber-200 dark:border-amber-600 dark:ring-amber-900/40' : '' }}">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ __('Cadastros pendentes') }}</p>
-                            @if($pendentesCount > 0)
-                                <span class="rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-900 dark:bg-amber-900/50 dark:text-amber-200">{{ __('Ação') }}</span>
-                            @endif
-                        </div>
-                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ $pendentesCount }}</p>
+        <div class="v-panel-section">
+            <h2 class="v-toolbar-label mb-3">{{ __('Indicadores') }}</h2>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <div class="v-dashboard-kpi">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
+                        <x-heroicon-o-user-group class="h-6 w-6 shrink-0" />
                     </div>
-                    <x-heroicon-o-exclamation-triangle class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais de campo') }}</p>
+                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $profissionaisAprovados }}</p>
+                        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ __('Aprovados no sistema') }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="{{ $card }}">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ __('Gestores') }}</p>
-                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ \App\Models\User::where('use_perfil', 'gestor')->count() }}</p>
+                <div class="v-dashboard-kpi {{ $pendentesCount > 0 ? 'border-amber-300/70 ring-1 ring-amber-200/80 dark:border-amber-700 dark:ring-amber-900/40' : '' }}">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--amber" aria-hidden="true">
+                        <x-heroicon-o-exclamation-triangle class="h-6 w-6 shrink-0" />
                     </div>
-                    <x-heroicon-o-user-circle class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Cadastros pendentes') }}</p>
+                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $pendentesCount }}</p>
+                        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ __('ACE/ACS sem aprovação') }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="{{ $card }}">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ __('Doenças monitoradas') }}</p>
-                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ \App\Models\Doenca::count() }}</p>
+                <div class="v-dashboard-kpi">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--violet" aria-hidden="true">
+                        <x-heroicon-o-user-circle class="h-6 w-6 shrink-0" />
                     </div>
-                    <x-heroicon-o-beaker class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Gestores') }}</p>
+                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $gestoresCount }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="{{ $card }}">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ __('Visitas registradas') }}</p>
-                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ \App\Models\Visita::count() }}</p>
+                <div class="v-dashboard-kpi">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--emerald" aria-hidden="true">
+                        <x-heroicon-o-beaker class="h-6 w-6 shrink-0" />
                     </div>
-                    <x-heroicon-o-clipboard-document-list class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Doenças monitoradas') }}</p>
+                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $doencasCount }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="{{ $card }} {{ $visitasComPendencia > 0 ? 'border-red-300/80 ring-1 ring-red-100 dark:border-red-700 dark:ring-red-900/30' : '' }}">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ __('Visitas com pendência') }}</p>
-                            @if($visitasComPendencia > 0)
-                                <span class="rounded-md bg-red-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-900 dark:bg-red-900/40 dark:text-red-200">{{ __('Pendente') }}</span>
-                            @endif
-                        </div>
-                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
+                <div class="v-dashboard-kpi">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
+                        <x-heroicon-o-clipboard-document-list class="h-6 w-6 shrink-0" />
                     </div>
-                    <x-heroicon-o-clock class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas registradas') }}</p>
+                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasCount }}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="{{ $card }} sm:col-span-2 lg:col-span-3">
-                <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-2.5 dark:border-slate-700/80">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</p>
-                        <p class="mt-1 text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-slate-100">{{ $totalOcupantesVisitaAi }}</p>
-                        @if(filled(config('visitaai_municipio.ocupantes.painel_gestor_subtitulo')))
-                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
-                        @endif
+                <div class="v-dashboard-kpi {{ $visitasComPendencia > 0 ? 'border-rose-300/70 ring-1 ring-rose-200/80 dark:border-rose-800 dark:ring-rose-900/35' : '' }}">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--rose" aria-hidden="true">
+                        <x-heroicon-o-clock class="h-6 w-6 shrink-0" />
                     </div>
-                    <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas com pendência') }}</p>
+                        <p class="mt-1 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComPendencia }}</p>
+                    </div>
                 </div>
-                @if($ocupantesPorBairroTop->isNotEmpty())
-                    <p class="mt-2.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
-                    <ul class="mt-1.5 grid grid-cols-1 gap-1 text-sm sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach($ocupantesPorBairroTop as $row)
-                            <li class="flex justify-between gap-2 border-b border-slate-100 py-1.5 last:border-0 dark:border-slate-700/80">
-                                <span class="min-w-0 truncate font-medium text-slate-800 dark:text-slate-200" title="{{ $row->bairro }}">{{ $row->bairro ?: '-' }}</span>
-                                <span class="shrink-0 tabular-nums font-semibold text-slate-900 dark:text-slate-100">{{ $row->total_moradores }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
             </div>
         </div>
-    </section>
 
-    @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-        <section class="{{ $card }}" aria-labelledby="heading-month">
-            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Monitoramento no mês') }}</p>
-            <h3 id="heading-month" class="mt-1 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</h3>
-            <p class="mt-0.5 text-sm tabular-nums text-gray-600 dark:text-gray-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro') : __('registros') }}</p>
-        </section>
-    @endif
-
-    <section class="space-y-2" aria-labelledby="heading-quick">
-        <h2 id="heading-quick" class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Ações rápidas') }}</h2>
-        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            <a href="{{ route('gestor.pendentes') }}"
-               class="{{ $actionBase }} {{ $pendentesCount > 0 ? 'border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-900/40' : 'border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700' }}">
-                <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ __('Usuários pendentes') }}
-                @if($pendentesCount > 0)
-                    <span class="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white">{{ $pendentesCount }}</span>
-                @endif
-            </a>
-            <a href="{{ route('gestor.users.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-users class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ __('Gerenciar usuários') }}
-            </a>
-            <a href="{{ route('gestor.doencas.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-beaker class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ __('Doenças monitoradas') }}
-            </a>
-            <a href="{{ route('gestor.visitas.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ __('Visitas realizadas') }}
-            </a>
-            <a href="{{ route('gestor.indicadores.ocupantes') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ __('Indicadores') }}
-            </a>
-            <a href="{{ route('gestor.relatorios.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-document-text class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ __('Relatórios') }}
-            </a>
+        <div class="v-panel-section-muted">
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</h2>
+                    @if(filled(config('visitaai_municipio.ocupantes.painel_gestor_subtitulo')))
+                        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
+                    @endif
+                </div>
+                <p class="text-3xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalOcupantesVisitaAi }}</p>
+            </div>
+            @if($ocupantesPorBairroTop->isNotEmpty())
+                <p class="v-toolbar-label mt-4 mb-2">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
+                <div class="v-table-wrap rounded-xl border border-slate-200/80 dark:border-slate-600">
+                    <table class="v-data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{ __('Bairro / localidade') }}</th>
+                                <th scope="col" class="w-28 text-right">{{ __('Ocupantes') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($ocupantesPorBairroTop as $row)
+                                <tr>
+                                    <td class="font-medium" title="{{ $row->bairro }}">{{ $row->bairro ?: '—' }}</td>
+                                    <td class="text-right tabular-nums font-semibold">{{ $row->total_moradores }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-3 text-center">
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver painel completo de indicadores') }}</a>
+                </p>
+            @else
+                <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>
+            @endif
         </div>
-    </section>
+
+        @if ($doencaMaisMes && $doencaMaisMes->total > 0)
+            <div class="v-panel-section border-l-4 border-l-blue-500/80">
+                <p class="v-toolbar-label">{{ __('Monitoramento no mês corrente') }}</p>
+                <p class="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
+                <p class="mt-1 text-sm tabular-nums text-slate-600 dark:text-slate-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro em monitoradas') : __('registros em monitoradas') }}</p>
+            </div>
+        @endif
+
+        <div class="v-panel-section">
+            <h2 class="v-toolbar-label mb-3">{{ __('Ações rápidas') }}</h2>
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                <a href="{{ route('gestor.pendentes') }}" class="v-dashboard-action {{ $pendentesCount > 0 ? 'v-dashboard-action--primary' : '' }}">
+                    <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span class="min-w-0">{{ __('Usuários pendentes') }}</span>
+                    @if($pendentesCount > 0)
+                        <span class="ml-1 inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white/25 px-1.5 text-xs font-bold tabular-nums">{{ $pendentesCount }}</span>
+                    @endif
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                </a>
+                <a href="{{ route('gestor.users.index') }}" class="v-dashboard-action">
+                    <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <span class="min-w-0">{{ __('Gerenciar usuários') }}</span>
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                </a>
+                <a href="{{ route('gestor.visitas.index') }}" class="v-dashboard-action">
+                    <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <span class="min-w-0">{{ __('Visitas realizadas') }}</span>
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                </a>
+                <a href="{{ route('gestor.doencas.index') }}" class="v-dashboard-action">
+                    <x-heroicon-o-beaker class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <span class="min-w-0">{{ __('Doenças monitoradas') }}</span>
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                </a>
+                <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dashboard-action">
+                    <x-heroicon-o-chart-bar class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <span class="min-w-0">{{ __('Indicadores') }}</span>
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                </a>
+                <a href="{{ route('gestor.relatorios.index') }}" class="v-dashboard-action">
+                    <x-heroicon-o-document-text class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                    <span class="min-w-0">{{ __('Relatórios') }}</span>
+                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-5 w-5" aria-hidden="true" />
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

@@ -2,12 +2,12 @@
 <header class="sticky top-0 z-20 flex h-12 shrink-0 items-center justify-end gap-1 border-b border-slate-200/90 bg-white/95 px-2 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95 sm:h-14 sm:justify-between sm:px-4">
     <div class="flex min-w-0 flex-1 items-center sm:flex-none">
         <button type="button"
-                class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 lg:hidden"
-                @click="sidebarOpen = true"
-                aria-expanded="false"
-                x-bind:aria-expanded="sidebarOpen"
+                class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900"
+                x-bind:class="{ 'lg:hidden': sidebarDesktop !== 'hidden' }"
+                @click="if (isLg) { sidebarDesktop = 'expanded'; } else { sidebarOpen = true; }"
+                x-bind:aria-expanded="isLg ? (sidebarDesktop !== 'hidden') : sidebarOpen"
                 aria-controls="app-sidebar"
-                aria-label="{{ __('Abrir menu') }}">
+                x-bind:aria-label="isLg && sidebarDesktop === 'hidden' ? @js(__('Mostrar menu lateral')) : @js(__('Abrir menu'))">
             <x-heroicon-o-bars-3 class="h-6 w-6" aria-hidden="true" />
         </button>
     </div>

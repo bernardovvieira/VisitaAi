@@ -4,7 +4,6 @@ import forms from '@tailwindcss/forms';
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
-  safelist: [{ pattern: /^btn-acesso-principal$/ }],
   content: [
     './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
     './vendor/blade-ui-kit/blade-heroicons/resources/**/*.php',
