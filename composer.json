@@ -61,6 +61,9 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "lang:build": [
+            "@php scripts/build-lang-json.php"
         ]
     },
     "extra": {
