@@ -102,7 +102,7 @@
         </div>
     </section>
 
-    @include('moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
+    @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 
     {{-- Adesivo --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">

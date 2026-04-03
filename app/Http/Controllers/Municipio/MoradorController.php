@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Municipio;
 
 use App\Helpers\LogHelper;
-use App\Http\Requests\MoradorRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Municipio\MoradorRequest;
 use App\Models\Local;
 use App\Models\Morador;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class MoradorController extends Controller
         $moradores = $local->moradores()->orderBy('mor_id')->paginate(15)->withQueryString();
         $profile = $this->routeProfile();
 
-        return view('moradores.index', compact('local', 'moradores', 'profile'));
+        return view('municipio.moradores.index', compact('local', 'moradores', 'profile'));
     }
 
     public function create(Local $local)
@@ -42,7 +43,7 @@ class MoradorController extends Controller
         $profile = $this->routeProfile();
         $morador = new Morador(['fk_local_id' => $local->loc_id]);
 
-        return view('moradores.create', compact('local', 'morador', 'profile'));
+        return view('municipio.moradores.create', compact('local', 'morador', 'profile'));
     }
 
     public function store(MoradorRequest $request, Local $local)
@@ -79,7 +80,7 @@ class MoradorController extends Controller
 
         $profile = $this->routeProfile();
 
-        return view('moradores.edit', compact('local', 'morador', 'profile'));
+        return view('municipio.moradores.edit', compact('local', 'morador', 'profile'));
     }
 
     public function update(MoradorRequest $request, Local $local, Morador $morador)

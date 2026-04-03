@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Local;
 use App\Models\Doenca;
-use App\Services\ResumoVisitaCidadaoService;
-use Illuminate\Http\Request;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgWriter;
+use App\Models\Local;
+use App\Services\Vigilancia\ResumoVisitaCidadaoService;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
-use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Illuminate\Http\Request;
 
 class ConsultaPublicaController extends Controller
 {
@@ -29,7 +29,7 @@ class ConsultaPublicaController extends Controller
             'codigo' => ['required', 'digits:8'],
         ], [
             'codigo.required' => 'Informe o código do imóvel.',
-            'codigo.digits'   => 'O código deve ter exatamente 8 dígitos numéricos.',
+            'codigo.digits' => 'O código deve ter exatamente 8 dígitos numéricos.',
         ]);
 
         $codigo = $validated['codigo'];
@@ -48,7 +48,7 @@ class ConsultaPublicaController extends Controller
             ->orderByDesc('vis_data')
             ->get();
 
-        $enderecoCompleto = $local->loc_endereco . ', ' . ($local->loc_numero ?? 'S/N') . ' - ' . $local->loc_bairro . ', ' . $local->loc_cidade . '/' . $local->loc_estado;
+        $enderecoCompleto = $local->loc_endereco.', '.($local->loc_numero ?? 'S/N').' - '.$local->loc_bairro.', '.$local->loc_cidade.'/'.$local->loc_estado;
         $resumoService = app(ResumoVisitaCidadaoService::class);
         $resumos = [];
         foreach ($visitas as $v) {
@@ -67,12 +67,12 @@ class ConsultaPublicaController extends Controller
         );
 
         try {
-            $writer = new PngWriter();
+            $writer = new PngWriter;
             $result = $writer->write($qrCode);
             $qrCodeBase64 = base64_encode($result->getString());
             $qrCodeMime = 'image/png';
         } catch (\Throwable $e) {
-            $writer = new SvgWriter();
+            $writer = new SvgWriter;
             $result = $writer->write($qrCode);
             $qrCodeBase64 = base64_encode($result->getString());
             $qrCodeMime = 'image/svg+xml';

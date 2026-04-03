@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doenca;
-use App\Services\SugestaoDoencasService;
+use App\Services\Vigilancia\SugestaoDoencasService;
 use Illuminate\Http\Request;
 
 /**
@@ -32,23 +32,24 @@ class SugestaoDoencasController extends Controller
                 $d = $doencas->get($doeId);
                 if ($d) {
                     $itens[] = [
-                        'doe_id'  => (int) $d->doe_id,
-                        'nome'    => $d->doe_nome,
-                        'motivo'  => $motivo,
+                        'doe_id' => (int) $d->doe_id,
+                        'nome' => $d->doe_nome,
+                        'motivo' => $motivo,
                     ];
                 }
             }
 
             return response()->json([
                 'sugestoes' => $itens,
-                'doencas'   => $doencas->values()->toArray(),
+                'doencas' => $doencas->values()->toArray(),
             ]);
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('SugestaoDoencas: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('SugestaoDoencas: '.$e->getMessage());
+
             return response()->json([
                 'sugestoes' => [],
-                'doencas'   => [],
-                'message'   => 'Não foi possível carregar sugestões. Tente novamente.',
+                'doencas' => [],
+                'message' => 'Não foi possível carregar sugestões. Tente novamente.',
             ], 500);
         }
     }

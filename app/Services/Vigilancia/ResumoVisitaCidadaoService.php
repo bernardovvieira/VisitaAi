@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Vigilancia;
 
 use App\Models\Visita;
 use Carbon\Carbon;
@@ -24,8 +24,8 @@ class ResumoVisitaCidadaoService
 
         $frase = "Em {$data} foi realizada uma visita de vigilância entomológica e controle vetorial neste endereço. ";
 
-        $frase .= "Foram realizadas ações de monitoramento e orientação conforme protocolo. ";
-        $frase .= "Recomenda-se manter medidas de prevenção, como eliminar água parada e manter recipientes cobertos, e seguir as orientações repassadas pela equipe de saúde.";
+        $frase .= 'Foram realizadas ações de monitoramento e orientação conforme protocolo. ';
+        $frase .= 'Recomenda-se manter medidas de prevenção, como eliminar água parada e manter recipientes cobertos, e seguir as orientações repassadas pela equipe de saúde.';
 
         return $frase;
     }

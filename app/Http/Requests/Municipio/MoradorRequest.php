@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Municipio;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

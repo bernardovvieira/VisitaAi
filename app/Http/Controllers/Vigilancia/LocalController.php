@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Vigilancia;
 
 use App\Helpers\LogHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LocalRequest;
 use App\Models\Local;
 use App\Services\Municipio\ResumoOcupantesMunicipioService;

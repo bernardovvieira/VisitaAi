@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Vigilancia;
 
-use App\Models\{Visita, Local, Doenca};
+use App\Helpers\LogHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\VisitaRequest;
+use App\Models\Doenca;
+use App\Models\Local;
+use App\Models\Visita;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Helpers\LogHelper;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Carbon\Carbon;
 
 class VisitaController extends Controller
 {
@@ -21,17 +23,19 @@ class VisitaController extends Controller
         if ($request->has('enviadas')) {
             $n = (int) $request->input('enviadas');
             $erros = (int) $request->input('erros', 0);
-            $msg = $n . ' visita(s) enviada(s) com sucesso.';
+            $msg = $n.' visita(s) enviada(s) com sucesso.';
             if ($erros > 0) {
-                $msg .= ' ' . $erros . ' não enviada(s) (verifique os dados).';
+                $msg .= ' '.$erros.' não enviada(s) (verifique os dados).';
             }
             session()->flash('success', $msg);
+
             return redirect()->to($request->url());
         }
 
         // Visita cadastrada offline: mensagem de sucesso (amarelo) na listagem
         if ($request->has('guardada')) {
             session()->flash('warning', 'Visita cadastrada no dispositivo com sucesso. Será sincronizada quando a conexão for estabelecida.');
+
             return redirect()->to($request->url());
         }
 
@@ -41,12 +45,12 @@ class VisitaController extends Controller
 
         if ($busca !== '') {
             $query->where(function ($q) use ($busca) {
-                $q->whereHas('local', fn($q) => $q->where('loc_endereco', 'like', "%$busca%"))
-                ->orWhereHas('local', fn($q) => $q->where('loc_codigo_unico', '=', $busca))
-                ->orWhereHas('local', fn($q) => $q->where('loc_responsavel_nome', 'like', "%$busca%"))
-                ->orWhereHas('usuario', fn($q) => $q->where('use_nome', 'like', "%$busca%"))
-                ->orWhereHas('doencas', fn($q) => $q->where('doe_nome', 'like', "%$busca%"))
-                ->orWhere('vis_atividade', 'like', "%$busca%");
+                $q->whereHas('local', fn ($q) => $q->where('loc_endereco', 'like', "%$busca%"))
+                    ->orWhereHas('local', fn ($q) => $q->where('loc_codigo_unico', '=', $busca))
+                    ->orWhereHas('local', fn ($q) => $q->where('loc_responsavel_nome', 'like', "%$busca%"))
+                    ->orWhereHas('usuario', fn ($q) => $q->where('use_nome', 'like', "%$busca%"))
+                    ->orWhereHas('doencas', fn ($q) => $q->where('doe_nome', 'like', "%$busca%"))
+                    ->orWhere('vis_atividade', 'like', "%$busca%");
 
                 $buscaLower = mb_strtolower($busca);
                 if (str_starts_with($buscaLower, 'pendente')) {
@@ -78,21 +82,20 @@ class VisitaController extends Controller
         }
 
         $visitas = $query->orderByDesc('vis_data')
-                        ->paginate(10)
-                        ->appends(['busca' => $busca]);
+            ->paginate(10)
+            ->appends(['busca' => $busca]);
 
         // NOVO: busca locais com pendência não revisitada
-        $locaisComPendenciasNaoRevisitadas = \App\Models\Local::whereHas('visitas', fn($q) => $q->where('vis_pendencias', true))
-            ->with(['visitas' => fn($q) => $q->orderByDesc('vis_data')])
+        $locaisComPendenciasNaoRevisitadas = \App\Models\Local::whereHas('visitas', fn ($q) => $q->where('vis_pendencias', true))
+            ->with(['visitas' => fn ($q) => $q->orderByDesc('vis_data')])
             ->get()
             ->filter(function ($local) {
                 $ultimaPendencia = $local->visitas->firstWhere('vis_pendencias', true);
 
-                $temRevisita = $local->visitas->firstWhere(fn($v) =>
-                    !$v->vis_pendencias && $v->vis_data > $ultimaPendencia->vis_data
+                $temRevisita = $local->visitas->firstWhere(fn ($v) => ! $v->vis_pendencias && $v->vis_data > $ultimaPendencia->vis_data
                 );
 
-                return $ultimaPendencia && !$temRevisita;
+                return $ultimaPendencia && ! $temRevisita;
             });
 
         return view($view, compact('visitas', 'busca', 'locaisComPendenciasNaoRevisitadas'));
@@ -140,6 +143,7 @@ class VisitaController extends Controller
                 }
             }
         }
+
         return null;
     }
 
@@ -167,7 +171,7 @@ class VisitaController extends Controller
         $sugestoesDisponiveis = false;
         if ($user->isAgenteEndemias() || $user->isAgenteSaude()) {
             $sugestoesDisponiveis = Visita::whereHas('doencas')
-                ->where('vis_data', '>=', now()->subMonths(\App\Services\SugestaoDoencasService::MESES_FREQUENCIA))
+                ->where('vis_data', '>=', now()->subMonths(\App\Services\Vigilancia\SugestaoDoencasService::MESES_FREQUENCIA))
                 ->exists()
                 || (Doenca::count() > 0 && Doenca::whereNotNull('doe_sintomas')->exists());
         }
@@ -216,20 +220,20 @@ class VisitaController extends Controller
 
         foreach ($tratamentos as $t) {
             if (
-                !empty($t['trat_tipo']) &&
-                !empty($t['trat_forma']) &&
+                ! empty($t['trat_tipo']) &&
+                ! empty($t['trat_forma']) &&
                 (
-                    (strtolower($t['trat_forma']) === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
-                    (strtolower($t['trat_forma']) === 'perifocal' && !empty($t['qtd_cargas']))
+                    (strtolower($t['trat_forma']) === 'focal' && (! empty($t['qtd_gramas']) || ! empty($t['qtd_depositos_tratados']))) ||
+                    (strtolower($t['trat_forma']) === 'perifocal' && ! empty($t['qtd_cargas']))
                 )
             ) {
                 $visita->tratamentos()->create([
-                    'trat_tipo'               => $t['trat_tipo'],
-                    'trat_forma'              => $t['trat_forma'],
-                    'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
-                    'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
-                    'qtd_depositos_tratados'  => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
-                    'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
+                    'trat_tipo' => $t['trat_tipo'],
+                    'trat_forma' => $t['trat_forma'],
+                    'linha' => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                    'qtd_gramas' => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                    'qtd_depositos_tratados' => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                    'qtd_cargas' => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
                 ]);
             }
         }
@@ -238,7 +242,7 @@ class VisitaController extends Controller
             'Registro de visita',
             'Visita',
             'create',
-            'Visita realizada no local: ' . $visita->local->loc_endereco . ', ' . ($visita->local->loc_numero ?: 'S/N')
+            'Visita realizada no local: '.$visita->local->loc_endereco.', '.($visita->local->loc_numero ?: 'S/N')
         );
 
         return redirect()
@@ -255,7 +259,7 @@ class VisitaController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        if (!$user->isAgenteEndemias() && !$user->isAgenteSaude()) {
+        if (! $user->isAgenteEndemias() && ! $user->isAgenteSaude()) {
             abort(403, 'Acesso negado.');
         }
 
@@ -280,7 +284,7 @@ class VisitaController extends Controller
         try {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            if (!$user->isAgenteEndemias() && !$user->isAgenteSaude()) {
+            if (! $user->isAgenteEndemias() && ! $user->isAgenteSaude()) {
                 return response()->json(['message' => 'Acesso negado.'], 403);
             }
 
@@ -305,6 +309,7 @@ class VisitaController extends Controller
                         'index' => $index,
                         'message' => implode(' ', $validator->errors()->all()),
                     ];
+
                     continue;
                 }
 
@@ -332,6 +337,7 @@ class VisitaController extends Controller
                         'index' => $index,
                         'message' => 'Visita já registrada com estes dados (local, data, atividade e ciclo).',
                     ];
+
                     continue;
                 }
 
@@ -341,19 +347,19 @@ class VisitaController extends Controller
 
                     foreach ($tratamentos as $t) {
                         if (
-                            !empty($t['trat_tipo']) && !empty($t['trat_forma']) &&
+                            ! empty($t['trat_tipo']) && ! empty($t['trat_forma']) &&
                             (
-                                (strtolower($t['trat_forma'] ?? '') === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
-                                (strtolower($t['trat_forma'] ?? '') === 'perifocal' && !empty($t['qtd_cargas']))
+                                (strtolower($t['trat_forma'] ?? '') === 'focal' && (! empty($t['qtd_gramas']) || ! empty($t['qtd_depositos_tratados']))) ||
+                                (strtolower($t['trat_forma'] ?? '') === 'perifocal' && ! empty($t['qtd_cargas']))
                             )
                         ) {
                             $visita->tratamentos()->create([
-                                'trat_tipo'               => $t['trat_tipo'],
-                                'trat_forma'              => $t['trat_forma'],
-                                'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
-                                'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
-                                'qtd_depositos_tratados'   => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
-                                'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
+                                'trat_tipo' => $t['trat_tipo'],
+                                'trat_forma' => $t['trat_forma'],
+                                'linha' => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                                'qtd_gramas' => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                                'qtd_depositos_tratados' => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                                'qtd_cargas' => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
                             ]);
                         }
                     }
@@ -362,14 +368,14 @@ class VisitaController extends Controller
                         'Sincronização offline',
                         'Visita',
                         'create',
-                        'Visita sincronizada no local ID ' . $visita->fk_local_id . ', data ' . $visita->vis_data
+                        'Visita sincronizada no local ID '.$visita->fk_local_id.', data '.$visita->vis_data
                     );
 
                     $sincronizados++;
                 } catch (\Throwable $e) {
                     $erros[] = [
                         'index' => $index,
-                        'message' => 'Erro ao salvar: ' . $e->getMessage(),
+                        'message' => 'Erro ao salvar: '.$e->getMessage(),
                     ];
                 }
             }
@@ -383,10 +389,11 @@ class VisitaController extends Controller
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            \Log::error('syncStore: ' . $e->getMessage(), ['exception' => $e]);
+            \Log::error('syncStore: '.$e->getMessage(), ['exception' => $e]);
+
             return response()->json([
                 'sincronizados' => 0,
-                'erros' => [['index' => 0, 'message' => 'Erro no servidor: ' . $e->getMessage()]],
+                'erros' => [['index' => 0, 'message' => 'Erro no servidor: '.$e->getMessage()]],
             ], 500);
         }
     }
@@ -407,9 +414,9 @@ class VisitaController extends Controller
             }
             if (is_array($trat)) {
                 $item['tratamentos'] = collect($trat)->filter(function ($t) {
-                    return !empty($t['trat_forma']) || !empty($t['trat_tipo'])
-                        || !empty($t['linha']) || !empty($t['qtd_gramas'])
-                        || !empty($t['qtd_depositos_tratados']) || !empty($t['qtd_cargas']);
+                    return ! empty($t['trat_forma']) || ! empty($t['trat_tipo'])
+                        || ! empty($t['linha']) || ! empty($t['qtd_gramas'])
+                        || ! empty($t['qtd_depositos_tratados']) || ! empty($t['qtd_cargas']);
                 })->map(function ($t) {
                     $tipo = isset($t['trat_tipo']) ? trim(ucfirst(strtolower((string) $t['trat_tipo']))) : null;
                     $forma = isset($t['trat_forma']) ? trim(ucfirst(strtolower((string) $t['trat_forma']))) : null;
@@ -418,17 +425,18 @@ class VisitaController extends Controller
                     if (array_key_exists('linha', $t) && $t['linha'] !== null && $t['linha'] !== '') {
                         $t['linha'] = (int) $t['linha'];
                     }
+
                     return $t;
                 })->values()->toArray();
             }
         }
 
-        if (isset($item['fk_local_id']) && !is_int($item['fk_local_id'])) {
+        if (isset($item['fk_local_id']) && ! is_int($item['fk_local_id'])) {
             $item['fk_local_id'] = (int) $item['fk_local_id'];
         }
 
         $vvt = $item['vis_visita_tipo'] ?? null;
-        if ($vvt === '' || ($vvt !== null && !in_array((string) $vvt, ['N', 'R'], true))) {
+        if ($vvt === '' || ($vvt !== null && ! in_array((string) $vvt, ['N', 'R'], true))) {
             $item['vis_visita_tipo'] = null;
         }
         if (isset($item['vis_atividade']) && $item['vis_atividade'] === '') {
@@ -451,7 +459,7 @@ class VisitaController extends Controller
         $sugestoesDisponiveis = false;
         if ($user->isAgenteEndemias() || $user->isAgenteSaude()) {
             $sugestoesDisponiveis = Visita::whereHas('doencas')
-                ->where('vis_data', '>=', now()->subMonths(\App\Services\SugestaoDoencasService::MESES_FREQUENCIA))
+                ->where('vis_data', '>=', now()->subMonths(\App\Services\Vigilancia\SugestaoDoencasService::MESES_FREQUENCIA))
                 ->exists()
                 || (Doenca::count() > 0 && Doenca::whereNotNull('doe_sintomas')->exists());
         }
@@ -483,25 +491,25 @@ class VisitaController extends Controller
         $visita->update($validated);
         $visita->doencas()->sync($doencas);
 
-        if (!empty($tratamentos)) {
+        if (! empty($tratamentos)) {
             $visita->tratamentos()->delete();
 
             foreach ($tratamentos as $t) {
                 if (
-                    !empty($t['trat_tipo']) &&
-                    !empty($t['trat_forma']) &&
+                    ! empty($t['trat_tipo']) &&
+                    ! empty($t['trat_forma']) &&
                     (
-                        (strtolower($t['trat_forma']) === 'focal' && (!empty($t['qtd_gramas']) || !empty($t['qtd_depositos_tratados']))) ||
-                        (strtolower($t['trat_forma']) === 'perifocal' && !empty($t['qtd_cargas']))
+                        (strtolower($t['trat_forma']) === 'focal' && (! empty($t['qtd_gramas']) || ! empty($t['qtd_depositos_tratados']))) ||
+                        (strtolower($t['trat_forma']) === 'perifocal' && ! empty($t['qtd_cargas']))
                     )
                 ) {
                     $visita->tratamentos()->create([
-                        'trat_tipo'               => $t['trat_tipo'],
-                        'trat_forma'              => $t['trat_forma'],
-                        'linha'                   => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
-                        'qtd_gramas'              => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
-                        'qtd_depositos_tratados'  => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
-                        'qtd_cargas'              => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
+                        'trat_tipo' => $t['trat_tipo'],
+                        'trat_forma' => $t['trat_forma'],
+                        'linha' => isset($t['linha']) && $t['linha'] !== '' ? $t['linha'] : null,
+                        'qtd_gramas' => isset($t['qtd_gramas']) && $t['qtd_gramas'] !== '' ? $t['qtd_gramas'] : null,
+                        'qtd_depositos_tratados' => isset($t['qtd_depositos_tratados']) && $t['qtd_depositos_tratados'] !== '' ? $t['qtd_depositos_tratados'] : null,
+                        'qtd_cargas' => isset($t['qtd_cargas']) && $t['qtd_cargas'] !== '' ? $t['qtd_cargas'] : null,
                     ]);
                 }
             }
@@ -511,7 +519,7 @@ class VisitaController extends Controller
             'Edição de visita',
             'Visita',
             'update',
-            'Visita atualizada no local: ' . $visita->local->loc_endereco . ', ' . ($visita->local->loc_numero ?: 'S/N')
+            'Visita atualizada no local: '.$visita->local->loc_endereco.', '.($visita->local->loc_numero ?: 'S/N')
         );
 
         return redirect()
@@ -523,7 +531,7 @@ class VisitaController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $descricao = 'Visita removida do local: ' . $visita->local->loc_endereco . ', código: ' . $visita->local->loc_codigo_unico;
+        $descricao = 'Visita removida do local: '.$visita->local->loc_endereco.', código: '.$visita->local->loc_codigo_unico;
 
         $visita->delete();
 

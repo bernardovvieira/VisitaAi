@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Vigilancia;
 
 use App\Models\Doenca;
 use App\Models\Visita;
@@ -22,8 +22,8 @@ class SugestaoDoencasService
     /**
      * Retorna sugestões de doenças (doe_id) ordenadas por relevância.
      *
-     * @param int|null $localId ID do local (opcional)
-     * @param string $observacoes Texto das observações da visita
+     * @param  int|null  $localId  ID do local (opcional)
+     * @param  string  $observacoes  Texto das observações da visita
      * @return array<int, string> [doe_id => motivo legível]
      */
     public function sugerir(?int $localId, string $observacoes = ''): array
@@ -66,8 +66,8 @@ class SugestaoDoencasService
         foreach ($doencasFrequentes as $id => $total) {
             $id = (int) $id;
             $scores[$id] = ($scores[$id] ?? 0) + (int) min($total, 5);
-            if (!isset($motivos[$id])) {
-                $motivos[$id] = 'Frequente nas visitas do município nos últimos ' . self::MESES_FREQUENCIA . ' meses.';
+            if (! isset($motivos[$id])) {
+                $motivos[$id] = 'Frequente nas visitas do município nos últimos '.self::MESES_FREQUENCIA.' meses.';
             }
         }
 
@@ -78,8 +78,8 @@ class SugestaoDoencasService
 
             foreach ($doencas as $doenca) {
                 $textoDoenca = $this->normalizarTexto(
-                    $doenca->doe_nome . ' ' .
-                    implode(' ', (array) $doenca->doe_sintomas) . ' ' .
+                    $doenca->doe_nome.' '.
+                    implode(' ', (array) $doenca->doe_sintomas).' '.
                     implode(' ', (array) $doenca->doe_transmissao)
                 );
                 $match = 0;
@@ -91,7 +91,7 @@ class SugestaoDoencasService
                 if ($match > 0) {
                     $id = (int) $doenca->doe_id;
                     $scores[$id] = ($scores[$id] ?? 0) + ($match * 2);
-                    if (!isset($motivos[$id])) {
+                    if (! isset($motivos[$id])) {
                         $motivos[$id] = 'Relacionada às palavras das suas observações.';
                     }
                 }
@@ -113,6 +113,7 @@ class SugestaoDoencasService
     {
         $t = mb_strtolower($texto, 'UTF-8');
         $t = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $t);
+
         return preg_replace('/\s+/', ' ', trim($t));
     }
 
@@ -120,6 +121,7 @@ class SugestaoDoencasService
     private function extrairPalavras(string $texto): array
     {
         $palavras = explode(' ', $texto);
+
         return array_values(array_filter(array_unique($palavras), fn ($p) => strlen($p) >= 2));
     }
 }
