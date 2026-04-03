@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Sincronizar')
+@section('og_title', config('app.name') . ' · Sincronizar')
 @section('og_description', 'Envie locais e visitas salvos no dispositivo quando estiver sem internet.')
 
 @section('content')

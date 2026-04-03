@@ -5,22 +5,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal') }}</title>
-
         @php
             $authMeta = match (request()->route()?->getName()) {
-                'login' => ['title' => config('app.name') . ' — Login', 'desc' => 'Acesse o sistema Visita Aí com CPF ou e-mail. Área de gestores, ACE e ACS.'],
-                'register' => ['title' => config('app.name') . ' — Cadastro', 'desc' => 'Cadastre-se no Visita Aí para atuar como ACE (Agente de Combate às Endemias) ou ACS (Agente Comunitário de Saúde), conforme Lei 11.350/2006.'],
-                'password.request' => ['title' => config('app.name') . ' — Esqueci a Senha', 'desc' => 'Recupere o acesso ao sistema Visita Aí pelo e-mail.'],
-                'password.reset' => ['title' => config('app.name') . ' — Redefinir Senha', 'desc' => 'Defina uma nova senha para sua conta no Visita Aí.'],
-                'verification.notice' => ['title' => config('app.name') . ' — Verificar E-mail', 'desc' => 'Confirme seu e-mail para ativar sua conta no Visita Aí.'],
-                'pendente' => ['title' => config('app.name') . ' — Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
-                default => ['title' => config('app.name') . ' — Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'],
+                'login' => ['title' => config('app.name') . ' · Login', 'desc' => 'Acesse o sistema Visita Aí com CPF ou e-mail. Área de gestores, ACE e ACS.'],
+                'register' => ['title' => config('app.name') . ' · Cadastro', 'desc' => 'Cadastre-se no Visita Aí para atuar como ACE (Agente de Combate às Endemias) ou ACS (Agente Comunitário de Saúde), conforme Lei 11.350/2006.'],
+                'password.request' => ['title' => config('app.name') . ' · Esqueci a Senha', 'desc' => 'Recupere o acesso ao sistema Visita Aí pelo e-mail.'],
+                'password.reset' => ['title' => config('app.name') . ' · Redefinir Senha', 'desc' => 'Defina uma nova senha para sua conta no Visita Aí.'],
+                'verification.notice' => ['title' => config('app.name') . ' · Verificar E-mail', 'desc' => 'Confirme seu e-mail para ativar sua conta no Visita Aí.'],
+                'pendente' => ['title' => config('app.name') . ' · Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
+                default => ['title' => config('app.name') . ' · Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'],
             };
             $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai.png';
             $ogUrl = url()->current();
             $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp
+
+        <title>{{ $authMeta['title'] }}</title>
+
         <!-- Open Graph (Facebook, WhatsApp) -->
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ $ogUrl }}">
@@ -42,7 +43,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
 
         <!-- Tema: respeita localStorage (igual às páginas públicas); fallback preferência do sistema ou claro -->
         <script>
@@ -66,9 +67,7 @@
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                 </a>
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
+                    <x-heroicon-o-arrow-left class="h-4 w-4 shrink-0" />
                     Voltar para o início
                 </a>
             </div>

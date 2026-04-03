@@ -85,13 +85,13 @@
 
 <header>
   <h1>Vigilância Entomológica e Controle Vetorial</h1>
-  <h2>Registro de Atividades — Município de {{ $mun }} / {{ $uf }}</h2>
+  <h2>Registro de Atividades | Município de {{ $mun }} / {{ $uf }}</h2>
   <p class="header-nota">{{ config('ms_terminologia.sistema.nome_subtitulo') }}</p>
 </header>
 
 <footer>
   <div class="page-number"></div>
-  Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) — Ministério da Saúde.@if(strtoupper($uf ?? '') === 'RS') No âmbito estadual, em conformidade com a SES-RS e o CEVS.@endif<br>
+  Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) | Ministério da Saúde.@if(strtoupper($uf ?? '') === 'RS') No âmbito estadual, em conformidade com a SES-RS e o CEVS.@endif<br>
   Documento gerado por {{ config('ms_terminologia.sistema.nome_subtitulo') }} (Visita Aí) em {{ now()->format('d/m/Y H:i') }}.
 </footer>
 
@@ -164,25 +164,25 @@
           return implode(' ', $p);
         })->filter()->implode('; ');
         $amostra = trim(($visita->vis_amos_inicial ?? '') . '-' . ($visita->vis_amos_final ?? ''));
-        if ($amostra === '-') $amostra = '—';
+        if ($amostra === '-') $amostra = '-';
       @endphp
       <tr>
         <td>{{ $visita->vis_id }}</td>
         <td>{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</td>
-        <td>{{ $visita->vis_ciclo ?? '—' }}</td>
-        <td>{{ $atividades[$visita->vis_atividade ?? ''] ?? '—' }}</td>
-        <td>{{ $visita->vis_visita_tipo === 'R' ? 'R' : ($visita->vis_visita_tipo === 'N' ? 'N' : '—') }}</td>
+        <td>{{ $visita->vis_ciclo ?? '-' }}</td>
+        <td>{{ $atividades[$visita->vis_atividade ?? ''] ?? '-' }}</td>
+        <td>{{ $visita->vis_visita_tipo === 'R' ? 'R' : ($visita->vis_visita_tipo === 'N' ? 'N' : '-') }}</td>
         <td>{{ (($visita->vis_pendencias ?? false) ? ($visita->vis_concluida ?? false) : true) ? 'S' : 'N' }}</td>
-        <td>{{ $loc?->loc_quarteirao ?? '—' }}</td>
-        <td>{{ $loc?->loc_sequencia ?? '—' }}</td>
-        <td>{{ $loc?->loc_lado ?? '—' }}</td>
-        <td class="text-left">{{ $loc?->loc_bairro ?? '—' }}</td>
-        <td class="text-left">{{ $loc?->loc_endereco ?? '—' }}</td>
+        <td>{{ $loc?->loc_quarteirao ?? '-' }}</td>
+        <td>{{ $loc?->loc_sequencia ?? '-' }}</td>
+        <td>{{ $loc?->loc_lado ?? '-' }}</td>
+        <td class="text-left">{{ $loc?->loc_bairro ?? '-' }}</td>
+        <td class="text-left">{{ $loc?->loc_endereco ?? '-' }}</td>
         <td>{{ $loc?->loc_numero ?? 'S/N' }}</td>
-        <td class="text-left">{{ $loc?->loc_complemento ?? '—' }}</td>
-        <td>{{ $loc?->loc_codigo_unico ?? '—' }}</td>
-        <td>{{ $loc ? ($tipoImovel[$loc->loc_tipo ?? ''] ?? $loc->loc_tipo ?? '—') : '—' }}</td>
-        <td>{{ $loc && $loc->loc_zona === 'U' ? 'Urb' : ($loc && $loc->loc_zona === 'R' ? 'Rur' : '—') }}</td>
+        <td class="text-left">{{ $loc?->loc_complemento ?? '-' }}</td>
+        <td>{{ $loc?->loc_codigo_unico ?? '-' }}</td>
+        <td>{{ $loc ? ($tipoImovel[$loc->loc_tipo ?? ''] ?? $loc->loc_tipo ?? '-') : '-' }}</td>
+        <td>{{ $loc && $loc->loc_zona === 'U' ? 'Urb' : ($loc && $loc->loc_zona === 'R' ? 'Rur' : '-') }}</td>
         <td>{{ ($visita->vis_pendencias ?? false) ? 'Sim' : 'Não' }}</td>
         <td>{{ $visita->insp_a1 ?? 0 }}</td>
         <td>{{ $visita->insp_a2 ?? 0 }}</td>
@@ -192,11 +192,11 @@
         <td>{{ $visita->insp_d2 ?? 0 }}</td>
         <td>{{ $visita->insp_e ?? 0 }}</td>
         <td>{{ $amostra }}</td>
-        <td>{{ $visita->vis_qtd_tubitos ?? '—' }}</td>
+        <td>{{ $visita->vis_qtd_tubitos ?? '-' }}</td>
         <td>{{ $visita->vis_depositos_eliminados ?? 0 }}</td>
         <td>{{ ($visita->vis_coleta_amostra ?? false) ? 'Sim' : 'Não' }}</td>
-        <td class="text-left">{{ $tratText ?: '—' }}</td>
-        <td class="text-left">{{ $visita->usuario?->use_nome ?? '—' }}</td>
+        <td class="text-left">{{ $tratText ?: '-' }}</td>
+        <td class="text-left">{{ $visita->usuario?->use_nome ?? '-' }}</td>
       </tr>
       @endforeach
     </tbody>
@@ -209,7 +209,7 @@
     <strong>Cód.:</strong> Código único do imóvel &nbsp;|&nbsp;
     <strong>Tipo (imóvel):</strong> R-Residencial, C-Comercial, T-Terreno Baldio (PE = atividade 8, não tipo de imóvel) &nbsp;|&nbsp;
     <strong>Pend.:</strong> Pendência (recusado, fechado ou retorno) &nbsp;|&nbsp;
-    <strong>A1–E:</strong> Depósitos inspecionados por tipo (classificação LIRAa — MS) &nbsp;|&nbsp;
+    <strong>A1–E:</strong> Depósitos inspecionados por tipo (classificação LIRAa | MS) &nbsp;|&nbsp;
     <strong>Amostra:</strong> Inicial-Final (LIRAa) &nbsp;|&nbsp;
     <strong>Dep.Elim.:</strong> Depósitos eliminados &nbsp;|&nbsp;
     <strong>Tub.:</strong> Tubitos &nbsp;|&nbsp;

@@ -3,7 +3,7 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.name') . ' — Resultado da Consulta')
+@section('og_title', config('app.name') . ' · Resultado da Consulta')
 @section('og_description', isset($local) ? 'Histórico de visitas do imóvel em ' . $local->loc_cidade . '/' . $local->loc_estado . '.' : 'Consulte o resultado da sua busca pelo código do imóvel.')
 
 @section('content')
@@ -17,16 +17,14 @@
         </div>
         <button type="button" id="btn-baixar-card" aria-label="Baixar card com QR Code"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-            </svg>
+            <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" />
             Baixar card QR Code
         </button>
     </div>
 
     {{-- Card QR Code (oculto, usado para download) --}}
     <div id="adesivo" class="fixed left-[-9999px] top-0 w-[300px] bg-white p-6 text-center">
-        <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3">Visita Aí — Consulta Pública</p>
+        <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3">Visita Aí · Consulta Pública</p>
         <p class="text-sm text-gray-800 leading-snug mb-4">
             {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
             <span class="text-gray-600">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
@@ -169,16 +167,14 @@
     <div class="flex flex-col items-center gap-4 pt-6">
         <a href="{{ route('consulta.index') }}"
            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <x-heroicon-o-magnifying-glass class="h-4 w-4 shrink-0" />
             Fazer nova consulta
         </a>
         <button type="button" id="btn-compartilhar" aria-label="Compartilhar link"
                 data-url="{{ url()->current() }}"
-                data-title="{{ config('app.name') }} — Resultado da Consulta"
+                data-title="{{ config('app.name') }} · Resultado da Consulta"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-            </svg>
+            <x-heroicon-o-share class="h-4 w-4 shrink-0" />
             <span id="btn-copiar-texto">Compartilhar link</span>
         </button>
     </div>
@@ -288,7 +284,7 @@
         if (navigator.share && typeof navigator.share === 'function') {
             navigator.share({
                 title: title,
-                text: 'Resultado da consulta — Visita Aí',
+                text: 'Resultado da consulta | Visita Aí',
                 url: url
             }).then(function () {
                 if (span) {

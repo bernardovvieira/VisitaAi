@@ -3,7 +3,7 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.name') . ' — Consulta Pública')
+@section('og_title', config('app.name') . ' · Consulta Pública')
 @section('og_description', 'Consulte o histórico de visitas de vigilância entomológica e controle vetorial do seu imóvel pelo código único fornecido pelo profissional (ACE/ACS).')
 
 @section('content')
@@ -16,9 +16,7 @@
             <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Consulta Pública</h1>
         </div>
         <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
+            <x-heroicon-o-arrow-left class="h-4 w-4 shrink-0" />
             Voltar para o início
         </a>
     </div>
@@ -68,9 +66,7 @@
     {{-- Alerta de erro (código não encontrado ou inválido) --}}
     @if (session('erro'))
         <div class="bg-red-100 dark:bg-red-900/40 border border-red-400 dark:border-red-600 text-red-800 dark:text-red-100 px-4 py-3 rounded-lg flex items-start gap-3" role="alert">
-            <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-300" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
+            <x-heroicon-o-x-circle class="mt-0.5 h-5 w-5 shrink-0 text-red-600 dark:text-red-300" />
             <div>
                 <strong class="font-semibold text-red-900 dark:text-red-50">Não foi possível consultar</strong>
                 <p class="mt-1 text-sm text-red-800 dark:text-red-100 opacity-100">{{ session('erro') }}</p>

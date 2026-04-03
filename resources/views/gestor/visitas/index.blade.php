@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Visitas')
+@section('og_title', config('app.name') . ' · Visitas')
 @section('og_description', 'Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).')
 
 @section('content')
@@ -149,12 +149,7 @@
                                     <a href="{{ route('gestor.visitas.show', $visita) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
                                        aria-label="Visualizar visita">
-                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
+                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                         Visualizar
                                     </a>
                                 </div>
@@ -165,9 +160,7 @@
                             <td colspan="7" class="p-8 text-center">
                                 <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
                                     <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2" />
-                                        </svg>
+                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma visita registrada.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">As visitas aparecerão aqui quando os profissionais (ACE/ACS) as registrarem.</p>

@@ -6,8 +6,6 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="manifest" href="{{ asset('manifest.json') }}">
 
-        <title>{{ config('app.name', 'Visita Aí - Local - Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal') }}</title>
-
         @php
             $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));
             $ogTitle = $ogTitle ?: config('app.name');
@@ -18,6 +16,9 @@
             $ogUrl = url()->current();
             $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp
+
+        <title>{{ $ogTitle }}</title>
+
         <!-- Open Graph (Facebook, WhatsApp, etc.) - URLs absolutas obrigatórias -->
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ $ogUrl }}">
@@ -42,7 +43,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
 
         <!-- Páginas públicas (home, consulta): padrão sempre modo claro quando não há preferência salva -->
         @if(View::hasSection('public'))
@@ -121,7 +122,7 @@
             .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
         </style>
     </head>
-    <body class="font-sans antialiased {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
+    <body class="font-sans antialiased text-[15px] leading-relaxed {{ View::hasSection('public') ? 'bg-white' : 'bg-slate-50' }} dark:bg-gray-950">
         @if (View::hasSection('public'))
             <div class="min-h-screen bg-white dark:bg-gray-900">
                 @isset($header)
@@ -140,7 +141,7 @@
         @else
             @auth
                 <div id="authenticated-shell"
-                     class="flex min-h-screen bg-gray-100 dark:bg-gray-900"
+                     class="flex min-h-screen bg-slate-50 dark:bg-gray-950"
                      x-data="{
                         sidebarOpen: false,
                         online: typeof navigator !== 'undefined' ? navigator.onLine : true,
@@ -190,8 +191,8 @@
                                 </div>
                             </header>
                         @endisset
-                        <main class="flex-1 overflow-y-auto" x-bind:inert="sidebarOpen">
-                            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                        <main class="flex-1 overflow-y-auto text-slate-800 dark:text-slate-100" x-bind:inert="sidebarOpen">
+                            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
                                 @yield('content')
                             </div>
                         </main>

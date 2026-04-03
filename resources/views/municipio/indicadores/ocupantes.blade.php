@@ -6,12 +6,12 @@
     $keysFaixa = ['0-11', '12-17', '18-59', '60+', 'sem_info'];
     $escLabels = config('visitaai_municipio.escolaridade_opcoes', []);
     $rendaLabels = config('visitaai_municipio.renda_faixa_opcoes', []);
-    $celSup = $cfgInd['texto_celula_suprimida'] ?? '—';
+    $celSup = $cfgInd['texto_celula_suprimida'] ?? '-';
     $canExportCsv = ($painel['resumo']['total_ocupantes'] ?? 0) > 0;
     $csvHintDisabled = $cfgInd['export_csv_disabled_hint'] ?? '';
 @endphp
 
-@section('og_title', config('app.name') . ' — ' . ($cfgInd['titulo_pagina'] ?? 'Indicadores'))
+@section('og_title', config('app.name') . ' · ' . ($cfgInd['titulo_pagina'] ?? 'Indicadores'))
 @section('og_description', $cfgInd['subtitulo'] ?? '')
 
 @section('content')
@@ -37,18 +37,14 @@
             @if($canExportCsv)
                 <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
                    class="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-600 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-900 shadow-sm transition hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:border-blue-500 dark:bg-blue-950/50 dark:text-blue-100 dark:hover:bg-blue-900/40 dark:focus-visible:ring-offset-gray-900">
-                    <svg class="mr-2 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
+                    <x-heroicon-o-arrow-down-tray class="mr-2 h-5 w-5 shrink-0" aria-hidden="true" />
                     {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
                 </a>
             @else
                 <span class="inline-flex shrink-0 cursor-not-allowed items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-500 dark:border-gray-600 dark:bg-gray-800/50 dark:text-gray-400"
                       title="{{ $csvHintDisabled }}"
                       aria-disabled="true">
-                    <svg class="mr-2 h-5 w-5 shrink-0 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
+                    <x-heroicon-o-arrow-down-tray class="mr-2 h-5 w-5 shrink-0 opacity-60" aria-hidden="true" />
                     {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
                 </span>
             @endif

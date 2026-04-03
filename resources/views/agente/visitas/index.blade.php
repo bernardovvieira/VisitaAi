@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Visitas')
+@section('og_title', config('app.name') . ' · Visitas')
 @section('og_description', 'Visitas de vigilância entomológica e controle vetorial registradas. Visualize, busque, edite ou remova suas visitas.')
 
 @section('content')
@@ -44,17 +44,13 @@
         <div class="flex flex-wrap gap-3 mt-4">
             <a href="{{ route('agente.visitas.create') }}"
                class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
+                <x-heroicon-o-plus class="mr-2 h-5 w-5 shrink-0" />
                 Cadastrar visita
             </a>
             <span x-show="online">
                 <a href="{{ route('agente.visitas.sync') }}"
                    class="inline-flex items-center rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-amber-950 shadow-sm transition hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50 dark:text-amber-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
+                    <x-heroicon-o-arrow-path class="mr-2 h-5 w-5 shrink-0" />
                     Enviar visitas salvas no dispositivo
                 </a>
             </span>
@@ -188,21 +184,13 @@
                                     <a href="{{ route('agente.visitas.show', $visita) }}"
                                         class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
                                         aria-label="Visualizar visita">
-                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
+                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                         Visualizar
                                     </a>
                                     <a href="{{ route('agente.visitas.edit', $visita) }}"
                                         class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition"
                                         aria-label="Editar visita">
-                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
-                                        </svg>
+                                        <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
                                         Editar
                                     </a> 
                                     <form method="POST" action="{{ route('agente.visitas.destroy', $visita) }}">
@@ -211,15 +199,12 @@
                                         <button type="submit" onclick="return confirm('Tem certeza que deseja excluir esta visita? Esta ação não pode ser desfeita.')"
                                                 class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition"
                                                 aria-label="Excluir visita">
-                                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                    d="M4 6H20 M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2 M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6 M10 11v6 M14 11v6" />
-                                                </svg>
+                                                <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
                                             Excluir
                                         </button>
                                     </form>
                                 </div>
-                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline — edição e exclusão não disponíveis</p>
+                                <p x-show="!online" class="text-xs text-gray-500 dark:text-gray-400">Offline · edição e exclusão não disponíveis</p>
                             </td>
                         </tr>
                     @empty
@@ -227,14 +212,12 @@
                             <td colspan="7" class="p-8 text-center">
                                 <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
                                     <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2" />
-                                        </svg>
+                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma visita registrada.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Registre a primeira visita para começar.</p>
                                     <a href="{{ route('agente.visitas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
                                         Registrar visita
                                     </a>
                                 </div>

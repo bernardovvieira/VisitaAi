@@ -10,9 +10,7 @@
 
     <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h2 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
+            <x-heroicon-o-lock-closed class="mr-2 h-6 w-6 shrink-0 text-amber-500" />
             O que você precisa saber
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
@@ -24,15 +22,10 @@
 
         <form id="form-enable-2fa" method="POST" action="{{ url(route('two-factor.enable')) }}" class="pt-2" accept-charset="UTF-8">
             @csrf
-            <div class="flex flex-col-reverse sm:flex-row gap-3">
-                <a href="{{ route('profile.edit') }}"
-                   class="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 rounded-lg transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    Voltar ao perfil
-                </a>
+            <div class="flex gap-3">
                 <button type="submit" id="btn-enable-2fa" name="enable_2fa" value="1"
-                        class="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition disabled:opacity-70">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        class="inline-flex flex-1 justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition disabled:opacity-70">
+                    <x-heroicon-o-lock-closed class="h-4 w-4 shrink-0" />
                     Ativar 2FA
                 </button>
             </div>

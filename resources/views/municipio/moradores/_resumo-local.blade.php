@@ -1,4 +1,4 @@
-{{-- Requer: $local, $moradorResumo — apenas telas de local gestor/ACE (não e-SUS / não ACS). --}}
+{{-- Requer: $local, $moradorResumo | apenas telas de local gestor/ACE (não e-SUS / não ACS). --}}
 @php
     $rp = request()->routeIs('gestor.*') ? 'gestor' : 'agente';
 @endphp

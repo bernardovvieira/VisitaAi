@@ -9,15 +9,6 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('saude.dashboard')], ['label' => 'Visitas', 'url' => route('saude.visitas.index')], ['label' => 'Cadastrar']]" />
-    <div>
-        <a href="{{ route('saude.visitas.index') }}"
-           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
-            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Voltar
-        </a>
-    </div>
 
     <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Registrar visita</h2>
@@ -169,7 +160,7 @@
                     @php $at7 = config('ms_terminologia.atividades_pncd.7', ['codigo' => '7-LIRAa', 'nome' => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)']); @endphp
                     <select id="vis_atividade" name="vis_atividade" required
                             class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
-                        <option value="7" selected>{{ $at7['codigo'] }} — {{ $at7['nome'] }}</option>
+                        <option value="7" selected>{{ $at7['codigo'] }} · {{ $at7['nome'] }}</option>
                     </select>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         O perfil ACS permite registrar a atividade LIRAa conforme Diretriz Nacional para Atuação Integrada dos ACE e ACS no Território (MS).

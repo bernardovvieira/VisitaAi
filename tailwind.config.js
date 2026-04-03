@@ -7,6 +7,7 @@ export default {
   safelist: [{ pattern: /^btn-acesso-principal$/ }],
   content: [
     './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+    './vendor/blade-ui-kit/blade-heroicons/resources/**/*.php',
     './storage/framework/views/*.php',
     './resources/views/**/*.blade.php',
   ],
@@ -15,7 +16,7 @@ export default {
     extend: {
       // Mantém suas fontes customizadas
       fontFamily: {
-        sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+        sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
       },
       // Define espaçamentos reutilizáveis (ex: largura da sidebar)
       spacing: {

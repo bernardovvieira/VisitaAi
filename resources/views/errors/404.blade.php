@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name') }} — Página não encontrada</title>
+    <title>{{ config('app.name') }} · Página não encontrada</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen items-center justify-center bg-gray-100 px-4 font-sans antialiased dark:bg-gray-900">

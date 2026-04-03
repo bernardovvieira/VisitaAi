@@ -1,7 +1,7 @@
 <!-- resources/views/gestor/users/index.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Usuários')
+@section('og_title', config('app.name') . ' · Usuários')
 @section('og_description', 'Usuários cadastrados no sistema. Visualize, edite e gerencie permissões.')
 
 @section('content')
@@ -85,7 +85,7 @@
                                 @if(method_exists($usuario, 'hasEnabledTwoFactorAuthentication') && $usuario->hasEnabledTwoFactorAuthentication())
                                     <span class="inline-flex items-center rounded px-2 py-1 text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800/80 dark:text-slate-300">Ativo</span>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-500 dark:text-gray-400">—</span>
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-500 dark:text-gray-400">-</span>
                                 @endif
                             </td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $usuario->use_data_criacao->format('d/m/Y') }}</td>
@@ -104,10 +104,7 @@
         <a href="{{ route('gestor.users.edit', $usuario) }}"
            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow-md transition"
            aria-label="Editar usuário">
-            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
-            </svg>
+            <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
             Editar
         </a>
 
@@ -119,10 +116,7 @@
                     onclick="return confirm('Tem certeza que deseja anonimizar este usuário? Esta ação não pode ser desfeita.')"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition"
                     aria-label="Anonimizar usuário">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
+                <x-heroicon-o-shield-exclamation class="mr-2 h-6 w-6 shrink-0 text-white" />
                 Anonimizar
             </button>
         </form>
@@ -136,9 +130,7 @@
                             <td colspan="8" class="p-8 text-center">
                                 <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
                                     <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                        </svg>
+                                        <x-heroicon-o-user-group class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum usuário cadastrado.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Novos usuários devem se registrar pela tela de login.</p>
@@ -159,7 +151,7 @@
             Visualize e aprove usuários que aguardam liberação para acessar o sistema.
         </p>
         <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <x-heroicon-o-chevron-right class="h-4 w-4 shrink-0" />
             Ver usuários pendentes
         </a>
     </section>

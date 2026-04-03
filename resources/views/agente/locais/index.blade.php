@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Locais')
+@section('og_title', config('app.name') . ' · Locais')
 @section('og_description', 'Locais de visitação. Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.')
 
 @section('content')
@@ -44,9 +44,7 @@
         </p>
         <a href="{{ route('agente.locais.create') }}"
            class="inline-flex items-center px-4 py-2 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
+            <x-heroicon-o-plus class="mr-2 h-5 w-5 shrink-0" />
             Cadastrar Local
         </a>
     </section>
@@ -139,22 +137,14 @@
                                     <a href="{{ route('agente.locais.show', $local) }}"
                                        class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
                                        aria-label="Visualizar local">
-                                       <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
+                                       <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                         Visualizar
                                     </a>
                                     @if(!$local->isPrimary())
                                     <a href="{{ route('agente.locais.edit', $local) }}"
                                         class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition"
                                         aria-label="Editar local">
-                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z" />
-                                        </svg>
+                                        <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
                                         Editar
                                     </a>
                                     <form method="POST" action="{{ route('agente.locais.destroy', $local) }}">
@@ -163,10 +153,7 @@
                                         <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.')"
                                                 class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition"
                                                 aria-label="Excluir local">
-                                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 6H20 M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2 M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6 M10 11v6 M14 11v6" />
-                                                </svg>
+                                                <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
                                                 Excluir
                                             </button>
                                     </form>
@@ -179,14 +166,12 @@
                             <td colspan="9" class="p-8 text-center">
                                 <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
                                     <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
+                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre o primeiro local para realizar visitas.</p>
                                     <a href="{{ route('agente.locais.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
                                         Cadastrar local
                                     </a>
                                 </div>

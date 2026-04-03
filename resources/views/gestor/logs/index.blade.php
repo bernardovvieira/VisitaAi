@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Auditoria')
+@section('og_title', config('app.name') . ' · Auditoria')
 @section('og_description', 'Registros de auditoria. Histórico de ações realizadas pelos usuários no sistema.')
 
 @section('content')
@@ -60,12 +60,12 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $log->log_descricao }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 @if($log->log_ip || $log->log_user_agent)
-                                    <span title="{{ $log->log_user_agent ?? '' }}">{{ $log->log_ip ?? '—' }}</span>
+                                    <span title="{{ $log->log_user_agent ?? '' }}">{{ $log->log_ip ?? '-' }}</span>
                                     @if($log->log_user_agent)
                                         <br><span class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px] inline-block" title="{{ $log->log_user_agent }}">{{ Str::limit($log->log_user_agent, 50) }}</span>
                                     @endif
                                 @else
-                                    <span class="text-gray-400">—</span>
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </td>
                         </tr>

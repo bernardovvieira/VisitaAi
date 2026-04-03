@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Relatórios')
+@section('og_title', config('app.name') . ' · Relatórios')
 @section('og_description', 'Relatórios e indicadores epidemiológicos. Gere PDF e visualize indicadores do período selecionado.')
 
 @section('content')
@@ -27,20 +27,18 @@
     @endif
 
     @if($sem_visitas ?? false)
-        {{-- Estado vazio: nenhuma visita no sistema — sem ações disponíveis --}}
+        {{-- Estado vazio: nenhuma visita no sistema · sem ações disponíveis --}}
         <div class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 shadow-sm px-8 py-12 text-center">
             <div class="max-w-md mx-auto pt-12 pb-12">
                 <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                    <svg class="w-10 h-10 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
+                    <x-heroicon-o-document-text class="h-10 w-10 shrink-0 text-gray-400 dark:text-gray-500" />
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Nenhuma visita cadastrada</h2>
                 <p class="text-gray-600 dark:text-gray-400 mb-6">
                     Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos profissionais (ACE/ACS).
                 </p>
                 <a href="{{ route('gestor.visitas.index') }}" class="btn-acesso-principal inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7-3.732 7-9.542 7-8.268-2.943-9.542-7z"/></svg>
+                    <x-heroicon-o-eye class="mr-2 h-5 w-5 shrink-0" />
                     Ir para Visitas
                 </a>
             </div>
@@ -52,7 +50,7 @@
             Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
         </p>
         <p class="mt-2 text-xs text-gray-500 dark:text-gray-500 italic">
-            Atividades e terminologia (ACE/ACS, tipos de visita, códigos) conforme recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas — Vigilância Entomológica e Controle Vetorial).
+            Atividades e terminologia (ACE/ACS, tipos de visita, códigos) conforme recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas | Vigilância Entomológica e Controle Vetorial).
         </p>
     </section>
     {{-- Filtros e PDF --}}
@@ -274,7 +272,7 @@
                         return;
                     } gerarBase64Graficos();"
                     class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <x-heroicon-o-arrow-down-tray class="mr-2 h-5 w-5 shrink-0" />
                     Gerar relatório em PDF
                 </button>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Filtre os dados e clique no botão para gerar o documento.</p>
@@ -288,45 +286,45 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="mr-2 h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    <x-heroicon-o-clipboard-document-list class="mr-2 h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Total de visitas</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalVisitas }}</p>
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-amber-500 dark:text-amber-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <x-heroicon-o-clock class="mr-2 h-6 w-6 shrink-0 text-amber-500 dark:text-amber-400" />
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $percentualPendencias }}% <span class="text-sm text-gray-500">({{ $totalComPendencia }})</span></p>
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <x-heroicon-o-building-office-2 class="mr-2 h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Depósitos eliminados</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalDepEliminados }}</p>
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <x-heroicon-o-check-circle class="mr-2 h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com tratamento</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $visitasComTratamento }}</p>
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    <x-heroicon-o-beaker class="mr-2 h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Coletas realizadas</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalComColeta }}</p>
             </div>
             <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-gray-500 dark:text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <x-heroicon-o-map-pin class="mr-2 h-6 w-6 shrink-0 text-gray-500 dark:text-gray-400" />
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bairro com mais ocorrências</h3>
                 </div>
-                <p class="mt-2 text-lg font-normal text-gray-900 dark:text-gray-100">{{ $bairroMaisFrequente ?: '—' }}</p>
+                <p class="mt-2 text-lg font-normal text-gray-900 dark:text-gray-100">{{ $bairroMaisFrequente ?: '-' }}</p>
             </div>
         </div>
     </section>
@@ -436,23 +434,19 @@
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                             <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
-                                Bairro/Localidade: {{ $visita->local->loc_bairro }} — Cód.: {{ $visita->local->loc_codigo_unico }}
+                                Bairro/Localidade: {{ $visita->local->loc_bairro }} · Cód.: {{ $visita->local->loc_codigo_unico }}
                             </div>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
                             <span class="text-sm">{{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: 'Não informado' }}</span>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
-                            {{ $visita->usuario->use_nome ?? '—' }}
+                            {{ $visita->usuario->use_nome ?? '-' }}
                         </td>
                         <td class="p-4 text-center">
                             <a href="{{ route('gestor.visitas.show', $visita) }}"
                                class="btn-acesso-principal inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white rounded shadow transition">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" stroke-width="2"
-                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7-3.732 7-9.542 7-8.268-2.943-9.542-7z"/>
-                                </svg>
+                                <x-heroicon-o-eye class="mr-1 h-4 w-4 shrink-0" />
                                 Visualizar
                             </a>
                         </td>

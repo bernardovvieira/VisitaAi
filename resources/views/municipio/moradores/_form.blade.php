@@ -17,7 +17,7 @@
     <div>
         <x-input-label for="mor_escolaridade" value="Escolaridade" />
         <select id="mor_escolaridade" name="mor_escolaridade" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
-            <option value="">{{ __('— Selecionar —') }}</option>
+            <option value="">{{ __('Selecionar') }}</option>
             @foreach($esc as $k => $label)
                 <option value="{{ $k }}" @selected(old('mor_escolaridade', $morador->mor_escolaridade) === $k)>{{ $label }}</option>
             @endforeach
@@ -27,7 +27,7 @@
     <div>
         <x-input-label for="mor_renda_faixa" value="Faixa de renda (referência salário mínimo)" />
         <select id="mor_renda_faixa" name="mor_renda_faixa" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
-            <option value="">{{ __('— Selecionar —') }}</option>
+            <option value="">{{ __('Selecionar') }}</option>
             @foreach($renda as $k => $label)
                 <option value="{{ $k }}" @selected(old('mor_renda_faixa', $morador->mor_renda_faixa) === $k)>{{ $label }}</option>
             @endforeach

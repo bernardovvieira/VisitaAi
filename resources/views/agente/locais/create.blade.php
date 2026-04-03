@@ -4,24 +4,11 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Locais', 'url' => route('agente.locais.index')], ['label' => 'Cadastrar']]" />
-    <div>
-        @if(!($isPrimario ?? false))
-        <a href="{{ route($indexRoute ?? 'agente.locais.index') }}"
-           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
-            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Voltar
-        </a>
-        @else
-        <span class="text-sm text-gray-600 dark:text-gray-400">Cadastre o local de referência do município para iniciar.</span>
-        @endif
-    </div>
 
     @if($isPrimario ?? false)
     <section class="rounded-xl border border-gray-200/80 bg-gray-50/90 p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800/50">
         <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <x-heroicon-o-information-circle class="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
             Local de referência do município
         </h2>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">

@@ -4,17 +4,6 @@
 <div class="max-w-7xl mx-auto space-y-10">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas', 'url' => route('agente.visitas.index')], ['label' => 'Visualizar']]" />
 
-    {{-- Botão Voltar --}}
-    <div>
-        <a href="{{ route('agente.visitas.index') }}"
-           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
-            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            Voltar
-        </a>
-    </div>
-
     {{-- Cabeçalho --}}
     <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detalhes da visita</h1>
@@ -118,7 +107,7 @@
                 <dt class="font-medium">Atividade</dt>
                 <dd>
                     @if(\App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade))
-                        {{ \App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade) }} — {{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}
+                        {{ \App\Helpers\MsTerminologia::atividadeCodigo($visita->vis_atividade) }} · {{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}
                     @else
                         Não informado
                     @endif

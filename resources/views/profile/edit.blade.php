@@ -31,9 +31,7 @@
             {{-- Card: Informações pessoais --}}
             <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
-                    </svg>
+                    <x-heroicon-o-user class="mr-2 mt-px h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                     Informações pessoais
                 </h3>
                 <dl class="text-gray-700 dark:text-gray-300 space-y-2">
@@ -47,9 +45,7 @@
             {{-- Card: Acesso e status --}}
             <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
+                    <x-heroicon-o-shield-check class="mr-2 mt-px h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                     Acesso e status
                 </h3>
                 <dl class="text-gray-700 dark:text-gray-300 space-y-2">
@@ -63,9 +59,7 @@
         {{-- Coluna direita: Atualizar Dados --}}
         <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
             <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5l3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
+                <x-heroicon-o-pencil-square class="mr-2 h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
                 Atualizar Dados
             </h3>
             <form method="POST" action="{{ route('profile.update') }}" class="space-y-4" id="profile-update-form">
@@ -119,9 +113,7 @@
     {{-- Card: Autenticação em dois fatores (2FA) --}}
     <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
+            <x-heroicon-o-lock-closed class="mr-2 h-6 w-6 shrink-0 text-amber-500" />
             Autenticação em dois fatores (2FA)
         </h3>
         <p class="text-gray-600 dark:text-gray-400">
@@ -139,7 +131,7 @@
             @else
                 <a href="{{ route('profile.two-factor') }}"
                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
-                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                   <x-heroicon-o-chevron-right class="h-4 w-4 shrink-0" />
                     Ativar autenticação em dois fatores 
                 </a>
             @endif
@@ -161,9 +153,7 @@
     {{-- Card: Anonimizar Conta --}}
     <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+            <x-heroicon-o-shield-exclamation class="mr-2 h-6 w-6 shrink-0 text-red-500" />
             Anonimizar Conta
         </h3>
         <p class="text-gray-600 dark:text-gray-400">

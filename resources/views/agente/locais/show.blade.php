@@ -3,15 +3,6 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Locais', 'url' => route('agente.locais.index')], ['label' => 'Visualizar']]" />
-    <div>
-        <a href="{{ route('agente.locais.index') }}"
-           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
-            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            Voltar
-        </a>
-    </div>
 
     <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Detalhes do Local</h2>
@@ -110,7 +101,7 @@
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
             <div id="adesivo" class="w-[300px] bg-white p-6 text-center shadow-sm text-gray-800">
-                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3">Visita Aí — Consulta Pública</p>
+                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-3">Visita Aí | Consulta Pública</p>
                 <p class="text-sm leading-snug mb-4">
                     {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}<br>
                     <span class="text-gray-600">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
@@ -126,10 +117,7 @@
         <div class="text-center pt-4">
             <button onclick="baixarAdesivo()"
                     class="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded shadow transition">
-                    <svg class="w-4 h-4 mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-                    </svg>
+                    <x-heroicon-o-arrow-down-tray class="mr-2 inline-block h-4 w-4" />
                 Salvar Adesivo
             </button>
             <p class="mt-3 text-sm text-gray-600 dark:text-gray-400" style="padding-top: 0.5rem;">

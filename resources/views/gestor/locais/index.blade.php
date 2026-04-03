@@ -1,7 +1,7 @@
 <!-- resources/views/gestor/locais/index.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' — Locais')
+@section('og_title', config('app.name') . ' · Locais')
 @section('og_description', 'Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação (vigilância entomológica e controle vetorial).')
 
 @section('content')
@@ -117,12 +117,7 @@
                                 <a href="{{ route('gestor.locais.show', $local) }}"
                                     class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
                                     aria-label="Visualizar local">
-                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
+                                    <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                     Visualizar
                                 </a>   
                             </td>
@@ -132,9 +127,7 @@
                             <td colspan="9" class="p-8 text-center">
                                 <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
                                     <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
+                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Os locais aparecerão aqui quando os profissionais (ACE/ACS) os cadastrarem.</p>
