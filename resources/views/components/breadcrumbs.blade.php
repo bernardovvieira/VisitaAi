@@ -12,7 +12,7 @@
                 <li class="flex min-w-0 items-center">
                     @if(!empty($item['url']))
                         <a href="{{ $item['url'] }}"
-                           class="truncate rounded-md px-1.5 py-0.5 text-gray-600 underline-offset-2 transition hover:text-emerald-700 hover:underline dark:text-gray-400 dark:hover:text-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50">
+                           class="truncate rounded-md px-1.5 py-0.5 text-gray-600 underline-offset-2 transition hover:text-blue-700 hover:underline dark:text-gray-400 dark:hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">
                             {{ $item['label'] }}
                         </a>
                     @else

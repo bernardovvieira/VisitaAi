@@ -13,14 +13,14 @@
     <div class="flex h-16 shrink-0 items-center gap-2 border-b border-slate-800/80 px-4">
         <a :href="online ? @js($logoHrefOnline) : @js($logoHrefOffline)"
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
-           class="flex min-w-0 flex-1 items-center gap-2 rounded-lg outline-none ring-emerald-500/40 focus-visible:ring-2">
+           class="flex min-w-0 flex-1 items-center gap-2 rounded-lg outline-none ring-blue-500/40 focus-visible:ring-2">
             <img src="{{ asset('images/visitaai_rembg.png') }}"
                  alt=""
                  class="h-9 w-auto shrink-0" width="36" height="36" />
             <span class="truncate text-sm font-semibold tracking-tight text-white">{{ config('app.name', 'Visita Aí') }}</span>
         </a>
         <button type="button"
-                class="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
+                class="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
                 @click="sidebarOpen = false"
                 aria-label="{{ __('Fechar menu') }}">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">

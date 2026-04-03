@@ -115,8 +115,8 @@
                 color: #ffffff !important;
             }
             .nav-link-active { border-color: #3b82f6 !important; }
-            .dropdown-link-active { background-color: rgba(16, 185, 129, 0.12) !important; color: #047857 !important; border-left: 3px solid #10b981; font-weight: 600; }
-            .dark .dropdown-link-active { background-color: rgba(16, 185, 129, 0.2) !important; color: #6ee7b7 !important; }
+            .dropdown-link-active { background-color: rgba(59, 130, 246, 0.12) !important; color: #1d4ed8 !important; border-left: 3px solid #3b82f6; font-weight: 600; }
+            .dark .dropdown-link-active { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
             .responsive-nav-link-active { border-color: #3b82f6 !important; color: #1d4ed8 !important; background-color: rgba(59, 130, 246, 0.1) !important; }
             .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
         </style>
@@ -231,7 +231,7 @@
             function showConnectionToast(msg, isError) {
                 var el = document.createElement('div');
                 el.setAttribute('role', 'alert');
-                el.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white ' + (isError ? 'bg-amber-600' : 'bg-emerald-600');
+                el.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white ' + (isError ? 'bg-amber-600' : 'bg-blue-600');
                 el.textContent = msg;
                 document.body.appendChild(el);
                 setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 7000);

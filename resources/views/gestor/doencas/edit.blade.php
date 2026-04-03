@@ -7,7 +7,7 @@
     <!-- Botão Voltar -->
     <div>
         <a href="{{ route('gestor.doencas.index') }}" 
-           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
+           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M15 19l-7-7 7-7"/>
@@ -41,7 +41,7 @@
                 <input id="doe_nome" name="doe_nome" type="text"
                        value="{{ old('doe_nome', $doenca->doe_nome) }}"
                        required autofocus
-                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600">
+                       class="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600">
                 @error('doe_nome')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -58,7 +58,7 @@
                                 name="doe_sintomas[]"
                                 value="{{ $opt }}"
                                 {{   in_array($opt, old('doe_sintomas', $doenca->doe_sintomas)) ? 'checked' : '' }}
-                                class="form-checkbox h-4 w-4 text-emerald-600 dark:text-emerald-400"
+                                class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
                             />
                             <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $opt }}</span>
                         </label>
@@ -82,7 +82,7 @@
                                 name="doe_transmissao[]"
                                 value="{{ $opt }}"
                                 {{ in_array($opt, old('doe_transmissao', $doenca->doe_transmissao)) ? 'checked' : '' }}
-                                class="form-checkbox h-4 w-4 text-emerald-600 dark:text-emerald-400"
+                                class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
                             />
                             <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $opt }}</span>
                         </label>
@@ -106,7 +106,7 @@
                                 name="doe_medidas_controle[]"
                                 value="{{ $opt }}"
                                 {{ in_array($opt, old('doe_medidas_controle', $doenca->doe_medidas_controle)) ? 'checked' : '' }}
-                                class="form-checkbox h-4 w-4 text-emerald-600 dark:text-emerald-400"
+                                class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
                             />
                             <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $opt }}</span>
                         </label>

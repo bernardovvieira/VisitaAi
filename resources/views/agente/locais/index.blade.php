@@ -12,7 +12,7 @@
         <x-alert type="success" :message="session('success')" />
         @if(session('created_local_id'))
             <div class="flex flex-wrap gap-3 mt-2">
-                <a href="{{ route('agente.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline">Ver local cadastrado</a>
+                <a href="{{ route('agente.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver local cadastrado</a>
             </div>
         @endif
     @endif
@@ -43,7 +43,7 @@
             <strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.
         </p>
         <a href="{{ route('agente.locais.create') }}"
-           class="inline-flex items-center px-4 py-2 mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
+           class="inline-flex items-center px-4 py-2 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -61,7 +61,7 @@
                            data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-locais"
                            placeholder="Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600 px-4 py-2">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600 px-4 py-2">
                     <span id="search-loading-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -185,7 +185,7 @@
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre o primeiro local para realizar visitas.</p>
-                                    <a href="{{ route('agente.locais.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                    <a href="{{ route('agente.locais.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                         Cadastrar local
                                     </a>

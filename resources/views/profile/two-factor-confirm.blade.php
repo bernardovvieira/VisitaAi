@@ -61,7 +61,7 @@
                        maxlength="6"
                        autocomplete="one-time-code"
                        placeholder="000000"
-                       class="mt-1 block w-full max-w-xs rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-emerald-600 dark:focus:ring-emerald-600"
+                       class="mt-1 block w-full max-w-xs rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"
                        required>
                 @error('code', 'confirmTwoFactorAuthentication')
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

@@ -22,7 +22,7 @@
         ->first();
 
     $card = 'rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800';
-    $actionBase = 'flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900';
+    $actionBase = 'flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900';
 @endphp
 
 <div class="mx-auto max-w-7xl space-y-10">
@@ -51,7 +51,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div class="{{ $card }}">
                 <div class="flex items-start gap-3">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z"/></svg>
                     </span>
                     <div class="min-w-0 flex-1">
@@ -80,7 +80,7 @@
 
             <div class="{{ $card }}">
                 <div class="flex items-start gap-3">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     </span>
                     <div class="min-w-0 flex-1">
@@ -92,7 +92,7 @@
 
             <div class="{{ $card }}">
                 <div class="flex items-start gap-3">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
                         </svg>
@@ -135,7 +135,7 @@
 
             <div class="{{ $card }} sm:col-span-2 lg:col-span-3">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857"/></svg>
                     </span>
                     <div class="min-w-0 flex-1">
@@ -190,7 +190,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 {{ __('Visitas realizadas') }}
             </a>
-            <a href="{{ route('gestor.indicadores.ocupantes') }}" class="{{ $actionBase }} border-emerald-200 bg-emerald-50 text-emerald-950 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-100 dark:hover:bg-emerald-900/40">
+            <a href="{{ route('gestor.indicadores.ocupantes') }}" class="{{ $actionBase }} border-blue-200 bg-blue-50 text-blue-950 hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-100 dark:hover:bg-blue-900/40">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                 {{ config('visitaai_municipio.indicadores.menu', __('Indicadores municipais')) }}
             </a>
@@ -209,8 +209,8 @@
         <h2 id="heading-support" class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Ajuda e suporte') }}</h2>
         <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">{{ __('Em caso de falha ou dúvida técnica, contacte o apoio.') }}</p>
         <ul class="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-            <li><span class="font-medium text-gray-900 dark:text-gray-100">{{ __('Site') }}:</span> <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-emerald-700 underline decoration-emerald-700/30 underline-offset-2 transition hover:decoration-emerald-700 dark:text-emerald-400">{{ __('bitwise.dev.br') }}</a></li>
-            <li><span class="font-medium text-gray-900 dark:text-gray-100">{{ __('E-mail') }}:</span> <a href="mailto:bernardo@bitwise.dev.br" class="font-medium text-emerald-700 underline decoration-emerald-700/30 underline-offset-2 transition hover:decoration-emerald-700 dark:text-emerald-400">bernardo@bitwise.dev.br</a></li>
+            <li><span class="font-medium text-gray-900 dark:text-gray-100">{{ __('Site') }}:</span> <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 transition hover:decoration-blue-700 dark:text-blue-400">{{ __('bitwise.dev.br') }}</a></li>
+            <li><span class="font-medium text-gray-900 dark:text-gray-100">{{ __('E-mail') }}:</span> <a href="mailto:bernardo@bitwise.dev.br" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 transition hover:decoration-blue-700 dark:text-blue-400">bernardo@bitwise.dev.br</a></li>
         </ul>
     </section>
 </div>

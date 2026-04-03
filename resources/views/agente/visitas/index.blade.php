@@ -18,7 +18,7 @@
         <x-alert type="success" :message="session('success')" />
         @if(session('created_visita_id'))
             <div class="flex flex-wrap gap-3 mt-2">
-                <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline">Ver visita registrada</a>
+                <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver visita registrada</a>
             </div>
         @endif
     @endif
@@ -43,7 +43,7 @@
         </p>
         <div class="flex flex-wrap gap-3 mt-4">
             <a href="{{ route('agente.visitas.create') }}"
-               class="inline-flex items-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60">
+               class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -74,7 +74,7 @@
                            data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading"
                            placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
                     <span id="search-loading" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -159,7 +159,7 @@
                                         </div>
                                     @endif
                                 @else
-                                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-emerald-900 dark:text-emerald-300">
+                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                         Concluída
                                     </span>
                                 @endif
@@ -233,7 +233,7 @@
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma visita registrada.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Registre a primeira visita para começar.</p>
-                                    <a href="{{ route('agente.visitas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                    <a href="{{ route('agente.visitas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                         Registrar visita
                                     </a>

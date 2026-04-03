@@ -16,7 +16,7 @@
             <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Resultado da Consulta</h1>
         </div>
         <button type="button" id="btn-baixar-card" aria-label="Baixar card com QR Code"
-                class="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline">
+                class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
             </svg>
@@ -114,7 +114,7 @@
                                             </div>
                                         @endif
                                     @else
-                                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-medium px-2 py-1 rounded dark:bg-emerald-900 dark:text-emerald-300">
+                                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded dark:bg-blue-900 dark:text-blue-300">
                                             Concluída
                                         </span>
                                     @endif
@@ -143,7 +143,7 @@
                         @if ($visita->vis_pendencias)
                             <span class="ml-2 text-amber-600 dark:text-amber-400">Pendente</span>
                         @else
-                            <span class="ml-2 text-emerald-600 dark:text-emerald-400">Concluída</span>
+                            <span class="ml-2 text-blue-600 dark:text-blue-400">Concluída</span>
                         @endif
                     </p>
                     <p class="text-sm text-gray-800 dark:text-gray-100 leading-relaxed">{{ $resumos[$visita->vis_id] }}</p>
@@ -175,7 +175,7 @@
         <button type="button" id="btn-compartilhar" aria-label="Compartilhar link"
                 data-url="{{ url()->current() }}"
                 data-title="{{ config('app.name') }} — Resultado da Consulta"
-                class="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline">
+                class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
@@ -255,10 +255,10 @@
         function copiarFeedback() {
             if (span) {
                 span.textContent = 'Link copiado!';
-                span.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                span.classList.add('text-blue-600', 'dark:text-blue-400');
                 setTimeout(function () {
                     span.textContent = original;
-                    span.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                    span.classList.remove('text-blue-600', 'dark:text-blue-400');
                 }, 2000);
             }
         }
@@ -293,10 +293,10 @@
             }).then(function () {
                 if (span) {
                     span.textContent = 'Compartilhado!';
-                    span.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                    span.classList.add('text-blue-600', 'dark:text-blue-400');
                     setTimeout(function () {
                         span.textContent = original;
-                        span.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                        span.classList.remove('text-blue-600', 'dark:text-blue-400');
                     }, 2000);
                 }
             }).catch(function (err) {

@@ -7,7 +7,7 @@
     {{-- Botão Voltar --}}
     <div>
         <a href="{{ route('agente.visitas.index') }}"
-           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
+           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -142,7 +142,7 @@
                     @if ($visita->vis_pendencias)
                         <span class="inline-block bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200 px-2 py-1 rounded text-xs font-semibold">Houve pendência</span>
                     @else
-                        <span class="inline-block bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200 px-2 py-1 rounded text-xs font-semibold">Nenhuma pendência</span>   
+                        <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">Nenhuma pendência</span>   
                     @endif
                 </dd>
             </div>
@@ -221,7 +221,7 @@
                     <p class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $visita->{'insp_'.$tipo} ?? 0 }}</p>
                 </div>
             @endforeach
-            <div class="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 col-span-2 sm:col-span-4 p-4 rounded-lg text-center font-bold text-lg shadow">
+            <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 col-span-2 sm:col-span-4 p-4 rounded-lg text-center font-bold text-lg shadow">
                 Eliminados: {{ $visita->vis_depositos_eliminados ?? 0 }}
             </div>
         </div>

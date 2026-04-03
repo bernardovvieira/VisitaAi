@@ -30,7 +30,7 @@
                     name="password"
                     required
                     autocomplete="current-password"
-                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-emerald-500 focus:ring-emerald-500 rounded-lg dark:focus:border-emerald-600 dark:focus:ring-emerald-600 shadow-sm block w-full pr-10 @error('password') border-red-500 @enderror"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-blue-500 focus:ring-blue-500 rounded-lg dark:focus:border-blue-600 dark:focus:ring-blue-600 shadow-sm block w-full pr-10 @error('password') border-red-500 @enderror"
                 />
 
                 <button
@@ -68,7 +68,7 @@
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
         Não tem conta?
-        <a href="{{ route('register') }}" class="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+        <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
             Registre‑se
         </a>
     </p>

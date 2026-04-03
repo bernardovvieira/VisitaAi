@@ -2,7 +2,7 @@
 <header class="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-gray-200 bg-white/95 px-3 shadow-sm backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/95 sm:px-4">
     <div class="flex min-w-0 items-center gap-2">
         <button type="button"
-                class="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900 lg:hidden"
+                class="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900 lg:hidden"
                 @click="sidebarOpen = true"
                 aria-expanded="false"
                 x-bind:aria-expanded="sidebarOpen"
@@ -23,14 +23,14 @@
               :title="online ? 'Conectado à internet' : '{{ __('Sem conexão') }}'"
               x-cloak>
             <span class="relative flex h-2 w-2">
-                <span x-show="online" class="absolute inline-flex h-full w-full rounded-full bg-emerald-500 ring-2 ring-emerald-500/30"></span>
+                <span x-show="online" class="absolute inline-flex h-full w-full rounded-full bg-blue-500 ring-2 ring-blue-500/30"></span>
                 <span x-show="!online" class="absolute inline-flex h-full w-full rounded-full bg-amber-500 ring-2 ring-amber-500/30"></span>
             </span>
             <span x-text="online ? '{{ __('Conectado') }}' : '{{ __('Offline') }}'"></span>
         </span>
         <span class="inline-flex items-center md:hidden" :title="online ? 'Online' : 'Offline'" x-cloak>
             <span class="relative flex h-2 w-2">
-                <span x-show="online" class="absolute inline-flex h-full w-full rounded-full bg-emerald-500"></span>
+                <span x-show="online" class="absolute inline-flex h-full w-full rounded-full bg-blue-500"></span>
                 <span x-show="!online" class="absolute inline-flex h-full w-full rounded-full bg-amber-500"></span>
             </span>
         </span>
@@ -40,8 +40,8 @@
         <x-dropdown align="right" width="w-56">
             <x-slot name="trigger">
                 <button type="button"
-                        class="inline-flex max-w-[200px] items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-2 pr-2 text-left text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 sm:max-w-[240px] sm:pl-3 sm:pr-2">
-                    <span class="hidden h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white sm:inline-flex"
+                        class="inline-flex max-w-[200px] items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-2 pr-2 text-left text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 sm:max-w-[240px] sm:pl-3 sm:pr-2">
+                    <span class="hidden h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white sm:inline-flex"
                           aria-hidden="true">
                         {{ strtoupper(mb_substr(auth()->user()->use_nome, 0, 1)) }}
                     </span>

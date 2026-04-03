@@ -87,7 +87,7 @@
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
         Já tem conta?
-        <a href="{{ route('login') }}" class="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+        <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
             Faça login
         </a>
     </p>
@@ -113,8 +113,8 @@
                     var n = [minLen, hasLetter, hasMixed, hasNumber, hasSymbol].filter(Boolean).length;
                     $bar.style.width = (n * 20) + '%';
                     // 0–2 requisitos: vermelho; 3–4: amarelo; 5: verde
-                    $bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-emerald-500');
-                    $bar.classList.add(n >= 5 ? 'bg-emerald-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
+                    $bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-blue-500');
+                    $bar.classList.add(n >= 5 ? 'bg-blue-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
                 }
                 $pwd.addEventListener('input', updatePasswordStrength);
                 $pwd.addEventListener('change', updatePasswordStrength);
@@ -132,11 +132,11 @@
                     if (p === c) {
                         matchFeedback.textContent = 'Senhas conferem.';
                         matchFeedback.classList.remove('text-red-600', 'dark:text-red-400');
-                        matchFeedback.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                        matchFeedback.classList.add('text-blue-600', 'dark:text-blue-400');
                         matchFeedback.classList.remove('hidden');
                     } else {
                         matchFeedback.textContent = 'As senhas não conferem.';
-                        matchFeedback.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                        matchFeedback.classList.remove('text-blue-600', 'dark:text-blue-400');
                         matchFeedback.classList.add('text-red-600', 'dark:text-red-400');
                         matchFeedback.classList.remove('hidden');
                     }
@@ -185,10 +185,10 @@
         if (!validarCPF(cpf)) {
             input.setCustomValidity('CPF inválido.');
             input.reportValidity();
-            $cpfFeedback.removeClass('hidden text-emerald-600 dark:text-emerald-400').addClass('text-red-600 dark:text-red-400').text('CPF inválido.');
+            $cpfFeedback.removeClass('hidden text-blue-600 dark:text-blue-400').addClass('text-red-600 dark:text-red-400').text('CPF inválido.');
         } else {
             input.setCustomValidity('');
-            $cpfFeedback.removeClass('hidden text-red-600 dark:text-red-400').addClass('text-emerald-600 dark:text-emerald-400').text('CPF válido.');
+            $cpfFeedback.removeClass('hidden text-red-600 dark:text-red-400').addClass('text-blue-600 dark:text-blue-400').text('CPF válido.');
         }
     });
     </script>

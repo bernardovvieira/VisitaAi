@@ -35,7 +35,7 @@
                            data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading-gestor-visitas"
                            placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
                     <span id="search-loading-gestor-visitas" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                                         </div>
                                     @endif
                                 @else
-                                    <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-emerald-900 dark:text-emerald-300">
+                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                         Concluída
                                     </span>
                                 @endif
