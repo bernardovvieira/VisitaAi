@@ -115,11 +115,11 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="p-4 text-center">
                                 <a href="{{ route('gestor.locais.show', $local) }}"
-                                    class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
-                                    aria-label="Visualizar local">
+                                    class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                    title="{{ __('Visualizar') }}"
+                                    aria-label="{{ __('Visualizar local') }}">
                                     <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
-                                    Visualizar
-                                </a>   
+                                </a>
                             </td>
                         </tr>
                     @empty

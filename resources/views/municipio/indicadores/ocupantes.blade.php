@@ -36,15 +36,15 @@
             </div>
             @if($canExportCsv)
                 <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-                   class="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-600 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-900 shadow-sm transition hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:border-blue-500 dark:bg-blue-950/50 dark:text-blue-100 dark:hover:bg-blue-900/40 dark:focus-visible:ring-offset-gray-900">
-                    <x-heroicon-o-arrow-down-tray class="mr-2 h-5 w-5 shrink-0" aria-hidden="true" />
+                   class="inline-flex shrink-0 items-center justify-center rounded-lg border border-emerald-600 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-950 shadow-sm transition hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:border-emerald-500 dark:bg-emerald-950/45 dark:text-emerald-100 dark:hover:bg-emerald-900/50 dark:focus-visible:ring-offset-gray-900">
+                    <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
                 </a>
             @else
-                <span class="inline-flex shrink-0 cursor-not-allowed items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-500 dark:border-gray-600 dark:bg-gray-800/50 dark:text-gray-400"
+                <span class="inline-flex shrink-0 cursor-not-allowed items-center justify-center rounded-lg border border-dashed border-emerald-300/80 bg-emerald-50/50 px-3 py-2 text-xs font-medium text-emerald-800/70 dark:border-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-200/50"
                       title="{{ $csvHintDisabled }}"
                       aria-disabled="true">
-                    <x-heroicon-o-arrow-down-tray class="mr-2 h-5 w-5 shrink-0 opacity-60" aria-hidden="true" />
+                    <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
                     {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
                 </span>
             @endif

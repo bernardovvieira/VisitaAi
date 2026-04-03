@@ -99,25 +99,22 @@
         Usuário com Aprovação Pendente
     </span>
 @else
-    <div class="flex justify-center gap-3">
-        <!-- Botão Editar -->
+    <div class="flex justify-center gap-1.5">
         <a href="{{ route('gestor.users.edit', $usuario) }}"
-           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow-md transition"
-           aria-label="Editar usuário">
+           class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+           title="{{ __('Editar usuário') }}"
+           aria-label="{{ __('Editar usuário') }}">
             <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
-            Editar
         </a>
-
-        <!-- Botão Anonimizar -->
-        <form method="POST" action="{{ route('gestor.users.destroy', $usuario) }}">
+        <form method="POST" action="{{ route('gestor.users.destroy', $usuario) }}" class="inline">
             @csrf
             @method('DELETE')
             <button type="submit"
                     onclick="return confirm('Tem certeza que deseja anonimizar este usuário? Esta ação não pode ser desfeita.')"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition"
-                    aria-label="Anonimizar usuário">
-                <x-heroicon-o-shield-exclamation class="mr-2 h-6 w-6 shrink-0 text-white" />
-                Anonimizar
+                    class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+                    title="{{ __('Anonimizar usuário') }}"
+                    aria-label="{{ __('Anonimizar usuário') }}">
+                <x-heroicon-o-shield-exclamation class="h-4 w-4 shrink-0" />
             </button>
         </form>
     </div>

@@ -445,9 +445,10 @@
                         </td>
                         <td class="p-4 text-center">
                             <a href="{{ route('gestor.visitas.show', $visita) }}"
-                               class="btn-acesso-principal inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white rounded shadow transition">
-                                <x-heroicon-o-eye class="mr-1 h-4 w-4 shrink-0" />
-                                Visualizar
+                               class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                               title="{{ __('Visualizar') }}"
+                               aria-label="{{ __('Visualizar visita') }}">
+                                <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                             </a>
                         </td>
                     </tr>

@@ -22,7 +22,7 @@
         ->first();
 
     $card = 'rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-slate-600 dark:bg-slate-800/80';
-    $actionBase = 'flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900';
+    $actionBase = 'flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900';
 @endphp
 
 <div class="mx-auto max-w-7xl space-y-8">
@@ -145,43 +145,33 @@
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <a href="{{ route('gestor.pendentes') }}"
                class="{{ $actionBase }} {{ $pendentesCount > 0 ? 'border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-900/40' : 'border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700' }}">
-                <x-heroicon-o-arrow-right class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
+                <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 {{ __('Usuários pendentes') }}
                 @if($pendentesCount > 0)
                     <span class="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white">{{ $pendentesCount }}</span>
                 @endif
             </a>
             <a href="{{ route('gestor.users.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-users class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
+                <x-heroicon-o-users class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 {{ __('Gerenciar usuários') }}
             </a>
             <a href="{{ route('gestor.doencas.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-beaker class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
+                <x-heroicon-o-beaker class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 {{ __('Doenças monitoradas') }}
             </a>
             <a href="{{ route('gestor.visitas.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
+                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 {{ __('Visitas realizadas') }}
             </a>
-            <a href="{{ route('gestor.indicadores.ocupantes') }}" class="{{ $actionBase }} border-emerald-200 bg-emerald-50/90 text-emerald-950 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100 dark:hover:bg-emerald-900/35">
-                <x-heroicon-o-chart-bar class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
+            <a href="{{ route('gestor.indicadores.ocupantes') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
+                <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 {{ config('visitaai_municipio.indicadores.menu', __('Indicadores municipais')) }}
             </a>
             <a href="{{ route('gestor.relatorios.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
-                <x-heroicon-o-document-text class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
+                <x-heroicon-o-document-text class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 {{ __('Relatórios') }}
             </a>
         </div>
-    </section>
-
-    <section class="border-t border-gray-100 pt-6 dark:border-gray-800" aria-labelledby="heading-support">
-        <h2 id="heading-support" class="sr-only">{{ __('Suporte') }}</h2>
-        <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-            <span class="font-medium text-slate-600 dark:text-slate-300">{{ __('Apoio') }}</span>
-            <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 hover:decoration-blue-700 dark:text-blue-400">bitwise.dev.br</a>
-            ·
-            <a href="mailto:bernardo@bitwise.dev.br" class="font-medium text-blue-700 underline decoration-blue-700/30 underline-offset-2 hover:decoration-blue-700 dark:text-blue-400">bernardo@bitwise.dev.br</a>
-        </p>
     </section>
 </div>
 @endsection

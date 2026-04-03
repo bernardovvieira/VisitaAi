@@ -15,7 +15,7 @@
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Gerenciamento de Aprovação</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Nesta tela, você pode visualizar usuários que aguardam aprovação para acessar o sistema.
-            Clique no botão <strong>"Aprovar"</strong> para liberar o acesso do usuário selecionado.
+            Use o botão de confirmação na coluna Ação para liberar o acesso do usuário selecionado.
         </p>
     </section>
 
@@ -54,12 +54,13 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100"><a href="mailto:{{ $u->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ $u->use_email }}</a></td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_data_criacao->format('d/m/Y') }}</td>
                             <td class="p-4 text-center">
-                                <form method="POST" action="{{ route('gestor.approve', $u) }}">
+                                <form method="POST" action="{{ route('gestor.approve', $u) }}" class="inline">
                                     @csrf
-                                    <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')" 
-                                        class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition">
+                                    <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')"
+                                        class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                        title="{{ __('Aprovar usuário') }}"
+                                        aria-label="{{ __('Aprovar usuário') }}">
                                         <x-heroicon-o-check class="h-4 w-4 shrink-0" />
-                                        Aprovar
                                     </button>
                                 </form>
                             </td>

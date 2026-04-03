@@ -47,14 +47,6 @@
 
             <x-sidebar-nav-section :label="__('Cadastro e campo')" />
             <div x-show="online" x-cloak>
-                <x-sidebar-link :href="route('gestor.pendentes')"
-                                :active="request()->routeIs('gestor.pendentes')"
-                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                    <x-heroicon-o-clock class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Cadastros pendentes') }}</span>
-                </x-sidebar-link>
-            </div>
-            <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.doencas.index')"
                                 :active="request()->routeIs('gestor.doencas.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -86,14 +78,6 @@
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-document-text class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
                     <span class="truncate">{{ __('Relatórios') }}</span>
-                </x-sidebar-link>
-            </div>
-            <div x-show="online" x-cloak>
-                <x-sidebar-link :href="route('gestor.users.index')"
-                                :active="request()->routeIs('gestor.users.*')"
-                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                    <x-heroicon-o-users class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Usuários') }}</span>
                 </x-sidebar-link>
             </div>
             <div x-show="online" x-cloak>

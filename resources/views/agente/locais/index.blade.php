@@ -133,28 +133,28 @@
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_responsavel_nome ?? 'Não informado' }}</td>
                             <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="p-4 text-center">
-                                <div class="flex justify-center items-center gap-3 flex-wrap">
+                                <div class="flex flex-wrap items-center justify-center gap-1.5">
                                     <a href="{{ route('agente.locais.show', $local) }}"
-                                       class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition"
-                                       aria-label="Visualizar local">
+                                       class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                       title="{{ __('Visualizar') }}"
+                                       aria-label="{{ __('Visualizar local') }}">
                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
-                                        Visualizar
                                     </a>
                                     @if(!$local->isPrimary())
                                     <a href="{{ route('agente.locais.edit', $local) }}"
-                                        class="inline-flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg shadow transition"
-                                        aria-label="Editar local">
+                                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                        title="{{ __('Editar') }}"
+                                        aria-label="{{ __('Editar local') }}">
                                         <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
-                                        Editar
                                     </a>
-                                    <form method="POST" action="{{ route('agente.locais.destroy', $local) }}">
+                                    <form method="POST" action="{{ route('agente.locais.destroy', $local) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.')"
-                                                class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow transition"
-                                                aria-label="Excluir local">
+                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+                                                title="{{ __('Excluir') }}"
+                                                aria-label="{{ __('Excluir local') }}">
                                                 <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
-                                                Excluir
                                             </button>
                                     </form>
                                     @endif

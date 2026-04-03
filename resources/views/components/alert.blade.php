@@ -5,15 +5,15 @@
     $isWarning = $type === 'warning';
     $autodismiss = $autodismiss ?? $isSuccess;
     $classes = $isSuccess
-        ? 'bg-blue-50 dark:bg-blue-900/25 text-blue-950 dark:text-blue-100 border border-blue-200/90 dark:border-blue-800'
+        ? 'border border-emerald-500 bg-emerald-100 text-emerald-950 dark:border-emerald-700 dark:bg-emerald-950/35 dark:text-emerald-50'
         : ($isWarning
-            ? 'bg-amber-50 dark:bg-amber-900/25 text-amber-950 dark:text-amber-100 border border-amber-200/90 dark:border-amber-800'
-            : 'bg-red-50 dark:bg-red-900/25 text-red-900 dark:text-red-100 border border-red-200/90 dark:border-red-800');
+            ? 'border border-amber-500 bg-amber-100 text-amber-950 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-50'
+            : 'border border-red-500 bg-red-100 text-red-950 dark:border-red-800 dark:bg-red-950/40 dark:text-red-50');
 @endphp
 
 @if ($message)
     <div role="alert"
-         class="mb-4 rounded-xl p-4 text-sm leading-relaxed shadow-sm {{ $classes }}"
+         class="mb-4 rounded-lg border px-3.5 py-2.5 text-sm font-medium leading-snug shadow-sm {{ $classes }}"
          @if($autodismiss) data-alert-autodismiss="5000" @endif>
         {{ $message }}
     </div>

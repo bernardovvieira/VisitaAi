@@ -57,13 +57,25 @@
                             <td class="px-4 py-3 tabular-nums">{{ $m->mor_data_nascimento ? $m->mor_data_nascimento->format('d/m/Y') : '-' }}</td>
                             <td class="px-4 py-3">{{ $m->idadeAnos() !== null ? $m->idadeAnos() . ' ' . __('anos') : '-' }}</td>
                             <td class="px-4 py-3">{{ $m->mor_escolaridade ? (config('visitaai_municipio.escolaridade_opcoes.' . $m->mor_escolaridade) ?: $m->mor_escolaridade) : '-' }}</td>
-                            <td class="space-x-3 px-4 py-3 text-right whitespace-nowrap">
-                                <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}" class="font-medium text-blue-700 underline-offset-2 hover:underline dark:text-blue-400">{{ __('Editar') }}</a>
-                                <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline" onsubmit="return confirm(@js(__('Excluir este registro de ocupante?')));">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit" class="font-medium text-red-600 underline-offset-2 hover:underline dark:text-red-400">{{ __('Excluir') }}</button>
-                                </form>
+                            <td class="px-4 py-3 text-right whitespace-nowrap">
+                                <div class="inline-flex justify-end gap-1.5">
+                                    <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
+                                       class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                       title="{{ __('Editar') }}"
+                                       aria-label="{{ __('Editar ocupante') }}">
+                                        <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
+                                    </a>
+                                    <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline" onsubmit="return confirm(@js(__('Excluir este registro de ocupante?')));">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit"
+                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+                                                title="{{ __('Excluir') }}"
+                                                aria-label="{{ __('Excluir ocupante') }}">
+                                            <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

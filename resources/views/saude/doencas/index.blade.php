@@ -65,9 +65,10 @@
               <td class="p-4 text-center">
                 @can('view', $doenca)
                 <a href="{{ route('saude.doencas.show', $doenca) }}"
-                    class="btn-acesso-principal inline-flex items-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow transition">
+                    class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                    title="{{ __('Visualizar') }}"
+                    aria-label="{{ __('Visualizar doença') }}">
                     <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
-                    Visualizar
                 </a>
                 @else
                   <span class="text-gray-500 text-sm italic">Sem acesso</span>
