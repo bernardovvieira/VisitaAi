@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Local;
+use App\Helpers\LogHelper;
 use App\Http\Requests\LocalRequest;
+use App\Models\Local;
+use App\Services\Municipio\ResumoOcupantesMunicipioService;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Helpers\LogHelper;
-
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgWriter;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\RoundBlockSizeMode;
-use Endroid\QrCode\Color\Color;
-
 
 class LocalController extends Controller
 {
@@ -27,6 +26,7 @@ class LocalController extends Controller
 
         if ($request->has('guardada')) {
             session()->flash('warning', 'Local cadastrado no dispositivo com sucesso. Sincronize quando se reconectar.');
+
             return redirect()->to($request->url());
         }
 
@@ -64,10 +64,10 @@ class LocalController extends Controller
             }
 
             $query->where(function ($q) use ($search, $tipo, $zona) {
-                $q->whereRaw("LOWER(loc_endereco) LIKE ?", ["%{$search}%"])
-                ->orWhereRaw("LOWER(loc_bairro) LIKE ?", ["%{$search}%"])
-                ->orWhereRaw("LOWER(COALESCE(loc_responsavel_nome, '')) LIKE ?", ["%{$search}%"])
-                ->orWhere('loc_codigo_unico', $search);
+                $q->whereRaw('LOWER(loc_endereco) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(loc_bairro) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw("LOWER(COALESCE(loc_responsavel_nome, '')) LIKE ?", ["%{$search}%"])
+                    ->orWhere('loc_codigo_unico', $search);
 
                 if ($tipo) {
                     $q->orWhere('loc_tipo', $tipo);
@@ -112,12 +112,12 @@ class LocalController extends Controller
         );
 
         try {
-            $writer = new PngWriter();
+            $writer = new PngWriter;
             $result = $writer->write($qrCode);
             $qrCodeBase64 = base64_encode($result->getString());
             $qrCodeMime = 'image/png';
         } catch (\Throwable $e) {
-            $writer = new SvgWriter();
+            $writer = new SvgWriter;
             $result = $writer->write($qrCode);
             $qrCodeBase64 = base64_encode($result->getString());
             $qrCodeMime = 'image/svg+xml';
@@ -127,7 +127,10 @@ class LocalController extends Controller
             ? 'agente.locais.show'
             : 'gestor.locais.show';
 
-        return view($view, compact('local', 'qrCodeBase64', 'qrCodeMime'));
+        $local->load('moradores');
+        $moradorResumo = app(ResumoOcupantesMunicipioService::class)->resumoParaLocal($local);
+
+        return view($view, compact('local', 'qrCodeBase64', 'qrCodeMime', 'moradorResumo'));
     }
 
     public function create()
@@ -143,6 +146,7 @@ class LocalController extends Controller
         }
         $storeRoute = Auth::user()->isGestor() ? 'gestor.locais.store' : 'agente.locais.store';
         $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
+
         return view('agente.locais.create', compact('cepPermitido', 'cidadeEstado', 'cepsCadastrados', 'isPrimario', 'storeRoute', 'indexRoute'));
     }
 
@@ -163,7 +167,7 @@ class LocalController extends Controller
             'Cadastro de local',
             'Local',
             'create',
-            'Local cadastrado: ' . $local->loc_endereco . ', ' . ($local->loc_numero ?? 'S/N')
+            'Local cadastrado: '.$local->loc_endereco.', '.($local->loc_numero ?? 'S/N')
         );
 
         $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
@@ -192,6 +196,7 @@ class LocalController extends Controller
             $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
             $cepsCadastrados = $this->buildCepsCadastrados($primario->loc_cidade, $primario->loc_estado);
         }
+
         return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado', 'cepsCadastrados'));
     }
 
@@ -200,7 +205,7 @@ class LocalController extends Controller
      */
     private function buildCepsCadastrados(?string $cidade, ?string $estado): array
     {
-        if (!$cidade || !$estado) {
+        if (! $cidade || ! $estado) {
             return [];
         }
         $locais = Local::where('loc_cidade', $cidade)
@@ -224,6 +229,7 @@ class LocalController extends Controller
                 ];
             }
         }
+
         return $out;
     }
 
@@ -242,7 +248,7 @@ class LocalController extends Controller
             'Atualização de local',
             'Local',
             'update',
-            'Local atualizado: ' . $local->loc_endereco . ', nº ' . ($local->loc_numero ?? 'S/N')
+            'Local atualizado: '.$local->loc_endereco.', nº '.($local->loc_numero ?? 'S/N')
         );
 
         return redirect()
@@ -257,13 +263,19 @@ class LocalController extends Controller
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
                 ->with('error', 'O local primário (primeiro cadastrado) não pode ser excluído pela interface. Para exclusão ou alterações, entre em contato com o suporte técnico.');
         }
+        if ($local->moradores()->exists()) {
+            return redirect()
+                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->with('error', 'Erro: este local possui ocupantes registrados no Visita Aí e não pode ser excluído.');
+        }
+
         if ($local->visitas()->exists()) {
             return redirect()
-                ->route('agente.locais.index')
+                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
                 ->with('error', 'Erro: este local possui visitas cadastradas e não pode ser excluído.');
         }
 
-        $descricao = $local->loc_endereco . ', ' . ($local->loc_numero ?? 'S/N');
+        $descricao = $local->loc_endereco.', '.($local->loc_numero ?? 'S/N');
 
         $local->delete();
 
@@ -271,11 +283,11 @@ class LocalController extends Controller
             'Exclusão de local',
             'Local',
             'delete',
-            'Local excluído: ' . $descricao
+            'Local excluído: '.$descricao
         );
 
         return redirect()
-            ->route('agente.locais.index')
+            ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
             ->with('success', 'Local excluído com sucesso.');
     }
 
@@ -286,7 +298,7 @@ class LocalController extends Controller
     public function syncStore(Request $request)
     {
         $user = Auth::user();
-        if (!$user->isAgenteEndemias() && !$user->isGestor()) {
+        if (! $user->isAgenteEndemias() && ! $user->isGestor()) {
             return response()->json(['message' => 'Acesso negado.'], 403);
         }
         $this->authorize('create', Local::class);
@@ -305,11 +317,13 @@ class LocalController extends Controller
             $validator = Validator::make($item, $rules);
             if ($validator->fails()) {
                 $erros[] = ['index' => $index, 'message' => implode(' ', $validator->errors()->all())];
+
                 continue;
             }
             $data = $validator->validated();
             if (Local::where('loc_endereco', $data['loc_endereco'])->exists()) {
                 $erros[] = ['index' => $index, 'message' => 'Já existe um local com este endereço.'];
+
                 continue;
             }
             do {
@@ -320,9 +334,9 @@ class LocalController extends Controller
             try {
                 $local = Local::create($data);
                 $ids[$index] = $local->loc_id;
-                LogHelper::registrar('Sincronização offline', 'Local', 'create', 'Local sincronizado: ' . $local->loc_endereco);
+                LogHelper::registrar('Sincronização offline', 'Local', 'create', 'Local sincronizado: '.$local->loc_endereco);
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('Local syncStore: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::warning('Local syncStore: '.$e->getMessage());
                 $erros[] = ['index' => $index, 'message' => $e->getMessage()];
             }
         }
@@ -344,6 +358,7 @@ class LocalController extends Controller
         if ($s === '' || strtoupper($s) === 'N/A' || strtoupper($s) === 'S/N') {
             return null;
         }
+
         return is_numeric($s) ? (int) $s : null;
     }
 

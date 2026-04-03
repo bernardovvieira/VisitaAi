@@ -4,6 +4,17 @@ Sistema desenvolvido para a gestão de visitas de vigilância entomológica e co
 
 **Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde) — Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
 
+### Funcionalidades em resumo
+
+- **Locais e visitas** de vigilância entomológica / PNCD (atividades 1–8, LIRAa para ACS onde aplicável).
+- **Doenças monitoradas**, pendências, relatórios, consulta pública por código do imóvel, QR Code.
+- **Ocupantes do imóvel (Visita Aí):** registro opcional vinculado ao cadastro de **locais**, com dados operacionais municipais (faixas etárias agregadas no painel, escolaridade e renda em categorias). **Não** substitui e-SUS APS, PEC, Ficha de Visita Domiciliar e Territorial nem e-SUS Território — ver `docs/CONFORMIDADE-MS-FLUXO.md` (§8) e `docs/ESUS-SISPNCD-DIFERENCIACAO-E-MEDIDAS.md`. Textos e opções de formulário: `config/visitaai_municipio.php`.
+
+### Rotas HTTP
+
+- `routes/web.php` — ponto de entrada; inclui `routes/web/public.php` (público / consulta / ping) e `routes/web/authenticated.php` (área logada por perfil).
+- Autenticação Fortify/Breeze: `routes/auth.php`.
+
 > **Desenvolvido por:** Bitwise Technologies  
 > **CNPJ:** 49.973.865/0001-23
 
@@ -79,6 +90,10 @@ docker compose down
 ```
 
 **Serviços:** `app` (PHP-FPM), `db` (MySQL 8, porta 3307 no host), `web` (Nginx na porta 80).
+
+### Testes automatizados
+
+O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rode na máquina local sem MySQL/Docker. Em produção e no Docker, o banco continua sendo o MySQL definido no `.env`. Para forçar outro banco nos testes, use `.env.testing` ou variáveis de ambiente.
 
 ---
 

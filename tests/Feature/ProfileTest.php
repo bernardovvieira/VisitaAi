@@ -3,13 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     /**
      * A página de edição de perfil deve estar acessível para usuários autenticados.
@@ -36,10 +36,10 @@ class ProfileTest extends TestCase
         $user = User::factory()->create();
 
         $payload = [
-            'name'  => 'Test User',
-            'email' => 'bernardo@bitwise.dev.br',
+            'name' => 'Test User',
+            'email' => 'perfil-teste@example.com',
+            'tema' => 'light',
         ];
-
 
         $this
             ->actingAs($user)
@@ -49,9 +49,9 @@ class ProfileTest extends TestCase
 
         // Verifica que o 'use_id' (PK), use_nome e use_email foram atualizados
         $this->assertDatabaseHas('users', [
-            'use_id'    => $user->use_id,
-            'use_nome'  => 'Test User',
-            'use_email' => 'bernardo@bitwise.dev.br',
+            'use_id' => $user->use_id,
+            'use_nome' => 'Test User',
+            'use_email' => 'perfil-teste@example.com',
         ]);
     }
 
@@ -67,7 +67,7 @@ class ProfileTest extends TestCase
         $this
             ->actingAs($user)
             ->patch(route('profile.update'), [])
-            ->assertSessionHasErrors(['name', 'email']);
+            ->assertSessionHasErrors(['name', 'email', 'tema']);
     }
 
     /**
@@ -79,8 +79,9 @@ class ProfileTest extends TestCase
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $payload = [
-            'name'  => 'Test User',
+            'name' => 'Test User',
             'email' => 'invalid-email',
+            'tema' => 'light',
         ];
 
         $this
@@ -97,11 +98,12 @@ class ProfileTest extends TestCase
     {
         $existing = User::factory()->create(['use_email' => '179835@upf.br']);
         /** @var \App\Models\User $user */
-        $user     = User::factory()->create();
+        $user = User::factory()->create();
 
         $payload = [
-            'name'  => 'Another User',
+            'name' => 'Another User',
             'email' => '179835@upf.br',
+            'tema' => 'light',
         ];
 
         $this

@@ -103,6 +103,8 @@
         </div>
     </section>
 
+    @include('moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
+
     {{-- Adesivo --}}
     <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>

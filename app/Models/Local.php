@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Local extends Model
 {
     use HasFactory;
 
     protected $table = 'locais';
+
     protected $primaryKey = 'loc_id';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -40,6 +42,11 @@ class Local extends Model
         return $this->hasMany(Visita::class, 'fk_local_id');
     }
 
+    public function moradores()
+    {
+        return $this->hasMany(Morador::class, 'fk_local_id');
+    }
+
     /**
      * Indica se este é o local primário (primeiro cadastrado).
      * Não pode ser editado nem excluído pela UI — apenas por suporte técnico.
@@ -47,6 +54,7 @@ class Local extends Model
     public function isPrimary(): bool
     {
         $minId = static::min('loc_id');
+
         return $minId !== null && (int) $this->loc_id === (int) $minId;
     }
 }

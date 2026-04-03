@@ -12,15 +12,35 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasColumn('users', 'login')) {
-            DB::statement('ALTER TABLE users ADD COLUMN login VARCHAR(255) GENERATED ALWAYS AS (use_email) STORED NOT NULL');
+        if (Schema::hasColumn('users', 'login')) {
+            return;
         }
+
+        if (Schema::getConnection()->getDriverName() === 'sqlite') {
+            Schema::table('users', function ($table) {
+                $table->string('login')->nullable();
+            });
+
+            return;
+        }
+
+        DB::statement('ALTER TABLE users ADD COLUMN login VARCHAR(255) GENERATED ALWAYS AS (use_email) STORED NOT NULL');
     }
 
     public function down(): void
     {
-        if (Schema::hasColumn('users', 'login')) {
-            DB::statement('ALTER TABLE users DROP COLUMN login');
+        if (! Schema::hasColumn('users', 'login')) {
+            return;
         }
+
+        if (Schema::getConnection()->getDriverName() === 'sqlite') {
+            Schema::table('users', function ($table) {
+                $table->dropColumn('login');
+            });
+
+            return;
+        }
+
+        DB::statement('ALTER TABLE users DROP COLUMN login');
     }
 };

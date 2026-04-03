@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Doenca;
+use App\Models\Local;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class DoencaTest extends TestCase
 {
@@ -17,9 +18,11 @@ class DoencaTest extends TestCase
      */
     protected function gestor(): User
     {
+        Local::factory()->create();
+
         return User::factory()->create([
-            'use_nome'     => 'Gestor Teste',
-            'use_perfil'   => 'gestor',
+            'use_nome' => 'Gestor Teste',
+            'use_perfil' => 'gestor',
             'use_aprovado' => 1,
         ]);
     }
@@ -38,10 +41,10 @@ class DoencaTest extends TestCase
         Doenca::factory()->count(3)->create();
 
         $response = $this->actingAs($user)
-                         ->get(route('gestor.doencas.index'));
+            ->get(route('gestor.doencas.index'));
 
         $response->assertStatus(200)
-                 ->assertSeeText('Gerenciar Doenças');
+            ->assertSeeText('Doenças monitoradas');
     }
 
     #[Test]
@@ -56,7 +59,7 @@ class DoencaTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-                         ->post(route('gestor.doencas.store'), $payload);
+            ->post(route('gestor.doencas.store'), $payload);
 
         $response->assertRedirect(route('gestor.doencas.index'));
         $this->assertDatabaseHas('doencas', ['doe_nome' => 'Teste Doença']);
@@ -68,10 +71,10 @@ class DoencaTest extends TestCase
         $user = $this->gestor();
 
         $response = $this->actingAs($user)
-                         ->post(route('gestor.doencas.store'), []);
+            ->post(route('gestor.doencas.store'), []);
 
         $response->assertSessionHasErrors([
-            'doe_nome', 'doe_sintomas', 'doe_transmissao', 'doe_medidas_controle'
+            'doe_nome', 'doe_sintomas', 'doe_transmissao', 'doe_medidas_controle',
         ]);
     }
 
@@ -89,7 +92,7 @@ class DoencaTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-                         ->patch(route('gestor.doencas.update', $doenca), $payload);
+            ->patch(route('gestor.doencas.update', $doenca), $payload);
 
         $response->assertRedirect(route('gestor.doencas.index'));
         $this->assertDatabaseHas('doencas', ['doe_nome' => 'Atualizada']);
@@ -102,7 +105,7 @@ class DoencaTest extends TestCase
         $doenca = Doenca::factory()->create();
 
         $response = $this->actingAs($user)
-                         ->delete(route('gestor.doencas.destroy', $doenca));
+            ->delete(route('gestor.doencas.destroy', $doenca));
 
         $response->assertRedirect(route('gestor.doencas.index'));
         $this->assertDatabaseMissing('doencas', ['doe_id' => $doenca->doe_id]);

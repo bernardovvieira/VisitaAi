@@ -1,0 +1,76 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Local;
+use App\Models\Morador;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+
+class MoradorTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected function gestorAprovado(): User
+    {
+        return User::factory()->create([
+            'use_perfil' => 'gestor',
+            'use_aprovado' => 1,
+        ]);
+    }
+
+    #[Test]
+    public function gestor_pode_listar_moradores_do_local(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create();
+        Morador::factory()->count(2)->create(['fk_local_id' => $local->loc_id]);
+
+        $response = $this->actingAs($user)
+            ->get(route('gestor.locais.moradores.index', $local));
+
+        $response->assertStatus(200)
+            ->assertSeeText(config('visitaai_municipio.ocupantes.titulo_listagem'));
+    }
+
+    #[Test]
+    public function gestor_pode_cadastrar_morador(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('gestor.locais.moradores.store', $local), [
+                'mor_nome' => 'Fulano Teste',
+                'mor_data_nascimento' => '1990-05-20',
+                'mor_escolaridade' => 'medio_completo',
+                'mor_renda_faixa' => 'ate_1_sm',
+            ]);
+
+        $response->assertRedirect(route('gestor.locais.moradores.index', $local));
+        $this->assertDatabaseHas('moradores', [
+            'fk_local_id' => $local->loc_id,
+            'mor_nome' => 'Fulano Teste',
+        ]);
+    }
+
+    #[Test]
+    public function acs_nao_acessa_gestao_de_ocupantes(): void
+    {
+        $acs = User::factory()->create([
+            'use_perfil' => 'agente_saude',
+            'use_aprovado' => 1,
+        ]);
+        $local = Local::factory()->create();
+
+        $this->actingAs($acs)
+            ->get(route('gestor.locais.moradores.index', $local))
+            ->assertForbidden();
+
+        $this->actingAs($acs)
+            ->get(url('/saude/locais/'.$local->loc_id.'/moradores'))
+            ->assertNotFound();
+    }
+}

@@ -19,15 +19,12 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_URL" value="http://localhost"/>
         <env name="CACHE_STORE" value="array"/>
 
-        <!-- Banco: use .env ou .env.testing para DB_PASSWORD (não commitar senha) -->
-        <env name="DB_CONNECTION" value="mysql"/>
-        <env name="DB_HOST" value="db"/>
-        <env name="DB_PORT" value="3306"/>
-        <env name="DB_DATABASE" value="visita_ai"/>
-        <env name="DB_USERNAME" value="visita"/>
-        <!-- DB_PASSWORD vem de .env / .env.testing (crie .env.testing com DB_PASSWORD= para testes) -->
+        <!-- SQLite em memória: testes rodam sem Docker/MySQL. Produção continua MySQL (.env). -->
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
 
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>

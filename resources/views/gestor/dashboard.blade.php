@@ -27,6 +27,9 @@
     @php
         $pendentesCount = \App\Models\User::where(function($q) { $q->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', false)->count();
         $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
+        $ocupantesResumo = app(\App\Services\Municipio\ResumoOcupantesMunicipioService::class);
+        $totalOcupantesVisitaAi = $ocupantesResumo->totalOcupantesRegistrados();
+        $ocupantesPorBairroTop = $ocupantesResumo->totaisPorBairro()->take(6);
     @endphp
     <section class="space-y-4">
         <header><h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Estatísticas Principais</h2></header>
@@ -106,6 +109,27 @@
                     @endif
                 </div>
                 <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $visitasComPendencia }}</p>
+            </div>
+            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow sm:col-span-2 lg:col-span-3">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sky-500 dark:text-sky-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</h3>
+                </div>
+                <p class="mt-2 text-3xl text-gray-900 dark:text-gray-100">{{ $totalOcupantesVisitaAi }}</p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
+                @if($ocupantesPorBairroTop->isNotEmpty())
+                    <p class="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
+                    <ul class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        @foreach($ocupantesPorBairroTop as $row)
+                            <li class="flex justify-between gap-2 border border-gray-100 dark:border-gray-600 rounded px-2 py-1">
+                                <span class="truncate" title="{{ $row->bairro }}">{{ $row->bairro ?: '—' }}</span>
+                                <span class="font-semibold shrink-0">{{ $row->total_moradores }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
         </div>
     </section>
