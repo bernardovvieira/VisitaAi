@@ -63,6 +63,20 @@ class IndicadoresOcupantesTest extends TestCase
     }
 
     #[Test]
+    public function gestor_export_csv_redireciona_sem_ocupantes(): void
+    {
+        $user = $this->gestorAprovado();
+
+        $response = $this->actingAs($user)->get(route('gestor.indicadores.ocupantes.export'));
+
+        $response->assertRedirect(route('gestor.indicadores.ocupantes'));
+        $response->assertSessionHas(
+            'warning',
+            config('visitaai_municipio.indicadores.export_csv_flash_sem_dados')
+        );
+    }
+
+    #[Test]
     public function gestor_baixa_csv_indicadores(): void
     {
         $user = $this->gestorAprovado();

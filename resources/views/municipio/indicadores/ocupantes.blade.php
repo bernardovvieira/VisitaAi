@@ -21,6 +21,13 @@
         ['label' => $cfgInd['titulo_pagina'] ?? 'Indicadores'],
     ]" />
 
+    @if(session('warning'))
+        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
+    @endif
+    @if(session('success'))
+        <x-alert type="success" :message="session('success')" />
+    @endif
+
     <header class="space-y-3">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>

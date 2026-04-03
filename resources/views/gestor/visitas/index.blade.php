@@ -6,24 +6,27 @@
 @section('content')
 <div class="space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Visitas</h1>
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Visitas</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
+    @endif
+    @if(session('warning'))
+        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
     @endif
     @if(session('error'))
         <x-alert type="error" :message="session('error')" />
     @endif
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Visitas</h2>
+        <p class="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
             Visualize e busque visitas registradas pelos profissionais de campo (ACE/ACS).
         </p>
     </section>
 
     <!-- Busca (atualiza ao digitar) -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
@@ -32,7 +35,7 @@
                            data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
                            data-live-loading-id="search-loading-gestor-visitas"
                            placeholder="Local, profissional, doença, atividade, pendentes, concluídas ou data..."
-                           class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
                     <span id="search-loading-gestor-visitas" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
@@ -40,7 +43,7 @@
     </section>
 
     @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-        <section class="p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg shadow border border-yellow-300 dark:border-yellow-700">
+        <section class="rounded-xl border border-amber-300/90 bg-amber-50 p-5 shadow-sm dark:border-amber-700 dark:bg-amber-950/40">
             <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
                 Locais em que há pendências e não foram revisitados
             </h3>
@@ -61,7 +64,7 @@
     @endif
 
     <!-- Contador de resultados -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $visitas->count() }} de {{ $visitas->total() }} visita(s) registradas.
             @if(request('busca'))
@@ -69,9 +72,9 @@
             @endif
         </p>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
-                <thead class="bg-gray-100 dark:bg-gray-700">
+        <div class="overflow-x-auto rounded-lg ring-1 ring-gray-200/80 dark:ring-gray-600">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-900/80">
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data</th>

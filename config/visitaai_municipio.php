@@ -61,6 +61,7 @@ return [
         'sem_bairro_label' => '(Sem bairro informado)',
         'export_csv_label' => 'Exportar CSV (apenas agregados)',
         'export_csv_disabled_hint' => 'Disponível quando houver pelo menos um ocupante registrado no Visita Aí.',
+        'export_csv_flash_sem_dados' => 'Não há ocupantes registrados para exportar. Cadastre ocupantes nos imóveis e tente novamente.',
         'csv_titulo' => 'Indicadores agregados — ocupantes (Visita Aí)',
         'csv_suprimido_label' => 'suprimido',
         'colunas_faixas' => [
