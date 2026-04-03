@@ -26,7 +26,7 @@
 @endphp
 
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial')]]" />
 
     <x-page-header :eyebrow="__('Console municipal')" :title="__('Painel do gestor')">
         <x-slot name="lead">
@@ -63,7 +63,7 @@
 
         <div class="v-card">
             <h2 class="v-toolbar-label mb-3">{{ __('Indicadores') }}</h2>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
                 <div class="v-dashboard-kpi">
                     <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
                         <x-heroicon-o-user-group class="h-6 w-6 shrink-0" />
@@ -176,7 +176,7 @@
 
         <div class="v-card">
             <h2 class="v-toolbar-label mb-3">{{ __('Ações rápidas') }}</h2>
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
                 <a href="{{ route('gestor.pendentes') }}" class="v-dashboard-action {{ $pendentesCount > 0 ? 'v-dashboard-action--primary' : '' }}">
                     <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" aria-hidden="true" />
                     <span class="min-w-0">{{ __('Usuários pendentes') }}</span>

@@ -5,15 +5,15 @@
 
 @section('content')
 <!-- Overlay de carregamento -->
-<div id="overlayCarregando" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
+<div id="overlayCarregando" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm hidden" role="alertdialog" aria-modal="true" aria-labelledby="overlay-carregando-msg">
     <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
-        <p class="text-white text-lg font-semibold">{{ __('Gerando relatório, aguarde…') }}</p>
+        <p id="overlay-carregando-msg" class="text-lg font-semibold text-white">{{ __('Gerando relatório, aguarde…') }}</p>
     </div>
 </div>
 
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
     <x-page-header :eyebrow="__('Inteligência municipal')" :title="__('Relatórios')">
         <x-slot name="lead">
             <p>{{ __('Gere PDFs e indicadores do período; use os filtros abaixo após aplicar.') }}</p>
@@ -21,53 +21,45 @@
     </x-page-header>
 
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded relative mb-4">
-            <strong>Erro:</strong> {{ session('error') }}
+        <div class="v-card border-red-200 bg-red-50/95 text-red-900 dark:border-red-900/50 dark:bg-red-950/35 dark:text-red-100" role="alert">
+            <p class="text-sm font-semibold">{{ __('Erro') }}</p>
+            <p class="mt-1 text-sm">{{ session('error') }}</p>
         </div>
     @endif
     @if(session('info'))
-        <div class="relative mb-4 rounded-lg border border-slate-300 bg-slate-100 px-4 py-3 text-slate-900 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-100">
-            {{ session('info') }}
+        <div class="v-card v-card--muted border-slate-200 dark:border-slate-600" role="status">
+            <p class="text-sm text-slate-800 dark:text-slate-100">{{ session('info') }}</p>
         </div>
     @endif
 
     @if($sem_visitas ?? false)
-        {{-- Estado vazio: nenhuma visita no sistema · sem ações disponíveis --}}
-        <div class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 shadow-sm px-8 py-12 text-center">
-            <div class="max-w-md mx-auto pt-12 pb-12">
-                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                    <x-heroicon-o-document-text class="h-10 w-10 shrink-0 text-gray-400 dark:text-gray-500" />
+        <div class="v-card">
+            <div class="v-empty-state py-12">
+                <div class="v-empty-state__icon h-20 w-20" aria-hidden="true">
+                    <x-heroicon-o-document-text class="h-10 w-10 shrink-0" />
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Nenhuma visita cadastrada</h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-2">
-                    Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos profissionais de campo.
+                <p class="v-empty-state__title text-lg">{{ __('Nenhuma visita cadastrada') }}</p>
+                <p class="v-empty-state__text max-w-md">
+                    {{ __('Não há visitas no sistema. Relatórios, indicadores e PDF ficam disponíveis após o cadastro de visitas pelos profissionais de campo.') }}
                 </p>
-                <p class="text-xs text-gray-500/90 dark:text-gray-500 mb-6">Inclui perfis ACE e ACS.</p>
-                <a href="{{ route('gestor.visitas.index') }}" class="btn-acesso-principal inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition">
-                    <x-heroicon-o-eye class="mr-2 h-5 w-5 shrink-0" />
-                    Ir para Visitas
+                <p class="mt-2 text-xs text-slate-500 dark:text-slate-500">{{ __('Inclui perfis ACE e ACS.') }}</p>
+                <a href="{{ route('gestor.visitas.index') }}" class="btn-acesso-principal mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition">
+                    <x-heroicon-o-eye class="h-5 w-5 shrink-0" />
+                    {{ __('Ir para visitas') }}
                 </a>
             </div>
         </div>
     @else
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Relatórios e indicadores</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
+    <div class="v-card v-card--muted v-card--tight sm:p-4">
+        <p class="v-toolbar-label mb-1">{{ __('Alinhamento normativo') }}</p>
+        <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+            {{ __('Terminologia e tipos de visita alinhados às recomendações do Ministério da Saúde (vigilância entomológica e controle vetorial). Referências: Lei 11.350/2006; Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas.') }}
         </p>
-        <p class="mt-2 text-xs text-gray-500 dark:text-gray-500">
-            Atividades e terminologia: ACE, ACS, tipos de visita e códigos, alinhadas às recomendações do Ministério da Saúde para vigilância entomológica e controle vetorial.
-        </p>
-        <p class="mt-1.5 text-[10px] leading-relaxed text-gray-400/95 dark:text-gray-500">
-            Referências: Lei 11.350/2006; Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas.
-        </p>
-    </section>
+    </div>
     {{-- Filtros e PDF --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            <span class="text-red-500">*</span> Para o filtro funcionar, todos os campos marcados com <span class="text-red-500 font-medium">*</span> devem ser preenchidos ou selecionados.
-        </p>
+    <div class="v-card">
+        <h2 class="v-section-title mb-1">{{ __('Filtros e relatório') }}</h2>
+        <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
         <div
             x-data="{
                 tipo: '{{ request('tipo_relatorio', 'completo') }}',
@@ -287,60 +279,63 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Filtre os dados e clique no botão para gerar o documento.</p>
             </div>
         </div>
-    </section>
+    </div>
 
     {{-- Indicadores (estilo dashboard) --}}
     <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Indicadores do período</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <x-heroicon-o-clipboard-document-list class="mr-2 h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Total de visitas</h3>
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <h2 class="v-section-title text-base">{{ __('Indicadores do período') }}</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Valores conforme filtros aplicados.') }}</p>
+        </div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            <div class="v-card v-card--tight">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-clipboard-document-list class="h-6 w-6 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Total de visitas') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalVisitas }}</p>
+                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalVisitas }}</p>
             </div>
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <x-heroicon-o-clock class="mr-2 h-6 w-6 shrink-0 text-amber-500 dark:text-amber-400" />
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
+            <div class="v-card v-card--tight">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-clock class="h-6 w-6 shrink-0 text-amber-500 dark:text-amber-400" />
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Visitas com pendência') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $percentualPendencias }}% <span class="text-sm text-gray-500">({{ $totalComPendencia }})</span></p>
+                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $percentualPendencias }}% <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ $totalComPendencia }})</span></p>
             </div>
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <x-heroicon-o-building-office-2 class="mr-2 h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Depósitos eliminados</h3>
+            <div class="v-card v-card--tight">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-building-office-2 class="h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Depósitos eliminados') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalDepEliminados }}</p>
+                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalDepEliminados }}</p>
             </div>
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <x-heroicon-o-check-circle class="mr-2 h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com tratamento</h3>
+            <div class="v-card v-card--tight">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-check-circle class="h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Visitas com tratamento') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $visitasComTratamento }}</p>
+                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComTratamento }}</p>
             </div>
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <x-heroicon-o-beaker class="mr-2 h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Coletas realizadas</h3>
+            <div class="v-card v-card--tight">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-beaker class="h-6 w-6 shrink-0 text-blue-500 dark:text-blue-400" />
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Coletas realizadas') }}</h3>
                 </div>
-                <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalComColeta }}</p>
+                <p class="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalComColeta }}</p>
             </div>
-            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-                <div class="flex items-center">
-                    <x-heroicon-o-map-pin class="mr-2 h-6 w-6 shrink-0 text-gray-500 dark:text-gray-400" />
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bairro com mais ocorrências</h3>
+            <div class="v-card v-card--tight">
+                <div class="flex items-center gap-2">
+                    <x-heroicon-o-map-pin class="h-6 w-6 shrink-0 text-slate-500 dark:text-slate-400" />
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Bairro com mais ocorrências') }}</h3>
                 </div>
-                <p class="mt-2 text-lg font-normal text-gray-900 dark:text-gray-100">{{ $bairroMaisFrequente ?: '-' }}</p>
+                <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{{ $bairroMaisFrequente ?: '—' }}</p>
             </div>
         </div>
     </section>
 
     {{-- Gráficos: apenas os 4 mais relevantes para o relatório --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Análise visual</h2>
+    <section class="v-card">
+        <h2 class="v-section-title mb-4 text-base">{{ __('Análise visual') }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:grid-rows-2 sm:auto-rows-fr">
             <div class="flex flex-col min-h-[13rem]">
                 <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Visitas por bairro</h3>
@@ -374,18 +369,18 @@
     </section>
 
     {{-- Mapa de calor --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Mapa de calor</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Concentração de visitas no território.</p>
-        <div class="relative w-full h-64 rounded-lg border border-gray-200 dark:border-gray-600">
+    <section class="v-card">
+        <h2 class="v-section-title mb-1">{{ __('Mapa de calor') }}</h2>
+        <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Concentração de visitas no território.') }}</p>
+        <div class="relative h-64 w-full overflow-hidden rounded-lg border" style="border-color: rgb(var(--v-border) / 1);">
             <div id="mapa-calor" class="w-full h-full rounded-lg"></div>
             <p id="mapa-calor-vazio" class="hidden absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/80 rounded-lg m-0">Nenhuma visita com localização no período.</p>
         </div>
     </section>
 
     {{-- Tabela de visitas --}}
-    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Visitas Registradas</h2>
+    <section class="v-card">
+    <h2 class="v-section-title mb-4">{{ __('Visitas registradas') }}</h2>
 
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">

@@ -11,7 +11,7 @@
 @endphp
 
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial')]]" />
 
     <x-page-header :eyebrow="__('Central LIRAa')" :title="__('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_saude')])">
         <x-slot name="lead">

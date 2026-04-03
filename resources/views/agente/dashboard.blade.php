@@ -13,7 +13,7 @@
 @endphp
 
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial')]]" />
 
     <x-page-header :eyebrow="__('Operações de campo')" :title="__('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')])">
         <x-slot name="lead">

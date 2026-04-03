@@ -345,5 +345,35 @@
     .v-dashboard-action--primary .v-dashboard-action__chevron {
         @apply text-blue-100;
     }
+
+    /* Select alinhado ao v-input */
+    .v-select {
+        @apply w-full border px-3 py-2.5 text-sm text-slate-900 shadow-sm transition focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-400/15;
+        border-radius: var(--v-radius-md);
+        border-color: rgb(var(--v-border) / 1);
+        background-color: rgb(var(--v-surface) / 1);
+    }
+
+    /* Estado vazio em tabelas */
+    .v-empty-state {
+        @apply mx-auto flex max-w-md flex-col items-center py-8 text-center;
+    }
+
+    .v-empty-state__icon {
+        @apply mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500;
+    }
+
+    .v-empty-state__title {
+        @apply font-semibold text-slate-800 dark:text-slate-100;
+    }
+
+    .v-empty-state__text {
+        @apply mt-1 max-w-sm text-sm leading-relaxed text-slate-500 dark:text-slate-400;
+    }
+
+    /* Rodapé de página: ajuda contextual */
+    .v-hint-card {
+        @apply border-l-4 border-l-blue-500/35 pl-4 dark:border-l-blue-400/25;
+    }
 }
 

@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Visitas']]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas')]]" />
 
     <x-page-header :eyebrow="__('Vigilância em campo')" :title="__('Visitas')">
         <x-slot name="lead">
@@ -132,14 +132,14 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="p-10 text-center">
-                                <div class="mx-auto flex max-w-md flex-col items-center">
-                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
+                            <td colspan="7" class="!p-0">
+                                <div class="v-empty-state px-4 py-10">
+                                    <div class="v-empty-state__icon" aria-hidden="true">
+                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0" />
                                     </div>
-                                    <p class="font-medium text-slate-700 dark:text-slate-200">{{ __('Nenhuma visita registrada.') }}</p>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('As visitas aparecem aqui quando ACE ou ACS as registrarem.') }}</p>
-                                    <a href="{{ route('gestor.locais.index') }}" class="mt-5 inline-flex items-center rounded-xl bg-slate-800 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
+                                    <p class="v-empty-state__title">{{ __('Nenhuma visita registrada.') }}</p>
+                                    <p class="v-empty-state__text">{{ __('As visitas aparecem aqui quando ACE ou ACS as registrarem.') }}</p>
+                                    <a href="{{ route('gestor.locais.index') }}" class="mt-5 inline-flex items-center gap-2 rounded-lg bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
                                         {{ __('Ver locais cadastrados') }}
                                     </a>
                                 </div>

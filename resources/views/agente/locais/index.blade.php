@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Locais')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')" />
 
     @if(session('success'))
@@ -28,9 +28,10 @@
     </div>
 
     @if(!empty($coordenadasDuplicadas))
-    <div class="p-3 mb-4 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800" role="alert">
-        Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.
-    </div>
+        <div class="v-card v-alert-erp mb-4 border-amber-200/60 dark:border-amber-900/40" role="alert">
+            <p class="text-sm font-medium text-amber-950 dark:text-amber-100">{{ __('Coordenadas duplicadas') }}</p>
+            <p class="mt-1 text-sm text-amber-900/90 dark:text-amber-200/85">{{ __('Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.') }}</p>
+        </div>
     @endif
 
     <!-- Card introdutório -->

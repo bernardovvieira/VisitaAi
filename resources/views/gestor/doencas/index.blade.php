@@ -6,8 +6,12 @@
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => __('Doenças')]]" />
-    <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Doenças')" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças')]]" />
+    <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Doenças')">
+        <x-slot name="lead">
+            <p>{{ __('Visualize, edite ou exclua doenças cadastradas para vigilância municipal. Inclua novas para orientar o trabalho em campo.') }}</p>
+        </x-slot>
+    </x-page-header>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
@@ -16,72 +20,67 @@
         <x-alert type="error" :message="session('error')" />
     @endif
 
-    <!-- Card introdutório -->
-    <section class="v-card dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Visualize, edite e exclua doenças do sistema. Para adicionar novas, clique no botão abaixo.
-        </p>
-        <a href="{{ route('gestor.doencas.create') }}"
-           class="inline-flex items-center px-4 py-2 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition">
-            <x-heroicon-o-plus class="mr-2 h-5 w-5 shrink-0" />
-            Cadastrar Doença
-        </a>
-    </section>
-
-    <!-- Busca (atualiza ao digitar) -->
-    <section class="v-card dark:bg-gray-800">
-        <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div class="flex-1">
-                <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
-                <div class="flex items-center gap-2">
-                    <input type="text" name="search" id="search" value="{{ old('search', request('search')) }}"
-                           data-live-url="{{ route('gestor.doencas.index') }}" data-live-param="search"
-                           data-live-loading-id="search-loading-doencas"
-                           placeholder="Nome, sintomas, transmissão ou medidas..."
-                           class="w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600 px-4 py-2">
-                    <span id="search-loading-doencas" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
-                </div>
+    <div class="v-card">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0 flex-1">
+                <h2 class="v-section-title">{{ __('Doenças monitoradas') }}</h2>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ __('Use a busca para filtrar por nome, sintomas, transmissão ou medidas de controle.') }}</p>
             </div>
+            <a href="{{ route('gestor.doencas.create') }}"
+               class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:bg-blue-600 dark:hover:bg-blue-500">
+                <x-heroicon-o-plus class="h-5 w-5 shrink-0" />
+                {{ __('Cadastrar doença') }}
+            </a>
         </div>
-    </section>
+    </div>
 
-    <!-- Tabela de Doenças com pré-visualização -->
-    <section class="v-card dark:bg-gray-800">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Exibindo {{ $doencas->count() }} de {{ $doencas->total() }} doença(s) cadastrada(s).
-            @if(request('search'))
-                <span class="text-gray-500">Resultados para: <strong>{{ request('search') }}</strong></span>
-            @endif
-        </p>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700">
+    <div class="v-card v-card--muted">
+        <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+        <div class="mt-1 flex items-center gap-2">
+            <input type="text" name="search" id="search" value="{{ old('search', request('search')) }}"
+                   data-live-url="{{ route('gestor.doencas.index') }}" data-live-param="search"
+                   data-live-loading-id="search-loading-doencas"
+                   placeholder="{{ __('Nome, sintomas, transmissão ou medidas…') }}"
+                   class="v-input" />
+            <span id="search-loading-doencas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+        </div>
+    </div>
+
+    <div class="v-card v-card--flush overflow-hidden">
+        <div class="v-table-meta">
+            <span>
+                {{ __('Exibindo :atual de :total doença(s) cadastrada(s).', ['atual' => $doencas->count(), 'total' => $doencas->total()]) }}
+                @if(request('search'))
+                    <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
+                @endif
+            </span>
+        </div>
+        <div class="v-table-wrap">
+            <table class="v-data-table">
+                <thead>
                     <tr>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Nome</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Sintomas</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Transmissão</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Medidas</th>
-                        <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
+                        <th scope="col">{{ __('ID') }}</th>
+                        <th scope="col">{{ __('Nome') }}</th>
+                        <th scope="col">{{ __('Sintomas') }}</th>
+                        <th scope="col">{{ __('Transmissão') }}</th>
+                        <th scope="col">{{ __('Medidas de controle') }}</th>
+                        <th scope="col" class="text-center">{{ __('Ações') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody>
                     @forelse($doencas as $doenca)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
-                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
-                                    #{{ $doenca->doe_id }}
-                                </span>
-                            </td> 
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $doenca->doe_nome }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_sintomas), 30) }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_transmissao), 30) }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_medidas_controle), 30) }}</td>
-                            <td class="p-4 text-center">
+                        <tr>
+                            <td>
+                                <span class="inline-flex rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold tabular-nums text-slate-800 dark:bg-slate-800 dark:text-slate-200">#{{ $doenca->doe_id }}</span>
+                            </td>
+                            <td class="font-medium text-slate-900 dark:text-slate-100">{{ $doenca->doe_nome }}</td>
+                            <td class="text-slate-700 dark:text-slate-300">{{ Str::limit(implode(', ', $doenca->doe_sintomas), 30) }}</td>
+                            <td class="text-slate-700 dark:text-slate-300">{{ Str::limit(implode(', ', $doenca->doe_transmissao), 30) }}</td>
+                            <td class="text-slate-700 dark:text-slate-300">{{ Str::limit(implode(', ', $doenca->doe_medidas_controle), 30) }}</td>
+                            <td class="text-center">
                                 <div class="flex justify-center gap-1.5">
                                     <a href="{{ route('gestor.doencas.show', $doenca) }}"
-                                       class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                       class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                                        title="{{ __('Visualizar') }}"
                                        aria-label="{{ __('Visualizar doença') }}">
                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
@@ -96,7 +95,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                onclick="return confirm('Tem certeza que deseja excluir esta doença? Esta ação não pode ser desfeita.')"
+                                                onclick="return confirm(@json(__('Tem certeza que deseja excluir esta doença? Esta ação não pode ser desfeita.')))"
                                                 class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
                                                 title="{{ __('Excluir') }}"
                                                 aria-label="{{ __('Excluir doença') }}">
@@ -108,16 +107,16 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-8 text-center">
-                                <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
-                                    <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <x-heroicon-o-document-text class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
+                            <td colspan="6" class="!p-0">
+                                <div class="v-empty-state px-4">
+                                    <div class="v-empty-state__icon" aria-hidden="true">
+                                        <x-heroicon-o-beaker class="h-7 w-7 shrink-0" />
                                     </div>
-                                    <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhuma doença cadastrada.</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre as doenças monitoradas no município.</p>
-                                    <a href="{{ route('gestor.doencas.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
-                                        <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
-                                        Cadastrar doença
+                                    <p class="v-empty-state__title">{{ __('Nenhuma doença cadastrada no município.') }}</p>
+                                    <p class="v-empty-state__text">{{ __('Cadastre as doenças monitoradas para orientar ACE e ACS em campo.') }}</p>
+                                    <a href="{{ route('gestor.doencas.create') }}" class="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">
+                                        <x-heroicon-o-plus class="h-4 w-4 shrink-0" />
+                                        {{ __('Cadastrar doença') }}
                                     </a>
                                 </div>
                             </td>
@@ -126,7 +125,9 @@
                 </tbody>
             </table>
         </div>
-        <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
-    </section>
+        <div class="border-t px-4 py-3 dark:border-slate-700/80 sm:px-5" style="border-color: rgb(var(--v-border) / 1);">
+            <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
+        </div>
+    </div>
 </div>
 @endsection
