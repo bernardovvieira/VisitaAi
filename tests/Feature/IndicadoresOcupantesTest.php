@@ -24,6 +24,17 @@ class IndicadoresOcupantesTest extends TestCase
     }
 
     #[Test]
+    public function gestor_ve_aviso_sem_export_quando_sem_ocupantes(): void
+    {
+        $user = $this->gestorAprovado();
+
+        $response = $this->actingAs($user)->get(route('gestor.indicadores.ocupantes'));
+
+        $response->assertOk()
+            ->assertSee(config('visitaai_municipio.indicadores.export_csv_disabled_hint'), false);
+    }
+
+    #[Test]
     public function gestor_acessa_painel_indicadores(): void
     {
         $user = $this->gestorAprovado();

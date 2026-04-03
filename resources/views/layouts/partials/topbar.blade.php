@@ -2,7 +2,7 @@
 <header class="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-gray-200 bg-white/95 px-3 shadow-sm backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/95 sm:px-4">
     <div class="flex min-w-0 items-center gap-2">
         <button type="button"
-                class="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 lg:hidden"
+                class="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900 lg:hidden"
                 @click="sidebarOpen = true"
                 aria-expanded="false"
                 x-bind:aria-expanded="sidebarOpen"

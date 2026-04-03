@@ -20,7 +20,7 @@
             <span class="truncate text-sm font-semibold tracking-tight text-white">{{ config('app.name', 'Visita Aí') }}</span>
         </a>
         <button type="button"
-                class="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white lg:hidden"
+                class="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
                 @click="sidebarOpen = false"
                 aria-label="{{ __('Fechar menu') }}">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -83,7 +83,7 @@
             </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.indicadores.ocupantes')"
-                                :active="request()->routeIs('gestor.indicadores.ocupantes')"
+                                :active="request()->routeIs('gestor.indicadores.ocupantes*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />

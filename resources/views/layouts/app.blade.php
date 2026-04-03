@@ -160,6 +160,10 @@
                                 online = window.visitaConnectionOnline;
                             }
                         }, 400);
+                        function closeSidebarIfDesktop() {
+                            if (window.innerWidth >= 1024) sidebarOpen = false;
+                        }
+                        window.addEventListener('resize', closeSidebarIfDesktop);
                      "
                      x-effect="if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline"
                      @keydown.escape.window="sidebarOpen = false">
@@ -167,8 +171,16 @@
                     <div class="fixed inset-0 z-40 bg-slate-950/55 backdrop-blur-sm transition-opacity lg:hidden"
                          x-show="sidebarOpen"
                          x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0"
                          @click="sidebarOpen = false"
-                         aria-hidden="true"></div>
+                         role="button"
+                         tabindex="-1"
+                         aria-label="{{ __('Fechar menu') }}"></div>
                     <div class="flex min-h-screen min-w-0 flex-1 flex-col">
                         @include('layouts.partials.topbar')
                         @isset($header)
@@ -178,7 +190,7 @@
                                 </div>
                             </header>
                         @endisset
-                        <main class="flex-1 overflow-y-auto">
+                        <main class="flex-1 overflow-y-auto" x-bind:inert="sidebarOpen">
                             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                                 @yield('content')
                             </div>

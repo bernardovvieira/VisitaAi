@@ -26,3 +26,9 @@
     background-color: #2563eb !important;  /* rgb(37, 99, 235) */
 }
 
+@media (prefers-reduced-motion: reduce) {
+    #app-sidebar {
+        transition: none !important;
+    }
+}
+

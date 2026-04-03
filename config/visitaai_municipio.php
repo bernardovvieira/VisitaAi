@@ -60,6 +60,7 @@ return [
         'titulo_secao_renda' => 'Renda informada (agregado)',
         'sem_bairro_label' => '(Sem bairro informado)',
         'export_csv_label' => 'Exportar CSV (apenas agregados)',
+        'export_csv_disabled_hint' => 'Disponível quando houver pelo menos um ocupante registrado no Visita Aí.',
         'csv_titulo' => 'Indicadores agregados — ocupantes (Visita Aí)',
         'csv_suprimido_label' => 'suprimido',
         'colunas_faixas' => [
