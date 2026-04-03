@@ -115,34 +115,93 @@
                 color: #ffffff !important;
             }
             .nav-link-active { border-color: #3b82f6 !important; }
-            .dropdown-link-active { background-color: rgba(59, 130, 246, 0.1) !important; color: #1d4ed8 !important; border-left: 3px solid #3b82f6; font-weight: 600; }
-            .dark .dropdown-link-active { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
+            .dropdown-link-active { background-color: rgba(16, 185, 129, 0.12) !important; color: #047857 !important; border-left: 3px solid #10b981; font-weight: 600; }
+            .dark .dropdown-link-active { background-color: rgba(16, 185, 129, 0.2) !important; color: #6ee7b7 !important; }
             .responsive-nav-link-active { border-color: #3b82f6 !important; color: #1d4ed8 !important; background-color: rgba(59, 130, 246, 0.1) !important; }
             .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
         </style>
     </head>
     <body class="font-sans antialiased {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
-        <div class="min-h-screen {{ View::hasSection('public') ? 'bg-white' : 'bg-gray-100' }} dark:bg-gray-900">
-            @if (! View::hasSection('public'))
-                @include('layouts.navigation')
-            @endif
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+        @if (View::hasSection('public'))
+            <div class="min-h-screen bg-white dark:bg-gray-900">
+                @isset($header)
+                    <header class="bg-white shadow dark:bg-gray-800">
+                        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
+                <main>
+                    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                        @yield('content')
                     </div>
-                </header>
-            @endisset
-
-            <!-- Page Content (mesmo alinhamento e margens do menu) -->
-            <main>
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    @yield('content')
+                </main>
+            </div>
+        @else
+            @auth
+                <div id="authenticated-shell"
+                     class="flex min-h-screen bg-gray-100 dark:bg-gray-900"
+                     x-data="{
+                        sidebarOpen: false,
+                        online: typeof navigator !== 'undefined' ? navigator.onLine : true,
+                     }"
+                     x-init="
+                        function updateOnline(e) {
+                            var d = e && e.detail;
+                            online = (d && typeof d.online === 'boolean') ? d.online : (typeof window.visitaConnectionOnline !== 'undefined' ? window.visitaConnectionOnline : (typeof navigator !== 'undefined' ? navigator.onLine : true));
+                        }
+                        document.addEventListener('visita-connection-change', updateOnline);
+                        window.addEventListener('visita-connection-change', updateOnline);
+                        $nextTick(function () {
+                            online = typeof window.visitaConnectionOnline !== 'undefined' ? window.visitaConnectionOnline : (typeof navigator !== 'undefined' ? navigator.onLine : true);
+                        });
+                        setInterval(function () {
+                            if (typeof window.visitaConnectionOnline === 'boolean' && online !== window.visitaConnectionOnline) {
+                                online = window.visitaConnectionOnline;
+                            }
+                        }, 400);
+                     "
+                     x-effect="if (typeof window.visitaConnectionOnline === 'boolean') online = window.visitaConnectionOnline"
+                     @keydown.escape.window="sidebarOpen = false">
+                    @include('layouts.partials.sidebar')
+                    <div class="fixed inset-0 z-40 bg-slate-950/55 backdrop-blur-sm transition-opacity lg:hidden"
+                         x-show="sidebarOpen"
+                         x-cloak
+                         @click="sidebarOpen = false"
+                         aria-hidden="true"></div>
+                    <div class="flex min-h-screen min-w-0 flex-1 flex-col">
+                        @include('layouts.partials.topbar')
+                        @isset($header)
+                            <header class="border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                                    {{ $header }}
+                                </div>
+                            </header>
+                        @endisset
+                        <main class="flex-1 overflow-y-auto">
+                            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                                @yield('content')
+                            </div>
+                        </main>
+                    </div>
                 </div>
-            </main>
-        </div>
+            @else
+                <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+                    @isset($header)
+                        <header class="bg-white shadow dark:bg-gray-800">
+                            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                                {{ $header }}
+                            </div>
+                        </header>
+                    @endisset
+                    <main>
+                        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                            @yield('content')
+                        </div>
+                    </main>
+                </div>
+            @endauth
+        @endif
         {{-- Toggle flutuante apenas em páginas públicas (home, consulta); nas restritas fica só no navbar --}}
         @if(View::hasSection('public'))
         <x-theme-toggle :floating="true" />
