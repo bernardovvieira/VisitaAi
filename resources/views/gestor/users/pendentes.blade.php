@@ -36,7 +36,7 @@
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Nome</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">CPF</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">E‑mail</th>
+                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">E-mail</th>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data de Cadastro</th>
                         <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ação</th>
                     </tr>

@@ -34,9 +34,10 @@
                     <x-heroicon-o-document-text class="h-10 w-10 shrink-0 text-gray-400 dark:text-gray-500" />
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Nenhuma visita cadastrada</h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">
-                    Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos profissionais (ACE/ACS).
+                <p class="text-gray-600 dark:text-gray-400 mb-2">
+                    Não há visitas no sistema. Os relatórios, indicadores e a geração de PDF ficarão disponíveis após o cadastro de visitas pelos profissionais de campo.
                 </p>
+                <p class="text-xs text-gray-500/90 dark:text-gray-500 mb-6">Inclui perfis ACE e ACS.</p>
                 <a href="{{ route('gestor.visitas.index') }}" class="btn-acesso-principal inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition">
                     <x-heroicon-o-eye class="mr-2 h-5 w-5 shrink-0" />
                     Ir para Visitas
@@ -49,8 +50,11 @@
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
         </p>
-        <p class="mt-2 text-xs text-gray-500 dark:text-gray-500 italic">
-            Atividades e terminologia (ACE/ACS, tipos de visita, códigos) conforme recomendações do Ministério da Saúde (Lei 11.350/2006, Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas | Vigilância Entomológica e Controle Vetorial).
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-500">
+            Atividades e terminologia: ACE, ACS, tipos de visita e códigos, alinhadas às recomendações do Ministério da Saúde para vigilância entomológica e controle vetorial.
+        </p>
+        <p class="mt-1.5 text-[10px] leading-relaxed text-gray-400/95 dark:text-gray-500">
+            Referências: Lei 11.350/2006; Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas.
         </p>
     </section>
     {{-- Filtros e PDF --}}
@@ -387,7 +391,10 @@
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Local</th>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Profissional (ACE/ACS)</th>
+                    <th class="p-4 text-left align-bottom font-semibold text-gray-700 dark:text-gray-300">
+                        <span class="block leading-tight">Profissional</span>
+                        <span class="mt-0.5 block text-[10px] font-normal text-gray-500 dark:text-gray-400">ACE ou ACS</span>
+                    </th>
                     <th class="p-4 text-center font-semibold text-gray-700 dark:text-gray-300">Ações</th>
                 </tr>
             </thead>

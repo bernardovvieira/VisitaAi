@@ -124,8 +124,8 @@ return [
         'lei_11350' => 'Lei nº 11.350, de 5 de outubro de 2006 (atribuições ACE e ACS).',
         'diretriz_ace_acs' => 'Diretriz Nacional para Atuação Integrada dos Agentes de Combate às Endemias e Agentes Comunitários de Saúde no Território (MS).',
         'diretriz_arboviroses' => 'Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas: Vigilância Entomológica e Controle Vetorial (MS).',
-        'pncd' => 'PNCD — Programa Nacional de Controle da Dengue. Ministério da Saúde.',
-        'liraa' => 'LIRAa/LIA — Levantamento Rápido de Índices para Aedes aegypti. gov.br/saude/arboviroses/liraa',
+        'pncd' => 'PNCD: Programa Nacional de Controle da Dengue. Ministério da Saúde.',
+        'liraa' => 'LIRAa/LIA: Levantamento Rápido de Índices para Aedes aegypti. gov.br/saude/arboviroses/liraa',
     ],
 
     /*
@@ -134,8 +134,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'estado_rs' => [
-        'ses' => 'SES-RS — Secretaria Estadual da Saúde do Rio Grande do Sul.',
-        'cevs' => 'CEVS — Centro Estadual de Vigilância em Saúde (RS).',
+        'ses' => 'SES-RS: Secretaria Estadual da Saúde do Rio Grande do Sul.',
+        'cevs' => 'CEVS: Centro Estadual de Vigilância em Saúde (RS).',
         'nota' => 'No âmbito do RS, as ações devem observar as orientações da SES-RS e do CEVS, em consonância com as diretrizes nacionais do MS.',
     ],
 ];

@@ -38,7 +38,7 @@
                     <div class="flex justify-between"><dt class="font-medium">ID</dt><dd>{{ Auth::id() }}</dd></div>
                     <div class="flex justify-between"><dt class="font-medium">CPF</dt><dd>{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', Auth::user()->use_cpf) }}</dd></div>
                     <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
-                    <div class="flex justify-between"><dt class="font-medium">E‑mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">E-mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
                 </dl>
             </div>
 
@@ -76,7 +76,7 @@
                 </div>
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E‑mail <span class="text-red-500">*</span></label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail <span class="text-red-500">*</span></label>
                     <input id="email" name="email" type="email" autocapitalize="off"
                         value="{{ old('email', Auth::user()->use_email) }}"
                         class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-600 dark:focus:ring-blue-600"

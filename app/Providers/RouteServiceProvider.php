@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * Rota padrão pós‑login.
+     * Rota padrão pós-login.
      */
     public const HOME = '/dashboard';
 

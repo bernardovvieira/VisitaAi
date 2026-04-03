@@ -209,7 +209,7 @@
     <strong>Cód.:</strong> Código único do imóvel &nbsp;|&nbsp;
     <strong>Tipo (imóvel):</strong> R-Residencial, C-Comercial, T-Terreno Baldio (PE = atividade 8, não tipo de imóvel) &nbsp;|&nbsp;
     <strong>Pend.:</strong> Pendência (recusado, fechado ou retorno) &nbsp;|&nbsp;
-    <strong>A1–E:</strong> Depósitos inspecionados por tipo (classificação LIRAa | MS) &nbsp;|&nbsp;
+    <strong>A1 a E:</strong> Depósitos inspecionados por tipo (classificação LIRAa | MS) &nbsp;|&nbsp;
     <strong>Amostra:</strong> Inicial-Final (LIRAa) &nbsp;|&nbsp;
     <strong>Dep.Elim.:</strong> Depósitos eliminados &nbsp;|&nbsp;
     <strong>Tub.:</strong> Tubitos &nbsp;|&nbsp;

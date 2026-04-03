@@ -199,15 +199,15 @@
                 </p>
                 <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <p>A1– Depósitos elevados com água (caixas d’água, tambores).</p>    
-                        <p>A2 – Depósitos ao nível do solo (cisternas, filtros, barris).</p>    
-                        <p>B – Pequenos móveis (vasos, pratos, pingadeiras, fontes).</p>    
-                        <p>C – Fixos ou de difícil remoção (calhas, ralos, lajes).</p> 
+                        <p>A1: depósitos elevados com água (caixas d’água, tambores).</p>    
+                        <p>A2: depósitos ao nível do solo (cisternas, filtros, barris).</p>    
+                        <p>B: pequenos móveis (vasos, pratos, pingadeiras, fontes).</p>    
+                        <p>C: fixos ou de difícil remoção (calhas, ralos, lajes).</p> 
                     </div>
                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <p>D1 – Pneus e materiais rodantes.</p>    
-                        <p>D2 – Lixo, sucatas e entulho.</p>    
-                        <p>E – Naturais (oclusões em árvores, folhas, rochas).</p>
+                        <p>D1: pneus e materiais rodantes.</p>    
+                        <p>D2: lixo, sucatas e entulho.</p>    
+                        <p>E: naturais (oclusões em árvores, folhas, rochas).</p>
                     </div>
                 </div>
                 <div>

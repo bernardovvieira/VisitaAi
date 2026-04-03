@@ -53,7 +53,7 @@
                         $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
                     @endphp
                     <li>
-                        {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }} – {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}
+                        {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}
                         <span class="text-xs text-yellow-700 dark:text-yellow-300 ml-2 italic">
                             Última pendência em {{ \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y') }}
                         </span>

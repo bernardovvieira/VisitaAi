@@ -1,4 +1,4 @@
-{{-- Sidebar: secções, branding centralizado, copyright dinâmico. Requer Alpine no #authenticated-shell. --}}
+{{-- Sidebar: secções, logo + nome em linha, copyright dinâmico. Requer Alpine no #authenticated-shell. --}}
 @php
     $u = auth()->user();
     $logoHrefOnline = route('dashboard');
@@ -6,7 +6,7 @@
         ? route('agente.visitas.index')
         : ($u->isAgenteSaude() ? route('saude.visitas.index') : route('gestor.visitas.index'));
     $yearEnd = (int) now()->format('Y');
-    $copyrightYears = $yearEnd <= 2025 ? '2025' : '2025–'.$yearEnd;
+    $copyrightYears = $yearEnd <= 2025 ? '2025' : '2025-'.$yearEnd;
 @endphp
 
 <aside id="app-sidebar" role="navigation" aria-label="{{ __('Menu principal') }}"
@@ -15,11 +15,11 @@
     <div class="relative flex h-[4.5rem] shrink-0 items-center justify-center border-b border-slate-800/80 px-4">
         <a :href="online ? @js($logoHrefOnline) : @js($logoHrefOffline)"
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
-           class="flex flex-col items-center gap-1.5 rounded-lg px-2 py-1 text-center outline-none ring-blue-500/40 focus-visible:ring-2">
+           class="flex flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-3">
             <img src="{{ asset('images/visitaai_rembg.png') }}"
                  alt="{{ config('app.name', 'Visita Aí') }}"
-                 class="h-8 w-auto" width="32" height="32" />
-            <span class="text-sm font-semibold leading-none tracking-tight text-white">Visita Aí</span>
+                 class="h-10 w-auto shrink-0" />
+            <span class="text-sm font-semibold leading-tight tracking-tight text-white">Visita Aí</span>
         </a>
         <button type="button"
                 class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
@@ -38,14 +38,14 @@
                 <x-heroicon-o-home class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
+
+            <x-sidebar-nav-section :label="__('Campo')" />
             <x-sidebar-link :href="route('gestor.visitas.index')"
                             :active="request()->routeIs('gestor.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
                 <span class="truncate">{{ __('Visitas') }}</span>
             </x-sidebar-link>
-
-            <x-sidebar-nav-section :label="__('Cadastro e campo')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.doencas.index')"
                                 :active="request()->routeIs('gestor.doencas.*')"
@@ -67,7 +67,7 @@
                                 :active="request()->routeIs('gestor.indicadores.ocupantes*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-chart-bar class="h-5 w-5 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ config('visitaai_municipio.indicadores.menu', __('Indicadores municipais')) }}</span>
+                    <span class="truncate">{{ __('Indicadores') }}</span>
                 </x-sidebar-link>
             </div>
 

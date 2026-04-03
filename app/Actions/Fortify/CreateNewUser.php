@@ -23,9 +23,9 @@ class CreateNewUser implements CreatesNewUsers
         ], [
             'cpf.required'      => 'O CPF é obrigatório.',
             'cpf.unique'        => 'Este CPF já está cadastrado.',
-            'email.required'    => 'O e‑mail é obrigatório.',
-            'email.email'       => 'Formato de e‑mail inválido.',
-            'email.unique'      => 'Este e‑mail já está cadastrado.',
+            'email.required'    => 'O e-mail é obrigatório.',
+            'email.email'       => 'Formato de e-mail inválido.',
+            'email.unique'      => 'Este e-mail já está cadastrado.',
             'password.required' => 'A senha é obrigatória.',
             'password.confirmed'=> 'A confirmação de senha não confere.',
             'password.letters'  => 'A senha deve conter pelo menos uma letra.',

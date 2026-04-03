@@ -1,5 +1,5 @@
 /**
- * Visita Aí – suporte offline (rascunhos + sincronização + aviso de visitas pendentes).
+ * Visita Aí: suporte offline (rascunhos + sincronização + aviso de visitas pendentes).
  * - Registra o Service Worker para cache das páginas.
  * - Se window.VisitaOfflineSyncPageUrl e window.VisitaOfflineProfile estiverem definidos (agente/saude),
  *   exibe banner quando houver visitas pendentes de envio (ao carregar e ao voltar online).

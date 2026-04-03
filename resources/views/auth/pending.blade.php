@@ -11,7 +11,7 @@
                 Sua conta está aguardando aprovação de um gestor.
             </p>
             <p class="text-sm text-gray-500 dark:text-gray-500 mb-6">
-                Você receberá um e‑mail quando ela for liberada. Enquanto isso, você pode sair e voltar depois.
+                Você receberá um e-mail quando ela for liberada. Enquanto isso, você pode sair e voltar depois.
             </p>
             <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <a href="{{ route('login') }}"

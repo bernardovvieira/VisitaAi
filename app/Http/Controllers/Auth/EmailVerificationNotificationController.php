@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class EmailVerificationNotificationController extends Controller
 {
     /**
-     * Send a new e‑mail‑verification notification.
+     * Send a new e-mail verification notification.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -20,7 +20,7 @@ class EmailVerificationNotificationController extends Controller
             );
         }
 
-        // Dispara o e‑mail de verificação
+        // Dispara o e-mail de verificação
         $request->user()->sendEmailVerificationNotification();
 
         // Flash de sucesso

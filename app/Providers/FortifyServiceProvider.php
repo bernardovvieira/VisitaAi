@@ -71,13 +71,13 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         //
-        // 2) Autenticação por CPF ou e‑mail
+        // 2) Autenticação por CPF ou e-mail
         Fortify::authenticateUsing(function (Request $request) {
             $request->validate([
                 'use_email' => 'required|string',
                 'password'  => 'required|string',
             ], [
-                'use_email.required' => 'O campo CPF ou e‑mail é obrigatório.',
+                'use_email.required' => 'O campo CPF ou e-mail é obrigatório.',
                 'password.required' => 'O campo senha é obrigatório.',
             ]);
 
@@ -113,7 +113,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         //
-        // 4) Throttle two‑factor
+        // 4) Throttle two-factor
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)
                         ->by($request->session()->get('login.id'));

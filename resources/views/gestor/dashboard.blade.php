@@ -21,26 +21,27 @@
         ->orderByDesc('total')
         ->first();
 
-    $card = 'rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-slate-600 dark:bg-slate-800/80';
+    $card = 'rounded-xl border border-slate-200/80 bg-white p-4 shadow-md shadow-slate-200/30 ring-1 ring-slate-100/90 dark:border-slate-600 dark:bg-slate-800/90 dark:shadow-none dark:ring-white/5';
     $actionBase = 'flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900';
 @endphp
 
-<div class="mx-auto max-w-7xl space-y-8">
+<div class="mx-auto max-w-7xl space-y-5">
     <x-breadcrumbs :items="[['label' => 'Página Inicial']]" />
 
-    <header class="border-b border-slate-200/90 pb-6 dark:border-slate-700">
+    <header class="border-b border-slate-200/90 pb-4 dark:border-slate-700">
         <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-[1.65rem]">{{ __('Painel do Gestor') }}</h1>
-        <p class="mt-2 text-sm font-medium text-slate-600 dark:text-slate-400">{{ Auth::user()->use_nome }}</p>
+        <p class="mt-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">{{ Auth::user()->use_nome }}</p>
     </header>
 
-    <section class="space-y-3" aria-labelledby="heading-stats">
+    <section class="rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white to-slate-50/90 p-3 shadow-sm dark:border-slate-700 dark:from-slate-900/40 dark:to-slate-900/20" aria-labelledby="heading-stats">
         <h2 id="heading-stats" class="sr-only">{{ __('Estatísticas principais') }}</h2>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <div class="{{ $card }}">
                 <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais ACE/ACS aprovados') }}</p>
-                        <p class="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-slate-100">{{ \App\Models\User::where(function ($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count() }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais de campo') }}</p>
+                        <p class="mt-0.5 text-[10px] font-medium leading-snug text-slate-400/90 dark:text-slate-500">{{ __('Somente usuários aprovados no sistema.') }}</p>
+                        <p class="mt-1.5 text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-slate-100">{{ \App\Models\User::where(function ($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count() }}</p>
                     </div>
                     <x-heroicon-o-user-group class="mt-0.5 h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                 </div>
@@ -107,23 +108,23 @@
             </div>
 
             <div class="{{ $card }} sm:col-span-2 lg:col-span-3">
-                <div class="flex items-start justify-between gap-4 border-b border-gray-100 pb-3 dark:border-gray-700/80">
+                <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-2.5 dark:border-slate-700/80">
                     <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</p>
-                        <p class="mt-1 text-3xl font-semibold tabular-nums tracking-tight text-gray-900 dark:text-gray-100">{{ $totalOcupantesVisitaAi }}</p>
-                        @if(config('visitaai_municipio.ocupantes.painel_gestor_subtitulo'))
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</p>
+                        <p class="mt-1 text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-slate-100">{{ $totalOcupantesVisitaAi }}</p>
+                        @if(filled(config('visitaai_municipio.ocupantes.painel_gestor_subtitulo')))
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
                         @endif
                     </div>
                     <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                 </div>
                 @if($ocupantesPorBairroTop->isNotEmpty())
-                    <p class="mt-3 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
-                    <ul class="mt-2 grid grid-cols-1 gap-1.5 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                    <p class="mt-2.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
+                    <ul class="mt-1.5 grid grid-cols-1 gap-1 text-sm sm:grid-cols-2 lg:grid-cols-3">
                         @foreach($ocupantesPorBairroTop as $row)
-                            <li class="flex justify-between gap-2 border-b border-gray-100 py-2 last:border-0 dark:border-gray-700/80">
-                                <span class="min-w-0 truncate font-medium text-gray-800 dark:text-gray-200" title="{{ $row->bairro }}">{{ $row->bairro ?: '-' }}</span>
-                                <span class="shrink-0 tabular-nums font-semibold text-gray-900 dark:text-gray-100">{{ $row->total_moradores }}</span>
+                            <li class="flex justify-between gap-2 border-b border-slate-100 py-1.5 last:border-0 dark:border-slate-700/80">
+                                <span class="min-w-0 truncate font-medium text-slate-800 dark:text-slate-200" title="{{ $row->bairro }}">{{ $row->bairro ?: '-' }}</span>
+                                <span class="shrink-0 tabular-nums font-semibold text-slate-900 dark:text-slate-100">{{ $row->total_moradores }}</span>
                             </li>
                         @endforeach
                     </ul>
@@ -140,9 +141,9 @@
         </section>
     @endif
 
-    <section class="space-y-3" aria-labelledby="heading-quick">
-        <h2 id="heading-quick" class="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ __('Ações rápidas') }}</h2>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <section class="space-y-2" aria-labelledby="heading-quick">
+        <h2 id="heading-quick" class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Ações rápidas') }}</h2>
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <a href="{{ route('gestor.pendentes') }}"
                class="{{ $actionBase }} {{ $pendentesCount > 0 ? 'border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-900/40' : 'border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700' }}">
                 <x-heroicon-o-arrow-right class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
@@ -165,7 +166,7 @@
             </a>
             <a href="{{ route('gestor.indicadores.ocupantes') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
                 <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                {{ config('visitaai_municipio.indicadores.menu', __('Indicadores municipais')) }}
+                {{ __('Indicadores') }}
             </a>
             <a href="{{ route('gestor.relatorios.index') }}" class="{{ $actionBase }} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
                 <x-heroicon-o-document-text class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />

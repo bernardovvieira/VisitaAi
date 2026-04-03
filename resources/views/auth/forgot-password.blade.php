@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Esqueceu sua senha? Sem problemas. Informe seu e‑mail e enviaremos um link para resetar sua senha.') }}
+        {{ __('Esqueceu sua senha? Sem problemas. Informe seu e-mail e enviaremos um link para resetar sua senha.') }}
     </div>
 
     @if (session('status'))
@@ -12,7 +12,7 @@
                 {{ session('status') }}
             </p>
             <p class="mt-2 text-sm text-blue-700 dark:text-blue-300">
-                Não recebeu o e‑mail? Verifique a pasta de spam ou solicite um novo link em alguns minutos.
+                Não recebeu o e-mail? Verifique a pasta de spam ou solicite um novo link em alguns minutos.
             </p>
         </div>
     @endif
@@ -22,7 +22,7 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email">{{ __('E‑mail') }} <span class="text-red-500">*</span></x-input-label>
+            <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input
                 id="email"
                 class="block mt-1 w-full"

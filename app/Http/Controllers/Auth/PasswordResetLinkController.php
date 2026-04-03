@@ -25,12 +25,12 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // 1) Validação do campo e‑mail
+        // 1) Validação do campo e-mail
         $request->validate([
             'email' => ['required', 'email'],
         ], [
-            'email.required' => 'O e‑mail é obrigatório.',
-            'email.email'    => 'Formato de e‑mail inválido.',
+            'email.required' => 'O e-mail é obrigatório.',
+            'email.email'    => 'Formato de e-mail inválido.',
         ]);
 
         // 2) Tenta enviar o link usando a coluna use_email
@@ -40,9 +40,9 @@ class PasswordResetLinkController extends Controller
 
         // 3) Responde de volta para a view (mensagem neutra para não revelar se e-mail existe)
         if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', 'Se o e‑mail estiver cadastrado, você receberá um link de recuperação de senha.');
+            return back()->with('status', 'Se o e-mail estiver cadastrado, você receberá um link de recuperação de senha.');
         }
         return back()->withInput($request->only('email'))
-            ->withErrors(['email' => 'Se o e‑mail estiver cadastrado, você receberá um link de recuperação. Verifique sua caixa de entrada e spam.']);
+            ->withErrors(['email' => 'Se o e-mail estiver cadastrado, você receberá um link de recuperação. Verifique sua caixa de entrada e spam.']);
     }
 }

@@ -49,7 +49,7 @@
             <!-- Preenchido via JS a partir do IndexedDB -->
         </div>
         <p id="sync-offline-warning" class="hidden mt-4 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
-            Você está sem internet. Conecte o dispositivo à internet (Wi‑Fi ou dados) para poder enviar as visitas.
+            Você está sem internet. Conecte o dispositivo à internet (Wi-Fi ou dados) para poder enviar as visitas.
         </p>
     </section>
 </div>

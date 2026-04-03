@@ -14,9 +14,9 @@
             <!-- Token de Reset -->
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <!-- E‑mail -->
+            <!-- E-mail -->
             <div class="mb-4">
-                <x-input-label for="email">{{ __('E‑mail') }} <span class="text-red-500">*</span></x-input-label>
+                <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
                 <x-text-input
                     id="email"
                     class="block mt-1 w-full"

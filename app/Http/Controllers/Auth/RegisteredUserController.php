@@ -53,9 +53,9 @@ class RegisteredUserController extends Controller
             'nome.required'   => 'O nome é obrigatório',
             'cpf.required'   => 'O CPF é obrigatório',
             'cpf.unique'     => 'Este CPF já está cadastrado',
-            'email.required' => 'O e‑mail é obrigatório',
-            'email.email'    => 'Formato de e‑mail inválido',
-            'email.unique'   => 'Este e‑mail já está cadastrado',
+            'email.required' => 'O e-mail é obrigatório',
+            'email.email'    => 'Formato de e-mail inválido',
+            'email.unique'   => 'Este e-mail já está cadastrado',
             'password.confirmed' => 'A confirmação de senha não confere',
             'password.required'  => 'Por favor, digite uma senha',
             'password.min'       => 'A senha deve ter no mínimo 8 caracteres',
@@ -66,7 +66,7 @@ class RegisteredUserController extends Controller
         ]);
 
         /* -----------------------------------------------------------------
-         |  2. Criação – usuário entra como NÃO aprovado
+         |  2. Criação: usuário entra como NÃO aprovado
          |-----------------------------------------------------------------*/
         $user = User::create([
             'use_nome'         => $request->input('nome'),

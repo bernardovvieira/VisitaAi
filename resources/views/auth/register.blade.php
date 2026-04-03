@@ -3,7 +3,7 @@
 
     @if ($errors->any())
         @php
-            $fieldLabels = ['nome' => 'Nome', 'cpf' => 'CPF', 'email' => 'E‑mail', 'password' => 'Senha', 'password_confirmation' => 'Confirmar senha'];
+            $fieldLabels = ['nome' => 'Nome', 'cpf' => 'CPF', 'email' => 'E-mail', 'password' => 'Senha', 'password_confirmation' => 'Confirmar senha'];
             $errorFields = array_unique($errors->keys());
             $labels = array_map(fn ($k) => $fieldLabels[$k] ?? $k, $errorFields);
         @endphp
@@ -46,9 +46,9 @@
             <x-input-error :messages="$errors->get('cpf')" class="mt-2" />
         </div>
 
-        {{-- E‑mail --}}
+        {{-- E-mail --}}
         <div class="mb-4">
-            <x-input-label for="email">{{ __('E‑mail') }} <span class="text-red-500">*</span></x-input-label>
+            <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
             <x-text-input id="email" name="email" type="email"
                           :value="old('email')" required autocapitalize="off"
                           class="block w-full mt-1
@@ -112,7 +112,7 @@
                     var hasSymbol = /[^a-zA-Z0-9]/.test(pwd);
                     var n = [minLen, hasLetter, hasMixed, hasNumber, hasSymbol].filter(Boolean).length;
                     $bar.style.width = (n * 20) + '%';
-                    // 0–2 requisitos: vermelho; 3–4: amarelo; 5: verde
+                    // 0 a 2 requisitos: vermelho; 3 a 4: amarelo; 5: verde
                     $bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-blue-500');
                     $bar.classList.add(n >= 5 ? 'bg-blue-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
                 }

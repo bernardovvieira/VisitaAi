@@ -106,7 +106,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
-            /* Botão principal azul – inline para garantir que sempre aplique (#3b82f6 / rgb(59,130,246)) */
+            /* Botão principal azul: inline para garantir que sempre aplique (#3b82f6 / rgb(59,130,246)) */
             .btn-acesso-principal {
                 background-color: #3b82f6 !important;
                 color: #ffffff !important;
@@ -192,7 +192,7 @@
                             </header>
                         @endisset
                         <main class="flex-1 overflow-y-auto text-slate-800 dark:text-slate-100" x-bind:inert="sidebarOpen">
-                            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+                            <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
                                 @yield('content')
                             </div>
                         </main>

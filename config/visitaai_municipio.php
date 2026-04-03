@@ -12,13 +12,13 @@
 return [
 
     'ocupantes' => [
-        'titulo_secao_local' => 'Ocupantes do imóvel (Visita Aí)',
+        'titulo_secao_local' => 'Ocupantes do imóvel',
         'titulo_listagem' => 'Ocupantes neste imóvel',
         'botao_gerenciar' => 'Gerenciar ocupantes',
-        'disclaimer' => 'Registro operacional municipal no Visita Aí. Não substitui o cadastro de cidadãos no e-SUS APS, o PEC nem a Ficha de Visita Domiciliar e Territorial.',
-        'painel_gestor_titulo' => 'Ocupantes (Visita Aí)',
-        'painel_gestor_subtitulo' => 'Registros neste sistema — complementar ao e-SUS e ao SisPNCD.',
-        'painel_gestor_bairros' => 'Distribuição por bairro (painel local)',
+        'disclaimer' => 'Dados operacionais vinculados a este imóvel no Visita Aí.',
+        'painel_gestor_titulo' => 'Ocupantes registrados',
+        'painel_gestor_subtitulo' => '',
+        'painel_gestor_bairros' => 'Por bairro',
     ],
 
     'escolaridade_opcoes' => [
@@ -42,32 +42,36 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Indicadores agregados (gestor) — apenas dados registrados no Visita Aí
+    | Indicadores agregados (gestor): apenas dados registrados no Visita Aí
     |--------------------------------------------------------------------------
     | Textos operacionais e públicos; sem finalidade de substituir cadastros oficiais.
     */
     'indicadores' => [
         'minimo_registros_bairro' => 5,
-        'menu' => 'Indicadores municipais',
-        'titulo_pagina' => 'Indicadores municipais (ocupantes no Visita Aí)',
-        'subtitulo' => 'Agregados por bairro do imóvel, faixa etária, escolaridade e faixa de renda informada — somente registros feitos neste sistema.',
-        'aviso' => 'Informação complementar à operação de vigilância em saúde ambiental. Não substitui indicadores oficiais do SUS, cadastros e-SUS/PEC nem outras bases municipais obrigatórias.',
+        'menu' => 'Indicadores',
+        'titulo_pagina' => 'Indicadores',
+        'subtitulo' => 'Resumo dos ocupantes cadastrados no Visita Aí: bairro do imóvel, faixa etária, escolaridade e renda.',
+        'subtitulo_detalhe' => 'Escolaridade e renda aparecem no resumo somente quando foram informadas no cadastro.',
+        'aviso' => 'Panorama a partir dos registros deste sistema. Não substitui relatórios oficiais ou outras bases de dados do município.',
         'aviso_privacidade' => 'Para bairros com poucos registros, os números são ocultados para reduzir risco de identificação.',
-        'texto_celula_suprimida' => '—',
+        'texto_celula_suprimida' => '-',
         'titulo_secao_bairro' => 'Por bairro do imóvel',
-        'titulo_secao_faixa_global' => 'Faixa etária (todos os registros)',
-        'titulo_secao_escolaridade' => 'Escolaridade informada (agregado)',
-        'titulo_secao_renda' => 'Renda informada (agregado)',
-        'sem_bairro_label' => '(Sem bairro informado)',
-        'export_csv_label' => 'Exportar CSV (apenas agregados)',
+        'titulo_secao_faixa_global' => 'Faixa etária',
+        'legenda_mapa_calor_faixa' => 'Cores mais quentes indicam faixas com mais ocupantes, em escala relativa à faixa mais numerosa. A porcentagem é a participação no total geral.',
+        'legenda_mapa_calor_tabela' => 'Nas colunas de idade, o fundo segue a mesma lógica por coluna: compara os bairros entre si em cada faixa.',
+        'titulo_secao_escolaridade' => 'Escolaridade',
+        'titulo_secao_renda' => 'Renda',
+        'sem_bairro_label' => 'Sem bairro',
+        'export_csv_label' => 'Exportar CSV',
+        'export_csv_legenda' => 'Somente totais agregados, sem dados identificáveis.',
         'export_csv_disabled_hint' => 'Disponível quando houver pelo menos um ocupante registrado no Visita Aí.',
         'export_csv_flash_sem_dados' => 'Não há ocupantes registrados para exportar. Cadastre ocupantes nos imóveis e tente novamente.',
-        'csv_titulo' => 'Indicadores agregados — ocupantes (Visita Aí)',
+        'csv_titulo' => 'Indicadores agregados',
         'csv_suprimido_label' => 'suprimido',
         'colunas_faixas' => [
-            '0-11' => '0–11 anos',
-            '12-17' => '12–17 anos',
-            '18-59' => '18–59 anos',
+            '0-11' => '0 a 11 anos',
+            '12-17' => '12 a 17 anos',
+            '18-59' => '18 a 59 anos',
             '60+' => '60 anos ou mais',
             'sem_info' => 'Sem data de nascimento',
         ],

@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Autentica o usuário por CPF **ou** e‑mail,
+     * Autentica o usuário por CPF **ou** e-mail,
      * verifica aprovação do gestor e trata mensagens de erro.
      */
     public function authenticate(): void
@@ -38,7 +38,7 @@ class LoginRequest extends FormRequest
         $password = $this->input('password');
 
         /* -----------------------------------------------------------------
-         | 1. Descobre se login é e‑mail ou CPF
+         | 1. Descobre se login é e-mail ou CPF
          |-----------------------------------------------------------------*/
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'use_email' : 'use_cpf';
 

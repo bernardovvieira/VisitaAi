@@ -18,7 +18,7 @@
     transform: scale(1);
 }
 
-/* Botão principal (azul padrão do sistema) – valores explícitos para não ser sobrescrito */
+/* Botão principal (azul padrão do sistema): valores explícitos para não ser sobrescrito */
 .btn-acesso-principal {
     background-color: #3b82f6 !important; /* rgb(59, 130, 246) */
 }

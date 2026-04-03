@@ -38,8 +38,8 @@ class NewPasswordController extends Controller
             'password'              => ['required','confirmed', Rules\Password::defaults()],
         ], [
             'token.required'            => 'O token de recuperação é obrigatório',
-            'email.required'            => 'O e‑mail é obrigatório',
-            'email.email'               => 'Formato de e‑mail inválido',
+            'email.required'            => 'O e-mail é obrigatório',
+            'email.email'               => 'Formato de e-mail inválido',
             'password.required'         => 'A senha é obrigatória',
             'password.confirmed'        => 'A confirmação de senha não confere',
             'password.min'              => 'A senha deve ter no mínimo 8 caracteres',

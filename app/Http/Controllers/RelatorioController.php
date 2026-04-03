@@ -125,10 +125,10 @@ class RelatorioController extends Controller
         $locaisParaSelect = Local::has('visitas')->withCount('visitas')->orderBy('loc_bairro')->orderBy('loc_endereco')->orderBy('loc_numero')->get();
         $locaisParaSelectArray = $locaisParaSelect->map(function ($loc) {
             $endereco = trim(($loc->loc_endereco ?? '') . ($loc->loc_numero ? ', ' . $loc->loc_numero : ''));
-            $codigo = $loc->loc_codigo_unico ?? '—';
-            $bairro = $loc->loc_bairro ?? '—';
+            $codigo = $loc->loc_codigo_unico ?? '-';
+            $bairro = $loc->loc_bairro ?? '-';
             $qtd = $loc->visitas_count ?? 0;
-            $label = ($endereco ?: '—') . ' — ' . $bairro . ' — Cód. ' . $codigo . ($qtd > 0 ? ' (' . $qtd . ' visita' . ($qtd !== 1 ? 's' : '') . ')' : '');
+            $label = ($endereco ?: '-') . ', ' . $bairro . ', Cód. ' . $codigo . ($qtd > 0 ? ' (' . $qtd . ' visita' . ($qtd !== 1 ? 's' : '') . ')' : '');
             return ['id' => $loc->loc_id, 'label' => $label];
         })->values()->toArray();
 
@@ -264,7 +264,7 @@ class RelatorioController extends Controller
 
         if ($tipo === 'individual') {
             $locaisSel = !empty($localIdsPdf) ? Local::whereIn('loc_id', $localIdsPdf)->get() : collect();
-            $periodo = $locaisSel->isEmpty() ? 'Local(is)' : 'Local(is): ' . $locaisSel->map(fn ($l) => trim(($l->loc_endereco ?? '') . ($l->loc_numero ? ', ' . $l->loc_numero : '') . ' — ' . ($l->loc_bairro ?? '')))->join(' | ');
+            $periodo = $locaisSel->isEmpty() ? 'Local(is)' : 'Local(is): ' . $locaisSel->map(fn ($l) => trim(($l->loc_endereco ?? '') . ($l->loc_numero ? ', ' . $l->loc_numero : '') . ', ' . ($l->loc_bairro ?? '')))->join(' | ');
         } elseif ($tipo === 'diario') {
             $periodo = 'Data: ' . $data_inicio;
         } elseif ($tipo === 'semanal') {

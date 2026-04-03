@@ -1,5 +1,5 @@
 /**
- * Service Worker – Visita Aí
+ * Service Worker: Visita Aí
  * Permite uso offline das telas de visitas e locais (após carregá-las uma vez com internet).
  * Estratégia: network-first; em caso de falha, usa cache (exato ou por pathname).
  */
