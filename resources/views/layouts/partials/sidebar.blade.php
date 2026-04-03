@@ -82,6 +82,16 @@
                 <span class="truncate">{{ __('Visitas') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
+                <x-sidebar-link :href="route('gestor.indicadores.ocupantes')"
+                                :active="request()->routeIs('gestor.indicadores.ocupantes')"
+                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span class="truncate">{{ config('visitaai_municipio.indicadores.menu', __('Indicadores municipais')) }}</span>
+                </x-sidebar-link>
+            </div>
+            <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.relatorios.index')"
                                 :active="request()->routeIs('gestor.relatorios.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">

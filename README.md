@@ -12,7 +12,8 @@ Sistema desenvolvido para a gestão de visitas de vigilância entomológica e co
 
 ### Rotas HTTP
 
-- `routes/web.php` — ponto de entrada; inclui `routes/web/public.php` (público / consulta / ping) e `routes/web/authenticated.php` (área logada por perfil).
+- `routes/web.php` — ponto de entrada; inclui `routes/web/public.php` (público / consulta / ping) e `routes/web/authenticated.php` (área logada).
+- Dentro da área autenticada, rotas agrupadas por módulo: `routes/web/pncd.php` (operação PNCD / ACE e ACS), `routes/web/gestao.php` (painel do gestor, inclui indicadores agregados de ocupantes em `gestor/indicadores/ocupantes`), `routes/web/conta.php` (perfil e preferências).
 - Autenticação Fortify/Breeze: `routes/auth.php`.
 
 > **Desenvolvido por:** Bitwise Technologies  

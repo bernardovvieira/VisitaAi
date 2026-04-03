@@ -9,6 +9,7 @@ use App\Http\Controllers\DoencaController;
 use App\Http\Controllers\Gestor\LogController;
 use App\Http\Controllers\Gestor\UserApprovalController;
 use App\Http\Controllers\Gestor\UserController;
+use App\Http\Controllers\Municipio\IndicadoresOcupantesController;
 use App\Http\Controllers\Municipio\MoradorController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\Vigilancia\LocalController;
@@ -34,6 +35,8 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
 
     Route::get('visitas', [VisitaController::class, 'index'])->name('visitas.index');
     Route::get('visitas/{visita}', [VisitaController::class, 'show'])->name('visitas.show');
+
+    Route::get('indicadores/ocupantes', [IndicadoresOcupantesController::class, 'index'])->name('indicadores.ocupantes');
 
     Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
     Route::get('relatorios/pdf', fn () => redirect()->route('gestor.relatorios.index')->with('info', 'Use os filtros na página de relatórios e clique em "Gerar relatório em PDF" para gerar o documento.'));

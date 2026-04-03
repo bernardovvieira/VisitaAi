@@ -40,4 +40,32 @@ return [
         'acima_3_sm' => 'Acima de 3 salários mínimos',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Indicadores agregados (gestor) — apenas dados registrados no Visita Aí
+    |--------------------------------------------------------------------------
+    | Textos operacionais e públicos; sem finalidade de substituir cadastros oficiais.
+    */
+    'indicadores' => [
+        'minimo_registros_bairro' => 5,
+        'menu' => 'Indicadores municipais',
+        'titulo_pagina' => 'Indicadores municipais (ocupantes no Visita Aí)',
+        'subtitulo' => 'Agregados por bairro do imóvel, faixa etária, escolaridade e faixa de renda informada — somente registros feitos neste sistema.',
+        'aviso' => 'Informação complementar à operação de vigilância em saúde ambiental. Não substitui indicadores oficiais do SUS, cadastros e-SUS/PEC nem outras bases municipais obrigatórias.',
+        'aviso_privacidade' => 'Para bairros com poucos registros, os números são ocultados para reduzir risco de identificação.',
+        'texto_celula_suprimida' => '—',
+        'titulo_secao_bairro' => 'Por bairro do imóvel',
+        'titulo_secao_faixa_global' => 'Faixa etária (todos os registros)',
+        'titulo_secao_escolaridade' => 'Escolaridade informada (agregado)',
+        'titulo_secao_renda' => 'Renda informada (agregado)',
+        'sem_bairro_label' => '(Sem bairro informado)',
+        'colunas_faixas' => [
+            '0-11' => '0–11 anos',
+            '12-17' => '12–17 anos',
+            '18-59' => '18–59 anos',
+            '60+' => '60 anos ou mais',
+            'sem_info' => 'Sem data de nascimento',
+        ],
+    ],
+
 ];
