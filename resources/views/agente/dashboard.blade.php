@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--emerald" aria-hidden="true">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
                         <x-heroicon-o-check-circle class="h-6 w-6 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--amber" aria-hidden="true">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
                         <x-heroicon-o-map-pin class="h-6 w-6 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--violet" aria-hidden="true">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
                         <x-heroicon-o-beaker class="h-6 w-6 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">

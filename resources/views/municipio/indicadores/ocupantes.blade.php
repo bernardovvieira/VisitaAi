@@ -59,7 +59,7 @@
             <div class="flex shrink-0 flex-col items-stretch gap-1 sm:items-end">
                 @if($canExportCsv)
                     <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-                       class="inline-flex items-center justify-center rounded-lg border border-emerald-600 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-950 shadow-sm transition hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:border-emerald-500 dark:bg-emerald-950/45 dark:text-emerald-100 dark:hover:bg-emerald-900/50 dark:focus-visible:ring-offset-gray-900">
+                       class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-950 shadow-sm transition hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:border-blue-500 dark:bg-blue-950/45 dark:text-blue-100 dark:hover:bg-blue-900/50 dark:focus-visible:ring-offset-gray-900">
                         <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0" aria-hidden="true" />
                         {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
                     </a>
@@ -67,7 +67,7 @@
                         <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500/80 dark:text-slate-400/75">{{ $cfgInd['export_csv_legenda'] }}</p>
                     @endif
                 @else
-                    <span class="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-dashed border-emerald-300/80 bg-emerald-50/50 px-3 py-2 text-xs font-medium text-emerald-800/70 dark:border-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-200/50"
+                    <span class="inline-flex cursor-not-allowed items-center justify-center rounded-lg border border-dashed border-blue-300/80 bg-blue-50/50 px-3 py-2 text-xs font-medium text-blue-800/70 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-200/50"
                           title="{{ $csvHintDisabled }}"
                           aria-disabled="true">
                         <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
@@ -102,7 +102,7 @@
         <div class="rounded-xl border border-slate-200/80 bg-white p-3 shadow-md shadow-slate-200/25 ring-1 ring-slate-100/80 dark:border-slate-600 dark:bg-slate-800/90 dark:shadow-none dark:ring-white/5 sm:col-span-2 lg:col-span-2">
             <div class="flex flex-wrap items-end justify-between gap-2">
                 <p class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ $cfgInd['titulo_secao_faixa_global'] ?? 'Faixa etária' }}</p>
-                <p class="text-[10px] font-medium uppercase tracking-wide text-orange-600/90 dark:text-orange-400/90">{{ __('Mapa de calor') }}</p>
+                <p class="text-[10px] font-medium uppercase tracking-wide text-blue-600/90 dark:text-blue-400/90">{{ __('Mapa de calor') }}</p>
             </div>
             <div class="mt-3 flex gap-1 overflow-hidden rounded-xl ring-1 ring-slate-200/90 dark:ring-slate-600 sm:gap-1.5"
                  role="img"
@@ -117,7 +117,7 @@
                     @endphp
                     <div class="relative flex min-h-[5.25rem] min-w-0 flex-1 flex-col items-center justify-center px-1 py-2.5 text-center sm:px-1.5">
                         <div class="absolute inset-0 rounded-lg bg-slate-100 dark:bg-slate-900/85" aria-hidden="true"></div>
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-b from-amber-300 via-orange-500 to-rose-600 dark:from-amber-400 dark:via-orange-500 dark:to-rose-600"
+                        <div class="absolute inset-0 rounded-lg bg-gradient-to-b from-sky-200 via-blue-500 to-blue-900 dark:from-sky-500 dark:via-blue-600 dark:to-blue-950"
                              style="opacity: {{ $heatOp }}"
                              aria-hidden="true"></div>
                         <span class="relative z-10 max-w-full text-[10px] font-semibold leading-tight {{ $faixaTxtLight ? 'text-white drop-shadow-sm' : 'text-slate-700 dark:text-slate-200' }}">{{ $labelsFaixa[$k] ?? $k }}</span>
@@ -136,7 +136,7 @@
         <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_bairro'] ?? 'Por bairro' }}</h2>
         <p class="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{{ __('Deslize a tabela para ver todas as colunas; a coluna do bairro fica fixa.') }}</p>
         @if(filled($cfgInd['legenda_mapa_calor_tabela'] ?? '') && ($painel['resumo']['total_ocupantes'] ?? 0) > 0)
-            <p class="mt-1 text-[10px] leading-snug text-orange-700/85 dark:text-orange-300/80">{{ $cfgInd['legenda_mapa_calor_tabela'] }}</p>
+            <p class="mt-1 text-[10px] leading-snug text-blue-700/85 dark:text-blue-300/80">{{ $cfgInd['legenda_mapa_calor_tabela'] }}</p>
         @endif
         <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-600">
@@ -168,7 +168,7 @@
                                         $heatAlpha = 0.05 + 0.28 * $heatCol;
                                     @endphp
                                     <td class="relative border-b border-gray-100 px-3 py-2.5 dark:border-gray-700">
-                                        <span class="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-400 to-rose-600 dark:from-amber-500 dark:to-rose-600" style="opacity: {{ $heatAlpha }}" aria-hidden="true"></span>
+                                        <span class="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-300 to-blue-800 dark:from-blue-500 dark:to-blue-950" style="opacity: {{ $heatAlpha }}" aria-hidden="true"></span>
                                         <span class="relative z-10 tabular-nums text-gray-900 dark:text-gray-100">{{ number_format($vIdade, 0, ',', '.') }}</span>
                                     </td>
                                 @endforeach

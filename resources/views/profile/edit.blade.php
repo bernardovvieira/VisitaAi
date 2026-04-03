@@ -51,7 +51,7 @@
                 <dl class="text-gray-700 dark:text-gray-300 space-y-2">
                     <div class="flex justify-between"><dt class="font-medium">Perfil</dt><dd>{{ \App\Models\User::perfilLabel(Auth::user()->use_perfil) }}</dd></div>
                     <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
-                    <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="text-blue-600 dark:text-blue-400 font-semibold">Ativo</span> @else <span class="text-yellow-600 dark:text-yellow-400 font-semibold">Pendente</span> @endif</dd></div>
+                    <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="font-semibold text-emerald-600 dark:text-emerald-400">Ativo</span> @else <span class="font-semibold text-amber-600 dark:text-amber-400">Pendente</span> @endif</dd></div>
                 </dl>
             </div>
         </div>
@@ -122,7 +122,7 @@
         @if(Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
             @php $user = Auth::user(); @endphp
             @if(method_exists($user, 'hasEnabledTwoFactorAuthentication') && $user->hasEnabledTwoFactorAuthentication())
-                <p class="text-sm font-medium text-blue-600 dark:text-blue-400">2FA ativado para esta conta.</p>
+                <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">2FA ativado para esta conta.</p>
                 <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
                    onclick="return confirm('Tem certeza que deseja desativar a autenticação em dois fatores?');"
                    class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg shadow transition">

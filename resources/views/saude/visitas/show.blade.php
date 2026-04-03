@@ -131,7 +131,7 @@
                     @if ($visita->vis_pendencias)
                         <span class="inline-block bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200 px-2 py-1 rounded text-xs font-semibold">Houve pendência</span>
                     @else
-                        <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">Nenhuma pendência</span>   
+                        <span class="inline-block rounded bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-900 dark:bg-emerald-900/45 dark:text-emerald-200">Nenhuma pendência</span>   
                     @endif
                 </dd>
             </div>
@@ -210,7 +210,7 @@
                     <p class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $visita->{'insp_'.$tipo} ?? 0 }}</p>
                 </div>
             @endforeach
-            <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 col-span-2 sm:col-span-4 p-4 rounded-lg text-center font-bold text-lg shadow">
+            <div class="col-span-2 rounded-lg bg-emerald-100 p-4 text-center text-lg font-bold text-emerald-900 shadow dark:bg-emerald-900/45 dark:text-emerald-100 sm:col-span-4">
                 Eliminados: {{ $visita->vis_depositos_eliminados ?? 0 }}
             </div>
         </div>

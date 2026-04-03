@@ -433,7 +433,7 @@
                                     </div>
                                 @endif
                             @else
-                                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                <span class="inline-block rounded bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-900 dark:bg-emerald-900/45 dark:text-emerald-200">
                                     Concluída
                                 </span>
                             @endif
@@ -528,11 +528,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const elDoencas = document.getElementById('graficoDoencas');
     const elDoencasVazio = document.getElementById('graficoDoencasVazio');
     if (labelsDoenca.length > 0 && elDoencas) {
+        const bluePiePalette = ['#172554', '#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#1d4ed8'];
+        const bgDoenca = labelsDoenca.map((_, i) => bluePiePalette[i % bluePiePalette.length]);
         new Chart(elDoencas, {
             type: 'pie',
             data: {
                 labels: labelsDoenca,
-                datasets: [{ data: dataDoenca, backgroundColor: ['#60a5fa', '#f87171', '#34d399', '#fbbf24', '#a78bfa', '#fb7185', '#38bdf8', '#facc15', '#4ade80', '#f472b6'] }]
+                datasets: [{ data: dataDoenca, backgroundColor: bgDoenca }]
             },
             options: {
                 responsive: true,
@@ -580,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
             radius: 25,
             blur: 15,
             maxZoom: 17,
-            gradient: { 0.2: 'blue', 0.4: 'lime', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red' }
+            gradient: { 0.15: '#dbeafe', 0.4: '#60a5fa', 0.65: '#2563eb', 0.85: '#1d4ed8', 1.0: '#1e3a8a' }
         }).addTo(mapa);
     } else {
         document.getElementById('mapa-calor-vazio').classList.remove('hidden');

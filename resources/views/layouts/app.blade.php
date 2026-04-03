@@ -156,7 +156,8 @@
                         sidebarDesktop: (function () {
                             try {
                                 var v = localStorage.getItem('visita-sidebar-desktop');
-                                if (v === 'collapsed' || v === 'hidden' || v === 'expanded') return v;
+                                if (v === 'collapsed' || v === 'expanded') return v;
+                                if (v === 'hidden') return 'expanded';
                             } catch (e) {}
                             return 'expanded';
                         })(),

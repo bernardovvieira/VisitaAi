@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--violet" aria-hidden="true">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
                         <x-heroicon-o-user-circle class="h-6 w-6 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">
@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--emerald" aria-hidden="true">
+                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
                         <x-heroicon-o-beaker class="h-6 w-6 shrink-0" />
                     </div>
                     <div class="min-w-0 flex-1">

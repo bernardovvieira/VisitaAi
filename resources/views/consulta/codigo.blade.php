@@ -119,7 +119,7 @@
                                             </div>
                                         @endif
                                     @else
-                                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded dark:bg-blue-900 dark:text-blue-300">
+                                        <span class="inline-block rounded bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-900 dark:bg-emerald-900/45 dark:text-emerald-200">
                                             {{ __('Concluída') }}
                                         </span>
                                     @endif
@@ -148,7 +148,7 @@
                         @if ($visita->vis_pendencias)
                             <span class="ml-2 text-amber-600 dark:text-amber-400">{{ __('Pendente') }}</span>
                         @else
-                            <span class="ml-2 text-blue-600 dark:text-blue-400">{{ __('Concluída') }}</span>
+                            <span class="ml-2 text-emerald-600 dark:text-emerald-400">{{ __('Concluída') }}</span>
                         @endif
                     </p>
                     <p class="text-sm text-gray-800 dark:text-gray-100 leading-relaxed">{{ $resumos[$visita->vis_id] }}</p>
