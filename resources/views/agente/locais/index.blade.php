@@ -34,7 +34,7 @@
     @endif
 
     <!-- Card introdutório -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais de visitação</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.
@@ -52,7 +52,7 @@
     </section>
 
     <!-- Busca (filtra ao digitar) -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
@@ -69,7 +69,7 @@
     </section>
 
     <!-- Tabela de Locais -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $locais->count() }} de {{ $locais->total() }} local(is) cadastrados.
             @if(request('search'))
@@ -78,7 +78,7 @@
         </p>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-100 dark:bg-gray-700">
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
@@ -199,7 +199,7 @@
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
     </section>
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
         <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
     </section>

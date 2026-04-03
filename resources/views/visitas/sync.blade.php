@@ -6,19 +6,19 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Sincronizar']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Sincronizar</h1>
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Sincronizar</h1>
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enviar dados guardados offline</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.</p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
             <button type="button" id="sync-btn"
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 disabled:cursor-not-allowed disabled:opacity-50">
                 Enviar todas agora
             </button>
             <button type="button" id="sync-clear-btn"
-                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 disabled:cursor-not-allowed disabled:opacity-50">
                 Apagar todas do dispositivo
             </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
@@ -26,7 +26,7 @@
     </section>
 
     @if(!empty($locaisSyncSubmitUrl))
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow" id="sync-locais-section"
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800" id="sync-locais-section"
              data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais guardados no dispositivo</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">Carregando…</p>
@@ -34,7 +34,7 @@
     </section>
     @endif
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow"
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800"
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
              data-locais-sync-url="{{ $locaisSyncSubmitUrl ?? '' }}"

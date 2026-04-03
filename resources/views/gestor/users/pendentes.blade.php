@@ -7,7 +7,7 @@
     <!-- Botão Voltar -->
     <div>
         <a href="{{ route('gestor.users.index') }}" 
-        class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
+        class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M15 19l-7-7 7-7"/>
@@ -23,7 +23,7 @@
     @endif
 
     <!-- Card introdutório -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Gerenciamento de Aprovação</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Nesta tela, você pode visualizar usuários que aguardam aprovação para acessar o sistema.
@@ -32,7 +32,7 @@
     </section>
 
     <!-- Tabela de Pendentes -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             @if($pendentes->total() > 0)
                 Exibindo {{ $pendentes->count() }} de {{ $pendentes->total() }} usuário(s) pendente(s).
@@ -42,7 +42,7 @@
         </p>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0">
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>

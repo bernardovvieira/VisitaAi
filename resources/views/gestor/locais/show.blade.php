@@ -5,7 +5,7 @@
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Locais', 'url' => route('gestor.locais.index')], ['label' => 'Visualizar']]" />
     <div>
         <a href="{{ route('gestor.locais.index') }}"
-           class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
+           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -13,14 +13,14 @@
         </a>
     </div>
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Detalhes do Local</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Informações completas do local registrado no sistema.
         </p>
     </section>
 
-    <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6 space-y-8">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-8">
         <dl class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
                 <dt class="font-medium">Código Único do Imóvel</dt>
@@ -105,7 +105,7 @@
     @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 
     {{-- Adesivo --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4 mt-10">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4 mt-10">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
             <div id="adesivo" class="w-[300px] bg-white p-6 text-center shadow-sm text-gray-800">

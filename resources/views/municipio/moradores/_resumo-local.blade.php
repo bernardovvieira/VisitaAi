@@ -2,14 +2,14 @@
 @php
     $rp = request()->routeIs('gestor.*') ? 'gestor' : 'agente';
 @endphp
-<section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow space-y-3">
+<section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-3">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ config('visitaai_municipio.ocupantes.titulo_secao_local') }}</h2>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ config('visitaai_municipio.ocupantes.disclaimer') }}</p>
         </div>
         <a href="{{ route($rp . '.locais.moradores.index', $local) }}"
-           class="inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
+           class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60">
             {{ config('visitaai_municipio.ocupantes.botao_gerenciar') }} ({{ $moradorResumo['total'] ?? 0 }})
         </a>
     </div>

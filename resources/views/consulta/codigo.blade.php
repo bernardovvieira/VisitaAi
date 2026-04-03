@@ -39,7 +39,7 @@
     </div>
 
     {{-- Endereço e mapa --}}
-    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div class="space-y-3 text-sm text-gray-800 dark:text-gray-100">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Imóvel Consultado</h2>
             <p>
@@ -75,7 +75,7 @@
     </section>
 
     {{-- Histórico de Visitas (sem doenças) --}}
-    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Histórico de Visitas</h2>
 
         @if ($visitas->isEmpty())
@@ -129,7 +129,7 @@
 
     {{-- Resumos para o cidadão (texto neutro, sem dados sensíveis) --}}
     @if (!empty($resumos) && count($resumos) > 0)
-    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Resumo das visitas</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
             O texto abaixo é apenas informativo. Em caso de dúvidas, procure a Secretaria Municipal de Saúde.
@@ -155,7 +155,7 @@
     @endif
 
     {{-- Informativo institucional --}}
-    <section class="bg-yellow-50 dark:bg-yellow-900 border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-100 p-6 rounded-lg shadow space-y-2 text-sm">
+    <section class="rounded-xl border border-amber-300/90 bg-amber-50 p-6 text-sm text-amber-950 shadow-sm space-y-2 dark:border-amber-700 dark:bg-amber-950/35 dark:text-amber-100">
         <h2 class="text-base font-semibold">Precisa de mais informações?</h2>
         <p>
             Esta consulta pública tem caráter informativo e exibe apenas datas e status das visitas realizadas no endereço.

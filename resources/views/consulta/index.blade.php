@@ -25,7 +25,7 @@
 
     {{-- Busca por código --}}
     <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
-          class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
+          class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm space-y-4">
         <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Digite o <strong>código único do imóvel</strong> fornecido pelo profissional (ACE/ACS) <span class="text-red-500">*</span>
         </label>
@@ -79,7 +79,7 @@
     @endif
 
     {{-- Seção de doenças monitoradas --}}
-    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
+    <section class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm space-y-4">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Doenças Monitoradas</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             @if($doencas->isEmpty())

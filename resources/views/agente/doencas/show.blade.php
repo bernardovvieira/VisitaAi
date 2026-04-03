@@ -8,7 +8,7 @@
   <!-- Botão Voltar -->
   <div>
     <a href="{{ route('agente.doencas.index') }}"
-       class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
+       class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
       <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
@@ -17,7 +17,7 @@
   </div>
 
   <!-- Introdução -->
-  <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+  <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Visão Geral da Doença</h2>
     <p class="mt-2 text-gray-600 dark:text-gray-400">
       Esta seção apresenta os detalhes completos de uma doença monitorada no sistema: nome, sintomas, formas de transmissão e medidas de controle.
@@ -25,7 +25,7 @@
   </section>
 
   <!-- Dados Básicos -->
-  <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6">
+  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Dados Básicos</h3>
     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
       <div>
@@ -48,7 +48,7 @@
   </section>
 
   <!-- Sintomas -->
-  <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6">
+  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Sintomas</h3>
     @if(count($doenca->doe_sintomas))
       <div class="flex flex-wrap gap-2">
@@ -62,7 +62,7 @@
   </section>
 
   <!-- Transmissão -->
-  <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6">
+  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Modos de Transmissão</h3>
     @if(count($doenca->doe_transmissao))
       <div class="flex flex-wrap gap-2">
@@ -76,7 +76,7 @@
   </section>
 
   <!-- Medidas de Controle -->
-  <section class="bg-white dark:bg-gray-700 rounded-lg shadow p-6">
+  <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Medidas de Controle</h3>
     @if(count($doenca->doe_medidas_controle))
       <div class="flex flex-wrap gap-2">

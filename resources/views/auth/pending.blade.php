@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="max-w-md mx-auto mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+    <div class="max-w-md mx-auto mt-8 rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
         <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-4">
                 <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

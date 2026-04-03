@@ -17,7 +17,7 @@
     @endif
 
     <!-- Card introdutório -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize, edite e exclua doenças do sistema. Para adicionar novas, clique no botão abaixo.
@@ -32,7 +32,7 @@
     </section>
 
     <!-- Busca (atualiza ao digitar) -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
@@ -49,7 +49,7 @@
     </section>
 
     <!-- Tabela de Doenças com pré-visualização -->
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $doencas->count() }} de {{ $doencas->total() }} doença(s) cadastrada(s).
             @if(request('search'))
@@ -57,7 +57,7 @@
             @endif
         </p>
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-100 dark:bg-gray-700">
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>

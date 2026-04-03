@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="w-full max-w-md mx-auto mt-8 sm:mt-12 px-4">
-        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 p-6 shadow-sm">
             <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Código de autenticação</h1>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 Digite o código de 6 dígitos gerado pelo seu aplicativo autenticador.

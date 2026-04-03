@@ -28,7 +28,7 @@
 
     @if($sem_visitas ?? false)
         {{-- Estado vazio: nenhuma visita no sistema — sem ações disponíveis --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow px-8 py-12 text-center">
+        <div class="rounded-xl border border-gray-200/80 bg-white dark:bg-gray-800 shadow-sm px-8 py-12 text-center">
             <div class="max-w-md mx-auto pt-12 pb-12">
                 <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                     <svg class="w-10 h-10 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +46,7 @@
             </div>
         </div>
     @else
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Relatórios e indicadores</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Gere relatórios em PDF e visualize indicadores do período selecionado. Use os filtros abaixo.
@@ -56,7 +56,7 @@
         </p>
     </section>
     {{-- Filtros e PDF --}}
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Filtros e relatório</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
             <span class="text-red-500">*</span> Para o filtro funcionar, todos os campos marcados com <span class="text-red-500 font-medium">*</span> devem ser preenchidos ou selecionados.
@@ -286,42 +286,42 @@
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Indicadores do período</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
                     <svg class="h-6 w-6 text-indigo-500 dark:text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Total de visitas</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalVisitas }}</p>
             </div>
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
                     <svg class="h-6 w-6 text-amber-500 dark:text-amber-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com pendência</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $percentualPendencias }}% <span class="text-sm text-gray-500">({{ $totalComPendencia }})</span></p>
             </div>
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
                     <svg class="h-6 w-6 text-emerald-500 dark:text-emerald-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Depósitos eliminados</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalDepEliminados }}</p>
             </div>
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
                     <svg class="h-6 w-6 text-teal-500 dark:text-teal-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas com tratamento</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $visitasComTratamento }}</p>
             </div>
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
                     <svg class="h-6 w-6 text-blue-500 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Coletas realizadas</h3>
                 </div>
                 <p class="mt-2 text-2xl font-normal text-gray-900 dark:text-gray-100">{{ $totalComColeta }}</p>
             </div>
-            <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
                 <div class="flex items-center">
                     <svg class="h-6 w-6 text-gray-500 dark:text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Bairro com mais ocorrências</h3>
@@ -332,7 +332,7 @@
     </section>
 
     {{-- Gráficos: apenas os 4 mais relevantes para o relatório --}}
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Análise visual</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:grid-rows-2 sm:auto-rows-fr">
             <div class="flex flex-col min-h-[13rem]">
@@ -367,7 +367,7 @@
     </section>
 
     {{-- Mapa de calor --}}
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Mapa de calor</h2>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Concentração de visitas no território.</p>
         <div class="relative w-full h-64 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -377,11 +377,11 @@
     </section>
 
     {{-- Tabela de visitas --}}
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
     <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Visitas Registradas</h2>
 
     <div class="overflow-x-auto">
-        <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow text-sm">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
             <thead class="bg-gray-100 dark:bg-gray-700">
                 <tr>
                     <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Código</th>

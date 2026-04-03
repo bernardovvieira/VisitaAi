@@ -7,7 +7,7 @@
     {{-- Botão Voltar --}}
     <div>
         <a href="{{ route('saude.visitas.index') }}"
-           class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-lg shadow transition">
+           class="inline-flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
             <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -16,13 +16,13 @@
     </div>
 
     {{-- Cabeçalho --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Detalhes da visita</h1>
         <p class="text-sm text-gray-600 dark:text-gray-300">Informações completas da visita registrada no sistema.</p>
     </section>
 
     {{-- Local --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Local Visitado</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -95,7 +95,7 @@
     </section>
 
     {{-- Dados da Visita --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Dados da Visita</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -150,13 +150,13 @@
     </section>
 
     {{-- Observações --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Observações</h2>
         <p class="text-sm text-gray-900 dark:text-gray-100">{{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}</p>
     </section>
 
     {{-- Doenças --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Doenças Monitoradas na Visita</h2>
 
         @if ($visita->doencas->count())
@@ -212,7 +212,7 @@
     </section>
 
     {{-- Depósitos Inspecionados --}}
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Depósitos Inspecionados</h2>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
             @foreach (['a1','a2','b','c','d1','d2','e'] as $tipo)
@@ -229,7 +229,7 @@
 
     {{-- Coleta de Amostra --}}
     @if ($visita->vis_coleta_amostra)
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Coleta de Amostra</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
@@ -248,7 +248,7 @@
     </section>
     @endif
 
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Tratamentos Realizados</h2>
 
         @if ($visita->tratamentos && count($visita->tratamentos))

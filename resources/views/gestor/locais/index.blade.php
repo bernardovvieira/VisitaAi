@@ -7,10 +7,16 @@
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     <x-breadcrumbs :items="[['label' => 'Página Inicial', 'url' => route('dashboard')], ['label' => 'Locais']]" />
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Locais</h1>
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Locais</h1>
 
     @if(session('success'))
         <x-alert type="success" :message="session('success')" />
+    @endif
+    @if(session('warning'))
+        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
+    @endif
+    @if(session('error'))
+        <x-alert type="error" :message="session('error')" />
     @endif
 
     @if(!empty($coordenadasDuplicadas))
@@ -19,14 +25,14 @@
     </div>
     @endif
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais cadastrados</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Locais registrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço.
         </p>
     </section>
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca inteligente</label>
@@ -35,14 +41,14 @@
                            data-live-url="{{ route('gestor.locais.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-gestor-locais"
                            placeholder="Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)..."
-                           class="w-full rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm px-4 py-2">
+                           class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100">
                     <span id="search-loading-gestor-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $locais->count() }} de {{ $locais->total() }} local(is) cadastrados.
             @if(request('search'))
@@ -51,7 +57,7 @@
         </p>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-100 dark:bg-gray-700">
                     <tr>
                         <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
@@ -143,7 +149,7 @@
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
     </section>
 
-    <section class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm dark:border-gray-600 dark:bg-gray-800">
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
         <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
     </section>

@@ -17,7 +17,7 @@
     @endif
 
     <!-- Mensagem de Contexto -->
-    <section class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-2">
+    <section class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-2">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Olá, {{ Auth::user()->use_nome }}!</h2>
         <p class="text-gray-600 dark:text-gray-400">
             Aqui você pode atualizar seus dados pessoais, como nome e e-mail. Algumas informações, como CPF e perfil, são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se precisar de ajuda, entre em contato com a Bitwise Technologies (suporte técnico).
@@ -29,7 +29,7 @@
         {{-- Coluna esquerda: Informações pessoais + Acesso e status --}}
         <div class="space-y-6">
             {{-- Card: Informações pessoais --}}
-            <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
@@ -45,7 +45,7 @@
             </div>
 
             {{-- Card: Acesso e status --}}
-            <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+            <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 mr-2 mt-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -61,7 +61,7 @@
         </div>
 
         {{-- Coluna direita: Atualizar Dados --}}
-        <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-6">
+        <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-6">
             <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5l3 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -117,7 +117,7 @@
     </div>
 
     {{-- Card: Autenticação em dois fatores (2FA) --}}
-    <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -159,7 +159,7 @@
     </div>
 
     {{-- Card: Anonimizar Conta --}}
-    <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow space-y-4">
+    <div class="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm dark:border-gray-600 dark:bg-gray-800 space-y-4">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
