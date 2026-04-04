@@ -38,8 +38,8 @@
     </div>
 
     {{-- Imóvel consultado --}}
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-start">
-        <section class="v-card">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch">
+        <section class="v-card flex h-full flex-col">
             <div class="space-y-3 text-sm text-slate-800 dark:text-slate-100">
                 <h2 class="v-section-title mb-1">{{ __('Imóvel consultado') }}</h2>
                 <p>
@@ -72,9 +72,9 @@
                 </p>
             </div>
         </section>
-        <section class="v-card" aria-label="{{ __('Mapa do imóvel') }}">
-            <h2 class="v-section-title mb-3">{{ __('Localização no mapa') }}</h2>
-            <div class="relative h-64 w-full overflow-hidden" id="mapa-local" role="region" aria-label="{{ __('Mapa interativo') }}"></div>
+        <section class="v-card flex h-full min-h-0 flex-col" aria-label="{{ __('Mapa do imóvel') }}">
+            <h2 class="v-section-title mb-3 shrink-0">{{ __('Localização no mapa') }}</h2>
+            <div class="relative min-h-[13rem] flex-1 w-full overflow-hidden md:min-h-0" id="mapa-local" role="region" aria-label="{{ __('Mapa interativo') }}"></div>
         </section>
     </div>
 
