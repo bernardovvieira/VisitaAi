@@ -20,7 +20,9 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
     Route::get('/dashboard', fn () => view('gestor.dashboard'))->name('dashboard');
 
     Route::get('/pendentes', [UserApprovalController::class, 'index'])->name('pendentes');
-    Route::post('/approve/{user}', [UserApprovalController::class, 'approve'])->name('approve');
+    Route::post('/approve/{user}', [UserApprovalController::class, 'approve'])
+        ->middleware('throttle:30,1')
+        ->name('approve');
 
     Route::resource('users', UserController::class)->except(['show']);
     Route::resource('doencas', DoencaController::class);
@@ -43,7 +45,9 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
 
     Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
     Route::get('relatorios/pdf', fn () => redirect()->route('gestor.relatorios.index')->with('info', 'Use os filtros na página de relatórios e clique em "Gerar relatório em PDF" para gerar o documento.'));
-    Route::post('relatorios/pdf', [RelatorioController::class, 'gerarPdf'])->name('relatorios.pdf');
+    Route::post('relatorios/pdf', [RelatorioController::class, 'gerarPdf'])
+        ->middleware('throttle:6,1')
+        ->name('relatorios.pdf');
 
     Route::get('logs', [LogController::class, 'index'])->name('logs.index');
 });

@@ -1,4 +1,4 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-gray-700'])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 v-dropdown-surface'])
 
 @php
 $alignmentClasses = match ($align) {
@@ -17,8 +17,8 @@ $width = match ($width) {
     <div class="cursor-pointer dropdown-trigger" role="button" tabindex="0" aria-haspopup="true">
         {{ $trigger }}
     </div>
-    <div class="dropdown-panel absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}" style="display: none;">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}" data-dropdown-close>
+    <div class="dropdown-panel absolute z-50 mt-2 overflow-hidden rounded-xl {{ $width }} shadow-none {{ $alignmentClasses }}" style="display: none;">
+        <div class="{{ $contentClasses }}" data-dropdown-close>
             {{ $content }}
         </div>
     </div>

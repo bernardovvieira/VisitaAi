@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'use_email' => ['required', 'string', 'max:255'],
-            'password'  => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -34,7 +34,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $login    = $this->input('use_email');
+        $login = $this->input('use_email');
         $password = $this->input('password');
 
         /* -----------------------------------------------------------------
@@ -48,7 +48,7 @@ class LoginRequest extends FormRequest
         $digitsOnly = preg_replace('/\D/', '', $login);
         if ($field === 'use_cpf' && strlen($digitsOnly) === 11 && ! preg_match('/^\d{3}\.\d{3}\.\d{3}-\d{2}$/', $login)) {
             throw ValidationException::withMessages([
-                'use_email' => 'O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).',
+                'use_email' => __('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).'),
             ]);
         }
 
@@ -61,7 +61,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'use_email' => 'Usuário não encontrado.',
+                'use_email' => __('CPF/e-mail ou senha incorretos.'),
             ]);
         }
 
@@ -72,7 +72,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'use_email' => 'Conta ainda não aprovada por um gestor.',
+                'use_email' => __('CPF/e-mail ou senha incorretos.'),
             ]);
         }
 
@@ -83,7 +83,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'password' => 'Senha incorreta.',
+                'use_email' => __('CPF/e-mail ou senha incorretos.'),
             ]);
         }
 

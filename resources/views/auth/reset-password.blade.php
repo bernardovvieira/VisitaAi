@@ -1,87 +1,87 @@
-<!-- resources/views/auth/reset-password.blade.php -->
 <x-guest-layout>
-    <div class="v-card mx-auto mt-6 max-w-md">
-        <h1 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-            Redefinir Senha
-        </h1>
+    <h1 class="mb-1 text-xl font-semibold text-gray-900 dark:text-gray-100 sm:text-2xl">
+        {{ __('Redefinir Senha') }}
+    </h1>
+    <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">
+        {{ __('Defina uma nova senha forte para sua conta.') }}
+    </p>
 
-        <!-- Session Status (link enviado com sucesso) -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <form method="POST" action="{{ route('password.store') }}" id="reset-password-form">
-            @csrf
+    <form method="POST" action="{{ route('password.store') }}" id="reset-password-form"
+          data-msg-match-ok="{{ __('Senhas conferem.') }}"
+          data-msg-match-bad="{{ __('As senhas não conferem.') }}"
+          data-label-resetting="{{ __('Redefinindo…') }}">
+        @csrf
 
-            <!-- Token de Reset -->
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+        <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <!-- E-mail -->
-            <div class="mb-4">
-                <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
-                <x-text-input
-                    id="email"
-                    class="block mt-1 w-full"
-                    type="email"
-                    name="email"
-                    :value="old('email', $request->email)"
-                    required
-                    readonly
-                    autocomplete="username"
+        <div class="mb-4">
+            <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
+            <x-text-input
+                id="email"
+                class="block mt-1 w-full"
+                type="email"
+                name="email"
+                :value="old('email', $request->email)"
+                required
+                readonly
+                autocomplete="username"
+            />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
 
-                />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="mb-4">
+            <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
+            <x-text-input
+                id="password"
+                class="block mt-1 w-full"
+                type="password"
+                name="password"
+                required
+                autofocus
+                autocomplete="new-password"
+            />
+            <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600" role="presentation" aria-hidden="true">
+                <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
             </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).') }}</p>
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
 
-            <!-- Senha Nova -->
-            <div class="mb-4">
-                <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
-                <x-text-input
-                    id="password"
-                    class="block mt-1 w-full"
-                    type="password"
-                    name="password"
-                    required
-                    autofocus
-                    autocomplete="new-password"
-                />
-                <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
-                    <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).</p>
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
-            </div>
+        <div class="mb-6">
+            <x-input-label for="password_confirmation">{{ __('Confirmar Senha') }} <span class="text-red-500">*</span></x-input-label>
+            <x-text-input
+                id="password_confirmation"
+                class="block mt-1 w-full"
+                type="password"
+                name="password_confirmation"
+                required
+                autocomplete="new-password"
+            />
+            <p id="password-match-feedback" class="mt-1 hidden text-sm" aria-live="polite"></p>
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
 
-            <!-- Confirmar Senha -->
-            <div class="mb-6">
-                <x-input-label for="password_confirmation">{{ __('Confirmar Senha') }} <span class="text-red-500">*</span></x-input-label>
-                <x-text-input
-                    id="password_confirmation"
-                    class="block mt-1 w-full"
-                    type="password"
-                    name="password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-                <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
-                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-            </div>
+        <div class="flex items-center justify-end">
+            <x-primary-button id="reset-password-submit-btn">
+                {{ __('Redefinir Senha') }}
+            </x-primary-button>
+        </div>
+    </form>
 
-            <div class="flex items-center justify-end">
-                <x-primary-button id="reset-password-submit-btn">
-                    {{ __('Redefinir Senha') }}
-                </x-primary-button>
-            </div>
-        </form>
-
-        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            Já lembra da senha?
-            <a href="{{ route('login') }}" class="underline text-blue-600 hover:text-blue-800 dark:text-blue-400">
-                Entrar
-            </a>
-        </p>
-    </div>
+    <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+        {{ __('Já lembra da senha?') }}
+        <a href="{{ route('login') }}" class="font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400">
+            {{ __('Entrar') }}
+        </a>
+    </p>
 
     <script>
     (function () {
+        var form = document.getElementById('reset-password-form');
+        var msgOk = form && form.getAttribute('data-msg-match-ok');
+        var msgBad = form && form.getAttribute('data-msg-match-bad');
         var bar = document.getElementById('password-strength-bar');
         var pwd = document.getElementById('password');
         if (bar && pwd) {
@@ -111,22 +111,22 @@
                 if (c.length === 0) return;
                 matchFeedback.classList.remove('hidden');
                 if (p === c) {
-                    matchFeedback.textContent = 'Senhas conferem.';
+                    matchFeedback.textContent = msgOk || '';
                     matchFeedback.className = 'mt-1 text-sm text-blue-600 dark:text-blue-400';
                 } else {
-                    matchFeedback.textContent = 'As senhas não conferem.';
+                    matchFeedback.textContent = msgBad || '';
                     matchFeedback.className = 'mt-1 text-sm text-red-600 dark:text-red-400';
                 }
             }
             pwd && pwd.addEventListener('input', updateMatch);
             conf.addEventListener('input', updateMatch);
         }
-        var form = document.getElementById('reset-password-form');
         var btn = document.getElementById('reset-password-submit-btn');
         if (form && btn) {
             form.addEventListener('submit', function () {
                 btn.disabled = true;
-                btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Redefinindo…</span>';
+                var resetLbl = form.getAttribute('data-label-resetting') || '';
+                btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>' + resetLbl + '</span>';
             });
         }
     })();

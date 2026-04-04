@@ -10,7 +10,8 @@
     @endif
 
     <div class="flex items-center justify-between gap-4 flex-wrap">
-        <form method="POST" action="{{ route('verification.send') }}" id="verify-email-resend-form">
+        <form method="POST" action="{{ route('verification.send') }}" id="verify-email-resend-form"
+              data-label-sending="{{ __('Enviando…') }}">
             @csrf
             <x-primary-button id="verify-email-resend-btn">
                 {{ __('Reenviar e-mail de verificação') }}
@@ -28,7 +29,7 @@
     (function(){
         var form = document.getElementById('verify-email-resend-form');
         var btn = document.getElementById('verify-email-resend-btn');
-        if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = 'Enviando…'; });
+        if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.textContent = form.getAttribute('data-label-sending') || '…'; });
     })();
     </script>
 </x-guest-layout>

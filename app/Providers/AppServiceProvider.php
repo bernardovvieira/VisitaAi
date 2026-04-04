@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Controllers\Auth\ConfirmPasswordOverride;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController as FortifyController;
@@ -25,6 +26,15 @@ class AppServiceProvider extends ServiceProvider
     {
         // Evita travamento longo se MySQL estiver inacessível (ex.: atrás do Coolify)
         ini_set('default_socket_timeout', (string) 10);
+
+        $forceHttps = config('app.force_https');
+        if ($forceHttps === null) {
+            $forceHttps = $this->app->environment('production')
+                && str_starts_with((string) config('app.url'), 'https://');
+        }
+        if ($forceHttps) {
+            URL::forceScheme('https');
+        }
 
         // Regra global de senha: mínimo 8 caracteres, letras (maiúscula e minúscula), números e caractere especial
         Password::defaults(function () {

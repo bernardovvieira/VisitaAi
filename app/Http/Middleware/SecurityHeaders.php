@@ -14,9 +14,22 @@ class SecurityHeaders
 
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-        $response->headers->set('X-XSS-Protection', '1; mode=block');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+        $response->headers->set('X-DNS-Prefetch-Control', 'off');
+        $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
+        $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=(), usb=()');
+
+        if ($request->secure() && config('security-headers.hsts_enabled', false)) {
+            $maxAge = max(0, (int) config('security-headers.hsts_max_age', 31536000));
+            $parts = ['max-age='.$maxAge];
+            if (config('security-headers.hsts_include_subdomains', false)) {
+                $parts[] = 'includeSubDomains';
+            }
+            if (config('security-headers.hsts_preload', false)) {
+                $parts[] = 'preload';
+            }
+            $response->headers->set('Strict-Transport-Security', implode('; ', $parts));
+        }
 
         if (config('security-headers.csp_enabled', true)) {
             $csp = implode('; ', config('security-headers.csp_directives', []));

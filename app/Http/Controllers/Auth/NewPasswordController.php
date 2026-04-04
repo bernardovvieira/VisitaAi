@@ -27,40 +27,40 @@ class NewPasswordController extends Controller
     /**
      * Handle an incoming new password request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
         // 1) Validação dos campos
         $request->validate([
-            'token'                 => ['required'],
-            'email'                 => ['required','email'],
-            'password'              => ['required','confirmed', Rules\Password::defaults()],
+            'token' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'token.required'            => 'O token de recuperação é obrigatório',
-            'email.required'            => 'O e-mail é obrigatório',
-            'email.email'               => 'Formato de e-mail inválido',
-            'password.required'         => 'A senha é obrigatória',
-            'password.confirmed'        => 'A confirmação de senha não confere',
-            'password.min'              => 'A senha deve ter no mínimo 8 caracteres',
-            'password.letters'           => 'A senha deve conter pelo menos uma letra.',
-            'password.mixed'             => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
-            'password.numbers'          => 'A senha deve conter pelo menos um número.',
-            'password.symbols'          => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
+            'token.required' => __('O token de recuperação é obrigatório'),
+            'email.required' => __('O e-mail é obrigatório'),
+            'email.email' => __('Formato de e-mail inválido'),
+            'password.required' => __('A senha é obrigatória'),
+            'password.confirmed' => __('A confirmação de senha não confere'),
+            'password.min' => __('A senha deve ter no mínimo 8 caracteres'),
+            'password.letters' => __('A senha deve conter pelo menos uma letra.'),
+            'password.mixed' => __('A senha deve conter pelo menos uma letra maiúscula e uma minúscula.'),
+            'password.numbers' => __('A senha deve conter pelo menos um número.'),
+            'password.symbols' => __('A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).'),
         ]);
 
         // 2) Tenta redefinir usando a coluna use_email
         $status = Password::reset(
             [
-                'use_email'             => $request->input('email'),
-                'password'              => $request->input('password'),
+                'use_email' => $request->input('email'),
+                'password' => $request->input('password'),
                 'password_confirmation' => $request->input('password_confirmation'),
-                'token'                 => $request->input('token'),
+                'token' => $request->input('token'),
             ],
             function (User $user) use ($request) {
                 // atualiza a senha no campo use_senha
                 $user->forceFill([
-                    'use_senha'      => Hash::make($request->input('password')),
+                    'use_senha' => Hash::make($request->input('password')),
                     'remember_token' => Str::random(60),
                 ])->save();
 
@@ -72,11 +72,11 @@ class NewPasswordController extends Controller
         if ($status === Password::PASSWORD_RESET) {
             return redirect()
                 ->route('login')
-                ->with('status', 'Senha redefinida com sucesso! Faça login com sua nova senha.');
+                ->with('status', __('Senha redefinida com sucesso! Faça login com sua nova senha.'));
         }
 
         throw ValidationException::withMessages([
-            'email' => ['Não foi possível redefinir a senha. Por favor, tente novamente.'],
+            'email' => [__('Não foi possível redefinir a senha. Por favor, tente novamente.')],
         ]);
     }
 }

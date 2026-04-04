@@ -15,7 +15,8 @@ Route::middleware('guest')->group(function () {
     // registro
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [RegisteredUserController::class, 'store'])
+        ->middleware('throttle:5,1');
 
     // form de login
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
@@ -24,7 +25,7 @@ Route::middleware('guest')->group(function () {
     // envio do login COM bloqueio de 3 tentativas em 1 minuto
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
         ->middleware('throttle:3,1')
-        ->name('login');
+        ->name('login.store');
 
     // esqueceu senha (throttle: 5 tentativas por minuto)
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
@@ -37,6 +38,7 @@ Route::middleware('guest')->group(function () {
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
     Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->middleware('throttle:5,1')
         ->name('password.store');
 });
 
@@ -53,16 +55,19 @@ Route::middleware('auth')->group(function () {
 
     // confirmar senha: /confirm-password (local/testes) e /user/confirm-password (Fortify/2FA no demo)
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show']);
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])
+        ->middleware('throttle:10,1');
     Route::prefix('user')->group(function () {
         Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
             ->name('password.confirm');
         Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])
+            ->middleware('throttle:10,1')
             ->name('password.confirm.store');
     });
 
     // trocar senha enquanto autenticado
     Route::put('password', [PasswordController::class, 'update'])
+        ->middleware('throttle:10,1')
         ->name('password.update');
 
     // logout

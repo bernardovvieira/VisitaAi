@@ -18,7 +18,7 @@
             'lg:w-[4.25rem]': sidebarDesktop === 'collapsed',
             'sidebar-desktop-collapsed': sidebarDesktop === 'collapsed',
         }">
-    <div class="relative flex h-[3.75rem] shrink-0 items-center justify-center border-b border-slate-800/80 px-3 lg:px-2">
+    <div class="relative flex h-[3.75rem] shrink-0 items-center justify-center border-b border-white/[0.06] bg-slate-950/30 px-3 backdrop-blur-md lg:px-2">
         <a :href="online ? @js($logoHrefOnline) : @js($logoHrefOffline)"
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
            class="sidebar-header-brand flex max-w-full flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-2">
@@ -171,7 +171,7 @@
         @endif
     </nav>
 
-    <div class="sidebar-footer-meta shrink-0 border-t border-slate-800/80 px-3 py-3 text-center">
+    <div class="sidebar-footer-meta shrink-0 border-t border-white/[0.06] px-3 py-3 text-center">
         <p class="text-[10px] leading-relaxed text-slate-500">
             © {{ $copyrightYears }} Visita Aí · Bitwise Technologies
         </p>

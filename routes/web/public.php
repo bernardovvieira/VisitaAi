@@ -14,7 +14,9 @@ Route::get('/ping', function () {
 
 Route::get('/', [PublicController::class, 'welcome']);
 
-Route::get('/consulta-publica', [ConsultaPublicaController::class, 'index'])->name('consulta.index');
+Route::get('/consulta-publica', [ConsultaPublicaController::class, 'index'])
+    ->middleware('throttle:30,1')
+    ->name('consulta.index');
 Route::get('/consulta-publica/codigo', [ConsultaPublicaController::class, 'consultaPorCodigo'])
     ->middleware('throttle:10,1')
     ->name('consulta.codigo');

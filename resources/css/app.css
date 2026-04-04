@@ -20,6 +20,8 @@
         --v-sidebar: 2 6 23; /* slate-950 */
         --v-radius-lg: 0.75rem;
         --v-radius-md: 0.5rem;
+        --v-radius-2xl: 1rem;
+        --v-header-height: 52px;
     }
 
     .dark {
@@ -127,45 +129,80 @@
 @layer components {
     .v-app-main {
         @apply min-h-0 flex-1 overflow-y-auto;
-        background-color: rgb(var(--v-canvas) / 1);
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--v-border-strong) / 0.9) transparent;
+        /* Gradiente suave (estilo Aviagest) com leve tom azul — mantém identidade Visita Aí */
+        background: linear-gradient(
+            145deg,
+            rgb(var(--v-canvas) / 1) 0%,
+            rgb(248 250 252) 42%,
+            rgb(239 246 255 / 0.45) 100%
+        );
+        background-attachment: fixed;
+    }
+
+    .v-app-main::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+
+    .v-app-main::-webkit-scrollbar-thumb {
+        background: rgb(var(--v-border-strong) / 0.85);
+        border-radius: 9999px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+    }
+
+    .v-app-main::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(59 130 246 / 0.45);
+    }
+
+    .dark .v-app-main {
+        background: linear-gradient(145deg, rgb(3 7 18) 0%, rgb(15 23 42 / 0.96) 52%, rgb(15 23 42 / 0.88) 100%);
+        background-attachment: fixed;
     }
 
     .v-app-main-inner {
-        @apply mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-5 lg:px-6;
+        @apply mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-6;
     }
 
     .v-topbar {
-        @apply sticky top-0 z-20 flex h-12 shrink-0 items-center justify-end gap-1 border-b px-2 backdrop-blur-md sm:justify-between sm:px-3;
-        border-color: rgb(var(--v-border) / 0.92);
-        background-color: rgb(var(--v-surface) / 0.92);
-        box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.35);
+        @apply sticky top-0 z-20 flex h-[52px] shrink-0 items-center justify-end gap-1 border-b px-2 backdrop-blur-xl sm:justify-between sm:px-4;
+        border-color: rgb(var(--v-border) / 0.85);
+        background-color: rgb(var(--v-surface) / 0.86);
+        box-shadow:
+            0 1px 0 0 rgb(var(--v-border) / 0.35),
+            inset 0 1px 0 0 rgb(255 255 255 / 0.45);
     }
 
     .dark .v-topbar {
-        background-color: rgb(var(--v-surface) / 0.88);
-        box-shadow: 0 1px 0 0 rgb(0 0 0 / 0.25);
+        background-color: rgb(var(--v-surface) / 0.82);
+        box-shadow:
+            0 1px 0 0 rgb(0 0 0 / 0.28),
+            inset 0 1px 0 0 rgb(255 255 255 / 0.04);
     }
 
     .v-page {
-        @apply mx-auto max-w-7xl space-y-4;
+        @apply mx-auto max-w-7xl space-y-5;
     }
 
     .v-page-header {
-        @apply border-b pb-4;
-        border-color: rgb(var(--v-border) / 0.85);
+        @apply mb-5 pb-0;
     }
 
     .v-page-eyebrow {
-        @apply mb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-blue-600 dark:text-blue-400;
+        @apply mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-600 dark:text-blue-400;
     }
 
     .v-page-title {
-        @apply text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-xl;
+        @apply text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl;
         letter-spacing: -0.02em;
+        line-height: 1.15;
     }
 
     .v-page-lead {
-        @apply mt-1.5 max-w-3xl text-xs leading-relaxed sm:text-[13px];
+        @apply mt-2 max-w-3xl text-sm leading-relaxed;
         color: rgb(var(--v-text-muted) / 1);
     }
 
@@ -173,21 +210,30 @@
         @apply text-[13px] font-semibold text-slate-900 dark:text-slate-100;
     }
 
-    /* Superfície de trabalho (cartão ERP) */
+    /* Superfície de trabalho — cartão com vidro e profundidade (alinhado ao painel “fino”) */
     .v-card {
-        @apply overflow-hidden p-3 shadow-sm sm:p-4;
-        border-radius: var(--v-radius-lg);
-        border: 1px solid rgb(var(--v-border) / 0.95);
-        background-color: rgb(var(--v-surface) / 1);
-        box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+        @apply overflow-hidden p-4 shadow-sm sm:p-5;
+        border-radius: var(--v-radius-2xl);
+        border: 1px solid rgb(var(--v-border) / 0.92);
+        background-color: rgb(var(--v-surface) / 0.94);
+        box-shadow:
+            0 2px 8px rgb(15 23 42 / 0.06),
+            0 1px 2px rgb(15 23 42 / 0.03),
+            inset 0 1px 0 rgb(255 255 255 / 0.55);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
     }
 
     .dark .v-card {
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.35);
+        background-color: rgb(var(--v-surface) / 0.9);
+        box-shadow:
+            0 2px 10px rgb(0 0 0 / 0.38),
+            0 1px 2px rgb(0 0 0 / 0.22),
+            inset 0 1px 0 rgb(255 255 255 / 0.05);
     }
 
     .v-card--muted {
-        background-color: rgb(var(--v-surface-muted) / 0.85);
+        background-color: rgb(var(--v-surface-muted) / 0.78);
     }
 
     .dark .v-card--muted {
@@ -209,19 +255,33 @@
 
     /* Legado: painel único com secções (preferir vários .v-card) */
     .v-panel {
-        @apply overflow-hidden border bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/50;
-        border-radius: var(--v-radius-lg);
-        border-color: rgb(var(--v-border) / 0.95);
-        box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+        @apply overflow-hidden border bg-white/95 dark:border-slate-700 dark:bg-slate-900/80;
+        border-radius: var(--v-radius-2xl);
+        border-color: rgb(var(--v-border) / 0.92);
+        box-shadow:
+            0 2px 8px rgb(15 23 42 / 0.06),
+            0 1px 2px rgb(15 23 42 / 0.03),
+            inset 0 1px 0 rgb(255 255 255 / 0.55);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
     }
 
     .dark .v-panel {
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.35);
+        box-shadow:
+            0 2px 10px rgb(0 0 0 / 0.38),
+            0 1px 2px rgb(0 0 0 / 0.22),
+            inset 0 1px 0 rgb(255 255 255 / 0.05);
     }
 
-    /* Navegação lateral — trilho fixo tipo ERP */
+    /* Navegação lateral — trilho com profundidade e leve vidro (marca escura + acento azul ativo) */
     .v-sidebar-rail {
-        @apply border-r border-slate-800/90 bg-slate-950 text-slate-200 shadow-2xl dark:shadow-none;
+        @apply border-r border-white/[0.06] text-slate-200 shadow-2xl dark:shadow-none;
+        background: linear-gradient(180deg, rgb(2 6 23) 0%, rgb(15 23 42 / 0.97) 55%, rgb(2 6 23) 100%);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        box-shadow:
+            inset -1px 0 0 rgb(255 255 255 / 0.04),
+            4px 0 24px rgb(0 0 0 / 0.2);
     }
 
     .v-panel-section {
@@ -253,7 +313,8 @@
     }
 
     .v-data-table thead {
-        @apply bg-slate-100/90 dark:bg-slate-800;
+        @apply bg-slate-100/95 dark:bg-slate-800/95;
+        box-shadow: inset 0 -1px 0 0 rgb(var(--v-border) / 0.5);
     }
 
     .v-data-table th {
@@ -375,5 +436,355 @@
     .v-hint-card {
         @apply border-l-4 border-l-blue-500/35 pl-4 dark:border-l-blue-400/25;
     }
+
+    /*
+     * Dashboard “fino” — hierarquia Aviagest (stack vertical, cartões com profundidade,
+     * KPIs só tipografia, atalhos em cartão horizontal). Cores de acento seguem o azul do produto.
+     */
+    .v-dash {
+        @apply flex min-w-0 max-w-full flex-col gap-5;
+    }
+
+    .v-dash-header {
+        @apply flex flex-wrap items-start justify-between gap-4;
+    }
+
+    .v-dash-header-text {
+        @apply min-w-0 flex-1;
+    }
+
+    .v-dash-eyebrow {
+        @apply mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400;
+    }
+
+    .v-dash-title {
+        @apply m-0 text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl;
+        letter-spacing: -0.02em;
+    }
+
+    .v-dash-sub {
+        @apply mt-1 max-w-3xl text-sm leading-snug;
+        color: rgb(var(--v-text-muted) / 1);
+    }
+
+    .v-dash-card {
+        @apply flex flex-col rounded-2xl border border-slate-200/95 bg-white/90 p-5 shadow-sm dark:border-slate-600 dark:bg-slate-900/75;
+        box-shadow:
+            0 2px 8px rgb(15 23 42 / 0.07),
+            0 1px 2px rgb(15 23 42 / 0.04),
+            inset 0 1px 0 rgb(255 255 255 / 0.55);
+        backdrop-filter: blur(14px) saturate(155%);
+        -webkit-backdrop-filter: blur(14px) saturate(155%);
+    }
+
+    .dark .v-dash-card {
+        box-shadow:
+            0 2px 8px rgb(0 0 0 / 0.4),
+            0 1px 2px rgb(0 0 0 / 0.28),
+            inset 0 1px 0 rgb(255 255 255 / 0.06);
+    }
+
+    .v-dash-card__head {
+        @apply mb-4 flex flex-wrap items-start justify-between gap-3;
+    }
+
+    .v-dash-card__title {
+        @apply m-0 text-base font-bold text-slate-900 dark:text-slate-100;
+    }
+
+    .v-dash-card__sub {
+        @apply m-0 text-xs leading-snug;
+        color: rgb(var(--v-text-muted) / 1);
+    }
+
+    .v-kpi-grid-agi {
+        @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3;
+    }
+
+    .v-kpi-grid-agi--dense {
+        @apply sm:grid-cols-2 lg:grid-cols-4;
+    }
+
+    .v-kpi-card-agi {
+        @apply flex flex-col gap-1 rounded-2xl border border-slate-200/95 bg-white/90 p-5 dark:border-slate-600 dark:bg-slate-900/75;
+        box-shadow:
+            0 2px 8px rgb(15 23 42 / 0.06),
+            0 1px 2px rgb(15 23 42 / 0.03),
+            inset 0 1px 0 rgb(255 255 255 / 0.5);
+        backdrop-filter: blur(12px) saturate(150%);
+        -webkit-backdrop-filter: blur(12px) saturate(150%);
+    }
+
+    .dark .v-kpi-card-agi {
+        box-shadow:
+            0 2px 8px rgb(0 0 0 / 0.38),
+            0 1px 2px rgb(0 0 0 / 0.22),
+            inset 0 1px 0 rgb(255 255 255 / 0.05);
+    }
+
+    .v-kpi-card-agi__label {
+        @apply text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400;
+        letter-spacing: 0.05em;
+    }
+
+    .v-kpi-card-agi__value {
+        @apply text-2xl font-extrabold tabular-nums text-slate-900 dark:text-slate-50;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+    }
+
+    .v-kpi-card-agi__hint {
+        @apply text-xs leading-snug;
+        color: rgb(var(--v-text-muted) / 1);
+    }
+
+    .v-kpi-card-agi--warn {
+        @apply border-amber-200/90 bg-amber-50/60 dark:border-amber-800/70 dark:bg-amber-950/30;
+    }
+
+    .v-kpi-card-agi--danger {
+        @apply border-rose-200/90 bg-rose-50/60 dark:border-rose-900/60 dark:bg-rose-950/30;
+    }
+
+    .v-dash-row {
+        @apply grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)];
+    }
+
+    .v-dash-shortcuts {
+        @apply grid grid-cols-1 gap-3 sm:grid-cols-2;
+    }
+
+    .v-dash-shortcuts--tight {
+        @apply lg:grid-cols-3;
+    }
+
+    .v-dash-shortcut {
+        @apply flex items-center gap-3 rounded-2xl border border-slate-200/95 bg-white/90 px-5 py-4 text-inherit no-underline transition dark:border-slate-600 dark:bg-slate-900/75;
+        box-shadow:
+            0 2px 8px rgb(15 23 42 / 0.06),
+            0 1px 2px rgb(15 23 42 / 0.03),
+            inset 0 1px 0 rgb(255 255 255 / 0.5);
+    }
+
+    .v-dash-shortcut:hover {
+        @apply border-blue-300/80 shadow-md dark:border-blue-500/35;
+    }
+
+    .v-dash-shortcut--primary {
+        @apply border-blue-600 bg-blue-600 text-white shadow-md dark:border-blue-500 dark:bg-blue-600;
+        box-shadow: 0 2px 10px rgb(37 99 235 / 0.35);
+    }
+
+    .v-dash-shortcut--primary:hover {
+        @apply border-blue-700 bg-blue-700 dark:border-blue-400 dark:bg-blue-500;
+    }
+
+    .v-dash-shortcut--primary .v-dash-shortcut__hint,
+    .v-dash-shortcut--primary .v-dash-shortcut__chevron {
+        @apply text-blue-100;
+    }
+
+    .v-dash-shortcut__icon {
+        @apply shrink-0 text-blue-600 dark:text-blue-400;
+    }
+
+    .v-dash-shortcut--primary .v-dash-shortcut__icon {
+        @apply text-white;
+    }
+
+    .v-dash-shortcut__body {
+        @apply flex min-w-0 flex-1 flex-col gap-0.5;
+    }
+
+    .v-dash-shortcut__label {
+        @apply text-sm font-bold text-slate-900 dark:text-slate-50;
+    }
+
+    .v-dash-shortcut--primary .v-dash-shortcut__label {
+        @apply text-white;
+    }
+
+    .v-dash-shortcut__hint {
+        @apply text-xs text-slate-500 dark:text-slate-400;
+    }
+
+    .v-dash-shortcut__chevron {
+        @apply shrink-0 text-slate-400 dark:text-slate-500;
+    }
+
+    .v-dash-alert-stack {
+        @apply flex flex-col gap-2;
+    }
+
+    .v-dash-alert {
+        @apply flex flex-wrap items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium;
+    }
+
+    .v-dash-alert--warn {
+        @apply border-amber-300/90 bg-amber-50/95 text-amber-950 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100;
+    }
+
+    .v-dash-alert--danger {
+        @apply border-rose-300/90 bg-rose-50/95 text-rose-950 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-100;
+    }
+
+    a.v-dash-alert {
+        @apply no-underline transition hover:brightness-[0.98] dark:hover:brightness-110;
+    }
+
+    /* Trilho de navegação estrutural (todas as páginas internas) */
+    .v-breadcrumbs {
+        @apply mb-4 rounded-xl border border-slate-200/70 bg-white/55 px-3 py-2 dark:border-slate-700/70 dark:bg-slate-900/45;
+        backdrop-filter: blur(10px) saturate(140%);
+        -webkit-backdrop-filter: blur(10px) saturate(140%);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+    }
+
+    .dark .v-breadcrumbs {
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    }
+
+    /* ─── Componentes Blade: botões ───────────────────────────────────────── */
+    .v-btn-primary {
+        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-blue-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 2px 10px rgb(37 99 235 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.15);
+    }
+
+    .v-btn-primary:hover:not(:disabled) {
+        box-shadow: 0 4px 16px rgb(37 99 235 / 0.38), inset 0 1px 0 rgb(255 255 255 / 0.18);
+    }
+
+    .v-btn-secondary {
+        @apply inline-flex items-center justify-center rounded-xl border border-slate-200/95 bg-white/90 px-3.5 py-2 text-[13px] font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
+        box-shadow:
+            0 1px 3px rgb(15 23 42 / 0.06),
+            inset 0 1px 0 rgb(255 255 255 / 0.55);
+        backdrop-filter: blur(10px) saturate(140%);
+        -webkit-backdrop-filter: blur(10px) saturate(140%);
+    }
+
+    .v-btn-danger {
+        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-red-500 active:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 2px 8px rgb(220 38 38 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.12);
+    }
+
+    /* Modal (Livewire / Alpine) */
+    .v-modal-backdrop {
+        @apply absolute inset-0 bg-slate-950/55 dark:bg-slate-950/70;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+    }
+
+    .v-modal-panel {
+        @apply mb-6 w-full overflow-hidden border border-slate-200/90 bg-white/95 dark:border-slate-600 dark:bg-slate-900/95;
+        border-radius: var(--v-radius-2xl);
+        box-shadow:
+            0 24px 64px -12px rgb(15 23 42 / 0.2),
+            0 1px 0 rgb(255 255 255 / 0.6) inset;
+        backdrop-filter: blur(18px) saturate(155%);
+        -webkit-backdrop-filter: blur(18px) saturate(155%);
+    }
+
+    .dark .v-modal-panel {
+        box-shadow:
+            0 24px 64px -12px rgb(0 0 0 / 0.55),
+            inset 0 1px 0 rgb(255 255 255 / 0.06);
+    }
+
+    /* Dropdown (painel do menu conta, etc.) */
+    .v-dropdown-surface {
+        @apply rounded-xl py-1;
+        border: 1px solid rgb(var(--v-border) / 0.92);
+        background-color: rgb(var(--v-surface) / 0.96);
+        box-shadow:
+            0 10px 28px rgb(15 23 42 / 0.12),
+            0 1px 0 rgb(255 255 255 / 0.55) inset;
+        backdrop-filter: blur(16px) saturate(155%);
+        -webkit-backdrop-filter: blur(16px) saturate(155%);
+    }
+
+    .dark .v-dropdown-surface {
+        box-shadow:
+            0 12px 32px rgb(0 0 0 / 0.45),
+            inset 0 1px 0 rgb(255 255 255 / 0.05);
+    }
+
+    .v-dropdown-link {
+        @apply block w-full px-4 py-2.5 text-start text-sm font-medium text-slate-700 transition dark:text-slate-200;
+    }
+
+    .v-dropdown-link:hover,
+    .v-dropdown-link:focus {
+        @apply bg-blue-50/95 dark:bg-slate-800/95;
+    }
+
+    /* Paginação (relatórios) */
+    .v-pagination-bar {
+        @apply mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200/90 pt-4 dark:border-slate-600/90;
+    }
+
+    .v-pagination-meta {
+        @apply text-sm text-slate-600 dark:text-slate-400;
+    }
+
+    .v-pagination-meta strong {
+        @apply font-semibold text-slate-800 dark:text-slate-200;
+    }
+
+    .v-pagination-btn {
+        @apply rounded-xl border border-slate-200/95 bg-white/90 px-3 py-2 text-sm font-medium text-slate-800 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), inset 0 1px 0 rgb(255 255 255 / 0.45);
+    }
+
+    .v-pagination-btn--disabled {
+        @apply cursor-not-allowed border-slate-100 bg-slate-50/90 text-slate-400 shadow-none dark:border-slate-700 dark:bg-slate-800/40 dark:text-slate-500;
+    }
+
+    .v-pagination-btn--current {
+        @apply border-blue-600 bg-blue-600 text-white shadow-md hover:border-blue-600 hover:bg-blue-600 dark:border-blue-500 dark:bg-blue-600 dark:hover:bg-blue-600;
+        box-shadow: 0 2px 8px rgb(37 99 235 / 0.35);
+    }
+
+    /* Alertas inline (x-alert) */
+    .v-alert {
+        @apply mb-4 rounded-xl border px-3.5 py-2.5 text-sm font-medium leading-snug shadow-sm backdrop-blur-sm;
+    }
+
+    .v-alert--success {
+        @apply border-emerald-300/90 bg-emerald-50/90 text-emerald-950 dark:border-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-50;
+    }
+
+    .v-alert--warning {
+        @apply border-amber-300/90 bg-amber-50/90 text-amber-950 dark:border-amber-700 dark:bg-amber-950/45 dark:text-amber-50;
+    }
+
+    .v-alert--error {
+        @apply border-red-300/90 bg-red-50/90 text-red-950 dark:border-red-800 dark:bg-red-950/40 dark:text-red-50;
+    }
+
+    /* Cookie banner / blocos informativos públicos */
+    .v-cookie-panel {
+        @apply flex flex-col gap-4 rounded-t-2xl border border-slate-200/90 border-b-0 bg-white/90 p-4 shadow-[0_-8px_32px_rgb(15_23_42/0.12)] backdrop-blur-xl dark:border-slate-600 dark:bg-slate-900/90 sm:flex-row sm:items-center sm:justify-between;
+        box-shadow:
+            0 -8px 32px rgb(15 23 42 / 0.08),
+            inset 0 1px 0 rgb(255 255 255 / 0.5);
+    }
+
+    .dark .v-cookie-panel {
+        box-shadow:
+            0 -8px 32px rgb(0 0 0 / 0.35),
+            inset 0 1px 0 rgb(255 255 255 / 0.05);
+    }
+}
+
+/* Consulta pública — mapa Leaflet (bundle Vite) */
+.consulta-leaflet-pin {
+    background: none !important;
+    border: none !important;
+}
+
+.leaflet-container {
+    font-family: inherit;
+    @apply rounded-lg border border-slate-200/90 bg-slate-100 dark:border-slate-600 dark:bg-slate-800/50;
 }
 

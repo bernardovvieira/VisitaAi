@@ -5,6 +5,7 @@
 
 @section('content')
 @php
+    $primeiroNome = strtok((string) Auth::user()->use_nome, ' ') ?: Auth::user()->use_nome;
     $uid = Auth::user()->use_id;
     $minhasVisitas = \App\Models\Visita::where('fk_usuario_id', $uid)->count();
     $visitasMunicipio = \App\Models\Visita::count();
@@ -12,87 +13,80 @@
     $doencasCount = \App\Models\Doenca::count();
 @endphp
 
-<div class="v-page">
+<div class="v-dash">
     <x-breadcrumbs :items="[['label' => __('Página Inicial')]]" />
 
-    <x-page-header :eyebrow="__('Operações de campo')" :title="__('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')])">
-        <x-slot name="lead">
-            <p>{{ __('Olá, :nome. Registre visitas e mantenha locais atualizados em campo.', ['nome' => Auth::user()->use_nome]) }}</p>
-        </x-slot>
-    </x-page-header>
+    <header class="v-dash-header">
+        <div class="v-dash-header-text">
+            <p class="v-dash-eyebrow">{{ __('Operações de campo') }}</p>
+            <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
+            <p class="v-dash-sub">{{ __('Registre visitas e mantenha locais atualizados — use os atalhos para o fluxo mais comum.') }}</p>
+        </div>
+    </header>
 
-        <div class="v-card">
-            <h2 class="v-toolbar-label mb-2">{{ __('Resumo') }}</h2>
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Minhas visitas') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $minhasVisitas }}</p>
-                    </div>
-                </div>
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-check-circle class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas no município') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasMunicipio }}</p>
-                    </div>
-                </div>
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-map-pin class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Locais') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $locaisCount }}</p>
-                    </div>
-                </div>
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-beaker class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Doenças') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $doencasCount }}</p>
-                    </div>
-                </div>
+    <section class="v-dash-card" aria-labelledby="agente-resumo-heading">
+        <h2 id="agente-resumo-heading" class="v-dash-card__title">{{ __('Resumo') }}</h2>
+        <p class="v-dash-card__sub">{{ __('Suas visitas e o panorama municipal.') }}</p>
+        <div class="v-kpi-grid-agi v-kpi-grid-agi--dense mt-4">
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Minhas visitas') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $minhasVisitas }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Visitas no município') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $visitasMunicipio }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Locais') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $locaisCount }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Doenças') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $doencasCount }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Referência municipal') }}</span>
             </div>
         </div>
+    </section>
 
-        <div class="v-card v-card--muted">
-            <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400 sm:text-[13px]">
-                {{ __('As visitas podem ser preenchidas offline e enviadas depois pela sincronização. Use os atalhos abaixo para o fluxo mais comum.') }}
-            </p>
-        </div>
+    <div class="v-dash-card">
+        <p class="m-0 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            {{ __('As visitas podem ser preenchidas offline e enviadas depois pela sincronização.') }}
+        </p>
+    </div>
 
-        <div class="v-card">
-            <h2 class="v-toolbar-label mb-2">{{ __('Ações rápidas') }}</h2>
-            <div class="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3">
-                <a href="{{ route('agente.visitas.create') }}" class="v-dashboard-action v-dashboard-action--primary">
-                    <x-heroicon-o-plus-circle class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Registrar visita') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('agente.visitas.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Minhas visitas') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('agente.locais.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Locais') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('agente.doencas.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-beaker class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Doenças monitoradas') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-            </div>
+    <section class="v-dash-card" aria-labelledby="agente-atalhos-heading">
+        <h2 id="agente-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
+        <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
+            <a href="{{ route('agente.visitas.create') }}" class="v-dash-shortcut v-dash-shortcut--primary">
+                <x-heroicon-o-plus-circle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <span class="v-dash-shortcut__body">
+                    <span class="v-dash-shortcut__label">{{ __('Registrar visita') }}</span>
+                    <span class="v-dash-shortcut__hint">{{ __('Novo registro em campo') }}</span>
+                </span>
+                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href="{{ route('agente.visitas.index') }}" class="v-dash-shortcut">
+                <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <span class="v-dash-shortcut__body">
+                    <span class="v-dash-shortcut__label">{{ __('Minhas visitas') }}</span>
+                </span>
+                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href="{{ route('agente.locais.index') }}" class="v-dash-shortcut">
+                <x-heroicon-o-map-pin class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <span class="v-dash-shortcut__body">
+                    <span class="v-dash-shortcut__label">{{ __('Locais') }}</span>
+                </span>
+                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href="{{ route('agente.doencas.index') }}" class="v-dash-shortcut">
+                <x-heroicon-o-beaker class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <span class="v-dash-shortcut__body">
+                    <span class="v-dash-shortcut__label">{{ __('Doenças monitoradas') }}</span>
+                </span>
+                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+            </a>
         </div>
+    </section>
 </div>
 @endsection

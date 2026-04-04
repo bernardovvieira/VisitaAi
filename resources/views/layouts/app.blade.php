@@ -133,7 +133,7 @@
     </head>
     <body class="font-sans antialiased text-[15px] leading-relaxed {{ View::hasSection('public') ? 'bg-white' : 'bg-slate-50' }} dark:bg-gray-950">
         @if (View::hasSection('public'))
-            <div class="min-h-screen bg-white dark:bg-gray-900">
+            <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-gray-900 dark:via-gray-900 dark:to-slate-950">
                 @isset($header)
                     <header class="bg-white shadow dark:bg-gray-800">
                         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -150,7 +150,7 @@
         @else
             @auth
                 <div id="authenticated-shell"
-                     class="flex min-h-screen bg-slate-100 dark:bg-[rgb(3,7,18)]"
+                     class="flex min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/35 dark:from-[rgb(3,7,18)] dark:via-slate-950 dark:to-slate-900"
                      x-data="{
                         sidebarOpen: false,
                         sidebarDesktop: (function () {
@@ -211,8 +211,8 @@
                     <div class="flex min-h-screen min-w-0 flex-1 flex-col">
                         @include('layouts.partials.topbar')
                         @isset($header)
-                            <header class="border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                            <header class="border-b border-slate-200/90 bg-white/90 shadow-sm backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/85">
+                                <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
                                     {{ $header }}
                                 </div>
                             </header>
@@ -376,5 +376,6 @@
             });
         });
         </script>
+        @stack('scripts')
     </body>
 </html>

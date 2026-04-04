@@ -5,6 +5,7 @@
 
 @section('content')
 @php
+    $primeiroNome = strtok((string) Auth::user()->use_nome, ' ') ?: Auth::user()->use_nome;
     $pendentesCount = \App\Models\User::where(function ($q) { $q->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', false)->count();
     $visitasComPendencia = \App\Models\Visita::where('vis_pendencias', true)->count();
     $ocupantesResumo = app(\App\Services\Municipio\ResumoOcupantesMunicipioService::class);
@@ -25,120 +26,82 @@
     $visitasCount = \App\Models\Visita::count();
 @endphp
 
-<div class="v-page">
+<div class="v-dash">
     <x-breadcrumbs :items="[['label' => __('Página Inicial')]]" />
 
-    <x-page-header :eyebrow="__('Console municipal')" :title="__('Painel do gestor')">
-        <x-slot name="lead">
-            <p>{{ __('Olá, :nome. Visão geral do município e atalhos para o dia a dia.', ['nome' => Auth::user()->use_nome]) }}</p>
-        </x-slot>
-    </x-page-header>
+    <header class="v-dash-header">
+        <div class="v-dash-header-text">
+            <p class="v-dash-eyebrow">{{ __('Console municipal') }}</p>
+            <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
+            <p class="v-dash-sub">{{ __('Visão geral do município, indicadores e atalhos para o dia a dia.') }}</p>
+        </div>
+    </header>
 
     @if($pendentesCount > 0 || $visitasComPendencia > 0)
-        <div class="v-card bg-slate-50/90 dark:border-slate-700 dark:bg-slate-900/50">
-            <p class="v-toolbar-label mb-2">{{ __('Requer atenção') }}</p>
-            <ul class="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
-                @if($pendentesCount > 0)
-                    <li>
-                        <a href="{{ route('gestor.pendentes') }}" class="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60">
-                            <x-heroicon-o-exclamation-triangle class="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden="true" />
-                            {{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}
-                            <x-heroicon-o-arrow-right class="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
-                        </a>
-                    </li>
-                @endif
-                @if($visitasComPendencia > 0)
-                    <li>
-                        <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="inline-flex items-center gap-1.5 rounded-md border border-rose-300 bg-rose-50 px-2.5 py-1.5 text-xs font-semibold text-rose-950 transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-100 dark:hover:bg-rose-950/55">
-                            <x-heroicon-o-clock class="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden="true" />
-                            {{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}
-                            <x-heroicon-o-arrow-right class="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
-                        </a>
-                    </li>
-                @endif
-            </ul>
+        <div class="v-dash-alert-stack" role="region" aria-label="{{ __('Requer atenção') }}">
+            @if($pendentesCount > 0)
+                <a href="{{ route('gestor.pendentes') }}" class="v-dash-alert v-dash-alert--warn">
+                    <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0 opacity-90" aria-hidden="true" />
+                    <span>{{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}</span>
+                    <x-heroicon-o-arrow-right class="ml-auto h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                </a>
+            @endif
+            @if($visitasComPendencia > 0)
+                <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="v-dash-alert v-dash-alert--danger">
+                    <x-heroicon-o-clock class="h-5 w-5 shrink-0 opacity-90" aria-hidden="true" />
+                    <span>{{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}</span>
+                    <x-heroicon-o-arrow-right class="ml-auto h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
+                </a>
+            @endif
         </div>
     @endif
 
-        <div class="v-card">
-            <h2 class="v-toolbar-label mb-2">{{ __('Indicadores') }}</h2>
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 xl:grid-cols-3">
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-user-group class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Profissionais de campo') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $profissionaisAprovados }}</p>
-                        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ __('Aprovados no sistema') }}</p>
-                    </div>
-                </div>
-
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--amber" aria-hidden="true">
-                        <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Cadastros pendentes') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $pendentesCount }}</p>
-                        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ __('ACE/ACS sem aprovação') }}</p>
-                    </div>
-                </div>
-
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-user-circle class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Gestores') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $gestoresCount }}</p>
-                    </div>
-                </div>
-
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-beaker class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Doenças monitoradas') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $doencasCount }}</p>
-                    </div>
-                </div>
-
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--blue" aria-hidden="true">
-                        <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas registradas') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasCount }}</p>
-                    </div>
-                </div>
-
-                <div class="v-dashboard-kpi">
-                    <div class="v-dashboard-kpi__icon v-dashboard-kpi__icon--rose" aria-hidden="true">
-                        <x-heroicon-o-clock class="h-5 w-5 shrink-0" />
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Visitas com pendência') }}</p>
-                        <p class="mt-0.5 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComPendencia }}</p>
-                    </div>
-                </div>
+    <section class="v-dash-card" aria-labelledby="gestor-kpis-heading">
+        <h2 id="gestor-kpis-heading" class="v-dash-card__title">{{ __('Indicadores') }}</h2>
+        <p class="v-dash-card__sub">{{ __('Números consolidados do município.') }}</p>
+        <div class="v-kpi-grid-agi mt-4">
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Profissionais de campo') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $profissionaisAprovados }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Aprovados no sistema') }}</span>
+            </div>
+            <div class="v-kpi-card-agi {{ $pendentesCount > 0 ? 'v-kpi-card-agi--warn' : '' }}">
+                <span class="v-kpi-card-agi__label">{{ __('Cadastros pendentes') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $pendentesCount }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('ACE/ACS sem aprovação') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Gestores') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $gestoresCount }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Doenças monitoradas') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $doencasCount }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Visitas registradas') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $visitasCount }}</span>
+            </div>
+            <div class="v-kpi-card-agi {{ $visitasComPendencia > 0 ? 'v-kpi-card-agi--danger' : '' }}">
+                <span class="v-kpi-card-agi__label">{{ __('Visitas com pendência') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $visitasComPendencia }}</span>
             </div>
         </div>
+    </section>
 
-        <div class="v-card v-card--muted">
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+    <div class="v-dash-row">
+        <section class="v-dash-card min-w-0" aria-labelledby="gestor-ocupantes-heading">
+            <div class="v-dash-card__head">
                 <div>
-                    <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</h2>
+                    <h2 id="gestor-ocupantes-heading" class="v-dash-card__title">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</h2>
                     @if(filled(config('visitaai_municipio.ocupantes.painel_gestor_subtitulo')))
-                        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
+                        <p class="v-dash-card__sub mt-1">{{ config('visitaai_municipio.ocupantes.painel_gestor_subtitulo') }}</p>
                     @endif
                 </div>
-                <p class="text-2xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalOcupantesVisitaAi }}</p>
+                <p class="text-2xl font-extrabold tabular-nums tracking-tight text-slate-900 dark:text-slate-50">{{ $totalOcupantesVisitaAi }}</p>
             </div>
             @if($ocupantesPorBairroTop->isNotEmpty())
-                <p class="v-toolbar-label mt-4 mb-2">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
+                <p class="v-toolbar-label mb-2">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
                 <div class="v-table-wrap rounded-xl border border-slate-200/80 dark:border-slate-600">
                     <table class="v-data-table">
                         <thead>
@@ -157,59 +120,78 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="mt-3 text-center">
-                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-xs font-semibold text-blue-600 hover:underline sm:text-[13px] dark:text-blue-400">{{ __('Ver painel completo de indicadores') }}</a>
+                <p class="mt-4 text-center">
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver painel completo de indicadores') }}</a>
                 </p>
             @else
-                <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>
             @endif
-        </div>
+        </section>
 
-        @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-            <div class="v-card border-l-4 border-l-blue-500/80">
-                <p class="v-toolbar-label">{{ __('Monitoramento no mês corrente') }}</p>
-                <p class="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
-                <p class="mt-1 text-sm tabular-nums text-slate-600 dark:text-slate-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro em monitoradas') : __('registros em monitoradas') }}</p>
-            </div>
-        @endif
+        <div class="flex flex-col gap-4">
+            @if ($doencaMaisMes && $doencaMaisMes->total > 0)
+                <section class="v-dash-card border-l-4 border-l-blue-500/85" aria-labelledby="gestor-monitor-heading">
+                    <h2 id="gestor-monitor-heading" class="v-dash-card__title">{{ __('Monitoramento no mês corrente') }}</h2>
+                    <p class="mt-2 text-lg font-semibold leading-snug text-slate-900 dark:text-slate-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
+                    <p class="mt-1 text-sm tabular-nums text-slate-600 dark:text-slate-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro em monitoradas') : __('registros em monitoradas') }}</p>
+                </section>
+            @endif
 
-        <div class="v-card">
-            <h2 class="v-toolbar-label mb-2">{{ __('Ações rápidas') }}</h2>
-            <div class="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3">
-                <a href="{{ route('gestor.pendentes') }}" class="v-dashboard-action {{ $pendentesCount > 0 ? 'v-dashboard-action--primary' : '' }}">
-                    <x-heroicon-o-exclamation-triangle class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Usuários pendentes') }}</span>
-                    @if($pendentesCount > 0)
-                        <span class="ml-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-white/25 px-1 text-[11px] font-bold tabular-nums">{{ $pendentesCount }}</span>
-                    @endif
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('gestor.users.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-users class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Gerenciar usuários') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('gestor.visitas.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Visitas realizadas') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('gestor.doencas.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-beaker class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Doenças monitoradas') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dashboard-action">
-                    <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Indicadores') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-                <a href="{{ route('gestor.relatorios.index') }}" class="v-dashboard-action">
-                    <x-heroicon-o-document-text class="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                    <span class="min-w-0">{{ __('Relatórios') }}</span>
-                    <x-heroicon-o-chevron-right class="v-dashboard-action__chevron h-4 w-4" aria-hidden="true" />
-                </a>
-            </div>
+            <section class="v-dash-card" aria-labelledby="gestor-atalhos-heading">
+                <h2 id="gestor-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
+                <p class="v-dash-card__sub">{{ __('Acesso direto às rotinas mais usadas.') }}</p>
+                <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
+                    <a href="{{ route('gestor.pendentes') }}" class="v-dash-shortcut {{ $pendentesCount > 0 ? 'v-dash-shortcut--primary' : '' }}">
+                        <x-heroicon-o-exclamation-triangle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Usuários pendentes') }}</span>
+                            <span class="v-dash-shortcut__hint">{{ __('Aprovar cadastros de campo') }}</span>
+                        </span>
+                        @if($pendentesCount > 0)
+                            <span class="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white/20 px-1.5 text-xs font-bold tabular-nums">{{ $pendentesCount }}</span>
+                        @endif
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.users.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-users class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Gerenciar usuários') }}</span>
+                            <span class="v-dash-shortcut__hint">{{ __('Perfis e permissões') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.visitas.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Visitas realizadas') }}</span>
+                            <span class="v-dash-shortcut__hint">{{ __('Consulta e filtros') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.doencas.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-beaker class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Doenças monitoradas') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-chart-bar class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Indicadores') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.relatorios.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-document-text class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Relatórios') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                </div>
+            </section>
         </div>
+    </div>
 </div>
 @endsection

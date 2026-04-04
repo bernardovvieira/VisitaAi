@@ -7,7 +7,7 @@
 @section('og_description', __('Visita Aí apoia a vigilância entomológica e o controle de vetores no município, alinhado às diretrizes do Ministério da Saúde. Profissionais registram visitas; moradores consultam o histórico do imóvel com o código único.'))
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-6 sm:px-8 md:px-12 py-12 min-w-full">
+<div class="flex min-h-screen min-w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-6 py-12 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 sm:px-8 md:px-12">
     <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {{-- Mobile only --}}
@@ -66,7 +66,7 @@
             </div>
 
             <p class="text-xs text-gray-400 dark:text-gray-500 mt-6" id="anim-footer">
-                &copy; {{ (int) date('Y') <= 2025 ? '2025' : '2025-'.date('Y') }} Visita Aí · {{ __('Desenvolvido por') }} <a href="https://bitwise.dev.br" target="_blank" rel="noopener" class="text-gray-600 hover:text-gray-700 dark:text-gray-400">Bitwise Technologies</a>
+                &copy; {{ date('Y') }} Visita Aí · {{ __('Desenvolvido por') }} <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-gray-700 dark:text-gray-400">Bitwise Technologies</a>
             </p>
         </div>
 

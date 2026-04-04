@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class PasswordResetLinkController extends Controller
@@ -21,7 +22,7 @@ class PasswordResetLinkController extends Controller
     /**
      * Handle an incoming password reset link request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
@@ -29,8 +30,8 @@ class PasswordResetLinkController extends Controller
         $request->validate([
             'email' => ['required', 'email'],
         ], [
-            'email.required' => 'O e-mail é obrigatório.',
-            'email.email'    => 'Formato de e-mail inválido.',
+            'email.required' => __('O e-mail é obrigatório.'),
+            'email.email' => __('Formato de e-mail inválido.'),
         ]);
 
         // 2) Tenta enviar o link usando a coluna use_email
@@ -38,11 +39,17 @@ class PasswordResetLinkController extends Controller
             'use_email' => $request->input('email'),
         ]);
 
-        // 3) Responde de volta para a view (mensagem neutra para não revelar se e-mail existe)
-        if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', 'Se o e-mail estiver cadastrado, você receberá um link de recuperação de senha.');
+        // 3) Mesma mensagem e mesmo canal (flash de status) para enviado, e-mail inexistente, etc. — evita enumeração
+        $neutral = __('Se o e-mail estiver cadastrado, você receberá um link de recuperação de senha.');
+
+        if ($status === Password::RESET_THROTTLED) {
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => __('Por favor, aguarde um momento antes de solicitar outro link.')]);
         }
-        return back()->withInput($request->only('email'))
-            ->withErrors(['email' => 'Se o e-mail estiver cadastrado, você receberá um link de recuperação. Verifique sua caixa de entrada e spam.']);
+
+        return back()
+            ->withInput($request->only('email'))
+            ->with('status', $neutral);
     }
 }

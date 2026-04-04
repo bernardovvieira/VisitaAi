@@ -2,7 +2,12 @@
     {{-- BANNER DE STATUS (logout ou link de reset enviado) --}}
     <x-alert type="success" :message="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="max-w-md mx-auto mt-8" id="login-form">
+    <form method="POST"
+          action="{{ route('login.store') }}"
+          class="max-w-md mx-auto mt-8"
+          id="login-form"
+          data-cpf-format-msg="{{ __('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).') }}"
+          data-label-entering="{{ __('Entrando…') }}">
         @csrf
 
         {{-- CPF ou E-mail --}}
@@ -36,7 +41,7 @@
                 <button
                     type="button"
                     id="password-toggle-btn"
-                    aria-label="Mostrar senha"
+                    aria-label="{{ __('Mostrar senha') }}"
                     class="absolute inset-y-0 right-0 px-3 flex items-center focus:outline-none"
                     tabindex="-1"
                 >
@@ -60,16 +65,16 @@
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
             <a href="{{ route('password.request') }}"
             class="text-sm underline  text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                Esqueceu a senha?
+                {{ __('Esqueceu a senha?') }}
             </a>
-            <x-primary-button id="login-submit-btn" class="ml-3">Entrar</x-primary-button>
+            <x-primary-button id="login-submit-btn" class="ml-3">{{ __('Entrar') }}</x-primary-button>
         </div>
     </form>
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        Não tem conta?
+        {{ __('Não tem conta?') }}
         <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-            Registre-se
+            {{ __('Registre-se') }}
         </a>
     </p>
 
@@ -86,7 +91,7 @@
                 input.type = isPassword ? 'text' : 'password';
                 iconShow.classList.toggle('hidden', isPassword);
                 iconHide.classList.toggle('hidden', !isPassword);
-                btn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+                btn.setAttribute('aria-label', isPassword ? @json(__('Ocultar senha')) : @json(__('Mostrar senha')));
             });
         }
     })();
@@ -151,11 +156,12 @@
             var digits = val.replace(/\D/g, '');
             var isEmail = val.indexOf('@') !== -1;
             var $err = $('#use_email_format_error');
+            var fmtMsg = $(this).attr('data-cpf-format-msg') || '';
 
             $err.addClass('hidden').text('');
             if (!isEmail && digits.length === 11 && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(val)) {
                 e.preventDefault();
-                $err.text('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).').removeClass('hidden');
+                $err.text(fmtMsg).removeClass('hidden');
                 $input.focus().addClass('border-red-500');
                 return false;
             }
@@ -163,7 +169,8 @@
             var btn = document.getElementById('login-submit-btn');
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Entrando…</span>';
+                var enterLbl = (document.getElementById('login-form') || {}).getAttribute('data-label-entering') || '';
+                btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>' + enterLbl + '</span>';
             }
         });
 

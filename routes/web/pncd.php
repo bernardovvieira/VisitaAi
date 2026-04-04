@@ -48,7 +48,9 @@ Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->
     Route::get('doencas/{doenca}', [DoencaController::class, 'show'])->name('doencas.show')
         ->middleware('can:view,doenca');
 
-    Route::get('sugestoes-doencas', SugestaoDoencasController::class)->name('sugestoes-doencas');
+    Route::get('sugestoes-doencas', SugestaoDoencasController::class)
+        ->middleware('throttle:120,1')
+        ->name('sugestoes-doencas');
 });
 
 Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group(function () {
@@ -69,5 +71,7 @@ Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group
     Route::get('doencas/{doenca}', [DoencaController::class, 'show'])->name('doencas.show')
         ->middleware('can:view,doenca');
 
-    Route::get('sugestoes-doencas', SugestaoDoencasController::class)->name('sugestoes-doencas');
+    Route::get('sugestoes-doencas', SugestaoDoencasController::class)
+        ->middleware('throttle:120,1')
+        ->name('sugestoes-doencas');
 });

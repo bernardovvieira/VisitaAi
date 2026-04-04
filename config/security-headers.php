@@ -4,6 +4,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | HTTP Strict Transport Security (HSTS)
+    |--------------------------------------------------------------------------
+    | Enviado só em respostas HTTPS. Em produção com HTTPS, o padrão é ativo.
+    | includeSubDomains/preload: ative só se o domínio inteiro for HTTPS permanente.
+    */
+
+    'hsts_enabled' => env('SECURITY_HSTS', env('APP_ENV') === 'production'),
+
+    'hsts_max_age' => (int) env('SECURITY_HSTS_MAX_AGE', 31536000),
+
+    'hsts_include_subdomains' => (bool) env('SECURITY_HSTS_SUBDOMAINS', false),
+
+    'hsts_preload' => (bool) env('SECURITY_HSTS_PRELOAD', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Content-Security-Policy (CSP)
     |--------------------------------------------------------------------------
     | Define se o header Content-Security-Policy deve ser enviado.

@@ -1,21 +1,33 @@
 <x-guest-layout>
     <x-alert type="success" :message="session('status')" />
+    <x-alert type="error" :message="$errors->first('register')" />
 
-    @if ($errors->any())
+    @if ($errors->any() && ! $errors->has('register'))
         @php
-            $fieldLabels = ['nome' => 'Nome', 'cpf' => 'CPF', 'email' => 'E-mail', 'password' => 'Senha', 'password_confirmation' => 'Confirmar senha'];
-            $errorFields = array_unique($errors->keys());
+            $fieldLabels = [
+                'nome' => __('Nome'),
+                'cpf' => __('CPF'),
+                'email' => __('E-mail'),
+                'password' => __('Senha'),
+                'password_confirmation' => __('Confirmar Senha'),
+            ];
+            $errorFields = array_values(array_diff(array_unique($errors->keys()), ['register']));
             $labels = array_map(fn ($k) => $fieldLabels[$k] ?? $k, $errorFields);
         @endphp
-        <div class="max-w-md mx-auto mt-4 px-4 py-3 rounded-lg bg-red-600 dark:bg-red-700 text-white text-sm" role="alert">
-            <p class="font-medium">Corrija os erros nos campos indicados abaixo.</p>
+        <div class="v-alert v-alert--error mb-4 text-left" role="alert">
+            <p class="font-medium">{{ __('Corrija os erros nos campos indicados abaixo.') }}</p>
             @if (count($labels) > 0)
-                <p class="mt-1 opacity-90">Campos com erro: {{ implode(', ', $labels) }}.</p>
+                <p class="mt-1 text-sm opacity-95">{{ __('Campos com erro:') }} {{ implode(', ', $labels) }}.</p>
             @endif
         </div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-8" id="register-form">
+    <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-8" id="register-form"
+          data-msg-cpf-invalid="{{ __('CPF inválido.') }}"
+          data-msg-cpf-valid="{{ __('CPF válido.') }}"
+          data-msg-match-ok="{{ __('Senhas conferem.') }}"
+          data-msg-match-bad="{{ __('As senhas não conferem.') }}"
+          data-label-registering="{{ __('Registrando…') }}">
         @csrf
 
         {{-- Nome --}}
@@ -41,7 +53,7 @@
                         required
                         inputmode="numeric"
                         pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
-                        title="Formato: XXX.XXX.XXX-XX" />
+                        title="{{ __('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).') }}" />
             <p id="cpf-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
             <x-input-error :messages="$errors->get('cpf')" class="mt-2" />
         </div>
@@ -67,7 +79,7 @@
             <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
                 <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).') }}</p>
             <x-input-error :messages="$errors->get('password')" />
         </div>
 
@@ -82,13 +94,13 @@
             <x-input-error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <x-primary-button id="register-submit-btn" class="w-full justify-center">Registrar</x-primary-button>
+        <x-primary-button id="register-submit-btn" class="w-full justify-center">{{ __('Registrar') }}</x-primary-button>
     </form>
 
     <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-        Já tem conta?
+        {{ __('Já tem conta?') }}
         <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-            Faça login
+            {{ __('Faça login') }}
         </a>
     </p>
 
@@ -129,13 +141,16 @@
                     var c = (pwdConf.value || '');
                     matchFeedback.classList.add('hidden');
                     if (c.length === 0) return;
+                    var formEl = document.getElementById('register-form');
+                    var msgOk = formEl && formEl.getAttribute('data-msg-match-ok');
+                    var msgBad = formEl && formEl.getAttribute('data-msg-match-bad');
                     if (p === c) {
-                        matchFeedback.textContent = 'Senhas conferem.';
+                        matchFeedback.textContent = msgOk || '';
                         matchFeedback.classList.remove('text-red-600', 'dark:text-red-400');
                         matchFeedback.classList.add('text-blue-600', 'dark:text-blue-400');
                         matchFeedback.classList.remove('hidden');
                     } else {
-                        matchFeedback.textContent = 'As senhas não conferem.';
+                        matchFeedback.textContent = msgBad || '';
                         matchFeedback.classList.remove('text-blue-600', 'dark:text-blue-400');
                         matchFeedback.classList.add('text-red-600', 'dark:text-red-400');
                         matchFeedback.classList.remove('hidden');
@@ -151,7 +166,8 @@
             if (form && btn) {
                 form.addEventListener('submit', function () {
                     btn.disabled = true;
-                    btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Registrando…</span>';
+                    var regLabel = form.getAttribute('data-label-registering') || '';
+                    btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>' + regLabel + '</span>';
                 });
             }
         });
@@ -175,6 +191,9 @@
     }
 
     var $cpfFeedback = $('#cpf-feedback');
+    var regForm = document.getElementById('register-form');
+    var msgCpfInvalid = regForm && regForm.getAttribute('data-msg-cpf-invalid');
+    var msgCpfValid = regForm && regForm.getAttribute('data-msg-cpf-valid');
     $('#cpf').on('blur', function () {
         const input = this;
         const cpf = input.value;
@@ -183,12 +202,13 @@
         if (!cpf) return; // ignora se estiver vazio (deixa o required tratar)
 
         if (!validarCPF(cpf)) {
-            input.setCustomValidity('CPF inválido.');
-            input.reportValidity();
-            $cpfFeedback.removeClass('hidden text-blue-600 dark:text-blue-400').addClass('text-red-600 dark:text-red-400').text('CPF inválido.');
+            input.setCustomValidity(msgCpfInvalid || '');
+            /* reportValidity pode abrir tooltip nativo; manter acessível */
+            if (typeof input.reportValidity === 'function') input.reportValidity();
+            $cpfFeedback.removeClass('hidden text-blue-600 dark:text-blue-400').addClass('text-red-600 dark:text-red-400').text(msgCpfInvalid || '');
         } else {
             input.setCustomValidity('');
-            $cpfFeedback.removeClass('hidden text-red-600 dark:text-red-400').addClass('text-blue-600 dark:text-blue-400').text('CPF válido.');
+            $cpfFeedback.removeClass('hidden text-red-600 dark:text-red-400').addClass('text-blue-600 dark:text-blue-400').text(msgCpfValid || '');
         }
     });
     </script>

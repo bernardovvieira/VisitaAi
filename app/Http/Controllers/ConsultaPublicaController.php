@@ -28,8 +28,8 @@ class ConsultaPublicaController extends Controller
         $validated = $request->validate([
             'codigo' => ['required', 'digits:8'],
         ], [
-            'codigo.required' => 'Informe o código do imóvel.',
-            'codigo.digits' => 'O código deve ter exatamente 8 dígitos numéricos.',
+            'codigo.required' => __('Informe o código do imóvel.'),
+            'codigo.digits' => __('O código deve ter exatamente 8 dígitos numéricos.'),
         ]);
 
         $codigo = $validated['codigo'];
@@ -40,13 +40,27 @@ class ConsultaPublicaController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('erro', 'Código não encontrado. Verifique o número informado (8 dígitos) e tente novamente. Se o problema persistir, entre em contato com o agente que realizou a visita.');
+                ->with('erro', __('Código não encontrado. Verifique o número informado (8 dígitos) e tente novamente. Se o problema persistir, entre em contato com o agente que realizou a visita.'));
         }
 
         $visitas = $local->visitas()
             ->with('doencas')
             ->orderByDesc('vis_data')
             ->get();
+
+        $visitas->each(fn ($v) => $v->setRelation('local', $local));
+
+        $ascPorData = $visitas->sortBy(fn ($v) => [$v->vis_data, $v->vis_id])->values();
+        $revisitaPosterior = [];
+        for ($i = 0; $i < $ascPorData->count(); $i++) {
+            $atual = $ascPorData[$i];
+            for ($j = $i + 1; $j < $ascPorData->count(); $j++) {
+                if ($ascPorData[$j]->vis_data > $atual->vis_data) {
+                    $revisitaPosterior[$atual->vis_id] = $ascPorData[$j];
+                    break;
+                }
+            }
+        }
 
         $enderecoCompleto = $local->loc_endereco.', '.($local->loc_numero ?? 'S/N').' - '.$local->loc_bairro.', '.$local->loc_cidade.'/'.$local->loc_estado;
         $resumoService = app(ResumoVisitaCidadaoService::class);
@@ -78,6 +92,6 @@ class ConsultaPublicaController extends Controller
             $qrCodeMime = 'image/svg+xml';
         }
 
-        return view('consulta.codigo', compact('local', 'visitas', 'resumos', 'qrCodeBase64', 'qrCodeMime'));
+        return view('consulta.codigo', compact('local', 'visitas', 'resumos', 'revisitaPosterior', 'qrCodeBase64', 'qrCodeMime'));
     }
 }

@@ -5,8 +5,8 @@
     ? 'theme-toggle-float fixed z-[100]'
     : 'inline-flex items-center';
   $btnClass = $floating
-    ? 'theme-toggle-circle w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 flex items-center justify-center'
-    : 'inline-flex items-center p-2 rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition';
+    ? 'theme-toggle-circle flex h-12 w-12 items-center justify-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/45 focus:ring-offset-2 dark:focus:ring-offset-slate-900'
+    : 'inline-flex items-center rounded-xl border border-slate-200/90 bg-white/90 p-2 text-slate-600 shadow-sm backdrop-blur-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:hover:text-white';
 @endphp
 
 <div class="{{ $wrapperClass }}" data-theme-toggle data-floating="{{ $floating ? '1' : '0' }}">
@@ -22,7 +22,7 @@
       </svg>
     </span>
     {{-- Lua: modo claro → clique vai para escuro --}}
-    <span data-theme-icon="moon" class="inline-flex text-gray-600">
+    <span data-theme-icon="moon" class="inline-flex text-slate-500 dark:text-slate-400">
       <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
       </svg>
@@ -40,12 +40,25 @@
   top: auto;
 }
 .theme-toggle-circle {
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgb(226 232 240 / 0.95);
+  box-shadow:
+    0 4px 20px rgb(15 23 42 / 0.12),
+    0 1px 0 rgb(255 255 255 / 0.7) inset;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+.theme-toggle-circle:hover {
+  box-shadow:
+    0 8px 28px rgb(15 23 42 / 0.16),
+    0 1px 0 rgb(255 255 255 / 0.75) inset;
 }
 .dark .theme-toggle-circle {
-  background-color: #1f2937;
-  border-color: #4b5563;
+  background-color: rgb(15 23 42 / 0.9);
+  border-color: rgb(51 65 85 / 0.9);
+  box-shadow:
+    0 4px 24px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 </style>
 @endif
