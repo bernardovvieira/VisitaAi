@@ -43,7 +43,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($pendentes as $u)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <tr class="v-table-row-interactive">
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
                                     #{{ $u->use_id }}
@@ -57,7 +57,7 @@
                                 <form method="POST" action="{{ route('gestor.approve', $u) }}" class="inline">
                                     @csrf
                                     <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')"
-                                        class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-transparent bg-emerald-600 text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/45 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
                                         title="{{ __('Aprovar usuário') }}"
                                         aria-label="{{ __('Aprovar usuário') }}">
                                         <x-heroicon-o-check class="h-4 w-4 shrink-0" />

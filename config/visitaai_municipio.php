@@ -38,6 +38,7 @@ return [
         'ate_2_sm' => 'De 1 a 2 salários mínimos',
         'ate_3_sm' => 'De 2 a 3 salários mínimos',
         'acima_3_sm' => 'Acima de 3 salários mínimos',
+        'acima_5_sm' => 'Acima de 5 salários mínimos',
     ],
 
     /*

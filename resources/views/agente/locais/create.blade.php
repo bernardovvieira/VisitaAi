@@ -194,7 +194,7 @@
                     </div>
                     <div class="flex justify-end">
                         <button type="button" id="btn-minha-localizacao" onclick="obterMinhaLocalizacao()"
-                                class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                class="v-btn-primary w-full">
                             Minha Localização
                         </button>
                     </div>
@@ -214,7 +214,7 @@
             <div class="flex justify-end">
                 <button type="submit" id="btn-cadastrar-local"
                         x-bind:disabled="carregando"
-                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="v-btn-primary px-6 disabled:opacity-50 disabled:cursor-not-allowed">
                     Cadastrar
                 </button>
             </div>
@@ -292,14 +292,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateLocalBtnOffline() {
         var btn = document.getElementById('btn-cadastrar-local');
         if (!btn) return;
+        var baseDisabled = ' disabled:opacity-50 disabled:cursor-not-allowed';
         if (!navigator.onLine) {
             btn.textContent = 'Guardar local';
-            btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            btn.classList.add('bg-amber-500', 'hover:bg-amber-600', 'text-amber-900');
+            btn.className = 'v-btn-amber-solid px-6' + baseDisabled;
         } else {
             btn.textContent = 'Cadastrar';
-            btn.classList.remove('bg-amber-500', 'hover:bg-amber-600', 'text-amber-900');
-            btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            btn.className = 'v-btn-primary px-6' + baseDisabled;
         }
     }
     updateLocalBtnOffline();

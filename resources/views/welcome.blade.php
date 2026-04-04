@@ -36,7 +36,7 @@
 
             <div class="flex flex-col sm:flex-row gap-4" id="anim-botoes">
                 <a href="{{ route('login') }}"
-                   class="btn-acesso-principal inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm transition group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:focus-visible:ring-offset-gray-900">
+                   class="v-btn-primary group gap-2 focus-visible:ring-blue-500/40">
                     <svg class="h-5 w-5 transform transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
@@ -44,7 +44,7 @@
                 </a>
 
                 <a href="{{ route('consulta.index') }}"
-                   class="group inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-5 py-2.5 text-[13px] font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
+                   class="v-btn-secondary group gap-2">
                     <svg class="h-5 w-5 transform transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
                     </svg>

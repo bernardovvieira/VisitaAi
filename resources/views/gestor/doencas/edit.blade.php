@@ -107,7 +107,7 @@
 
             <div class="flex justify-end">
                 <button type="submit" id="doenca-edit-btn"
-                        class="btn-acesso-principal px-6 py-2 text-white font-semibold text-sm rounded-lg shadow-md transition inline-flex items-center">
+                        class="v-btn-compact v-btn-compact--blue">
                     Salvar Alterações
                 </button>
             </div>

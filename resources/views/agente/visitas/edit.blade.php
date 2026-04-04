@@ -88,7 +88,7 @@
                                 <li>
                                     <button type="button"
                                             @click="selectedId = local.loc_id; search = 'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || ''); open = false"
-                                            class="block text-left w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                            class="v-list-item-hover block w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-100">
                                         <span x-text="'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || '')"></span>
                                     </button>
                                 </li>
@@ -205,7 +205,7 @@
                         <div class="mt-2">
                             <button type="button"
                                     @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
-                                    class="btn-acesso-principal px-3 py-1 text-white text-sm font-semibold rounded shadow">
+                                    class="v-btn-compact v-btn-compact--blue">
                                 + Adicionar Tratamento
                             </button>
                         </div>
@@ -275,7 +275,7 @@
 
                                 <div class="flex justify-end">
                                     <button type="button" @click="tratamentos.splice(i, 1)"
-                                            class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded shadow">
+                                            class="v-btn-compact v-btn-compact--red">
                                         - Remover Tratamento
                                     </button>
                                 </div>
@@ -285,7 +285,7 @@
                         <div class="flex justify-start" x-show="tratamentos.length > 0">
                             <button type="button"
                                     @click="tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
-                                    class="btn-acesso-principal px-2 py-1 text-white font-semibold text-xs rounded shadow">
+                                    class="v-btn-compact v-btn-compact--blue">
                                 + Adicionar Tratamento
                             </button>
                         </div>
@@ -371,7 +371,7 @@
 
             <div class="flex justify-end">
                 <button type="submit"
-                        class="btn-acesso-principal px-6 py-2 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                        class="v-btn-primary px-6">
                     Atualizar Visita
                 </button>
             </div>
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sugestoes.forEach(function(s) {
                     var bt = document.createElement('button');
                     bt.type = 'button';
-                    bt.className = 'inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-slate-700';
+                    bt.className = 'v-chip-suggestion';
                     bt.title = s.motivo || '';
                     bt.textContent = s.nome || '';
                     bt.addEventListener('click', function() {

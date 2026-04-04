@@ -115,15 +115,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
-            /* Botão principal azul: inline para garantir que sempre aplique (#3b82f6 / rgb(59,130,246)) */
-            .btn-acesso-principal {
-                background-color: #3b82f6 !important;
-                color: #ffffff !important;
-            }
-            .btn-acesso-principal:hover {
-                background-color: #2563eb !important;
-                color: #ffffff !important;
-            }
             .nav-link-active { border-color: #3b82f6 !important; }
             .dropdown-link-active { background-color: rgba(59, 130, 246, 0.12) !important; color: #1d4ed8 !important; border-left: 3px solid #3b82f6; font-weight: 600; }
             .dark .dropdown-link-active { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
@@ -259,7 +250,7 @@
             function showConnectionToast(msg, isError) {
                 var el = document.createElement('div');
                 el.setAttribute('role', 'alert');
-                el.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white ' + (isError ? 'bg-amber-600' : 'bg-blue-600');
+                el.className = 'v-toast-connection ' + (isError ? 'v-toast-connection--warn' : 'v-toast-connection--ok');
                 el.textContent = msg;
                 document.body.appendChild(el);
                 setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 7000);

@@ -18,11 +18,11 @@
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.</p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
             <button type="button" id="sync-btn"
-                    class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 disabled:cursor-not-allowed disabled:opacity-50">
+                    class="v-btn-compact v-btn-compact--blue">
                 Enviar todas agora
             </button>
             <button type="button" id="sync-clear-btn"
-                    class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 disabled:cursor-not-allowed disabled:opacity-50">
+                    class="v-btn-compact v-btn-compact--red">
                 Apagar todas do dispositivo
             </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>

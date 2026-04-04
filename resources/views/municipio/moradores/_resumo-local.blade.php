@@ -9,7 +9,7 @@
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ config('visitaai_municipio.ocupantes.disclaimer') }}</p>
         </div>
         <a href="{{ route($rp . '.locais.moradores.index', $local) }}"
-           class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60">
+           class="v-btn-compact v-btn-compact--blue">
             {{ config('visitaai_municipio.ocupantes.botao_gerenciar') }} ({{ $moradorResumo['total'] ?? 0 }})
         </a>
     </div>

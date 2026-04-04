@@ -44,8 +44,8 @@
             <strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.
         </p>
         <a href="{{ route('agente.locais.create') }}"
-           class="mt-4 inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40">
-            <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
+           class="v-btn-compact v-btn-compact--blue mt-4">
+            <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
             Cadastrar Local
         </a>
     </section>
@@ -93,7 +93,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($locais as $local)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <tr class="v-table-row-interactive">
                             <td class="p-4 text-gray-800 dark:text-gray-100">
                                 <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
                                     #{{ $local->loc_codigo_unico }}
@@ -136,7 +136,7 @@
                             <td class="p-4 text-center">
                                 <div class="flex flex-wrap items-center justify-center gap-1.5">
                                     <a href="{{ route('agente.locais.show', $local) }}"
-                                       class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                       class="v-btn-icon-primary"
                                        title="{{ __('Visualizar') }}"
                                        aria-label="{{ __('Visualizar local') }}">
                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
@@ -171,8 +171,8 @@
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre o primeiro local para realizar visitas.</p>
-                                    <a href="{{ route('agente.locais.create') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
-                                        <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
+                                    <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
+                                        <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         Cadastrar local
                                     </a>
                                 </div>

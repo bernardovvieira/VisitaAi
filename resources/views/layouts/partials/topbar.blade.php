@@ -37,15 +37,16 @@
         <x-dropdown align="right" width="w-56">
             <x-slot name="trigger">
                 <button type="button"
-                        class="inline-flex max-w-[min(100vw-8rem,14rem)] items-center gap-2 rounded-lg py-1.5 pl-1 pr-1.5 text-left transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:hover:bg-slate-800 sm:max-w-[16rem]">
+                        class="inline-flex max-sm:max-w-none max-sm:gap-0 max-sm:px-1.5 items-center gap-2 rounded-lg py-1.5 pl-1 pr-1.5 text-left transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:hover:bg-slate-800 sm:max-w-[min(100vw-8rem,16rem)]"
+                        aria-label="{{ auth()->user()->use_nome }}">
                     <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white dark:bg-blue-500"
                           aria-hidden="true">
                         {{ strtoupper(mb_substr(auth()->user()->use_nome, 0, 1)) }}
                     </span>
-                    <span class="min-w-0 truncate text-[13px] font-medium text-slate-900 dark:text-slate-100" title="{{ auth()->user()->use_nome }}">
+                    <span class="hidden min-w-0 truncate text-[13px] font-medium text-slate-900 dark:text-slate-100 sm:inline" title="{{ auth()->user()->use_nome }}">
                         {{ auth()->user()->use_nome }}
                     </span>
-                    <x-heroicon-o-chevron-down class="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+                    <x-heroicon-o-chevron-down class="hidden h-4 w-4 shrink-0 text-slate-400 sm:block" aria-hidden="true" />
                 </button>
             </x-slot>
 

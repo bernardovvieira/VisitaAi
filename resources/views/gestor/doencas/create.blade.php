@@ -106,7 +106,7 @@
 
             <div class="flex justify-end">
                 <button type="submit" id="doenca-create-btn"
-                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md transition inline-flex items-center">
+                        class="v-btn-compact v-btn-compact--blue">
                     Cadastrar
                 </button>
             </div>

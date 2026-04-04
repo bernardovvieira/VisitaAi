@@ -123,12 +123,12 @@
                 <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">2FA ativado para esta conta.</p>
                 <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
                    onclick="return confirm('Tem certeza que deseja desativar a autenticação em dois fatores?');"
-                   class="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700">
+                   class="v-btn-danger !px-3 !py-1.5 !text-xs">
                     Desativar autenticação em dois fatores
                 </a>
             @else
                 <a href="{{ route('profile.two-factor') }}"
-                   class="inline-flex items-center gap-1.5 rounded-md bg-gray-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500">
+                   class="v-btn-slate !px-3 !py-1.5 !text-xs gap-1.5">
                    <x-heroicon-o-chevron-right class="h-3.5 w-3.5 shrink-0" />
                     Ativar autenticação em dois fatores 
                 </a>
@@ -164,7 +164,7 @@
             @elseif(auth()->user()->isGestor())
                 <!-- Link para gestores -->
                 <a href="{{ route('gestor.users.index') }}"
-                   class="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700">
+                   class="v-btn-danger !px-3 !py-1.5 !text-xs">
                     Ir para Usuários
                 </a>
             @endif

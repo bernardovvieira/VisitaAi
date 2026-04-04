@@ -123,7 +123,7 @@
                             </td>
                             <td class="text-center">
                                 <a href="{{ route('gestor.visitas.show', $visita) }}"
-                                   class="btn-acesso-principal inline-flex h-9 w-9 items-center justify-center rounded-xl shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                   class="v-btn-icon-primary v-btn-icon-primary--lg"
                                    title="{{ __('Visualizar') }}"
                                    aria-label="{{ __('Visualizar visita') }}">
                                     <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
@@ -139,7 +139,7 @@
                                     </div>
                                     <p class="v-empty-state__title">{{ __('Nenhuma visita registrada.') }}</p>
                                     <p class="v-empty-state__text">{{ __('As visitas aparecem aqui quando ACE ou ACS as registrarem.') }}</p>
-                                    <a href="{{ route('gestor.locais.index') }}" class="mt-5 inline-flex items-center gap-2 rounded-lg bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
+                                    <a href="{{ route('gestor.locais.index') }}" class="v-btn-compact v-btn-compact--slate mt-5">
                                         {{ __('Ver locais cadastrados') }}
                                     </a>
                                 </div>

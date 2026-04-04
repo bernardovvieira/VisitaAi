@@ -45,14 +45,14 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('agente.visitas.create') }}"
-                   class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">
-                    <x-heroicon-o-plus class="mr-2 h-5 w-5 shrink-0" />
+                   class="v-btn-compact v-btn-compact--blue">
+                    <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ __('Cadastrar visita') }}
                 </a>
                 <span x-show="online" x-cloak>
                     <a href="{{ route('agente.visitas.sync') }}"
-                       class="inline-flex items-center rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-amber-950 shadow-sm transition hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40 dark:text-amber-50">
-                        <x-heroicon-o-arrow-path class="mr-2 h-5 w-5 shrink-0" />
+                       class="v-btn-compact v-btn-compact--amber">
+                        <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
                         {{ __('Enviar visitas do dispositivo') }}
                     </a>
                 </span>
@@ -159,7 +159,7 @@
                             <td class="text-center">
                                 <div x-show="online" class="flex justify-center gap-1">
                                     <a href="{{ route('agente.visitas.show', $visita) }}"
-                                       class="btn-acesso-principal inline-flex h-9 w-9 items-center justify-center rounded-xl shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                       class="v-btn-icon-primary v-btn-icon-primary--lg"
                                        title="{{ __('Visualizar') }}" aria-label="{{ __('Visualizar visita') }}">
                                         <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                     </a>
@@ -190,8 +190,8 @@
                                     </div>
                                     <p class="font-medium text-slate-700 dark:text-slate-200">{{ __('Nenhuma visita registrada.') }}</p>
                                     <p class="mt-1 text-sm text-slate-500">{{ __('Registre a primeira visita para começar.') }}</p>
-                                    <a href="{{ route('agente.visitas.create') }}" class="mt-5 inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40">
-                                        <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
+                                    <a href="{{ route('agente.visitas.create') }}" class="v-btn-compact v-btn-compact--blue mt-5">
+                                        <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Registrar visita') }}
                                     </a>
                                 </div>

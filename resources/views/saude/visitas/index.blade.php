@@ -45,14 +45,14 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('saude.visitas.create') }}"
-                   class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">
-                    <x-heroicon-o-plus class="mr-2 h-5 w-5 shrink-0" />
+                   class="v-btn-compact v-btn-compact--blue">
+                    <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ __('Nova visita LIRAa') }}
                 </a>
                 <span x-show="online" x-cloak>
                     <a href="{{ route('saude.visitas.sync') }}"
-                       class="inline-flex items-center rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-amber-950 shadow-sm transition hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40 dark:text-amber-50">
-                        <x-heroicon-o-arrow-path class="mr-2 h-5 w-5 shrink-0" />
+                       class="v-btn-compact v-btn-compact--amber">
+                        <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
                         {{ __('Enviar visitas do dispositivo') }}
                     </a>
                 </span>
@@ -157,7 +157,7 @@
                             <td class="text-center">
                                 <div x-show="online" class="flex justify-center">
                                     <a href="{{ route('saude.visitas.show', $visita) }}"
-                                       class="btn-acesso-principal inline-flex h-9 w-9 items-center justify-center rounded-xl shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                                       class="v-btn-icon-primary v-btn-icon-primary--lg"
                                        title="{{ __('Visualizar') }}" aria-label="{{ __('Visualizar visita') }}">
                                         <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                     </a>

@@ -59,14 +59,6 @@
     transform: scale(1);
 }
 
-/* Botão principal (azul padrão do sistema): valores explícitos para não ser sobrescrito */
-.btn-acesso-principal {
-    background-color: #3b82f6 !important; /* rgb(59, 130, 246) */
-}
-.btn-acesso-principal:hover {
-    background-color: #2563eb !important;  /* rgb(37, 99, 235) */
-}
-
 @media (prefers-reduced-motion: reduce) {
     #app-sidebar {
         transition: none !important;
@@ -188,6 +180,19 @@
         .visita-skip-link {
             transition: none;
         }
+    }
+
+    /* Toast de conexão (JS em layouts.app — ping / offline) */
+    .v-toast-connection {
+        @apply fixed left-1/2 top-4 z-[100] max-w-[min(100vw-2rem,28rem)] -translate-x-1/2 rounded-xl px-4 py-3 text-center text-sm font-medium text-white shadow-lg;
+    }
+
+    .v-toast-connection--ok {
+        @apply bg-blue-600 dark:bg-blue-600;
+    }
+
+    .v-toast-connection--warn {
+        @apply bg-amber-600 dark:bg-amber-600;
     }
 }
 
@@ -426,6 +431,26 @@
 
     .v-data-table tbody tr:last-child {
         @apply border-b-0;
+    }
+
+    /* Linha com hover em tabelas legadas (min-w-full divide-y) — alinhado ao .v-data-table */
+    .v-table-row-interactive {
+        @apply transition-colors hover:bg-blue-50/45 dark:hover:bg-slate-800/65;
+    }
+
+    /* Mesmo padrão com célula bairro fixa (indicadores ocupantes) — use com `group` na <tr> */
+    .v-table-row-interactive-sticky {
+        @apply bg-white transition-colors hover:bg-blue-50/45 dark:bg-gray-800 dark:hover:bg-slate-800/65;
+    }
+
+    /* Chip gerado em JS (ex.: sugestões de doença na visita) */
+    .v-chip-suggestion {
+        @apply inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-slate-700;
+    }
+
+    /* Item de lista / opção em painel (dropdown nativo estilizado, multiselect) */
+    .v-list-item-hover {
+        @apply transition-colors hover:bg-slate-100 dark:hover:bg-slate-700;
     }
 
     .v-table-meta {
@@ -748,6 +773,10 @@
         @apply border-rose-300/90 bg-rose-50/95 text-rose-950 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-100;
     }
 
+    .v-dash-alert--success {
+        @apply border-emerald-300/90 bg-emerald-50/95 text-emerald-950 dark:border-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-100;
+    }
+
     a.v-dash-alert {
         @apply no-underline transition hover:brightness-[0.98] dark:hover:brightness-110;
     }
@@ -780,6 +809,36 @@
             inset 0 1px 0 rgb(255 255 255 / 0.18);
     }
 
+    /* Listagens / formulários: CTAs menores que v-btn-primary */
+    .v-btn-compact {
+        @apply inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 dark:focus-visible:ring-offset-slate-900;
+    }
+
+    .v-btn-compact--blue {
+        @apply border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500/40 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-500;
+    }
+
+    .v-btn-compact--amber {
+        @apply border border-transparent bg-amber-500 text-amber-950 hover:bg-amber-600 focus-visible:ring-amber-500/35 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-50;
+    }
+
+    .v-btn-compact--slate {
+        @apply border border-transparent bg-slate-800 text-white hover:bg-slate-900 focus-visible:ring-slate-500/35 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600;
+    }
+
+    .v-btn-compact--red {
+        @apply border border-transparent bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500/45 disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    /* Ação primária só com ícone (tabelas: ver detalhes, etc.) */
+    .v-btn-icon-primary {
+        @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900;
+    }
+
+    .v-btn-icon-primary--lg {
+        @apply h-9 w-9 rounded-xl dark:focus-visible:ring-offset-gray-900;
+    }
+
     .v-btn-secondary {
         @apply inline-flex items-center justify-center rounded-xl border border-slate-200/95 bg-white/90 px-3.5 py-2 text-[13px] font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
         box-shadow:
@@ -792,6 +851,16 @@
     .v-btn-danger {
         @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-red-500 active:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
         box-shadow: 0 2px 8px rgb(220 38 38 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.12);
+    }
+
+    /* Ação primária em modo offline / rascunho (âmbar, mesmo peso visual do azul) */
+    .v-btn-amber-solid {
+        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-amber-500 px-3.5 py-2 text-[13px] font-semibold text-amber-950 shadow-sm transition hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-50 dark:focus-visible:ring-offset-slate-900;
+    }
+
+    /* CTA neutra escura (PDF, download secundário, 2FA) */
+    .v-btn-slate {
+        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-slate-600 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-600 dark:hover:bg-slate-500 dark:focus-visible:ring-offset-slate-900;
     }
 
     /* Modal (Livewire / Alpine) */

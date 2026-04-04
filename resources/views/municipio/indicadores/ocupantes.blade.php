@@ -77,7 +77,7 @@
                 <p class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ $cfgInd['titulo_secao_faixa_global'] ?? 'Faixa etária' }}</p>
                 <p class="text-[10px] font-medium uppercase tracking-wide text-blue-600/90 dark:text-blue-400/90">{{ __('Mapa de calor') }}</p>
             </div>
-            <div class="mt-3 flex gap-1 overflow-hidden rounded-xl ring-1 ring-slate-200/90 dark:ring-slate-600 sm:gap-1.5"
+            <div class="mt-3 flex overflow-hidden rounded-xl ring-1 ring-slate-200/90 dark:ring-slate-600"
                  role="img"
                  aria-label="{{ __('Distribuição por faixa etária') }}: {{ $ariaFaixaCalor }}">
                 @foreach($keysFaixa as $k)
@@ -89,8 +89,8 @@
                         $faixaTxtLight = $relFaixa >= 0.5;
                     @endphp
                     <div class="relative flex min-h-[5.25rem] min-w-0 flex-1 flex-col items-center justify-center px-1 py-2.5 text-center sm:px-1.5">
-                        <div class="absolute inset-0 rounded-lg bg-slate-100 dark:bg-slate-900/85" aria-hidden="true"></div>
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-b from-sky-200 via-blue-500 to-blue-900 dark:from-sky-500 dark:via-blue-600 dark:to-blue-950"
+                        <div class="absolute inset-0 bg-slate-100 dark:bg-slate-900/85" aria-hidden="true"></div>
+                        <div class="absolute inset-0 bg-gradient-to-b from-sky-200 via-blue-500 to-blue-900 dark:from-sky-500 dark:via-blue-600 dark:to-blue-950"
                              style="opacity: {{ $heatOp }}"
                              aria-hidden="true"></div>
                         <span class="relative z-10 max-w-full text-[10px] font-semibold leading-tight {{ $faixaTxtLight ? 'text-white drop-shadow-sm' : 'text-slate-700 dark:text-slate-200' }}">{{ $labelsFaixa[$k] ?? $k }}</span>
@@ -127,8 +127,8 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse($painel['por_bairro'] as $linha)
-                        <tr class="group bg-white transition-colors hover:bg-gray-50/80 dark:bg-gray-800 dark:hover:bg-gray-800/80">
-                            <th scope="row" class="sticky left-0 z-10 max-w-xs truncate border-b border-gray-100 bg-white px-3 py-2.5 text-left font-medium text-gray-900 shadow-[4px_0_12px_-6px_rgba(15,23,42,0.15)] group-hover:bg-gray-50/80 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:shadow-[4px_0_12px_-6px_rgba(0,0,0,0.45)] dark:group-hover:bg-gray-800/80" title="{{ $linha['bairro'] }}">{{ $linha['bairro'] }}</th>
+                        <tr class="group v-table-row-interactive-sticky">
+                            <th scope="row" class="sticky left-0 z-10 max-w-xs truncate border-b border-gray-100 bg-white px-3 py-2.5 text-left font-medium text-gray-900 shadow-[4px_0_12px_-6px_rgba(15,23,42,0.15)] group-hover:bg-blue-50/45 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:shadow-[4px_0_12px_-6px_rgba(0,0,0,0.45)] dark:group-hover:bg-slate-800/65" title="{{ $linha['bairro'] }}">{{ $linha['bairro'] }}</th>
                             @if($linha['suprimido'])
                                 <td class="border-b border-gray-100 px-3 py-2.5 text-gray-400 dark:border-gray-700" colspan="{{ 1 + count($keysFaixa) }}" title="{{ __('Agregado suprimido para este recorte.') }}">{{ $celSup }}</td>
                             @else

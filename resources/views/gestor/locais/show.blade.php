@@ -114,9 +114,9 @@
         </div>
 
         <div class="text-center pt-4">
-            <button onclick="baixarAdesivo()"
-                    class="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded shadow transition">
-                    <x-heroicon-o-arrow-down-tray class="mr-2 inline-block h-4 w-4" />
+            <button type="button" onclick="baixarAdesivo()"
+                    class="v-btn-slate mt-4 gap-2">
+                    <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
                 Salvar Adesivo
             </button>
             <p class="mt-3 text-sm text-gray-600 dark:text-gray-400" style="padding-top: 0.5rem;">

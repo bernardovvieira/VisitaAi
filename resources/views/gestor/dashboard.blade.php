@@ -40,7 +40,7 @@
     @if($pendentesCount > 0 || $visitasComPendencia > 0)
         <div class="v-dash-alert-stack" role="region" aria-label="{{ __('Requer atenção') }}">
             @if($pendentesCount > 0)
-                <a href="{{ route('gestor.pendentes') }}" class="v-dash-alert v-dash-alert--warn">
+                <a href="{{ route('gestor.pendentes') }}" class="v-dash-alert v-dash-alert--success">
                     <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0 opacity-90" aria-hidden="true" />
                     <span>{{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}</span>
                     <x-heroicon-o-arrow-right class="ml-auto h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
@@ -90,7 +90,7 @@
     </section>
 
     <div class="v-dash-row">
-        <section class="v-dash-card min-w-0" aria-labelledby="gestor-ocupantes-heading">
+        <section class="v-dash-card min-h-0 min-w-0 lg:h-full" aria-labelledby="gestor-ocupantes-heading">
             <div class="v-dash-card__head">
                 <div>
                     <h2 id="gestor-ocupantes-heading" class="v-dash-card__title">{{ config('visitaai_municipio.ocupantes.painel_gestor_titulo') }}</h2>
@@ -120,26 +120,26 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="mt-4 flex justify-center">
-                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-btn-success inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold no-underline">{{ __('Ver painel completo de indicadores') }}</a>
+                <p class="mt-auto flex justify-center pt-4">
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-btn-primary inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold no-underline">{{ __('Ver painel completo de indicadores') }}</a>
                 </p>
             @else
                 <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>
             @endif
         </section>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex min-h-0 flex-col gap-4 lg:h-full">
             @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-                <section class="v-dash-card border-l-4 border-l-blue-500/85" aria-labelledby="gestor-monitor-heading">
+                <section class="v-dash-card shrink-0 border-l-4 border-l-blue-500/85" aria-labelledby="gestor-monitor-heading">
                     <h2 id="gestor-monitor-heading" class="v-dash-card__title">{{ __('Monitoramento no mês corrente') }}</h2>
                     <p class="mt-2 text-lg font-semibold leading-snug text-slate-900 dark:text-slate-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
                     <p class="mt-1 text-sm tabular-nums text-slate-600 dark:text-slate-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro em monitoradas') : __('registros em monitoradas') }}</p>
                 </section>
             @endif
 
-            <section class="v-dash-card min-w-0" aria-labelledby="gestor-atalhos-heading">
+            <section class="v-dash-card flex min-h-0 min-w-0 flex-1 flex-col" aria-labelledby="gestor-atalhos-heading">
                 <h2 id="gestor-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
-                <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
+                <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4 min-h-0 flex-1 content-start">
                     <a href="{{ route('gestor.pendentes') }}" class="v-dash-shortcut {{ $pendentesCount > 0 ? 'v-dash-shortcut--primary' : '' }}">
                         <x-heroicon-o-exclamation-triangle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
@@ -164,6 +164,13 @@
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
+                    <a href="{{ route('gestor.locais.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-map-pin class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Locais') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
                     <a href="{{ route('gestor.doencas.index') }}" class="v-dash-shortcut">
                         <x-heroicon-o-beaker class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
@@ -182,6 +189,13 @@
                         <x-heroicon-o-document-text class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
                             <span class="v-dash-shortcut__label">{{ __('Relatórios') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.logs.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-clipboard-document-check class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Auditoria') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>

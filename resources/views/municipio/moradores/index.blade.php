@@ -21,8 +21,8 @@
 
     <div class="v-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <a href="{{ route($profile . '.locais.moradores.create', $local) }}"
-           class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900">
-            <x-heroicon-o-plus class="mr-2 h-4 w-4 shrink-0" />
+           class="v-btn-compact v-btn-compact--blue">
+            <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ __('Cadastrar ocupante') }}
         </a>
     </div>
@@ -53,7 +53,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse ($moradores as $m)
-                        <tr class="text-gray-800 transition-colors hover:bg-gray-50/80 dark:text-gray-200 dark:hover:bg-gray-900/40">
+                        <tr class="v-table-row-interactive text-gray-800 dark:text-gray-200">
                             <td class="px-4 py-3">{{ $m->mor_nome ?: '-' }}</td>
                             <td class="px-4 py-3 tabular-nums">{{ $m->mor_data_nascimento ? $m->mor_data_nascimento->format('d/m/Y') : '-' }}</td>
                             <td class="px-4 py-3">{{ $m->idadeAnos() !== null ? $m->idadeAnos() . ' ' . __('anos') : '-' }}</td>

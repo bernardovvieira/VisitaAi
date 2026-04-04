@@ -27,8 +27,8 @@
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ __('Use a busca para filtrar por nome, sintomas, transmissão ou medidas de controle.') }}</p>
             </div>
             <a href="{{ route('gestor.doencas.create') }}"
-               class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:bg-blue-600 dark:hover:bg-blue-500">
-                <x-heroicon-o-plus class="h-5 w-5 shrink-0" />
+               class="v-btn-compact v-btn-compact--blue shrink-0">
+                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                 {{ __('Cadastrar doença') }}
             </a>
         </div>
@@ -80,7 +80,7 @@
                             <td class="text-center">
                                 <div class="flex justify-center gap-1.5">
                                     <a href="{{ route('gestor.doencas.show', $doenca) }}"
-                                       class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                                       class="v-btn-icon-primary"
                                        title="{{ __('Visualizar') }}"
                                        aria-label="{{ __('Visualizar doença') }}">
                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
@@ -114,8 +114,8 @@
                                     </div>
                                     <p class="v-empty-state__title">{{ __('Nenhuma doença cadastrada no município.') }}</p>
                                     <p class="v-empty-state__text">{{ __('Cadastre as doenças monitoradas para orientar ACE e ACS em campo.') }}</p>
-                                    <a href="{{ route('gestor.doencas.create') }}" class="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">
-                                        <x-heroicon-o-plus class="h-4 w-4 shrink-0" />
+                                    <a href="{{ route('gestor.doencas.create') }}" class="v-btn-compact v-btn-compact--blue mt-5">
+                                        <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Cadastrar doença') }}
                                     </a>
                                 </div>

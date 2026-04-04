@@ -43,8 +43,8 @@
                     {{ __('Não há visitas no sistema. Relatórios, indicadores e PDF ficam disponíveis após o cadastro de visitas pelos profissionais de campo.') }}
                 </p>
                 <p class="mt-2 text-xs text-slate-500 dark:text-slate-500">{{ __('Inclui perfis ACE e ACS.') }}</p>
-                <a href="{{ route('gestor.visitas.index') }}" class="btn-acesso-principal mt-6 inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition">
-                    <x-heroicon-o-eye class="h-5 w-5 shrink-0" />
+                <a href="{{ route('gestor.visitas.index') }}" class="v-btn-compact v-btn-compact--blue mt-6">
+                    <x-heroicon-o-eye class="h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ __('Ir para visitas') }}
                 </a>
             </div>
@@ -174,7 +174,7 @@
                              class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
                             <template x-for="opt in filtered" :key="opt.id">
                                 <div @click="toggle(opt)" role="option"
-                                     class="flex items-center justify-between w-full px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                     class="v-list-item-hover flex w-full cursor-pointer items-center justify-between px-3 py-2 text-sm"
                                      :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': isSelected(opt.id) }">
                                     <span x-text="opt.label" class="truncate flex-1"></span>
                                     <span x-show="isSelected(opt.id)" class="ml-2 text-slate-600 dark:text-slate-300">✓</span>
@@ -240,7 +240,7 @@
                              class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
                             <template x-for="opt in filtered" :key="opt">
                                 <div @click="toggle(opt)" role="option" :aria-selected="selected.includes(opt)"
-                                     class="px-3 py-2 cursor-pointer text-sm flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700"
+                                     class="v-list-item-hover flex cursor-pointer items-center justify-between px-3 py-2 text-sm"
                                      :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': selected.includes(opt) }">
                                     <span x-text="opt"></span>
                                     <span x-show="selected.includes(opt)" class="text-slate-600 dark:text-slate-300">✓</span>
@@ -254,8 +254,8 @@
                     </template>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center">
-                    <button type="submit" class="btn-acesso-principal inline-flex items-center justify-center px-4 py-2 text-white font-medium rounded-md shadow-sm transition h-10">Filtrar</button>
-                    <a href="{{ route('gestor.relatorios.index') }}" class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-medium rounded-md transition hover:bg-gray-300 dark:hover:bg-gray-500 h-10">Limpar</a>
+                    <button type="submit" class="v-btn-primary h-10 px-5">{{ __('Filtrar') }}</button>
+                    <a href="{{ route('gestor.relatorios.index') }}" class="v-btn-secondary h-10 px-5">{{ __('Limpar') }}</a>
                 </div>
             </form>
             <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
@@ -272,7 +272,7 @@
                         alert(msg);
                         return;
                     } gerarBase64Graficos();"
-                    class="inline-flex items-center gap-1.5 rounded-md bg-gray-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50">
+                    class="v-btn-slate gap-1.5 disabled:cursor-not-allowed disabled:opacity-50">
                     <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
                     Gerar relatório em PDF
                 </button>
@@ -400,7 +400,7 @@
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                 @forelse ($visitasPaginated as $visita)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <tr class="v-table-row-interactive">
                         <td class="p-4">
                             <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
                                 #{{ $visita->vis_id }}
@@ -452,7 +452,7 @@
                         </td>
                         <td class="p-4 text-center">
                             <a href="{{ route('gestor.visitas.show', $visita) }}"
-                               class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                               class="v-btn-icon-primary"
                                title="{{ __('Visualizar') }}"
                                aria-label="{{ __('Visualizar visita') }}">
                                 <x-heroicon-o-eye class="h-4 w-4 shrink-0" />

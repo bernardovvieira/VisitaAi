@@ -67,11 +67,11 @@
             </div>
             <div class="flex flex-wrap gap-3">
                 <button type="submit"
-                        class="inline-flex items-center rounded-md border border-transparent bg-slate-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 dark:bg-slate-600 dark:hover:bg-slate-500">
+                        class="v-btn-slate !px-2.5 !py-1 !text-xs">
                     Confirmar e ativar 2FA
                 </button>
                 <a href="{{ route('profile.edit') }}"
-                   class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40">
+                   class="v-btn-danger !px-2.5 !py-1 !text-xs">
                     Cancelar
                 </a>
             </div>

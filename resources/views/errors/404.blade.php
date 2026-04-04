@@ -18,7 +18,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased text-gray-900 dark:text-gray-100">
-    <a href="#error-main" class="fixed left-4 top-0 z-[200] -translate-y-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg outline-none ring-2 ring-blue-400 ring-offset-2 transition-transform focus:translate-y-4 dark:ring-offset-slate-900">{{ __('Ir para o conteúdo') }}</a>
+    <a href="#error-main" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
     <div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-4 py-12 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <main id="error-main" tabindex="-1" class="w-full max-w-md text-center outline-none">
             <div class="mb-6">
@@ -31,15 +31,15 @@
                 </p>
                 <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="v-btn-primary inline-flex items-center justify-center px-4 py-2.5 text-[13px] font-semibold">
+                        <a href="{{ route('dashboard') }}" class="v-btn-primary">
                             {{ __('Ir para o painel') }}
                         </a>
                     @else
-                        <a href="{{ url('/') }}" class="v-btn-primary inline-flex items-center justify-center px-4 py-2.5 text-[13px] font-semibold">
+                        <a href="{{ url('/') }}" class="v-btn-primary">
                             {{ __('Voltar ao início') }}
                         </a>
                     @endauth
-                    <a href="javascript:history.back()" class="v-btn-secondary inline-flex items-center justify-center px-4 py-2.5 text-[13px] font-semibold">
+                    <a href="javascript:history.back()" class="v-btn-secondary">
                         {{ __('Voltar…') }}
                     </a>
                 </div>

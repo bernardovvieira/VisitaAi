@@ -167,7 +167,7 @@
                     </div>
                     <div class="flex justify-end">
                         <button type="button" id="btn-minha-localizacao" onclick="obterMinhaLocalizacao()"
-                                class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow transition">
+                                class="v-btn-primary w-full">
                             Minha Localização
                         </button>
                     </div>
@@ -197,8 +197,7 @@
             </fieldset>
 
             <div class="flex justify-end">
-                <button type="submit"
-                        class="btn-acesso-principal px-6 py-2 text-white font-semibold text-sm rounded-lg shadow-md transition">
+                <button type="submit" class="v-btn-primary px-6">
                     Salvar Alterações
                 </button>
             </div>

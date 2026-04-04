@@ -101,7 +101,7 @@
                             <td class="tabular-nums text-xs text-slate-600 dark:text-slate-400">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="text-center">
                                 <a href="{{ route('gestor.locais.show', $local) }}"
-                                    class="btn-acesso-principal inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                                    class="v-btn-icon-primary"
                                     title="{{ __('Visualizar') }}"
                                     aria-label="{{ __('Visualizar local') }}">
                                     <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
