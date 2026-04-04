@@ -66,7 +66,9 @@
         <div class="p-4 sm:p-5">
             <h2 id="consulta-doencas-titulo" class="v-section-title">{{ __('Doenças monitoradas no município') }}</h2>
             <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                @if($doencas->isEmpty())
+                @if($doencasIndisponivel ?? false)
+                    {{ __('Não foi possível carregar a lista de doenças neste momento. A consulta pelo código do imóvel acima continua disponível. Se o problema persistir, tente mais tarde ou procure a Secretaria Municipal de Saúde.') }}
+                @elseif($doencas->isEmpty())
                     {{ __('Aqui serão listadas as doenças que o gestor cadastrou para vigilância municipal — com sintomas, transmissão e o que fazer para se proteger. Enquanto não houver cadastro, a tabela fica vazia.') }}
                 @else
                     {{ __('Informações de apoio à população: sintomas comuns, como a doença pode ser transmitida e medidas de controle recomendadas pelo município.') }}
@@ -74,7 +76,12 @@
             </p>
         </div>
 
-        @if($doencas->isEmpty())
+        @if($doencasIndisponivel ?? false)
+            <div class="border-t border-amber-200/80 bg-amber-50/60 px-4 py-10 text-center dark:border-amber-900/40 dark:bg-amber-950/25 sm:px-5" role="status">
+                <p class="text-sm font-medium text-amber-900 dark:text-amber-100">{{ __('Serviço temporariamente indisponível') }}</p>
+                <p class="mt-2 text-sm text-amber-800/90 dark:text-amber-200/90">{{ __('As orientações sobre doenças não puderam ser exibidas. Use o formulário acima para verificar visitas no seu imóvel.') }}</p>
+            </div>
+        @elseif($doencas->isEmpty())
             <div class="border-t border-slate-200/80 px-4 py-10 text-center dark:border-slate-700/80 sm:px-5">
                 <p class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('Nenhuma doença cadastrada no momento') }}</p>
                 <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ __('Volte mais tarde ou procure a Secretaria Municipal de Saúde para orientações gerais sobre dengue e outras arboviroses.') }}</p>

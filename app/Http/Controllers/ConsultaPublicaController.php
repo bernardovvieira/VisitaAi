@@ -13,14 +13,22 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ConsultaPublicaController extends Controller
 {
     public function index()
     {
-        $doencas = Doenca::all();
+        $doencasIndisponivel = false;
+        try {
+            $doencas = Doenca::query()->orderBy('doe_nome')->get();
+        } catch (\Throwable $e) {
+            report($e);
+            $doencas = new Collection;
+            $doencasIndisponivel = true;
+        }
 
-        return view('consulta.index', compact('doencas'));
+        return view('consulta.index', compact('doencas', 'doencasIndisponivel'));
     }
 
     public function consultaPorCodigo(Request $request)
