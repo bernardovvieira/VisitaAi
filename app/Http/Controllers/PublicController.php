@@ -9,8 +9,8 @@ class PublicController extends Controller
 {
     public function welcome()
     {
+        $local = null;
         try {
-            $local = null;
             try {
                 $local = Local::query()->orderBy('loc_id')->first();
             } catch (\Throwable $e) {
@@ -19,11 +19,19 @@ class PublicController extends Controller
                 ]);
             }
 
-            return view('welcome', compact('local'));
+            // render() aqui: exceções do Blade/layout (ex.: @vite) ocorrem dentro deste try;
+            // apenas `return view()` adia a renderização até depois do controller (500 sem catch).
+            return response(view('welcome', compact('local'))->render());
         } catch (\Throwable $e) {
             report($e);
 
-            return response()->view('welcome-fallback', [], 200);
+            try {
+                return response(view('welcome-fallback', [])->render(), 200);
+            } catch (\Throwable $e2) {
+                report($e2);
+
+                return response(view('welcome-fallback-minimal', [])->render(), 200);
+            }
         }
     }
 }
