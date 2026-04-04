@@ -2,7 +2,7 @@
 <header class="v-topbar h-12 text-slate-800 dark:text-slate-100">
     <div class="flex min-w-0 flex-1 items-center gap-0.5 sm:flex-none sm:gap-1">
         <button type="button"
-                class="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 lg:hidden"
+                class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 lg:hidden"
                 @click="sidebarOpen = true"
                 x-bind:aria-expanded="sidebarOpen"
                 aria-controls="app-sidebar"
@@ -21,8 +21,10 @@
     </div>
 
     <div class="flex shrink-0 items-center gap-0.5 sm:gap-2">
-        <span class="inline-flex p-2"
-              :title="online ? '{{ __('Conectado à internet') }}' : '{{ __('Sem conexão à internet') }}'"
+        <span class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center p-2"
+              role="status"
+              x-bind:aria-label="online ? @js(__('Conectado à internet')) : @js(__('Sem conexão à internet'))"
+              :title="online ? @js(__('Conectado à internet')) : @js(__('Sem conexão à internet'))"
               x-cloak>
             <span class="relative flex h-2.5 w-2.5">
                 <span x-show="online" class="absolute inline-flex h-full w-full rounded-full bg-emerald-500 dark:bg-emerald-400"></span>

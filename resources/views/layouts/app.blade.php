@@ -132,6 +132,7 @@
         </style>
     </head>
     <body class="font-sans antialiased text-[15px] leading-relaxed {{ View::hasSection('public') ? 'bg-white' : 'bg-slate-50' }} dark:bg-gray-950">
+        <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         @if (View::hasSection('public'))
             <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-gray-900 dark:via-gray-900 dark:to-slate-950">
                 @isset($header)
@@ -141,7 +142,7 @@
                         </div>
                     </header>
                 @endisset
-                <main>
+                <main id="main-content" tabindex="-1">
                     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         @yield('content')
                     </div>
@@ -217,7 +218,7 @@
                                 </div>
                             </header>
                         @endisset
-                        <main class="v-app-main text-slate-800 dark:text-slate-100" x-bind:inert="sidebarOpen">
+                        <main id="main-content" class="v-app-main text-slate-800 dark:text-slate-100" tabindex="-1" x-bind:inert="sidebarOpen">
                             <div class="v-app-main-inner">
                                 @yield('content')
                             </div>
@@ -233,7 +234,7 @@
                             </div>
                         </header>
                     @endisset
-                    <main>
+                    <main id="main-content" tabindex="-1">
                         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                             @yield('content')
                         </div>

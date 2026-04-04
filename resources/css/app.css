@@ -8,6 +8,12 @@
  * KPIs densos, tabelas com cabeçalho fixo visual, acento azul para ação primária.
  */
 @layer base {
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+
     :root {
         --v-canvas: 241 245 249; /* slate-100 */
         --v-surface: 255 255 255;
@@ -147,6 +153,42 @@
 
 .sidebar-nav-scroll::-webkit-scrollbar-thumb:hover {
     background: rgb(71 85 105 / 0.85);
+}
+
+/* Link “Ir para o conteúdo”: primeiro foco no teclado (WCAG 2.4.1) */
+@layer components {
+    .visita-skip-link {
+        position: fixed;
+        left: 0.75rem;
+        top: -120px;
+        z-index: 9999;
+        padding: 0.65rem 1rem;
+        border-radius: var(--v-radius-md);
+        background-color: rgb(var(--v-accent) / 1);
+        color: rgb(255 255 255);
+        font-size: 0.875rem;
+        font-weight: 600;
+        line-height: 1.25;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgb(15 23 42 / 0.22);
+        transition: top 0.15s ease-out;
+    }
+
+    .visita-skip-link:focus {
+        top: 0.75rem;
+        outline: 2px solid rgb(255 255 255);
+        outline-offset: 2px;
+    }
+
+    .visita-skip-link:focus-visible {
+        top: 0.75rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .visita-skip-link {
+            transition: none;
+        }
+    }
 }
 
 /* Área autenticada: layout tipo ERP */
@@ -607,17 +649,31 @@
         @apply grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)];
     }
 
-    .v-dash-shortcuts {
-        @apply grid grid-cols-1 gap-2 sm:grid-cols-2;
+    .v-dash-row > * {
+        min-width: 0;
     }
 
-    /* Só 3 colunas em telas bem largas — evita cartões estreitos com texto amontoado */
-    .v-dash-shortcuts--tight {
-        @apply xl:grid-cols-3;
+    /* minmax(0,1fr): células podem encolher abaixo do min-content do texto (evita extravasar para a coluna ao lado) */
+    .v-dash-shortcuts {
+        @apply grid min-w-0 grid-cols-1 gap-2 items-start;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    @media (min-width: 640px) {
+        .v-dash-shortcuts {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    /* 3 colunas só em viewport largo — em sidebar do gestor, xl ainda é estreito */
+    @media (min-width: 1536px) {
+        .v-dash-shortcuts--tight {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
     }
 
     .v-dash-shortcut {
-        @apply flex min-h-0 min-w-0 items-start gap-2 rounded-xl border border-slate-200/95 bg-white/90 px-3 py-2.5 text-inherit no-underline transition dark:border-slate-600 dark:bg-slate-900/75;
+        @apply flex min-h-0 min-w-0 max-w-full items-start gap-2 overflow-hidden rounded-xl border border-slate-200/95 bg-white/90 px-3 py-2.5 text-inherit no-underline transition dark:border-slate-600 dark:bg-slate-900/75;
         box-shadow:
             0 2px 8px rgb(15 23 42 / 0.06),
             0 1px 2px rgb(15 23 42 / 0.03),
@@ -659,7 +715,8 @@
     }
 
     .v-dash-shortcut__label {
-        @apply text-[13px] font-semibold leading-tight text-slate-900 dark:text-slate-50;
+        @apply break-words text-[13px] font-semibold leading-tight text-slate-900 dark:text-slate-50;
+        overflow-wrap: anywhere;
     }
 
     .v-dash-shortcut--primary .v-dash-shortcut__label {
@@ -667,7 +724,12 @@
     }
 
     .v-dash-shortcut__hint {
-        @apply mt-0.5 line-clamp-2 text-[11px] leading-snug text-slate-500 dark:text-slate-400;
+        @apply mt-0.5 text-[11px] leading-snug text-slate-500 dark:text-slate-400;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        overflow-wrap: anywhere;
     }
 
     .v-dash-shortcut__chevron {

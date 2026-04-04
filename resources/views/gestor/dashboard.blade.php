@@ -137,9 +137,8 @@
                 </section>
             @endif
 
-            <section class="v-dash-card" aria-labelledby="gestor-atalhos-heading">
+            <section class="v-dash-card min-w-0" aria-labelledby="gestor-atalhos-heading">
                 <h2 id="gestor-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
-                <p class="v-dash-card__sub">{{ __('Acesso direto às rotinas mais usadas.') }}</p>
                 <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
                     <a href="{{ route('gestor.pendentes') }}" class="v-dash-shortcut {{ $pendentesCount > 0 ? 'v-dash-shortcut--primary' : '' }}">
                         <x-heroicon-o-exclamation-triangle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
