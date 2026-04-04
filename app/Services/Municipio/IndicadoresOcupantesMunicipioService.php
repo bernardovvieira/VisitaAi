@@ -132,7 +132,7 @@ class IndicadoresOcupantesMunicipioService
         $trabLabels = config('visitaai_municipio.situacao_trabalho_opcoes', []);
         $faixaLabels = config('visitaai_municipio.indicadores.colunas_faixas', []);
 
-        fputcsv($fp, ['Visita Aí — indicadores ocupantes (exportação gestor)']);
+        fputcsv($fp, ['Visita Aí: indicadores ocupantes']);
         fputcsv($fp, ['gerado_em', now()->toIso8601String()]);
         fputcsv($fp, []);
 

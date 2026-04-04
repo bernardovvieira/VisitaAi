@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Painel do ' . \App\Helpers\MsTerminologia::perfilLabel('agente_saude'))
-@section('og_description', 'Painel do ' . \App\Helpers\MsTerminologia::perfilLabel('agente_saude') . '. Registre visitas LIRAa e consulte doenças monitoradas. Conforme Lei 11.350/2006 e Diretriz MS.')
+@section('og_title', config('app.name') . ' · ' . __('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_saude')]))
+@section('og_description', __('Painel do :perfil. Registre visitas LIRAa e consulte doenças monitoradas. Conforme Lei 11.350/2006 e Diretriz MS.', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_saude')]))
 
 @section('content')
 @php

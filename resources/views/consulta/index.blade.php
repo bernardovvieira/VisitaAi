@@ -10,8 +10,8 @@
 <div class="v-page space-y-6">
     <x-page-header :eyebrow="__('Transparência para a população')" :title="__('Verificar visitas no imóvel')">
         <x-slot name="lead">
-            <p>{{ __('Consulte pelo código de oito dígitos do imóvel — o mesmo formato usado na gestão interna do sistema.') }}</p>
-            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Digite abaixo o código único do imóvel (apenas números). Você verá o endereço cadastrado, um mapa quando houver localização e o histórico de visitas — sem dados clínicos ou informações pessoais sensíveis.') }}</p>
+            <p>{{ __('Consulte pelo código de oito dígitos do imóvel (o mesmo formato usado na gestão interna do sistema).') }}</p>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Digite abaixo o código único do imóvel (apenas números). Você verá o endereço cadastrado, um mapa quando houver localização e o histórico de visitas, sem dados clínicos ou informações pessoais sensíveis.') }}</p>
             <a href="{{ url('/') }}" class="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
                 <x-heroicon-o-arrow-left class="h-4 w-4 shrink-0" aria-hidden="true" />
                 {{ __('Voltar à página inicial') }}
@@ -64,7 +64,7 @@
                 @if($doencasIndisponivel ?? false)
                     {{ __('Não foi possível carregar a lista de doenças neste momento. A consulta pelo código do imóvel acima continua disponível. Se o problema persistir, tente mais tarde ou procure a Secretaria Municipal de Saúde.') }}
                 @elseif($doencas->isEmpty())
-                    {{ __('Aqui serão listadas as doenças que o gestor cadastrou para vigilância municipal — com sintomas, transmissão e o que fazer para se proteger. Enquanto não houver cadastro, a tabela fica vazia.') }}
+                    {{ __('Aqui serão listadas as doenças que o gestor cadastrou para vigilância municipal, com sintomas, transmissão e o que fazer para se proteger. Enquanto não houver cadastro, a tabela fica vazia.') }}
                 @else
                     {{ __('Informações de apoio à população: sintomas comuns, como a doença pode ser transmitida e medidas de controle recomendadas pelo município.') }}
                 @endif

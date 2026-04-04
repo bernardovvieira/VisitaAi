@@ -7,41 +7,89 @@
 @section('og_description', __('Visita Aí reúne consulta pública pelo código do imóvel, painéis com indicadores municipais para a gestão e registro de campo por ACE/ACS, alinhado às diretrizes do Ministério da Saúde.'))
 
 @section('content')
-<div class="flex min-h-screen min-w-full items-start justify-center px-2 py-8 sm:px-4 sm:py-12 md:px-8">
-    <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
+<div class="welcome-public flex min-h-[calc(100vh-3rem)] min-w-full items-start justify-center py-6 sm:py-10 md:py-12">
+    <div class="welcome-public__grid max-w-6xl w-full grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12 xl:max-w-7xl">
 
-        {{-- Mobile only --}}
-        <div class="flex lg:hidden justify-center order-first lg:order-none">
-            <div class="w-56 sm:w-64" data-aos="zoom-in" data-aos-duration="700">
+        {{-- Ilustração: no topo no mobile, à direita no desktop --}}
+        <div class="flex justify-center lg:order-2 lg:col-span-5 xl:col-span-5">
+            <div class="w-52 sm:w-64 lg:w-full lg:max-w-sm lg:sticky lg:top-28" data-aos="zoom-in" data-aos-duration="680">
                 <x-welcome-illustration />
             </div>
         </div>
 
-        {{-- Lado esquerdo: texto, benefícios, indicadores, ações --}}
-        <div class="space-y-8 md:pl-4 max-w-xl lg:max-w-none lg:pr-4" id="welcome-col-principal">
-            <div class="space-y-4" id="anim-texto">
-                <h1 class="text-4xl font-extrabold leading-tight text-gray-900 dark:text-white">
-                    {{ __('Bem-vindo(a) ao') }}
-                    <span class="text-blue-600 dark:text-blue-400">{{ config('app.brand') }}</span>
-                </h1>
+        {{-- Coluna principal: marca, texto, ações, blocos --}}
+        <div class="welcome-public__main space-y-8 lg:order-1 lg:col-span-7 xl:col-span-7" id="welcome-col-principal">
+
+            {{-- Cabeçalho: logo + título + município + lead --}}
+            <header class="welcome-public__hero space-y-4" id="anim-texto">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+                    <img
+                        src="{{ asset('images/visitaai.svg') }}"
+                        alt="{{ __('Marca do aplicativo') }} — {{ config('app.brand') }}"
+                        width="64"
+                        height="64"
+                        class="welcome-public__logo h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16"
+                        decoding="async" />
+                    <div class="min-w-0 flex-1 space-y-1">
+                        <p class="text-[11px] font-bold uppercase leading-snug tracking-[0.14em] text-blue-600 dark:text-blue-400 sm:text-xs">
+                            {{ __('Vigilância entomológica e controle de vetores') }}
+                        </p>
+                        <h1 class="text-balance text-3xl font-extrabold leading-tight text-gray-900 dark:text-white sm:text-4xl">
+                            {{ __('Bem-vindo(a) ao') }}
+                            <span class="text-blue-600 dark:text-blue-400">{{ config('app.brand') }}</span>
+                        </h1>
+                    </div>
+                </div>
+
                 @if ($local)
-                    <p class="text-lg font-medium text-blue-700 dark:text-blue-300">
+                    <p class="inline-flex items-center gap-2 rounded-full border border-blue-200/90 bg-blue-50/90 px-3 py-1 text-sm font-semibold text-blue-800 dark:border-blue-800/60 dark:bg-blue-950/50 dark:text-blue-200">
+                        <svg class="h-4 w-4 shrink-0 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
                         {{ $local->loc_cidade }}/{{ $local->loc_estado }}
                     </p>
                 @endif
-                <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed max-w-2xl font-medium">
+
+                <p class="text-pretty max-w-2xl text-base font-medium leading-relaxed text-gray-600 dark:text-gray-400">
                     {{ __('Transparência para quem mora no imóvel, indicadores para quem gerencia o município e apoio digital a ACE e ACS — em um só lugar, com foco em dengue e outras arboviroses.') }}
                 </p>
-            </div>
+            </header>
 
-            {{-- Benefícios: realce no cliente (hover + AOS) --}}
-            <div class="space-y-3" id="welcome-beneficios-wrap">
-                <h2 class="text-xs font-bold uppercase tracking-[0.12em] text-blue-600 dark:text-blue-400">
+            {{-- Ações principais (logo após o resumo) --}}
+            <section class="welcome-public__actions space-y-3" aria-label="{{ __('Acesse o sistema ou consulte seu imóvel') }}">
+                <h2 class="text-xs font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                    {{ __('Acesse o sistema ou consulte seu imóvel') }}
+                </h2>
+                <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap" id="anim-botoes">
+                    <a href="{{ route('login') }}"
+                       class="v-btn-primary group justify-center gap-2 focus-visible:ring-blue-500/40 sm:min-w-[12rem]">
+                        <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        {{ __('Acessar o sistema') }}
+                    </a>
+                    <a href="{{ route('consulta.index') }}"
+                       class="v-btn-secondary group justify-center gap-2 sm:min-w-[12rem]">
+                        <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                        </svg>
+                        {{ __('Verificar visitas no imóvel') }}
+                    </a>
+                </div>
+            </section>
+
+            {{-- Benefícios em painel único --}}
+            <section
+                class="welcome-public__benefits rounded-3xl border border-slate-200/90 bg-white/70 p-5 shadow-sm ring-1 ring-slate-900/[0.03] dark:border-slate-700 dark:bg-slate-900/45 dark:ring-white/[0.05] sm:p-6"
+                id="welcome-beneficios-wrap"
+                aria-labelledby="welcome-beneficios-heading">
+                <h2 id="welcome-beneficios-heading" class="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-blue-600 dark:text-blue-400">
                     {{ __('Benefícios em destaque') }}
                 </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <article
-                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-700 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
+                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-600/80 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
                         data-aos="fade-up"
                         data-aos-delay="0">
                         <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300">
@@ -56,7 +104,7 @@
                         </p>
                     </article>
                     <article
-                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-700 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
+                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-600/80 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
                         data-aos="fade-up"
                         data-aos-delay="80">
                         <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300">
@@ -70,7 +118,7 @@
                         </p>
                     </article>
                     <article
-                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-700 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
+                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-600/80 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
                         data-aos="fade-up"
                         data-aos-delay="160">
                         <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200">
@@ -84,7 +132,7 @@
                         </p>
                     </article>
                     <article
-                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-700 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
+                        class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-600/80 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
                         data-aos="fade-up"
                         data-aos-delay="240">
                         <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-800 dark:bg-violet-950/80 dark:text-violet-300">
@@ -98,14 +146,14 @@
                         </p>
                     </article>
                 </div>
-            </div>
+            </section>
 
-            {{-- Indicadores municipais (citado para gestão; acesso via login) --}}
+            {{-- Indicadores municipais --}}
             <div
-                class="relative overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/95 via-white to-sky-50/80 px-5 py-4 dark:border-indigo-500/30 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-sky-950/30"
+                class="welcome-public__insight relative overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/95 via-white to-sky-50/80 px-5 py-4 sm:px-6 sm:py-5 dark:border-indigo-500/30 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-sky-950/30"
                 id="welcome-indicadores"
                 data-aos="fade-up"
-                data-aos-delay="100">
+                data-aos-delay="60">
                 <div class="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-indigo-400/20 blur-2xl dark:bg-indigo-400/10" aria-hidden="true"></div>
                 <h2 class="text-sm font-bold text-indigo-950 dark:text-indigo-200">
                     {{ __('Indicadores municipais no painel do gestor') }}
@@ -115,47 +163,43 @@
                 </p>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4" id="anim-botoes">
-                <a href="{{ route('login') }}"
-                   class="v-btn-primary group gap-2 focus-visible:ring-blue-500/40">
-                    <svg class="h-5 w-5 transform transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                    {{ __('Acessar o sistema') }}
-                </a>
-
-                <a href="{{ route('consulta.index') }}"
-                   class="v-btn-secondary group gap-2">
-                    <svg class="h-5 w-5 transform transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-                    </svg>
-                    {{ __('Verificar visitas no imóvel') }}
-                </a>
-            </div>
-
             {{-- Conformidade MS --}}
-            <div class="rounded-xl border border-blue-200/90 bg-blue-50/90 px-4 py-3 dark:border-blue-800 dark:bg-blue-950/35" id="anim-conformidade">
+            <div class="welcome-public__ms rounded-xl border border-blue-200/90 bg-blue-50/90 px-4 py-4 dark:border-blue-800 dark:bg-blue-950/35 sm:px-5" id="anim-conformidade">
                 <p class="flex items-center gap-2 text-sm font-semibold text-blue-950 dark:text-blue-100">
                     <svg class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                     {{ __('Alinhado às diretrizes do Ministério da Saúde') }}
                 </p>
-                <p class="mt-1 text-xs leading-relaxed text-blue-900/90 dark:text-blue-200/90">
+                <p class="mt-2 text-xs leading-relaxed text-blue-900/90 dark:text-blue-200/90">
                     {{ __('O Visita Aí segue a Lei nº 11.350/2006 (ACE e ACS), a diretriz de atuação integrada desses profissionais, as diretrizes nacionais de arboviroses urbanas e o Programa Nacional de Controle da Dengue (PNCD), como referência para o trabalho em campo e a transparência para a população.') }}
                 </p>
             </div>
 
-            <p class="text-xs text-gray-400 dark:text-gray-500" id="anim-footer">
-                &copy; {{ date('Y') }} Visita Aí · {{ __('Desenvolvido por') }} <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-gray-700 dark:text-gray-400">Bitwise Technologies</a>
-            </p>
-        </div>
-
-        {{-- Desktop only --}}
-        <div class="hidden lg:flex justify-center lg:sticky lg:top-8" id="anim-ilustracao">
-            <div class="w-full max-w-md" data-aos="fade-left" data-aos-duration="700">
-                <x-welcome-illustration />
-            </div>
+            {{-- Rodapé: marcas + crédito --}}
+            <footer class="welcome-public__footer border-t border-slate-200/80 pt-6 dark:border-slate-700/80" id="anim-footer">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-center gap-3">
+                        <img
+                            src="{{ asset('images/visitaai.svg') }}"
+                            alt=""
+                            width="40"
+                            height="40"
+                            class="h-9 w-9 object-contain opacity-90 dark:opacity-95"
+                            aria-hidden="true"
+                            decoding="async" />
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            <span class="font-semibold text-gray-700 dark:text-gray-300">{{ config('app.brand') }}</span>
+                            <span class="mx-1.5 text-gray-300 dark:text-gray-600" aria-hidden="true">·</span>
+                            &copy; {{ date('Y') }}
+                        </p>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ __('Desenvolvido por') }}
+                        <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-gray-700 underline-offset-2 hover:text-blue-600 hover:underline dark:text-gray-300 dark:hover:text-blue-400">Bitwise Technologies</a>
+                    </p>
+                </div>
+            </footer>
         </div>
 
     </div>
@@ -170,7 +214,7 @@
         AOS.init({
             duration: 680,
             once: true,
-            offset: 32,
+            offset: 28,
             easing: 'ease-out-cubic',
         });
     }
@@ -180,7 +224,6 @@
         initWelcomeMotion();
     }
 
-    // Reforço no cliente: pulse discreto nos cards ao entrar no viewport (acessível: apenas classe visual)
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduced && 'IntersectionObserver' in window) {
         var cards = document.querySelectorAll('.welcome-benefit-card');

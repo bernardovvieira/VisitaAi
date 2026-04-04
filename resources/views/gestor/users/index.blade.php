@@ -88,7 +88,7 @@
                                 @if(method_exists($usuario, 'hasEnabledTwoFactorAuthentication') && $usuario->hasEnabledTwoFactorAuthentication())
                                     <span class="inline-flex rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-200">{{ __('Ativo') }}</span>
                                 @else
-                                    <span class="text-slate-400 dark:text-slate-500">—</span>
+                                    <span class="text-slate-400 dark:text-slate-500">{{ __('N/D') }}</span>
                                 @endif
                             </td>
                             <td class="text-slate-600 dark:text-slate-400">{{ $usuario->use_data_criacao->format('d/m/Y') }}</td>

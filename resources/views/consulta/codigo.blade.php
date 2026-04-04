@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta do imóvel'))
-@section('og_description', isset($local) ? __('Histórico público de visitas de vigilância em :cidade/:uf — datas e status, sem dados sensíveis.', ['cidade' => $local->loc_cidade, 'uf' => $local->loc_estado]) : __('Resultado da consulta pelo código do imóvel.'))
+@section('og_description', isset($local) ? __('Histórico público de visitas de vigilância em :cidade/:uf; datas e status, sem dados sensíveis.', ['cidade' => $local->loc_cidade, 'uf' => $local->loc_estado]) : __('Resultado da consulta pelo código do imóvel.'))
 
 @section('content')
 @php
@@ -14,7 +14,7 @@
 <div class="v-page max-w-5xl space-y-6">
     <x-page-header :eyebrow="__('Consulta pública')" :title="__('Visitas registradas neste endereço')">
         <x-slot name="lead">
-            <p>{{ __('Os dados abaixo são apenas informativos: localização cadastrada, datas das visitas, tipo de atividade em campo e se havia pendência na época — no mesmo padrão resumido visto na gestão interna, sem identificar o profissional.') }}</p>
+            <p>{{ __('Os dados abaixo são apenas informativos: localização cadastrada, datas das visitas, tipo de atividade em campo e se havia pendência na época, no mesmo padrão resumido visto na gestão interna, sem identificar o profissional.') }}</p>
             <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
                     class="v-btn-secondary mt-4 inline-flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold">
                 <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
@@ -31,7 +31,7 @@
             <span class="text-gray-600">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
         </p>
         <div class="flex justify-center">
-            <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="{{ __('QR Code — consulta pública deste imóvel') }}" class="w-32 h-32 block" width="128" height="128">
+            <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="{{ __('QR Code: consulta pública deste imóvel') }}" class="w-32 h-32 block" width="128" height="128">
         </div>
         <p class="text-[10px] text-gray-500 break-all mt-4 font-mono leading-tight px-1">{{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}</p>
         <p class="text-[9px] text-gray-400 mt-5">{{ __('Bitwise Technologies') }}</p>

@@ -1,8 +1,8 @@
 <!-- resources/views/gestor/locais/index.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Locais')
-@section('og_description', 'Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação (vigilância entomológica e controle vetorial).')
+@section('og_title', config('app.name') . ' · ' . __('Locais'))
+@section('og_description', __('Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação (vigilância entomológica e controle vetorial).'))
 
 @section('content')
 <div class="v-page">

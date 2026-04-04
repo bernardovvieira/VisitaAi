@@ -11,13 +11,18 @@
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas'), 'url' => route('agente.visitas.index')], ['label' => __('Cadastrar')]]" />
 
     <section class="v-card dark:bg-gray-800">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Registrar visita</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('Registrar visita') }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Preencha os dados da visita e dos tratamentos realizados.
+            {{ __('Preencha os dados da visita e dos tratamentos realizados.') }}
         </p>
         <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            <strong>Sem internet?</strong> Use o botão "Guardar no dispositivo para enviar depois" no final do formulário. A visita fica salva só no seu aparelho. Quando tiver conexão, abra o menu Visitas e clique em "Enviar visitas salvas no dispositivo" para enviar todas de uma vez.<br>
-            <b>Nota:</b> Antes de ir a campo, abra a tela de registrar visita pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.
+            <strong>{{ __('Sem internet?') }}</strong>
+            {{ __('Use o botão «:btn» no final do formulário. A visita fica salva só no seu aparelho. Quando tiver conexão, abra o menu Visitas e clique em «:menu» para enviar todas de uma vez.', [
+                'btn' => __('Guardar no dispositivo para enviar depois'),
+                'menu' => __('Enviar visitas salvas no dispositivo'),
+            ]) }}<br>
+            <span class="font-semibold">{{ __('Nota:') }}</span>
+            {{ __('Antes de ir a campo, abra a tela de registrar visita pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.') }}
         </p>
     </section>
 
@@ -40,28 +45,28 @@
 
             {{-- Dados básicos --}}
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Dados Básicos</legend>
+                <legend class="v-section-title mb-2">{{ __('Dados básicos') }}</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="vis_data" class="v-toolbar-label">Data da Visita <span class="text-red-500">*</span></label>
+                        <label for="vis_data" class="v-toolbar-label">{{ __('Data da visita') }} <span class="text-red-500">*</span></label>
                         <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="vis_ciclo" class="v-toolbar-label">Ciclo/Ano <span class="text-red-500">*</span></label>
+                        <label for="vis_ciclo" class="v-toolbar-label">{{ __('Ciclo/ano') }} <span class="text-red-500">*</span></label>
                         <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required
                             class="v-input mt-1"
-                            placeholder="mm/aa">
+                            placeholder="{{ __('mm/aa') }}">
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/{{ now()->format('y') }}" para a primeira referência do ano de {{ now()->year }}.
+                    {{ __('O ciclo deve ser informado no formato «mm/aa», por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
                 </p>
             </fieldset>
 
             {{-- Localização --}}
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Localização</legend>
+                <legend class="v-section-title mb-2">{{ __('Localização') }}</legend>
                 <div class="col-span-1 sm:col-span-2"
                     x-data="{
                         open: false,

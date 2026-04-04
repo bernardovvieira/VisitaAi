@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Painel do Gestor')
-@section('og_description', 'Painel do gestor municipal. Acompanhe estatísticas e gerencie doenças, locais, visitas, usuários e relatórios.')
+@section('og_title', config('app.name') . ' · ' . __('Painel do gestor'))
+@section('og_description', __('Painel do gestor municipal. Acompanhe estatísticas e gerencie doenças, locais, visitas, usuários e relatórios.'))
 
 @section('content')
 @php
@@ -113,7 +113,7 @@
                         <tbody>
                             @foreach($ocupantesPorBairroTop as $row)
                                 <tr>
-                                    <td class="font-medium" title="{{ $row->bairro }}">{{ $row->bairro ?: '—' }}</td>
+                                    <td class="font-medium" title="{{ $row->bairro }}">{{ $row->bairro ?: __('N/D') }}</td>
                                     <td class="text-right tabular-nums font-semibold">{{ $row->total_moradores }}</td>
                                 </tr>
                             @endforeach

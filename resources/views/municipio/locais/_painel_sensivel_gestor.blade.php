@@ -1,4 +1,4 @@
-{{-- Painel com dados identificáveis e socioeconômicos — apenas gestor, ficha do imóvel após busca em Locais. --}}
+{{-- Painel com dados identificáveis e socioeconômicos; apenas gestor, ficha do imóvel após busca em Locais. --}}
 @php
     $cfg = config('visitaai_municipio.ocupantes', []);
     $escL = config('visitaai_municipio.escolaridade_opcoes', []);
@@ -35,13 +35,13 @@
                     @foreach($local->moradores->sortBy('mor_id') as $m)
                         <tr class="bg-white/90 dark:bg-gray-900/50">
                             <td class="whitespace-nowrap px-3 py-2 font-mono text-xs text-rose-900 dark:text-rose-100/90">{{ $m->mor_id }}</td>
-                            <td class="max-w-[12rem] truncate px-3 py-2 text-rose-950 dark:text-rose-50" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: '—' }}</td>
-                            <td class="whitespace-nowrap px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? '—' }}</td>
-                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $escL[$m->mor_escolaridade] ?? ($m->mor_escolaridade ?? '—') }}</td>
-                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $rendaL[$m->mor_renda_faixa] ?? ($m->mor_renda_faixa ?? '—') }}</td>
-                            <td class="max-w-[8rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $corL[$m->mor_cor_raca] ?? ($m->mor_cor_raca ?? '—') }}</td>
-                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $trabL[$m->mor_situacao_trabalho] ?? ($m->mor_situacao_trabalho ?? '—') }}</td>
-                            <td class="max-w-[14rem] whitespace-pre-wrap px-3 py-2 text-xs text-rose-900 dark:text-rose-100/85">{{ $m->mor_observacao ?: '—' }}</td>
+                            <td class="max-w-[12rem] truncate px-3 py-2 text-rose-950 dark:text-rose-50" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: __('N/D') }}</td>
+                            <td class="whitespace-nowrap px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? __('N/D') }}</td>
+                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $escL[$m->mor_escolaridade] ?? ($m->mor_escolaridade ?? __('N/D')) }}</td>
+                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $rendaL[$m->mor_renda_faixa] ?? ($m->mor_renda_faixa ?? __('N/D')) }}</td>
+                            <td class="max-w-[8rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $corL[$m->mor_cor_raca] ?? ($m->mor_cor_raca ?? __('N/D')) }}</td>
+                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $trabL[$m->mor_situacao_trabalho] ?? ($m->mor_situacao_trabalho ?? __('N/D')) }}</td>
+                            <td class="max-w-[14rem] whitespace-pre-wrap px-3 py-2 text-xs text-rose-900 dark:text-rose-100/85">{{ $m->mor_observacao ?: __('N/D') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -58,7 +58,7 @@
             @foreach($visitasComObs as $vis)
                 <li class="rounded-lg border border-rose-200/70 bg-white/60 p-3 dark:border-rose-800/60 dark:bg-gray-900/40">
                     <p class="font-medium text-rose-950 dark:text-rose-50">
-                        {{ __('Visita') }} #{{ $vis->vis_id }} — {{ $vis->vis_data ? \Carbon\Carbon::parse($vis->vis_data)->format('d/m/Y') : '—' }}
+                        {{ __('Visita') }} #{{ $vis->vis_id }}, {{ $vis->vis_data ? \Carbon\Carbon::parse($vis->vis_data)->format('d/m/Y') : __('N/D') }}
                     </p>
                     <ul class="mt-2 space-y-1.5 border-t border-rose-100/80 pt-2 dark:border-rose-800/50">
                         @foreach($vis->vis_ocupantes_observacoes as $mid => $texto)
@@ -66,7 +66,7 @@
                             <li class="text-rose-900/95 dark:text-rose-100/90">
                                 <span class="font-mono text-[11px] text-rose-700 dark:text-rose-300">#{{ $midInt }}</span>
                                 @if(filled($nomeMor))
-                                    <span class="font-medium"> — {{ $nomeMor }}</span>
+                                    <span class="font-medium">: {{ $nomeMor }}</span>
                                 @endif
                                 <span class="block mt-0.5 whitespace-pre-wrap text-xs">{{ $texto }}</span>
                             </li>

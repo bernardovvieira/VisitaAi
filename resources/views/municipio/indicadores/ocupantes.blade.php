@@ -30,7 +30,7 @@
     })->implode('; ');
 @endphp
 
-@section('og_title', config('app.name') . ' · ' . ($cfgInd['titulo_pagina'] ?? 'Indicadores'))
+@section('og_title', config('app.name') . ' · ' . ($cfgInd['titulo_pagina'] ?? __('Indicadores')))
 @section('og_description', trim(implode(' ', array_filter([(string) ($cfgInd['subtitulo'] ?? ''), (string) ($cfgInd['subtitulo_detalhe'] ?? '')]))))
 
 @section('content')
@@ -49,38 +49,64 @@
 
     <x-page-header :eyebrow="__('Gestão municipal')" :title="$cfgInd['titulo_pagina'] ?? __('Indicadores')">
         <x-slot name="lead">
-            @if(filled($cfgInd['subtitulo'] ?? ''))
-                <p class="text-sm text-slate-600 dark:text-slate-400">{{ $cfgInd['subtitulo'] }}</p>
-            @endif
-            @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
-                <p class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $cfgInd['subtitulo_detalhe'] }}</p>
+            @if(filled($cfgInd['subtitulo'] ?? '') || filled($cfgInd['subtitulo_detalhe'] ?? ''))
+                <details class="text-sm text-slate-600 dark:text-slate-400">
+                    <summary class="cursor-pointer list-inside list-none font-medium text-slate-700 marker:hidden hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100 [&::-webkit-details-marker]:hidden">
+                        {{ __('Sobre este painel') }}
+                    </summary>
+                    <div class="mt-2 space-y-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                        @if(filled($cfgInd['subtitulo'] ?? ''))
+                            <p>{{ $cfgInd['subtitulo'] }}</p>
+                        @endif
+                        @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
+                            <p>{{ $cfgInd['subtitulo_detalhe'] }}</p>
+                        @endif
+                    </div>
+                </details>
             @endif
         </x-slot>
     </x-page-header>
 
     <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        <p class="text-[11px] leading-snug text-slate-600 dark:text-slate-400 max-w-xl">{{ $cfgInd['export_csv_aviso'] ?? '' }}</p>
+        @if(filled($cfgInd['export_csv_aviso'] ?? ''))
+            <details class="max-w-xl text-[11px] leading-snug text-slate-600 dark:text-slate-400">
+                <summary class="cursor-pointer list-inside list-none font-medium text-slate-700 marker:hidden dark:text-slate-300 [&::-webkit-details-marker]:hidden">
+                    {{ __('Sobre a exportação CSV') }}
+                </summary>
+                <p class="mt-1.5">{{ $cfgInd['export_csv_aviso'] }}</p>
+            </details>
+        @endif
         <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-           class="v-btn-compact v-btn-compact--slate shrink-0 text-sm">
+           class="v-btn-compact v-btn-compact--green shrink-0 text-sm sm:ms-auto">
             <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
         </a>
     </div>
 
-    <section class="v-card border-amber-200/90 bg-amber-50/95 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
-        <p><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
-        <p class="mt-1.5 text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
-        <p class="mt-1.5 text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
-        <p class="mt-1.5 text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
-    </section>
+    <details class="v-card list-none border-amber-200/90 bg-amber-50/95 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
+        <summary class="cursor-pointer list-none px-3 py-2.5 text-sm font-semibold text-amber-950 marker:hidden dark:text-amber-50 [&::-webkit-details-marker]:hidden">
+            {{ __('Avisos: privacidade, supressão e limites de uso') }}
+        </summary>
+        <div class="space-y-1.5 border-t border-amber-200/80 px-3 pb-3 pt-2 dark:border-amber-800/60">
+            <p><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
+            <p class="text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
+            <p class="text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
+            <p class="text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
+        </div>
+    </details>
 
-    <x-lgpd.aviso context="painel_indicadores" class="border-amber-200/40 bg-slate-50/95 dark:border-amber-900/30 dark:bg-slate-900/35" />
+    <x-lgpd.aviso context="painel_indicadores" compact class="max-w-none border-amber-200/40 dark:border-amber-900/30" />
 
     @php $Q = $painel['completude']; @endphp
     <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
         <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_completude'] ?? __('Qualidade do preenchimento') }}</h2>
         @if(filled($cfgInd['subtitulo_completude'] ?? ''))
-            <p class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $cfgInd['subtitulo_completude'] }}</p>
+            <details class="mt-1 text-xs text-slate-600 dark:text-slate-400">
+                <summary class="cursor-pointer list-inside list-none font-medium text-slate-600 marker:hidden dark:text-slate-400 [&::-webkit-details-marker]:hidden">
+                    {{ __('Notas sobre completude') }}
+                </summary>
+                <p class="mt-1.5 leading-relaxed text-slate-500 dark:text-slate-400">{{ $cfgInd['subtitulo_completude'] }}</p>
+            </details>
         @endif
         <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
             <div>
@@ -95,7 +121,7 @@
             </div>
             <div>
                 <div class="flex items-baseline justify-between gap-2">
-                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Escolaridade (categoria definida)') }}</p>
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Escolaridade') }}</p>
                     <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_escolaridade_informada'] }}%</p>
                 </div>
                 <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
@@ -105,7 +131,7 @@
             </div>
             <div>
                 <div class="flex items-baseline justify-between gap-2">
-                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Renda (faixa definida)') }}</p>
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Renda') }}</p>
                     <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_renda_informada'] }}%</p>
                 </div>
                 <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
@@ -115,7 +141,7 @@
             </div>
             <div>
                 <div class="flex items-baseline justify-between gap-2">
-                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Cor/raça informada') }}</p>
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Cor/raça') }}</p>
                     <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_cor_raca_informada'] }}%</p>
                 </div>
                 <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
@@ -125,7 +151,7 @@
             </div>
             <div>
                 <div class="flex items-baseline justify-between gap-2">
-                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Situação de trabalho informada') }}</p>
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Trabalho') }}</p>
                     <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_situacao_trabalho_informada'] }}%</p>
                 </div>
                 <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
@@ -173,18 +199,29 @@
                     </div>
                 @endforeach
             </div>
-            @if(filled($cfgInd['legenda_mapa_calor_faixa'] ?? ''))
-                <p class="mt-2 text-[10px] leading-snug text-slate-500 dark:text-slate-400">{{ $cfgInd['legenda_mapa_calor_faixa'] }}</p>
-            @endif
         </div>
     </section>
 
+    @php
+        $mostrarLegendaTabela = filled($cfgInd['legenda_mapa_calor_tabela'] ?? '') && ($painel['resumo']['total_ocupantes'] ?? 0) > 0;
+    @endphp
+    <details class="text-[11px] leading-snug text-slate-600 dark:text-slate-400">
+        <summary class="cursor-pointer list-inside list-none font-medium text-slate-700 marker:hidden dark:text-slate-300 [&::-webkit-details-marker]:hidden">
+            {{ __('Como ler mapas de calor e tabela por bairro') }}
+        </summary>
+        <div class="mt-2 space-y-1.5 border-t border-slate-200/80 pt-2 dark:border-slate-600">
+            <p>{{ __('Deslize a tabela para ver todas as colunas; a coluna do bairro fica fixa.') }}</p>
+            @if(filled($cfgInd['legenda_mapa_calor_faixa'] ?? ''))
+                <p>{{ $cfgInd['legenda_mapa_calor_faixa'] }}</p>
+            @endif
+            @if($mostrarLegendaTabela)
+                <p class="text-blue-700/90 dark:text-blue-300/85">{{ $cfgInd['legenda_mapa_calor_tabela'] }}</p>
+            @endif
+        </div>
+    </details>
+
     <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
         <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_bairro'] ?? 'Por bairro' }}</h2>
-        <p class="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{{ __('Deslize a tabela para ver todas as colunas; a coluna do bairro fica fixa.') }}</p>
-        @if(filled($cfgInd['legenda_mapa_calor_tabela'] ?? '') && ($painel['resumo']['total_ocupantes'] ?? 0) > 0)
-            <p class="mt-1 text-[10px] leading-snug text-blue-700/85 dark:text-blue-300/80">{{ $cfgInd['legenda_mapa_calor_tabela'] }}</p>
-        @endif
         <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-600">
                 <thead>
@@ -232,7 +269,6 @@
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none lg:col-span-1">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_escolaridade'] ?? 'Escolaridade' }}</h2>
-            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['escolaridade'] as $codigo => $qtd)
                     @php
@@ -250,7 +286,6 @@
         </section>
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_renda'] ?? 'Renda' }}</h2>
-            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['renda'] as $codigo => $qtd)
                     @php
@@ -271,7 +306,6 @@
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_cor_raca'] ?? __('Cor ou raça') }}</h2>
-            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['cor_raca'] ?? [] as $codigo => $qtd)
                     @php
@@ -289,7 +323,6 @@
         </section>
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_situacao_trabalho'] ?? __('Situação no trabalho') }}</h2>
-            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['situacao_trabalho'] ?? [] as $codigo => $qtd)
                     @php
@@ -314,11 +347,18 @@
     @endphp
     @if(($cruz['total_cruzamento'] ?? 0) > 0)
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
-            <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_cruzamento'] ?? __('Escolaridade e renda (cruzamento)') }}</h2>
-            @if(filled($cfgInd['legenda_cruzamento'] ?? ''))
-                <p class="mt-1 text-[10px] leading-snug text-slate-500 dark:text-slate-400">{{ $cfgInd['legenda_cruzamento'] }}</p>
-            @endif
-            <p class="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Base') }}: {{ number_format($cruz['total_cruzamento'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $cruz['total_cruzamento']) }}.</p>
+            <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_cruzamento'] ?? __('Escolaridade e renda') }}</h2>
+            <details class="mt-1 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
+                <summary class="cursor-pointer list-inside list-none font-medium text-slate-600 marker:hidden dark:text-slate-400 [&::-webkit-details-marker]:hidden">
+                    {{ __('Notas sobre o cruzamento') }}
+                </summary>
+                <div class="mt-1.5 space-y-1.5">
+                    @if(filled($cfgInd['legenda_cruzamento'] ?? ''))
+                        <p>{{ $cfgInd['legenda_cruzamento'] }}</p>
+                    @endif
+                    <p>{{ __('Base') }}: {{ number_format($cruz['total_cruzamento'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $cruz['total_cruzamento']) }}.</p>
+                </div>
+            </details>
             <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
                 <table class="min-w-full divide-y divide-gray-200 text-xs dark:divide-gray-600 sm:text-sm">
                     <thead>

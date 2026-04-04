@@ -103,7 +103,7 @@ return [
     | Force HTTPS URLs
     |--------------------------------------------------------------------------
     | Quando true (ou null em produção com APP_URL em https), o gerador de URLs
-    | usa https:// — útil atrás de proxy TLS (Coolify, nginx).
+    | usa https:// (útil atrás de proxy TLS: Coolify, nginx).
     */
 
     'force_https' => env('APP_FORCE_HTTPS'),
@@ -225,7 +225,7 @@ return [
          */
         AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        App\Providers\FortifyServiceProvider::class,    // <— adicione aqui
+        App\Providers\FortifyServiceProvider::class,    // <- adicione aqui
         EventServiceProvider::class,
         RouteServiceProvider::class,
     ],

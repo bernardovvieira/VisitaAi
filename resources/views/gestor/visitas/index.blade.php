@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Visitas')
-@section('og_description', 'Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).')
+@section('og_title', config('app.name') . ' · ' . __('Visitas'))
+@section('og_description', __('Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).'))
 
 @section('content')
 <div class="v-page">

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Relatórios')
-@section('og_description', 'Relatórios e indicadores epidemiológicos. Gere PDF e visualize indicadores do período selecionado.')
+@section('og_title', config('app.name') . ' · ' . __('Relatórios'))
+@section('og_description', __('Relatórios e indicadores epidemiológicos. Gere PDF e visualize indicadores do período selecionado.'))
 
 @section('content')
 <!-- Overlay de carregamento -->
@@ -66,6 +66,13 @@
                 filtrosAplicados: false,
                 filtrosAlterados: false,
                 appliedParams: { data_unica: '', data_inicio: '', data_fim: '', local_ids: [] },
+                relPdfMsgs: @js([
+                    'filtrosAlterados' => __('Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.'),
+                    'diario' => __('Selecione a data para o relatório diário e clique em Filtrar.'),
+                    'semanal' => __('Selecione as datas de início e fim e clique em Filtrar.'),
+                    'individual' => __('Selecione ao menos um local e clique em Filtrar.'),
+                    'generico' => __('Aplique os filtros antes de gerar o PDF.'),
+                ]),
                 get botaoAtivo() {
                     if (this.filtrosAlterados) return false;
                     if (this.tipo === 'completo') return true;
@@ -90,26 +97,26 @@
             <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
-                    <label class="v-toolbar-label mb-1">Tipo <span class="text-red-500">*</span></label>
+                    <label class="v-toolbar-label mb-1">{{ __('Tipo') }} <span class="text-red-500">*</span></label>
                     <select name="tipo_relatorio" x-model="tipo" class="v-select">
-                        <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>Completo</option>
-                        <option value="diario">Diário</option>
-                        <option value="semanal">Por período</option>
-                        <option value="individual">Individual</option>
+                        <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>{{ __('Completo') }}</option>
+                        <option value="diario">{{ __('Diário') }}</option>
+                        <option value="semanal">{{ __('Por período') }}</option>
+                        <option value="individual">{{ __('Individual') }}</option>
                     </select>
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
-                    <label class="v-toolbar-label mb-1">Data <span class="text-red-500">*</span></label>
+                    <label class="v-toolbar-label mb-1">{{ __('Data') }} <span class="text-red-500">*</span></label>
                     <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="v-input" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
-                            <label class="v-toolbar-label mb-1">Início <span class="text-red-500">*</span></label>
+                            <label class="v-toolbar-label mb-1">{{ __('Início') }} <span class="text-red-500">*</span></label>
                             <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="v-input" />
                         </div>
                         <div>
-                            <label class="v-toolbar-label mb-1">Fim <span class="text-red-500">*</span></label>
+                            <label class="v-toolbar-label mb-1">{{ __('Fim') }} <span class="text-red-500">*</span></label>
                             <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="v-input" />
                         </div>
                     </div>
@@ -157,18 +164,18 @@
                         }, (array) request('local_id', [])))
                     )) }}"
                     @click.outside="open = false">
-                    <label class="v-toolbar-label mb-1">Local(is) <span class="text-red-500">*</span></label>
+                    <label class="v-toolbar-label mb-1">{{ __('Local(is)') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <div @click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
                             <template x-for="item in selected" :key="item.id">
                                 <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="item.label" class="truncate max-w-[200px]"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="Remover">×</button>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
                                 </span>
                             </template>
-                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar local..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
+                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="{{ __('Buscar local...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
                                    @keydown.escape="open = false">
-                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">Selecione um Local</span>
+                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Selecione um Local') }}</span>
                         </div>
                         <div x-show="open" x-transition
                              class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
@@ -180,7 +187,7 @@
                                     <span x-show="isSelected(opt.id)" class="ml-2 text-slate-600 dark:text-slate-300">✓</span>
                                 </div>
                             </template>
-                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Nenhum local encontrado</div>
+                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('Nenhum local encontrado') }}</div>
                         </div>
                     </div>
                     <template x-for="item in selected" :key="item.id">
@@ -193,6 +200,8 @@
                         search: '',
                         options: [],
                         selected: [],
+                        emptyBairroCadastrado: @js(__('Nenhum bairro cadastrado nos locais.')),
+                        emptyBairroBusca: @js(__('Nenhum bairro encontrado para a busca.')),
                         get filtered() {
                             const q = this.search.toLowerCase();
                             return this.options.filter(o => o.toLowerCase().includes(q));
@@ -223,18 +232,18 @@
                     data-options="{{ e(json_encode($bairros ?? [])) }}"
                     data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
                     @click.outside="open = false">
-                    <label class="v-toolbar-label mb-1">Bairro(s)</label>
+                    <label class="v-toolbar-label mb-1">{{ __('Bairro(s)') }}</label>
                     <div class="relative">
                         <div @click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">
                                 <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="val"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="Remover">×</button>
+                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
                                 </span>
                             </template>
-                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="Buscar bairro..." class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
+                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="{{ __('Buscar bairro...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
                                    @keydown.escape="open = false">
-                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">Selecione um ou mais bairros...</span>
+                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Selecione um ou mais bairros...') }}</span>
                         </div>
                         <div x-show="open" x-transition
                              class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
@@ -246,7 +255,7 @@
                                     <span x-show="selected.includes(opt)" class="text-slate-600 dark:text-slate-300">✓</span>
                                 </div>
                             </template>
-                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" x-text="options.length === 0 ? 'Nenhum bairro cadastrado nos locais.' : 'Nenhum bairro encontrado para a busca.'"></div>
+                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" x-text="options.length === 0 ? emptyBairroCadastrado : emptyBairroBusca"></div>
                         </div>
                     </div>
                     <template x-for="val in selected" :key="val">
@@ -260,23 +269,23 @@
             </form>
             <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
                 <p x-show="filtrosAlterados" x-cloak class="text-sm text-amber-600 dark:text-amber-400 mb-2 font-medium">
-                    Você alterou os filtros. Clique em <strong>Filtrar</strong> antes de gerar o PDF para que o relatório use os dados corretos.
+                    {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
                 </p>
                 <button type="button" :disabled="!botaoAtivo"
                     @click.prevent="if (!botaoAtivo) {
-                        let msg = filtrosAlterados ? 'Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.' : '';
-                        if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = 'Selecione a data para o relatório diário e clique em Filtrar.';
-                        if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = 'Selecione as datas de início e fim e clique em Filtrar.';
-                        if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = 'Selecione ao menos um local e clique em Filtrar.';
-                        if (!msg) msg = 'Aplique os filtros antes de gerar o PDF.';
+                        let msg = filtrosAlterados ? relPdfMsgs.filtrosAlterados : '';
+                        if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = relPdfMsgs.diario;
+                        if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = relPdfMsgs.semanal;
+                        if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = relPdfMsgs.individual;
+                        if (!msg) msg = relPdfMsgs.generico;
                         alert(msg);
                         return;
                     } gerarBase64Graficos();"
-                    class="v-btn-slate gap-1.5 disabled:cursor-not-allowed disabled:opacity-50">
+                    class="v-btn-danger gap-1.5 disabled:cursor-not-allowed disabled:opacity-50">
                     <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    Gerar relatório em PDF
+                    {{ __('Gerar relatório em PDF') }}
                 </button>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Filtre os dados e clique no botão para gerar o documento.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>
             </div>
         </div>
     </div>
@@ -328,7 +337,7 @@
                     <x-heroicon-o-map-pin class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" />
                     <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Bairro com mais ocorrências') }}</h3>
                 </div>
-                <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{{ $bairroMaisFrequente ?: '—' }}</p>
+                <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{{ $bairroMaisFrequente ?: __('N/D') }}</p>
             </div>
         </div>
     </section>
@@ -338,31 +347,31 @@
         <h2 class="v-section-title mb-4 text-base">{{ __('Análise visual') }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:grid-rows-2 sm:auto-rows-fr">
             <div class="flex flex-col min-h-[13rem]">
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Visitas por bairro</h3>
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">{{ __('Visitas por bairro') }}</h3>
                 <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
                     <canvas id="graficoBairros" width="400" height="168" class="max-w-full"></canvas>
-                    <p id="graficoBairrosVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Sem dados no período.</p>
+                    <p id="graficoBairrosVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">{{ __('Sem dados no período.') }}</p>
                 </div>
             </div>
             <div class="flex flex-col min-h-[13rem]">
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Doenças registradas</h3>
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">{{ __('Doenças registradas') }}</h3>
                 <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
                     <canvas id="graficoDoencas" width="400" height="168" class="max-w-full"></canvas>
-                    <p id="graficoDoencasVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Nenhuma doença registrada.</p>
+                    <p id="graficoDoencasVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">{{ __('Nenhuma doença registrada.') }}</p>
                 </div>
             </div>
             <div class="flex flex-col min-h-[13rem]">
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Visitas por dia</h3>
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">{{ __('Visitas por dia') }}</h3>
                 <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
                     <canvas id="graficoDias" width="400" height="168" class="max-w-full"></canvas>
-                    <p id="graficoDiasVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Sem dados no período.</p>
+                    <p id="graficoDiasVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">{{ __('Sem dados no período.') }}</p>
                 </div>
             </div>
             <div class="flex flex-col min-h-[13rem]">
-                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">Formas de tratamento</h3>
+                <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">{{ __('Formas de tratamento') }}</h3>
                 <div class="flex-1 min-h-[12rem] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center justify-center overflow-hidden">
                     <canvas id="graficoTratamentos" width="400" height="168" class="max-w-full"></canvas>
-                    <p id="graficoTratamentosVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">Nenhum tratamento registrado.</p>
+                    <p id="graficoTratamentosVazio" class="hidden w-full h-full min-h-[12rem] flex items-center justify-center text-base text-gray-600 dark:text-gray-300 px-6 py-8 text-center m-0">{{ __('Nenhum tratamento registrado.') }}</p>
                 </div>
             </div>
         </div>
@@ -374,7 +383,7 @@
         <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Concentração de visitas no território.') }}</p>
         <div class="relative h-64 w-full overflow-hidden rounded-lg border" style="border-color: rgb(var(--v-border) / 1);">
             <div id="mapa-calor" class="w-full h-full rounded-lg"></div>
-            <p id="mapa-calor-vazio" class="hidden absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/80 rounded-lg m-0">Nenhuma visita com localização no período.</p>
+            <p id="mapa-calor-vazio" class="hidden absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/80 rounded-lg m-0">{{ __('Nenhuma visita com localização no período.') }}</p>
         </div>
     </section>
 
@@ -386,16 +395,16 @@
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
             <thead class="bg-gray-100 dark:bg-gray-700">
                 <tr>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Código</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Data</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Pendência</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Local</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">Atividade</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Código') }}</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Data') }}</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Pendência') }}</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Local') }}</th>
+                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Atividade') }}</th>
                     <th class="p-4 text-left align-bottom font-semibold text-gray-700 dark:text-gray-300">
-                        <span class="block leading-tight">Profissional</span>
-                        <span class="mt-0.5 block text-[10px] font-normal text-gray-500 dark:text-gray-400">ACE ou ACS</span>
+                        <span class="block leading-tight">{{ __('Profissional') }}</span>
+                        <span class="mt-0.5 block text-[10px] font-normal text-gray-500 dark:text-gray-400">{{ __('ACE ou ACS') }}</span>
                     </th>
-                    <th class="p-4 text-center font-semibold text-gray-700 dark:text-gray-300">Ações</th>
+                    <th class="p-4 text-center font-semibold text-gray-700 dark:text-gray-300">{{ __('Ações') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -417,7 +426,7 @@
                         <td class="p-4 text-gray-800 dark:text-gray-100">
                             @if($visita->vis_pendencias)
                                 <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                    Pendente
+                                    {{ __('Pendente') }}
                                 </span>
 
                                 @php
@@ -429,23 +438,23 @@
 
                                 @if($revisitaPosterior)
                                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
-                                        Revisitado em {{ \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y') }}
+                                        {{ __('Revisitado em :data', ['data' => \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y')]) }}
                                     </div>
                                 @endif
                             @else
                                 <span class="inline-block rounded bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-900 dark:bg-emerald-900/45 dark:text-emerald-200">
-                                    Concluída
+                                    {{ __('Concluída') }}
                                 </span>
                             @endif
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
                             <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
-                                Bairro/Localidade: {{ $visita->local->loc_bairro }} · Cód.: {{ $visita->local->loc_codigo_unico }}
+                                {{ __('Bairro/Localidade: :bairro · Cód.: :codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
                             </div>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
-                            <span class="text-sm">{{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: 'Não informado' }}</span>
+                            <span class="text-sm">{{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: __('Não informado') }}</span>
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
                             {{ $visita->usuario->use_nome ?? '-' }}
@@ -461,7 +470,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="p-6 text-center text-gray-600 dark:text-gray-400 italic">Nenhuma visita encontrada.</td>
+                        <td colspan="7" class="p-6 text-center text-gray-600 dark:text-gray-400 italic">{{ __('Nenhuma visita encontrada.') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -472,7 +481,7 @@
         <x-pagination-relatorio :paginator="$visitasPaginated" item-label="visitas" />
     @endif
     @if(isset($visitasPaginated) && $visitasPaginated->total() == 0)
-        <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Nenhuma visita no período.</p>
+        <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">{{ __('Nenhuma visita no período.') }}</p>
     @endif
 </section>
 
@@ -491,16 +500,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const REL_I18N = @json([
+        'visitas' => __('Visitas'),
+        'desconhecido' => __('Desconhecido'),
+        'ni' => __('N/I'),
+        'indefinida' => __('Indefinida'),
+    ]);
     const visitas = @json($visitasParaGraficos ?? []);
 
     const contagemPorBairro = {};
     const contagemPorDoenca = {};
 
     (Array.isArray(visitas) ? visitas : []).forEach(v => {
-        const bairro = (v.local && v.local.loc_bairro) ? String(v.local.loc_bairro) : 'Desconhecido';
+        const bairro = (v.local && v.local.loc_bairro) ? String(v.local.loc_bairro) : REL_I18N.desconhecido;
         contagemPorBairro[bairro] = (contagemPorBairro[bairro] || 0) + 1;
         (v.doencas || []).forEach(d => {
-            const nome = (d && d.doe_nome) ? String(d.doe_nome) : 'N/I';
+            const nome = (d && d.doe_nome) ? String(d.doe_nome) : REL_I18N.ni;
             contagemPorDoenca[nome] = (contagemPorDoenca[nome] || 0) + 1;
         });
     });
@@ -514,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'bar',
             data: {
                 labels: labelsBairro,
-                datasets: [{ label: 'Visitas', data: dataBairro, backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }]
+                datasets: [{ label: REL_I18N.visitas, data: dataBairro, backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
@@ -605,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const base64Mapa = await new Promise(resolve => {
             leafletImage(mapa, function(err, canvas) {
                 if (err || !canvas) {
-                    console.error("Erro ao capturar o mapa:", err);
+                    console.error(@json(__('Erro ao capturar o mapa:')), err);
                     return resolve("");
                 }
                 resolve(canvas.toDataURL("image/png"));
@@ -679,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'line',
             data: {
                 labels: datasOrdenadas,
-                datasets: [{ label: 'Visitas', data: datasOrdenadas.map(d => contagemPorData[d]), borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.2)', tension: 0.3, fill: true }]
+                datasets: [{ label: REL_I18N.visitas, data: datasOrdenadas.map(d => contagemPorData[d]), borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.2)', tension: 0.3, fill: true }]
             },
             options: {
                 responsive: true,
@@ -697,7 +712,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contagemTratamentoForma = {};
     (Array.isArray(visitas) ? visitas : []).forEach(v => {
         (v.tratamentos || []).forEach(t => {
-            const forma = t.trat_forma ?? 'Indefinida';
+            const forma = t.trat_forma ?? REL_I18N.indefinida;
             contagemTratamentoForma[forma] = (contagemTratamentoForma[forma] || 0) + 1;
         });
     });

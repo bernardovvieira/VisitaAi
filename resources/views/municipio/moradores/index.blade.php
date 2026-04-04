@@ -6,7 +6,7 @@
         ['label' => __('Página Inicial'), 'url' => route('dashboard')],
         ['label' => __('Locais'), 'url' => route($profile . '.locais.index')],
         ['label' => __('Visualizar'), 'url' => route($profile . '.locais.show', $local)],
-        ['label' => 'Moradores'],
+        ['label' => __('Ocupantes')],
     ])" />
 
     @if(session('success'))

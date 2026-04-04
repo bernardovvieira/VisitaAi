@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Locais')
-@section('og_description', 'Locais de visitação. Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.')
+@section('og_title', config('app.name') . ' · ' . __('Locais'))
+@section('og_description', __('Locais de visitação. Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')
 <div class="v-page">

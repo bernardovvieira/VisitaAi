@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · Auditoria')
-@section('og_description', 'Registros de auditoria. Histórico de ações realizadas pelos usuários no sistema.')
+@section('og_title', config('app.name') . ' · ' . __('Auditoria'))
+@section('og_description', __('Registros de auditoria. Histórico de ações realizadas pelos usuários no sistema.'))
 
 @section('content')
 <div class="v-page">
@@ -59,12 +59,12 @@
                             <td class="max-w-xs text-slate-600 dark:text-slate-400">{{ Str::limit($log->log_descricao, 120) }}</td>
                             <td class="text-sm">
                                 @if($log->log_ip || $log->log_user_agent)
-                                    <span class="tabular-nums text-slate-800 dark:text-slate-200" title="{{ $log->log_user_agent ?? '' }}">{{ $log->log_ip ?? '—' }}</span>
+                                    <span class="tabular-nums text-slate-800 dark:text-slate-200" title="{{ $log->log_user_agent ?? '' }}">{{ $log->log_ip ?? __('N/D') }}</span>
                                     @if($log->log_user_agent)
                                         <span class="mt-0.5 block max-w-[14rem] truncate text-xs text-slate-500 dark:text-slate-400" title="{{ $log->log_user_agent }}">{{ Str::limit($log->log_user_agent, 48) }}</span>
                                     @endif
                                 @else
-                                    <span class="text-slate-400">—</span>
+                                    <span class="text-slate-400">{{ __('N/D') }}</span>
                                 @endif
                             </td>
                         </tr>

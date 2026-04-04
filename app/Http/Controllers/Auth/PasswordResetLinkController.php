@@ -39,7 +39,7 @@ class PasswordResetLinkController extends Controller
             'use_email' => $request->input('email'),
         ]);
 
-        // 3) Mesma mensagem e mesmo canal (flash de status) para enviado, e-mail inexistente, etc. — evita enumeração
+        // 3) Mesma mensagem e mesmo canal (flash de status) para enviado, e-mail inexistente, etc.; evita enumeração
         $neutral = __('Se o e-mail estiver cadastrado, você receberá um link de recuperação de senha.');
 
         if ($status === Password::RESET_THROTTLED) {

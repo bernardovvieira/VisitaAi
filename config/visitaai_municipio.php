@@ -13,15 +13,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Proteção de dados — legislação federal brasileira
+    | Proteção de dados: legislação federal brasileira
     |--------------------------------------------------------------------------
     | CF/1988, Lei 8.080/1990, LGPD, LAI, Marco Civil e normas da ANPD.
     | Complementar com assessoria jurídica municipal e Encarregado (art. 41 LGPD).
     */
     'lgpd' => [
-        'titulo' => 'Proteção de dados pessoais — legislação federal (LGPD, LAI, Marco Civil e correlatos)',
+        'titulo' => 'Proteção de dados pessoais: legislação federal (LGPD, LAI, Marco Civil e correlatos)',
 
-        'quadro_legislacao_federal' => 'Observa-se, entre outras, a Constituição Federal de 1988 — inviolabilidade da intimidade e da vida privada (art. 5º, X e XII); direito à saúde e organização do SUS (arts. 196 a 200). Lei nº 8.080/1990 — promoção, proteção e recuperação da saúde e organização do SUS (ações de vigilância sanitária articuladas no sistema). Lei nº 13.709/2018 (LGPD). Lei nº 12.527/2011 (LAI). Lei nº 12.965/2014 (Marco Civil da Internet — arts. 7º a 10, inclusive registros e sigilo). Normas editadas pela ANPD (institucionalizada pela Lei nº 14.058/2020, nos termos do art. 55-J da LGPD), quando aplicáveis.',
+        'quadro_legislacao_federal' => 'Observa-se, entre outras, a Constituição Federal de 1988: inviolabilidade da intimidade e da vida privada (art. 5º, X e XII); direito à saúde e organização do SUS (arts. 196 a 200). Lei nº 8.080/1990: promoção, proteção e recuperação da saúde e organização do SUS (ações de vigilância sanitária articuladas no sistema). Lei nº 13.709/2018 (LGPD). Lei nº 12.527/2011 (LAI). Lei nº 12.965/2014 (Marco Civil da Internet, arts. 7º a 10, inclusive registros e sigilo). Normas editadas pela ANPD (institucionalizada pela Lei nº 14.058/2020, nos termos do art. 55-J da LGPD), quando aplicáveis.',
 
         'principios_lgpd' => 'Princípios do art. 6º da LGPD: boa-fé; finalidade; adequação; necessidade; livre acesso; qualidade dos dados; transparência; segurança; prevenção; não discriminação; responsabilização e prestação de contas.',
 
@@ -41,7 +41,7 @@ return [
 
         'titulares_direitos' => 'Direitos do art. 18 da LGPD perante o controlador, sem prejuízo de hipóteses legais de indeferimento, incluindo confirmação de tratamento, acesso, correção, anonimização, bloqueio ou eliminação, portabilidade nos termos regulamentares da ANPD, informações sobre compartilhamento e sobre consentimento, revogação do consentimento quando for a base legal, e demais prerrogativas previstas na legislação federal.',
 
-        'encarregado_titulo' => 'Encarregado (DPO) / canal municipal — art. 41 da LGPD',
+        'encarregado_titulo' => 'Encarregado (DPO) / canal municipal (art. 41 da LGPD)',
         'encarregado_texto' => 'O art. 41 da LGPD prevê o encarregado como canal de comunicação entre controlador, titulares e ANPD. O município deve divulgar contato funcional (e-mail, protocolo ou ouvidoria) em sítio oficial, conforme arts. 23, § 1º, e 26 da LGPD quando aplicáveis ao setor público.',
 
         'retencao' => 'Conservação conforme finalidade, necessidade e prazos legais ou regulamentares de guarda; possibilidade de anonimização ou eliminação quando autorizada (art. 16, LGPD) e legislação de arquivo público.',
@@ -63,7 +63,7 @@ return [
         'contextos' => [
             'ocupantes_cadastro' => 'Minimização e finalidade (art. 6º, LGPD) e competências de vigilância em saúde (Lei nº 8.080/1990); evitar dados clínicos de prontuário (fluxos do SUS em sistemas federais).',
             'visitas_observacoes_ocupantes' => 'Registro objetivo e não discriminatório; proteção da intimidade (CF, art. 5º, X e XII) e regime de dados sensíveis (LGPD, art. 11), quando houver.',
-            'painel_indicadores' => 'Acesso restrito; agregados com redução de risco na tela; exportação CSV com dados institucionais detalhados — uso interno, sem publicidade irresponsável (LGPD e LAI).',
+            'painel_indicadores' => 'Acesso restrito; agregados com redução de risco na tela; exportação CSV com dados institucionais detalhados; uso interno, sem publicidade irresponsável (LGPD e LAI).',
             'export_csv' => 'Documento para administração pública municipal; armazenamento e tráfego conforme políticas de TI; vedação de divulgação aberta sem critério jurídico (arts. 7º e 18, LGPD; LAI).',
             'painel_gestor_sensivel' => 'Acesso apenas por perfil autorizado; desvio de finalidade ou vazamento pode ensejar sanções previstas no ordenamento federal e municipal (LGPD e legislação de improbidade/funcional, quando aplicável).',
             'consulta_publica' => 'Transparência e minimização (arts. 6º, III, LGPD; arts. 3º a 6º, LAI); sem exposição de dados sensíveis ou identificação de moradores.',
@@ -71,7 +71,7 @@ return [
 
         'csv_secao_titulo' => 'AVISO_LEGISLACAO_FEDERAL_EXPORTACAO',
         'csv_aviso_linhas' => [
-            'Documento gerado no Visita Aí — controlador: administração pública municipal competente.',
+            'Documento gerado no Visita Aí. Controlador: administração pública municipal competente.',
             'Uso restrito à gestão e ao planejamento em vigilância/saúde pública: Constituição Federal (arts. 196-200), Lei nº 8.080/1990 e LGPD (Lei nº 13.709/2018).',
             'Matriz escolaridade × renda com contagens completas: dado institucional sensível; não publicar em meios abertos sem anonimização e parecer jurídico.',
             'Segurança e compartilhamento: arts. 6º, 7º, 11, 18, 23 a 27, 37, 41 e 46 a 49 da LGPD; transparência e sigilo: Lei nº 12.527/2011.',
@@ -83,7 +83,7 @@ return [
         'titulo_secao_local' => 'Ocupantes do imóvel',
         'titulo_listagem' => 'Ocupantes neste imóvel',
         'botao_gerenciar' => 'Gerenciar ocupantes',
-        'disclaimer' => 'Dados operacionais vinculados a este imóvel — tratamento conforme legislação federal (Constituição Federal; Lei nº 8.080/1990 — SUS; Lei nº 13.709/2018 — LGPD) e normas municipais. Informe apenas o necessário (princípio da minimização, art. 6º, III, LGPD).',
+        'disclaimer' => 'Dados operacionais vinculados a este imóvel. Tratamento conforme legislação federal (Constituição Federal; Lei nº 8.080/1990, SUS; Lei nº 13.709/2018, LGPD) e normas municipais. Informe apenas o necessário (princípio da minimização, art. 6º, III, LGPD).',
         'painel_gestor_titulo' => 'Ocupantes registrados',
         'painel_gestor_subtitulo' => '',
         'painel_gestor_bairros' => 'Por bairro',
@@ -104,11 +104,11 @@ return [
 
     'renda_faixa_opcoes' => [
         'nao_informado' => 'Não informado',
-        'ate_meio_salario' => 'Até meio salário mínimo',
+        'ate_meio_salario' => 'Até 1/2 salário mínimo',
         'ate_1_sm' => 'Até 1 salário mínimo',
         'ate_2_sm' => 'De 1 a 2 salários mínimos',
         'ate_3_sm' => 'De 2 a 3 salários mínimos',
-        'acima_3_sm' => 'Acima de 3 salários mínimos',
+        'acima_3_sm' => 'De 3 a 4 salários mínimos',
         'acima_5_sm' => 'Acima de 5 salários mínimos',
     ],
 
@@ -159,11 +159,11 @@ return [
         'titulo_secao_renda' => 'Renda',
         'titulo_secao_completude' => 'Qualidade do preenchimento',
         'subtitulo_completude' => 'Percentual de ocupantes com data de nascimento informada e com escolaridade, renda, cor/raça ou situação de trabalho além da opção “Não informado”.',
-        'titulo_secao_cruzamento' => 'Escolaridade e renda (cruzamento)',
+        'titulo_secao_cruzamento' => 'Escolaridade e renda',
         'legenda_cruzamento' => 'Cada célula é a quantidade de ocupantes na combinação de escolaridade (linha) e faixa de renda (coluna). Células com poucos casos são ocultas pelo mesmo critério de privacidade das tabelas por bairro.',
         'titulo_secao_cor_raca' => 'Cor ou raça (autodeclarada)',
         'titulo_secao_situacao_trabalho' => 'Situação no trabalho',
-        'botao_export_csv' => 'Exportar CSV (gestor)',
+        'botao_export_csv' => 'Exportar CSV',
         'export_csv_aviso' => 'Arquivo exclusivo para uso interno da administração pública municipal. Contém matriz escolaridade × renda sem supressão por célula (dado institucional sensível). Não trafegar por canais não oficiais. Fundamentos: Constituição Federal; Lei nº 8.080/1990; Lei nº 13.709/2018 (arts. 6º, 7º, 18, 46 a 49); Lei nº 12.527/2011 quando couber. O CSV inclui seção de aviso legal federal.',
         'sem_bairro_label' => 'Sem bairro',
         'colunas_faixas' => [
