@@ -6,7 +6,7 @@
     : 'inline-flex items-center';
   $btnClass = $floating
     ? 'theme-toggle-circle flex h-12 w-12 items-center justify-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/45 focus:ring-offset-2 dark:focus:ring-offset-slate-900'
-    : 'inline-flex items-center rounded-xl border border-slate-200/90 bg-white/90 p-2 text-slate-600 shadow-sm backdrop-blur-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:hover:text-white';
+    : 'inline-flex items-center justify-center rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white dark:focus-visible:ring-offset-slate-900';
 @endphp
 
 <div class="{{ $wrapperClass }}" data-theme-toggle data-floating="{{ $floating ? '1' : '0' }}">

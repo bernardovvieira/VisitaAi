@@ -551,15 +551,16 @@
     }
 
     .v-dash-shortcuts {
-        @apply grid grid-cols-1 gap-3 sm:grid-cols-2;
+        @apply grid grid-cols-1 gap-2 sm:grid-cols-2;
     }
 
+    /* Só 3 colunas em telas bem largas — evita cartões estreitos com texto amontoado */
     .v-dash-shortcuts--tight {
-        @apply lg:grid-cols-3;
+        @apply xl:grid-cols-3;
     }
 
     .v-dash-shortcut {
-        @apply flex items-center gap-3 rounded-2xl border border-slate-200/95 bg-white/90 px-5 py-4 text-inherit no-underline transition dark:border-slate-600 dark:bg-slate-900/75;
+        @apply flex min-h-0 min-w-0 items-start gap-2 rounded-xl border border-slate-200/95 bg-white/90 px-3 py-2.5 text-inherit no-underline transition dark:border-slate-600 dark:bg-slate-900/75;
         box-shadow:
             0 2px 8px rgb(15 23 42 / 0.06),
             0 1px 2px rgb(15 23 42 / 0.03),
@@ -585,7 +586,11 @@
     }
 
     .v-dash-shortcut__icon {
-        @apply shrink-0 text-blue-600 dark:text-blue-400;
+        @apply mt-0.5 shrink-0 text-blue-600 dark:text-blue-400;
+    }
+
+    .v-dash-shortcut__icon svg {
+        @apply h-4 w-4;
     }
 
     .v-dash-shortcut--primary .v-dash-shortcut__icon {
@@ -593,11 +598,11 @@
     }
 
     .v-dash-shortcut__body {
-        @apply flex min-w-0 flex-1 flex-col gap-0.5;
+        @apply flex min-w-0 flex-1 flex-col gap-0;
     }
 
     .v-dash-shortcut__label {
-        @apply text-sm font-bold text-slate-900 dark:text-slate-50;
+        @apply text-[13px] font-semibold leading-tight text-slate-900 dark:text-slate-50;
     }
 
     .v-dash-shortcut--primary .v-dash-shortcut__label {
@@ -605,11 +610,15 @@
     }
 
     .v-dash-shortcut__hint {
-        @apply text-xs text-slate-500 dark:text-slate-400;
+        @apply mt-0.5 line-clamp-2 text-[11px] leading-snug text-slate-500 dark:text-slate-400;
     }
 
     .v-dash-shortcut__chevron {
-        @apply shrink-0 text-slate-400 dark:text-slate-500;
+        @apply mt-1 shrink-0 text-slate-400 dark:text-slate-500;
+    }
+
+    .v-dash-shortcut__chevron svg {
+        @apply h-3.5 w-3.5;
     }
 
     .v-dash-alert-stack {
@@ -632,16 +641,9 @@
         @apply no-underline transition hover:brightness-[0.98] dark:hover:brightness-110;
     }
 
-    /* Trilho de navegação estrutural (todas as páginas internas) */
+    /* Trilho de navegação estrutural — fora do visual de cartão (só texto/chevrons no fundo da página) */
     .v-breadcrumbs {
-        @apply mb-4 rounded-xl border border-slate-200/70 bg-white/55 px-3 py-2 dark:border-slate-700/70 dark:bg-slate-900/45;
-        backdrop-filter: blur(10px) saturate(140%);
-        -webkit-backdrop-filter: blur(10px) saturate(140%);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-    }
-
-    .dark .v-breadcrumbs {
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+        @apply mb-0 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
     }
 
     /* ─── Componentes Blade: botões ───────────────────────────────────────── */
