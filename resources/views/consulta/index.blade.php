@@ -8,11 +8,6 @@
 
 @section('content')
 <div class="v-page space-y-6">
-    <x-breadcrumbs :items="[
-        ['label' => __('Página Inicial'), 'url' => url('/')],
-        ['label' => __('Consulta pública')],
-    ]" />
-
     <x-page-header :eyebrow="__('Transparência para a população')" :title="__('Verificar visitas no imóvel')">
         <x-slot name="lead">
             <p>{{ __('Consulte pelo código de oito dígitos do imóvel — o mesmo formato usado na gestão interna do sistema.') }}</p>
@@ -35,7 +30,7 @@
             {!! __('Informe o <strong>código numérico</strong> que consta no comprovante ou foi passado pelo ACE ou ACS na visita.') !!}
             <span class="text-red-500" aria-hidden="true">*</span>
         </label>
-        <div class="flex flex-col gap-3 md:flex-row md:items-end">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center">
             <input
                 type="text"
                 id="codigo"
@@ -50,7 +45,7 @@
                 class="v-input md:max-w-md"
                 aria-describedby="codigo-ajuda"
             />
-            <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex min-h-[2.75rem] shrink-0 items-center justify-center px-5 py-2.5 text-[13px] font-semibold">
+            <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex shrink-0 items-center justify-center px-3.5 py-1.5 text-[13px] font-semibold leading-snug">
                 {{ __('Consultar agora') }}
             </button>
         </div>

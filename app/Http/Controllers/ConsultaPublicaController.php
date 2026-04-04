@@ -101,7 +101,16 @@ class ConsultaPublicaController extends Controller
                 $qrCodeMime = 'image/svg+xml';
             }
 
-            return view('consulta.codigo', compact('local', 'visitas', 'resumos', 'revisitaPosterior', 'qrCodeBase64', 'qrCodeMime'));
+            $html = view('consulta.codigo', compact(
+                'local',
+                'visitas',
+                'resumos',
+                'revisitaPosterior',
+                'qrCodeBase64',
+                'qrCodeMime',
+            ))->render();
+
+            return response($html);
         } catch (\Throwable $e) {
             report($e);
 

@@ -3,11 +3,11 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.name'))
+@section('og_title', config('app.brand'))
 @section('og_description', __('Visita Aí apoia a vigilância entomológica e o controle de vetores no município, alinhado às diretrizes do Ministério da Saúde. Profissionais registram visitas; moradores consultam o histórico do imóvel com o código único.'))
 
 @section('content')
-<div class="flex min-h-screen min-w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-6 py-12 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 sm:px-8 md:px-12">
+<div class="flex min-h-screen min-w-full items-center justify-center px-2 py-8 sm:px-4 sm:py-12 md:px-8">
     <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {{-- Mobile only --}}
@@ -22,7 +22,7 @@
             <div class="space-y-4">
                 <h1 class="text-4xl font-extrabold leading-tight text-gray-900 dark:text-white">
                     {{ __('Bem-vindo(a) ao') }}
-                    <span class="text-blue-600 dark:text-blue-400">{{ config('app.name', 'Visita Aí') }}</span>
+                    <span class="text-blue-600 dark:text-blue-400">{{ config('app.brand') }}</span>
                 </h1>
                 @if ($local)
                     <p class="text-lg font-medium text-blue-700 dark:text-blue-300">

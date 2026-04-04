@@ -55,6 +55,11 @@ return [
     },
 
     /*
+    | Marca curta (hero público, título da home, etc.). O nome completo segue em "name".
+    */
+    'brand' => env('APP_BRAND', 'Visita Aí'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------

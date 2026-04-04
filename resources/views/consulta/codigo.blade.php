@@ -12,12 +12,6 @@
     $linhaPopup = $local->loc_endereco.', '.$numeroExibicao;
 @endphp
 <div class="v-page max-w-5xl space-y-6">
-    <x-breadcrumbs :items="[
-        ['label' => __('Página Inicial'), 'url' => url('/')],
-        ['label' => __('Consulta pública'), 'url' => route('consulta.index')],
-        ['label' => __('Cód.') . ' ' . $local->loc_codigo_unico],
-    ]" />
-
     <x-page-header :eyebrow="__('Consulta pública')" :title="__('Visitas registradas neste endereço')">
         <x-slot name="lead">
             <p>{{ __('Os dados abaixo são apenas informativos: localização cadastrada, datas das visitas, tipo de atividade em campo e se havia pendência na época — no mesmo padrão resumido visto na gestão interna, sem identificar o profissional.') }}</p>
@@ -196,25 +190,26 @@
 @endsection
 
 @push('scripts')
-<script type="application/json" id="consulta-publica-config">
-@json([
-    'codigoUnico' => $local->loc_codigo_unico,
-    'map' => [
-        'lat' => $local->loc_latitude,
-        'lng' => $local->loc_longitude,
-        'popup' => $linhaPopup,
-    ],
-    'i18n' => [
-        'noCoord' => __('Não há localização no mapa para este imóvel cadastrado.'),
-        'mapError' => __('Não foi possível carregar o mapa.'),
-        'downloadFail' => __('Não foi possível gerar a imagem do cartão. Tente novamente.'),
-        'labelShare' => __('Copiar ou compartilhar link'),
-        'labelCopied' => __('Link copiado!'),
-        'labelCopyError' => __('Não foi possível copiar'),
-        'labelShared' => __('Compartilhado!'),
-        'textShare' => __('Consulta pública de visitas no imóvel | :app', ['app' => config('app.name')]),
-    ],
-])
-</script>
+@php
+    $consultaPublicaConfig = [
+        'codigoUnico' => $local->loc_codigo_unico,
+        'map' => [
+            'lat' => $local->loc_latitude,
+            'lng' => $local->loc_longitude,
+            'popup' => $linhaPopup,
+        ],
+        'i18n' => [
+            'noCoord' => __('Não há localização no mapa para este imóvel cadastrado.'),
+            'mapError' => __('Não foi possível carregar o mapa.'),
+            'downloadFail' => __('Não foi possível gerar a imagem do cartão. Tente novamente.'),
+            'labelShare' => __('Copiar ou compartilhar link'),
+            'labelCopied' => __('Link copiado!'),
+            'labelCopyError' => __('Não foi possível copiar'),
+            'labelShared' => __('Compartilhado!'),
+            'textShare' => __('Consulta pública de visitas no imóvel | :app', ['app' => config('app.name')]),
+        ],
+    ];
+@endphp
+<script type="application/json" id="consulta-publica-config">@json($consultaPublicaConfig)</script>
 @vite(['resources/js/consulta-codigo.js'])
 @endpush
