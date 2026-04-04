@@ -30,7 +30,7 @@ class PublicController extends Controller
             } catch (\Throwable $e2) {
                 report($e2);
 
-                return response(view('welcome-fallback-minimal', [])->render(), 200);
+                return response(view('welcome-fallback-minimal', compact('local'))->render(), 200);
             }
         }
     }
