@@ -62,7 +62,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased dark:text-gray-100">
-        <a href="#guest-main" class="fixed left-4 top-0 z-[200] -translate-y-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg outline-none ring-2 ring-blue-400 ring-offset-2 transition-transform focus:translate-y-4 dark:ring-offset-slate-900">{{ __('Ir para o conteúdo') }}</a>
         <div class="flex min-h-screen flex-col items-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-4 pt-6 sm:justify-center sm:px-6 sm:pt-0 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
             <div class="flex flex-col items-center gap-3">
                 <x-application-logo />
@@ -72,7 +71,7 @@
                 </a>
             </div>
 
-            <main id="guest-main" tabindex="-1" class="mt-8 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-white/80 px-6 py-6 shadow-[0_8px_30px_rgb(15_23_42/0.08),0_1px_0_rgb(255_255_255/0.7)_inset] backdrop-blur-xl outline-none dark:border-slate-700/90 dark:bg-slate-900/75 dark:shadow-[0_8px_30px_rgb(0_0_0/0.45),inset_0_1px_0_rgb(255_255_255/0.06)] sm:mt-10 sm:rounded-[1.25rem]">
+            <main class="mt-8 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-white/80 px-6 py-6 shadow-[0_8px_30px_rgb(15_23_42/0.08),0_1px_0_rgb(255_255_255/0.7)_inset] backdrop-blur-xl dark:border-slate-700/90 dark:bg-slate-900/75 dark:shadow-[0_8px_30px_rgb(0_0_0/0.45),inset_0_1px_0_rgb(255_255_255/0.06)] sm:mt-10 sm:rounded-[1.25rem]">
                 {{ $slot }}
             </main>
         </div>
