@@ -35,7 +35,7 @@
         </button>
     </div>
 
-    <nav class="flex-1 space-y-0.5 overflow-y-auto px-2 py-3" aria-label="{{ __('Navegação') }}">
+    <nav class="sidebar-nav-scroll flex-1 space-y-0.5 overflow-y-auto overscroll-y-contain px-2 py-3" aria-label="{{ __('Navegação') }}">
         @if ($u->isGestor())
             <x-sidebar-nav-section :label="__('Geral')" :first="true" />
             <x-sidebar-link :href="route('dashboard')"
@@ -53,14 +53,6 @@
                 <span class="truncate">{{ __('Visitas') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
-                <x-sidebar-link :href="route('gestor.doencas.index')"
-                                :active="request()->routeIs('gestor.doencas.*')"
-                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                    <x-heroicon-o-beaker class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Doenças') }}</span>
-                </x-sidebar-link>
-            </div>
-            <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.locais.index')"
                                 :active="request()->routeIs('gestor.locais.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -68,8 +60,16 @@
                     <span class="truncate">{{ __('Locais') }}</span>
                 </x-sidebar-link>
             </div>
+            <div x-show="online" x-cloak>
+                <x-sidebar-link :href="route('gestor.doencas.index')"
+                                :active="request()->routeIs('gestor.doencas.*')"
+                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                    <x-heroicon-o-beaker class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                    <span class="truncate">{{ __('Doenças') }}</span>
+                </x-sidebar-link>
+            </div>
 
-            <x-sidebar-nav-section :label="__('Gestão municipal')" />
+            <x-sidebar-nav-section :label="__('Equipe e aprovações')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.pendentes')"
                                 :active="request()->routeIs('gestor.pendentes')"
@@ -86,6 +86,8 @@
                     <span class="truncate">{{ __('Usuários') }}</span>
                 </x-sidebar-link>
             </div>
+
+            <x-sidebar-nav-section :label="__('Indicadores, relatórios e auditoria')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.indicadores.ocupantes')"
                                 :active="request()->routeIs('gestor.indicadores.ocupantes*')"
@@ -120,6 +122,18 @@
             </x-sidebar-link>
 
             <x-sidebar-nav-section :label="__('Campo')" />
+            <x-sidebar-link :href="route('agente.visitas.index')"
+                            :active="request()->routeIs('agente.visitas.*')"
+                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                <span class="truncate">{{ __('Visitas') }}</span>
+            </x-sidebar-link>
+            <x-sidebar-link :href="route('agente.locais.index')"
+                            :active="request()->routeIs('agente.locais.*')"
+                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                <span class="truncate">{{ __('Locais') }}</span>
+            </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('agente.doencas.index')"
                                 :active="request()->routeIs('agente.doencas.*')"
@@ -128,18 +142,6 @@
                     <span class="truncate">{{ __('Doenças') }}</span>
                 </x-sidebar-link>
             </div>
-            <x-sidebar-link :href="route('agente.locais.index')"
-                            :active="request()->routeIs('agente.locais.*')"
-                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Locais') }}</span>
-            </x-sidebar-link>
-            <x-sidebar-link :href="route('agente.visitas.index')"
-                            :active="request()->routeIs('agente.visitas.*')"
-                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Visitas') }}</span>
-            </x-sidebar-link>
 
             <x-sidebar-nav-section :label="__('Sincronização')" />
             <div x-show="online" x-cloak>
@@ -160,6 +162,12 @@
             </x-sidebar-link>
 
             <x-sidebar-nav-section :label="__('LIRAa')" />
+            <x-sidebar-link :href="route('saude.visitas.index')"
+                            :active="request()->routeIs('saude.visitas.*')"
+                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                <span class="truncate">{{ __('Minhas Visitas') }}</span>
+            </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('saude.doencas.index')"
                                 :active="request()->routeIs('saude.doencas.*')"
@@ -168,12 +176,6 @@
                     <span class="truncate">{{ __('Doenças') }}</span>
                 </x-sidebar-link>
             </div>
-            <x-sidebar-link :href="route('saude.visitas.index')"
-                            :active="request()->routeIs('saude.visitas.*')"
-                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Minhas Visitas') }}</span>
-            </x-sidebar-link>
 
             <x-sidebar-nav-section :label="__('Sincronização')" />
             <div x-show="online" x-cloak>
