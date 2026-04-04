@@ -99,6 +99,7 @@
     "Não foi possível carregar a lista de doenças neste momento. A consulta pelo código do imóvel acima continua disponível. Se o problema persistir, tente mais tarde ou procure a Secretaria Municipal de Saúde.": "The disease list could not be loaded right now. Property code lookup above still works. If this continues, try again later or contact your municipal health department.",
     "Serviço temporariamente indisponível": "Service temporarily unavailable",
     "As orientações sobre doenças não puderam ser exibidas. Use o formulário acima para verificar visitas no seu imóvel.": "Disease information could not be shown. Use the form above to check visits at your property.",
+    "Não foi possível consultar o imóvel no momento. Verifique sua conexão ou tente novamente em instantes.": "We couldn’t look up the property right now. Check your connection or try again in a moment.",
     "QR Code — consulta pública deste imóvel": "QR code — public lookup for this property",
     "Transparência para a população": "Transparency for residents",
     "Consulte pelo código de oito dígitos do imóvel — o mesmo formato usado na gestão interna do sistema.": "Look up using the property’s eight-digit code—the same format used inside the system.",

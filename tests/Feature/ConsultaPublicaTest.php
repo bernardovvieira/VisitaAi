@@ -16,4 +16,12 @@ class ConsultaPublicaTest extends TestCase
         $response->assertOk();
         $response->assertSee(__('Código do imóvel'), false);
     }
+
+    public function test_consulta_codigo_desconhecido_redireciona_sem_500(): void
+    {
+        $response = $this->get(route('consulta.codigo', ['codigo' => '99999999']));
+
+        $response->assertRedirect();
+        $response->assertSessionHas('erro');
+    }
 }
