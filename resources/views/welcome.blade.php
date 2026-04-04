@@ -163,16 +163,41 @@
                 </p>
             </div>
 
-            {{-- Conformidade MS --}}
-            <div class="welcome-public__ms rounded-xl border border-blue-200/90 bg-blue-50/90 px-4 py-4 dark:border-blue-800 dark:bg-blue-950/35 sm:px-5" id="anim-conformidade">
-                <p class="flex items-center gap-2 text-sm font-semibold text-blue-950 dark:text-blue-100">
-                    <svg class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            {{-- Base legal (card) + selo MS --}}
+            <div class="welcome-public__laws space-y-3" id="anim-conformidade">
+                <section
+                    class="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/30 px-4 py-4 shadow-sm ring-1 ring-slate-900/[0.04] dark:border-slate-600 dark:from-slate-900/75 dark:via-slate-900/50 dark:to-blue-950/20 dark:ring-white/[0.06] sm:px-5 sm:py-5"
+                    aria-labelledby="welcome-laws-heading">
+                    <div class="flex gap-3 sm:gap-4">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-200/90 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <h2 id="welcome-laws-heading" class="text-sm font-bold text-slate-900 dark:text-white">
+                                {{ __('Base legal e normas de referência') }}
+                            </h2>
+                            <p class="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                                {{ __('O Visita Aí apoia o trabalho de vigilância em saúde e controle de vetores com respaldo nas leis federais e nas diretrizes do Ministério da Saúde; a consulta pública limita-se a dados não sensíveis do imóvel.') }}
+                            </p>
+                            <ul class="mt-3 list-inside list-disc space-y-1.5 text-xs leading-relaxed text-slate-700 marker:text-blue-600 dark:text-slate-300 dark:marker:text-blue-400">
+                                <li>{!! __('Lei nº :lei — Agentes Comunitários de Saúde e de Combate às Endemias (ACS e ACE).', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11350.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">11.350/2006</a>']) !!}</li>
+                                <li>{!! __('Lei nº :lei — diretrizes do SUS e vigilância em saúde.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/leis/l8080.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">8.080/1990</a>']) !!}</li>
+                                <li>{!! __('Lei nº :lei — proteção de dados pessoais (LGPD), inclusive bases para saúde pública.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">13.709/2018</a>']) !!}</li>
+                                <li>{{ __('Diretrizes nacionais de arboviroses urbanas e Programa Nacional de Controle da Dengue (PNCD), como referência técnica.') }}</li>
+                            </ul>
+                            <p class="mt-3 text-[11px] leading-snug text-slate-500 dark:text-slate-500">
+                                {{ __('Links levam ao texto legal consolidado no Planalto; orientações técnicas atualizadas devem ser consultadas no portal do Ministério da Saúde.') }}
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <p class="flex items-center gap-2 rounded-lg border border-blue-200/90 bg-blue-50/90 px-3 py-2 text-xs font-semibold text-blue-950 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-100">
+                    <svg class="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
-                    {{ __('Alinhado às diretrizes do Ministério da Saúde') }}
-                </p>
-                <p class="mt-2 text-xs leading-relaxed text-blue-900/90 dark:text-blue-200/90">
-                    {{ __('O Visita Aí segue a Lei nº 11.350/2006 (ACE e ACS), a diretriz de atuação integrada desses profissionais, as diretrizes nacionais de arboviroses urbanas e o Programa Nacional de Controle da Dengue (PNCD), como referência para o trabalho em campo e a transparência para a população.') }}
+                    {{ __('Alinhado às diretrizes do Ministério da Saúde para ACE, ACS e vigilância entomológica.') }}
                 </p>
             </div>
 

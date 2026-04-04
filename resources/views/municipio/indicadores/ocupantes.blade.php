@@ -28,16 +28,20 @@
     $ariaFaixaCalor = collect($keysFaixa)->map(function ($k) use ($labelsFaixa, $faixasCounts) {
         return ($labelsFaixa[$k] ?? $k).': '.$faixasCounts[$k];
     })->implode('; ');
+    $__ogIndicadores = trim(implode(' ', array_filter([
+        (string) ($cfgInd['subtitulo'] ?? ''),
+        (string) ($cfgInd['subtitulo_detalhe'] ?? ''),
+    ])));
 @endphp
 
 @section('og_title', config('app.name') . ' · ' . ($cfgInd['titulo_pagina'] ?? __('Indicadores')))
-@section('og_description', trim(implode(' ', array_filter([(string) ($cfgInd['subtitulo'] ?? ''), (string) ($cfgInd['subtitulo_detalhe'] ?? '')]))))
+@section('og_description', filled($__ogIndicadores) ? $__ogIndicadores : __('Painel agregado de ocupantes no Visita Aí: bairro do imóvel, faixas etárias, escolaridade, renda, cor/raça e trabalho, com critérios de privacidade e uso institucional.'))
 
 @section('content')
 <div class="v-page space-y-5">
     <x-breadcrumbs :items="[
         ['label' => __('Página Inicial'), 'url' => route('dashboard')],
-        ['label' => $cfgInd['titulo_pagina'] ?? 'Indicadores'],
+        ['label' => $cfgInd['titulo_pagina'] ?? __('Indicadores')],
     ]" />
 
     @if(session('warning'))
@@ -94,6 +98,29 @@
             <p class="text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
         </div>
     </details>
+
+    <div class="v-card border-blue-200/80 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/40 dark:border-blue-900/40 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-blue-950/25">
+        <div class="flex gap-3 sm:gap-4">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950/90 dark:text-blue-300">
+                <x-heroicon-o-book-open class="h-6 w-6 shrink-0" aria-hidden="true" />
+            </div>
+            <div class="min-w-0">
+                <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ __('Legislação e finalidade deste painel') }}</h2>
+                <p class="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                    {{ __('Os indicadores reúnem apenas dados cadastrados no Visita Aí, com agregação e supressão configuradas pelo município para reduzir risco de reidentificação, em linha com a LGPD e a LAI.') }}
+                </p>
+                <ul class="mt-3 list-inside list-disc space-y-1 text-xs leading-relaxed text-slate-700 marker:text-blue-600 dark:text-slate-300 dark:marker:text-blue-400">
+                    <li>{{ __('Lei nº 8.080/1990 (SUS) — atividades de vigilância em saúde e informação para gestão.') }}</li>
+                    <li>{{ __('Lei nº 11.350/2006 — ACS e ACE; registro de ações de campo compatível com a organização municipal.') }}</li>
+                    <li>{{ __('Lei nº 13.709/2018 (LGPD) — bases legais para tratamento em saúde pública e cautelas do art. 6º (necessidade, adequação, segurança).') }}</li>
+                    <li>{{ __('Lei nº 12.527/2011 (LAI) — classificação e uso interno de informações estatísticas agregadas, quando aplicável.') }}</li>
+                </ul>
+                <p class="mt-3 text-[11px] leading-snug text-slate-500 dark:text-slate-500">
+                    {{ __('As descrições por seção abaixo podem ser ajustadas em configuração municipal; a base normativa federal permanece como referência.') }}
+                </p>
+            </div>
+        </div>
+    </div>
 
     <x-lgpd.aviso context="painel_indicadores" compact class="max-w-none border-amber-200/40 dark:border-amber-900/30" />
 
@@ -174,7 +201,7 @@
         </div>
         <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none sm:col-span-2 lg:col-span-2">
             <div class="flex flex-wrap items-end justify-between gap-2">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ $cfgInd['titulo_secao_faixa_global'] ?? 'Faixa etária' }}</p>
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ $cfgInd['titulo_secao_faixa_global'] ?? __('Faixa etária') }}</p>
                 <p class="text-[10px] font-medium uppercase tracking-wide text-blue-600/90 dark:text-blue-400/90">{{ __('Mapa de calor') }}</p>
             </div>
             <div class="mt-3 flex overflow-hidden rounded-xl ring-1 ring-slate-200/90 dark:ring-slate-600"
@@ -221,7 +248,7 @@
     </details>
 
     <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
-        <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_bairro'] ?? 'Por bairro' }}</h2>
+        <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_bairro'] ?? __('Por bairro') }}</h2>
         <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-600">
                 <thead>
@@ -268,7 +295,7 @@
 
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none lg:col-span-1">
-            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_escolaridade'] ?? 'Escolaridade' }}</h2>
+            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_escolaridade'] ?? __('Escolaridade') }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['escolaridade'] as $codigo => $qtd)
                     @php
@@ -285,14 +312,14 @@
             @endif
         </section>
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
-            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_renda'] ?? 'Renda' }}</h2>
+            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_renda'] ?? __('Renda') }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['renda'] as $codigo => $qtd)
                     @php
                         $pctListaR = $R['total_ocupantes'] > 0 ? (int) round(100 * $qtd / $R['total_ocupantes']) : 0;
                     @endphp
                     <li class="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 border-b border-slate-100 pb-1.5 dark:border-slate-700">
-                        <span class="text-gray-700 dark:text-gray-300">{{ $rendaLabels[$codigo] ?? ($codigo === 'nao_informado' ? ($escLabels['nao_informado'] ?? 'Não informado') : $codigo) }}</span>
+                        <span class="text-gray-700 dark:text-gray-300">{{ $rendaLabels[$codigo] ?? ($codigo === 'nao_informado' ? ($escLabels['nao_informado'] ?? __('Não informado')) : $codigo) }}</span>
                         <span class="shrink-0 text-right font-semibold tabular-nums text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">({{ $pctListaR }}%)</span></span>
                     </li>
                 @endforeach
