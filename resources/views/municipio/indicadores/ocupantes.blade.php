@@ -74,8 +74,9 @@
     <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         @if(filled($cfgInd['export_csv_aviso'] ?? ''))
             <details class="max-w-xl text-[11px] leading-snug text-slate-600 dark:text-slate-400">
-                <summary class="cursor-pointer list-inside list-none font-medium text-slate-700 marker:hidden dark:text-slate-300 [&::-webkit-details-marker]:hidden">
-                    {{ __('Sobre a exportação CSV') }}
+                <summary class="cursor-pointer list-inside list-none marker:hidden text-blue-800 dark:text-blue-300 [&::-webkit-details-marker]:hidden">
+                    <span class="border-b border-dotted border-current pb-px font-medium">{{ __('Sobre a exportação CSV') }}</span>
+                    <span class="sr-only">{{ __('Abre texto sobre o arquivo exportado.') }}</span>
                 </summary>
                 <p class="mt-1.5">{{ $cfgInd['export_csv_aviso'] }}</p>
             </details>
@@ -88,8 +89,8 @@
     </div>
 
     <details class="list-none overflow-hidden rounded-lg border border-amber-200/90 bg-amber-50/95 text-[11px] leading-snug text-amber-950 shadow-sm dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
-        <summary class="cursor-pointer list-none px-2.5 py-1.5 text-xs font-semibold text-amber-950 marker:hidden dark:text-amber-50 [&::-webkit-details-marker]:hidden">
-            {{ __('Avisos: privacidade, supressão e limites de uso') }}
+        <summary class="cursor-pointer list-none px-2.5 py-1.5 text-xs text-amber-950 marker:hidden dark:text-amber-50 [&::-webkit-details-marker]:hidden">
+            <span class="font-semibold">{{ __('Avisos:') }}</span> {{ __('privacidade, supressão e limites de uso') }}
         </summary>
         <div class="space-y-1 border-t border-amber-200/80 px-2.5 pb-2 pt-1.5 dark:border-amber-800/60">
             <p class="leading-snug"><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
