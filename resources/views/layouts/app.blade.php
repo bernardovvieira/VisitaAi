@@ -12,7 +12,7 @@
             $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
             $ogDescription = $ogDescription ?: 'Sistema de apoio à vigilância entomológica e controle vetorial municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.';
             $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
-            $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai.png';
+            $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
             $ogUrl = url()->current();
             $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp

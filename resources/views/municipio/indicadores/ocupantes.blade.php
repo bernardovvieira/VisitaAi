@@ -87,15 +87,15 @@
         </a>
     </div>
 
-    <details class="v-card list-none border-amber-200/90 bg-amber-50/95 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
-        <summary class="cursor-pointer list-none px-3 py-2.5 text-sm font-semibold text-amber-950 marker:hidden dark:text-amber-50 [&::-webkit-details-marker]:hidden">
+    <details class="list-none overflow-hidden rounded-lg border border-amber-200/90 bg-amber-50/95 text-[11px] leading-snug text-amber-950 shadow-sm dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
+        <summary class="cursor-pointer list-none px-2.5 py-1.5 text-xs font-semibold text-amber-950 marker:hidden dark:text-amber-50 [&::-webkit-details-marker]:hidden">
             {{ __('Avisos: privacidade, supressão e limites de uso') }}
         </summary>
-        <div class="space-y-1.5 border-t border-amber-200/80 px-3 pb-3 pt-2 dark:border-amber-800/60">
-            <p><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
-            <p class="text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
-            <p class="text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
-            <p class="text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
+        <div class="space-y-1 border-t border-amber-200/80 px-2.5 pb-2 pt-1.5 dark:border-amber-800/60">
+            <p class="leading-snug"><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
+            <p class="leading-snug text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
+            <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
+            <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
         </div>
     </details>
 
@@ -110,10 +110,10 @@
                     {{ __('Os indicadores reúnem apenas dados cadastrados no Visita Aí, com agregação e supressão configuradas pelo município para reduzir risco de reidentificação, em linha com a LGPD e a LAI.') }}
                 </p>
                 <ul class="mt-3 list-inside list-disc space-y-1 text-xs leading-relaxed text-slate-700 marker:text-blue-600 dark:text-slate-300 dark:marker:text-blue-400">
-                    <li>{{ __('Lei nº 8.080/1990 (SUS) — atividades de vigilância em saúde e informação para gestão.') }}</li>
-                    <li>{{ __('Lei nº 11.350/2006 — ACS e ACE; registro de ações de campo compatível com a organização municipal.') }}</li>
-                    <li>{{ __('Lei nº 13.709/2018 (LGPD) — bases legais para tratamento em saúde pública e cautelas do art. 6º (necessidade, adequação, segurança).') }}</li>
-                    <li>{{ __('Lei nº 12.527/2011 (LAI) — classificação e uso interno de informações estatísticas agregadas, quando aplicável.') }}</li>
+                    <li>{{ __('Lei nº 8.080/1990 (SUS): atividades de vigilância em saúde e informação para gestão.') }}</li>
+                    <li>{{ __('Lei nº 11.350/2006: ACS e ACE; registro de ações de campo compatível com a organização municipal.') }}</li>
+                    <li>{{ __('Lei nº 13.709/2018 (LGPD): bases legais para tratamento em saúde pública e cautelas do art. 6º (necessidade, adequação, segurança).') }}</li>
+                    <li>{{ __('Lei nº 12.527/2011 (LAI): classificação e uso interno de informações estatísticas agregadas, quando aplicável.') }}</li>
                 </ul>
                 <p class="mt-3 text-[11px] leading-snug text-slate-500 dark:text-slate-500">
                     {{ __('As descrições por seção abaixo podem ser ajustadas em configuração municipal; a base normativa federal permanece como referência.') }}

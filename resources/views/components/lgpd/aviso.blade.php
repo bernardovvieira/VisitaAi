@@ -9,7 +9,7 @@
 @endphp
 
 @if($compact)
-<details {{ $attributes->merge(['class' => 'mx-auto w-full max-w-2xl rounded-lg border border-slate-200 bg-slate-50/90 text-slate-800 shadow-sm dark:border-slate-600 dark:bg-slate-900/45 dark:text-slate-200']) }}>
+<details {{ $attributes->merge(['class' => 'w-full max-w-none rounded-lg border border-slate-200 bg-slate-50/90 text-slate-800 shadow-sm dark:border-slate-600 dark:bg-slate-900/45 dark:text-slate-200']) }}>
     <summary class="cursor-pointer list-inside list-none px-3 py-2.5 text-xs font-medium text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden sm:text-sm">
         {{ __('LGPD e tratamento dos dados neste painel') }}
     </summary>
@@ -47,7 +47,7 @@
     </div>
 </details>
 @else
-<div {{ $attributes->merge(['class' => 'mx-auto w-full max-w-2xl rounded-lg border border-slate-200 bg-slate-50/90 p-3 text-slate-800 shadow-sm dark:border-slate-600 dark:bg-slate-900/45 dark:text-slate-200 sm:p-4']) }}>
+<div {{ $attributes->merge(['class' => 'w-full max-w-none rounded-lg border border-slate-200 bg-slate-50/90 p-3 text-slate-800 shadow-sm dark:border-slate-600 dark:bg-slate-900/45 dark:text-slate-200 sm:p-4']) }}>
     <p class="text-xs font-semibold leading-snug text-slate-900 dark:text-slate-100 sm:text-sm">{{ $lgpd['titulo'] ?? '' }}</p>
     <p class="mt-1.5 text-[11px] leading-relaxed text-slate-700 dark:text-slate-300 sm:mt-2 sm:text-xs">{{ $lgpd['resumo_sistema'] ?? '' }}</p>
     @if(filled($ctx))

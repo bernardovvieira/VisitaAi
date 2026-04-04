@@ -7,25 +7,18 @@
 @section('og_description', __('Visita Aí reúne consulta pública pelo código do imóvel, painéis com indicadores municipais para a gestão e registro de campo por ACE/ACS, alinhado às diretrizes do Ministério da Saúde.'))
 
 @section('content')
-<div class="welcome-public flex min-h-[calc(100vh-3rem)] min-w-full items-start justify-center py-6 sm:py-10 md:py-12">
-    <div class="welcome-public__grid max-w-6xl w-full grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12 xl:max-w-7xl">
+<div class="welcome-public flex min-h-[calc(100vh-3rem)] min-w-full items-start justify-center px-4 py-6 sm:px-6 sm:py-10 md:py-12 lg:px-8">
+    <div class="welcome-public__grid w-full max-w-screen-2xl space-y-10">
 
-        {{-- Ilustração: no topo no mobile, à direita no desktop --}}
-        <div class="flex justify-center lg:order-2 lg:col-span-5 xl:col-span-5">
-            <div class="w-52 sm:w-64 lg:w-full lg:max-w-sm lg:sticky lg:top-28" data-aos="zoom-in" data-aos-duration="680">
-                <x-welcome-illustration />
-            </div>
-        </div>
-
-        {{-- Coluna principal: marca, texto, ações, blocos --}}
-        <div class="welcome-public__main space-y-8 lg:order-1 lg:col-span-7 xl:col-span-7" id="welcome-col-principal">
+        {{-- Conteúdo principal em largura útil maior (sem coluna de ilustração) --}}
+        <div class="welcome-public__main space-y-8" id="welcome-col-principal">
 
             {{-- Cabeçalho: logo + título + município + lead --}}
             <header class="welcome-public__hero space-y-4" id="anim-texto">
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6 lg:gap-10 xl:items-center">
                     <img
-                        src="{{ asset('images/visitaai.svg') }}"
-                        alt="{{ __('Marca do aplicativo') }} — {{ config('app.brand') }}"
+                        src="{{ asset('images/visitaai_rembg.png') }}"
+                        alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
                         width="64"
                         height="64"
                         class="welcome-public__logo h-14 w-14 shrink-0 object-contain sm:h-16 sm:w-16"
@@ -51,8 +44,8 @@
                     </p>
                 @endif
 
-                <p class="text-pretty max-w-2xl text-base font-medium leading-relaxed text-gray-600 dark:text-gray-400">
-                    {{ __('Transparência para quem mora no imóvel, indicadores para quem gerencia o município e apoio digital a ACE e ACS — em um só lugar, com foco em dengue e outras arboviroses.') }}
+                <p class="text-pretty max-w-none text-base font-medium leading-relaxed text-gray-600 dark:text-gray-400 lg:max-w-4xl xl:max-w-5xl">
+                    {{ __('Transparência para quem mora no imóvel, indicadores para quem gerencia o município e apoio digital a ACE e ACS. Em um só lugar, com foco em dengue e outras arboviroses.') }}
                 </p>
             </header>
 
@@ -87,7 +80,7 @@
                 <h2 id="welcome-beneficios-heading" class="mb-4 text-xs font-bold uppercase tracking-[0.12em] text-blue-600 dark:text-blue-400">
                     {{ __('Benefícios em destaque') }}
                 </h2>
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
                     <article
                         class="welcome-benefit-card group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-5 shadow-sm ring-1 ring-slate-900/[0.04] transition duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-300/90 hover:shadow-md hover:shadow-blue-500/10 hover:ring-blue-500/15 dark:border-slate-600/80 dark:from-slate-900/80 dark:to-slate-900/40 dark:ring-white/[0.06] dark:hover:border-blue-500/50"
                         data-aos="fade-up"
@@ -114,7 +107,7 @@
                         </div>
                         <h3 class="text-sm font-bold text-slate-900 dark:text-white">{{ __('Indicadores para gestão municipal') }}</h3>
                         <p class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400 sm:text-sm">
-                            {{ __('O gestor acompanha no sistema totais de visitas, pendências, distribuição por bairro, relatórios em PDF e painéis com perfil dos ocupantes do imóvel — base para planejamento e transparência interna.') }}
+                            {{ __('O gestor acompanha no sistema totais de visitas, pendências, distribuição por bairro, relatórios em PDF e painéis com perfil dos ocupantes do imóvel: base para planejamento e transparência interna.') }}
                         </p>
                     </article>
                     <article
@@ -142,15 +135,16 @@
                         </div>
                         <h3 class="text-sm font-bold text-slate-900 dark:text-white">{{ __('Relatórios, gráficos e mapa de calor') }}</h3>
                         <p class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400 sm:text-sm">
-                            {{ __('Gere PDFs com indicadores do período, acompanhe gráficos por bairro, evolução diária e tratamentos, e visualize no mapa de calor onde há mais visitas com localização — apoio à gestão da vigilância.') }}
+                            {{ __('Gere PDFs com indicadores do período, acompanhe gráficos por bairro, evolução diária e tratamentos, e visualize no mapa de calor onde há mais visitas com localização. Apoio à gestão da vigilância.') }}
                         </p>
                     </article>
                 </div>
             </section>
 
-            {{-- Indicadores municipais --}}
+            {{-- Indicadores + base legal em duas colunas no desktop --}}
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start lg:gap-8">
             <div
-                class="welcome-public__insight relative overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/95 via-white to-sky-50/80 px-5 py-4 sm:px-6 sm:py-5 dark:border-indigo-500/30 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-sky-950/30"
+                class="welcome-public__insight relative h-full overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/95 via-white to-sky-50/80 px-5 py-4 sm:px-6 sm:py-5 dark:border-indigo-500/30 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-sky-950/30"
                 id="welcome-indicadores"
                 data-aos="fade-up"
                 data-aos-delay="60">
@@ -159,11 +153,10 @@
                     {{ __('Indicadores municipais no painel do gestor') }}
                 </h2>
                 <p class="mt-2 text-sm leading-relaxed text-indigo-900/85 dark:text-indigo-100/85">
-                    {{ __('Além das visitas, o município dispõe de visões agregadas: produção por período, território (bairros) e dados complementares de ocupação do imóvel quando cadastrados — sempre com critérios de privacidade na área pública.') }}
+                    {{ __('Além das visitas, o município dispõe de visões agregadas: produção por período, território (bairros) e dados complementares de ocupação do imóvel quando cadastrados. Sempre com critérios de privacidade na área pública.') }}
                 </p>
             </div>
 
-            {{-- Base legal (card) + selo MS --}}
             <div class="welcome-public__laws space-y-3" id="anim-conformidade">
                 <section
                     class="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/30 px-4 py-4 shadow-sm ring-1 ring-slate-900/[0.04] dark:border-slate-600 dark:from-slate-900/75 dark:via-slate-900/50 dark:to-blue-950/20 dark:ring-white/[0.06] sm:px-5 sm:py-5"
@@ -182,9 +175,9 @@
                                 {{ __('O Visita Aí apoia o trabalho de vigilância em saúde e controle de vetores com respaldo nas leis federais e nas diretrizes do Ministério da Saúde; a consulta pública limita-se a dados não sensíveis do imóvel.') }}
                             </p>
                             <ul class="mt-3 list-inside list-disc space-y-1.5 text-xs leading-relaxed text-slate-700 marker:text-blue-600 dark:text-slate-300 dark:marker:text-blue-400">
-                                <li>{!! __('Lei nº :lei — Agentes Comunitários de Saúde e de Combate às Endemias (ACS e ACE).', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11350.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">11.350/2006</a>']) !!}</li>
-                                <li>{!! __('Lei nº :lei — diretrizes do SUS e vigilância em saúde.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/leis/l8080.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">8.080/1990</a>']) !!}</li>
-                                <li>{!! __('Lei nº :lei — proteção de dados pessoais (LGPD), inclusive bases para saúde pública.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">13.709/2018</a>']) !!}</li>
+                                <li>{!! __('Lei nº :lei: Agentes Comunitários de Saúde e de Combate às Endemias (ACS e ACE).', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11350.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">11.350/2006</a>']) !!}</li>
+                                <li>{!! __('Lei nº :lei: diretrizes do SUS e vigilância em saúde.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/leis/l8080.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">8.080/1990</a>']) !!}</li>
+                                <li>{!! __('Lei nº :lei: proteção de dados pessoais (LGPD), inclusive bases para saúde pública.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">13.709/2018</a>']) !!}</li>
                                 <li>{{ __('Diretrizes nacionais de arboviroses urbanas e Programa Nacional de Controle da Dengue (PNCD), como referência técnica.') }}</li>
                             </ul>
                             <p class="mt-3 text-[11px] leading-snug text-slate-500 dark:text-slate-500">
@@ -200,13 +193,14 @@
                     {{ __('Alinhado às diretrizes do Ministério da Saúde para ACE, ACS e vigilância entomológica.') }}
                 </p>
             </div>
+            </div>
 
             {{-- Rodapé: marcas + crédito --}}
             <footer class="welcome-public__footer border-t border-slate-200/80 pt-6 dark:border-slate-700/80" id="anim-footer">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center gap-3">
                         <img
-                            src="{{ asset('images/visitaai.svg') }}"
+                            src="{{ asset('images/visitaai_rembg.png') }}"
                             alt=""
                             width="40"
                             height="40"

@@ -16,7 +16,7 @@
                 $routeName === 'pendente' => ['title' => config('app.name') . ' · Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
                 default => ['title' => config('app.name') . ' · Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'],
             };
-            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai.png';
+            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
             $ogUrl = url()->current();
             $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp

@@ -93,8 +93,8 @@
                 filtrosAplicados = p.toString() !== '';
                 $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
             "
-            @filtro-alterado.window="filtrosAlterados = true">
-            <form method="GET" x-ref="formulario" @submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
+            @@filtro-alterado.window="filtrosAlterados = true">
+            <form method="GET" x-ref="formulario" @@submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
                     <label class="v-toolbar-label mb-1">{{ __('Tipo') }} <span class="text-red-500">*</span></label>
@@ -107,17 +107,17 @@
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak>
                     <label class="v-toolbar-label mb-1">{{ __('Data') }} <span class="text-red-500">*</span></label>
-                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @change="filtrosAlterados = true" class="v-input" />
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @@change="filtrosAlterados = true" class="v-input" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="md:col-span-2 grid grid-cols-2 gap-4">
                         <div>
                             <label class="v-toolbar-label mb-1">{{ __('Início') }} <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @change="filtrosAlterados = true" class="v-input" />
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @@change="filtrosAlterados = true" class="v-input" />
                         </div>
                         <div>
                             <label class="v-toolbar-label mb-1">{{ __('Fim') }} <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @change="filtrosAlterados = true" class="v-input" />
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @@change="filtrosAlterados = true" class="v-input" />
                         </div>
                     </div>
                 </template>
@@ -163,24 +163,24 @@
                             return ['id' => $id, 'label' => $item ? ($item['label'] ?? 'Local #'.$id) : 'Local #'.$id];
                         }, (array) request('local_id', [])))
                     )) }}"
-                    @click.outside="open = false">
+                    @@click.outside="open = false">
                     <label class="v-toolbar-label mb-1">{{ __('Local(is)') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
-                        <div @click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
+                        <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
                             <template x-for="item in selected" :key="item.id">
                                 <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="item.label" class="truncate max-w-[200px]"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
+                                    <button type="button" @@click.stop="selected = selected.filter(s => s.id !== item.id); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
                                 </span>
                             </template>
-                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="{{ __('Buscar local...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
-                                   @keydown.escape="open = false">
+                            <input x-show="open" x-model="search" @@click.stop type="text" placeholder="{{ __('Buscar local...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                   @@keydown.escape="open = false">
                             <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Selecione um Local') }}</span>
                         </div>
                         <div x-show="open" x-transition
                              class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
                             <template x-for="opt in filtered" :key="opt.id">
-                                <div @click="toggle(opt)" role="option"
+                                <div @@click="toggle(opt)" role="option"
                                      class="v-list-item-hover flex w-full cursor-pointer items-center justify-between px-3 py-2 text-sm"
                                      :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': isSelected(opt.id) }">
                                     <span x-text="opt.label" class="truncate flex-1"></span>
@@ -231,24 +231,24 @@
                     "
                     data-options="{{ e(json_encode($bairros ?? [])) }}"
                     data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
-                    @click.outside="open = false">
+                    @@click.outside="open = false">
                     <label class="v-toolbar-label mb-1">{{ __('Bairro(s)') }}</label>
                     <div class="relative">
-                        <div @click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
+                        <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">
                                 <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
                                     <span x-text="val"></span>
-                                    <button type="button" @click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
+                                    <button type="button" @@click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
                                 </span>
                             </template>
-                            <input x-show="open" x-model="search" @click.stop type="text" placeholder="{{ __('Buscar bairro...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
-                                   @keydown.escape="open = false">
+                            <input x-show="open" x-model="search" @@click.stop type="text" placeholder="{{ __('Buscar bairro...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                   @@keydown.escape="open = false">
                             <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Selecione um ou mais bairros...') }}</span>
                         </div>
                         <div x-show="open" x-transition
                              class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
                             <template x-for="opt in filtered" :key="opt">
-                                <div @click="toggle(opt)" role="option" :aria-selected="selected.includes(opt)"
+                                <div @@click="toggle(opt)" role="option" :aria-selected="selected.includes(opt)"
                                      class="v-list-item-hover flex cursor-pointer items-center justify-between px-3 py-2 text-sm"
                                      :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': selected.includes(opt) }">
                                     <span x-text="opt"></span>
@@ -272,7 +272,7 @@
                     {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
                 </p>
                 <button type="button" :disabled="!botaoAtivo"
-                    @click.prevent="if (!botaoAtivo) {
+                    @@click.prevent="if (!botaoAtivo) {
                         let msg = filtrosAlterados ? relPdfMsgs.filtrosAlterados : '';
                         if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = relPdfMsgs.diario;
                         if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = relPdfMsgs.semanal;
