@@ -1,5 +1,16 @@
 <?php
 
+$envBool = static function (mixed $value, bool $default): bool {
+    if ($value === null || $value === '') {
+        return $default;
+    }
+    if (is_bool($value)) {
+        return $value;
+    }
+
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+};
+
 return [
 
     /*
@@ -8,15 +19,16 @@ return [
     |--------------------------------------------------------------------------
     | Enviado só em respostas HTTPS. Em produção com HTTPS, o padrão é ativo.
     | includeSubDomains/preload: ative só se o domínio inteiro for HTTPS permanente.
+    | SECURITY_HSTS=false trata-se corretamente (evitar (bool) "false" === true em PHP).
     */
 
-    'hsts_enabled' => env('SECURITY_HSTS', env('APP_ENV') === 'production'),
+    'hsts_enabled' => $envBool(env('SECURITY_HSTS'), env('APP_ENV') === 'production'),
 
     'hsts_max_age' => (int) env('SECURITY_HSTS_MAX_AGE', 31536000),
 
-    'hsts_include_subdomains' => (bool) env('SECURITY_HSTS_SUBDOMAINS', false),
+    'hsts_include_subdomains' => $envBool(env('SECURITY_HSTS_SUBDOMAINS'), false),
 
-    'hsts_preload' => (bool) env('SECURITY_HSTS_PRELOAD', false),
+    'hsts_preload' => $envBool(env('SECURITY_HSTS_PRELOAD'), false),
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +39,7 @@ return [
     | Para desativar: SECURITY_CSP=false no .env
     */
 
-    'csp_enabled' => env('SECURITY_CSP', true),
+    'csp_enabled' => $envBool(env('SECURITY_CSP'), true),
 
     /*
     |--------------------------------------------------------------------------
