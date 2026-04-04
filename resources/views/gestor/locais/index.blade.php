@@ -124,9 +124,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="border-t px-4 py-3 dark:border-slate-700/80 sm:px-5" style="border-color: rgb(var(--v-border) / 1);">
-            <x-pagination-relatorio :paginator="$locais" item-label="locais" />
-        </div>
+        <x-pagination-relatorio :paginator="$locais" item-label="locais" />
     </div>
 
     <div class="v-card v-card--muted v-hint-card">

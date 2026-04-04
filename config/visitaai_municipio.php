@@ -62,12 +62,6 @@ return [
         'titulo_secao_escolaridade' => 'Escolaridade',
         'titulo_secao_renda' => 'Renda',
         'sem_bairro_label' => 'Sem bairro',
-        'export_csv_label' => 'Exportar CSV',
-        'export_csv_legenda' => 'Somente totais agregados, sem dados identificáveis.',
-        'export_csv_disabled_hint' => 'Disponível quando houver pelo menos um ocupante registrado no Visita Aí.',
-        'export_csv_flash_sem_dados' => 'Não há ocupantes registrados para exportar. Cadastre ocupantes nos imóveis e tente novamente.',
-        'csv_titulo' => 'Indicadores agregados',
-        'csv_suprimido_label' => 'suprimido',
         'colunas_faixas' => [
             '0-11' => '0 a 11 anos',
             '12-17' => '12 a 17 anos',

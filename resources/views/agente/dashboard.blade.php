@@ -61,7 +61,6 @@
                 <x-heroicon-o-plus-circle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                 <span class="v-dash-shortcut__body">
                     <span class="v-dash-shortcut__label">{{ __('Registrar visita') }}</span>
-                    <span class="v-dash-shortcut__hint">{{ __('Novo registro em campo') }}</span>
                 </span>
                 <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
             </a>

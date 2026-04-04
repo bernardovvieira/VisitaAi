@@ -24,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Traduções completas em /lang; sem isto o Laravel prefere resources/lang e ignora lang/*.json
+        $this->app->useLangPath(base_path('lang'));
+
         // Evita travamento longo se MySQL estiver inacessível (ex.: atrás do Coolify)
         ini_set('default_socket_timeout', (string) 10);
 

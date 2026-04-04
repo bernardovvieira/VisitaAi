@@ -120,8 +120,8 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="mt-4 text-center">
-                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver painel completo de indicadores') }}</a>
+                <p class="mt-4 flex justify-center">
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-btn-success inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold no-underline">{{ __('Ver painel completo de indicadores') }}</a>
                 </p>
             @else
                 <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>
@@ -144,7 +144,6 @@
                         <x-heroicon-o-exclamation-triangle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
                             <span class="v-dash-shortcut__label">{{ __('Usuários pendentes') }}</span>
-                            <span class="v-dash-shortcut__hint">{{ __('Aprovar cadastros de campo') }}</span>
                         </span>
                         @if($pendentesCount > 0)
                             <span class="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white/20 px-1.5 text-xs font-bold tabular-nums">{{ $pendentesCount }}</span>
@@ -155,7 +154,6 @@
                         <x-heroicon-o-users class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
                             <span class="v-dash-shortcut__label">{{ __('Gerenciar usuários') }}</span>
-                            <span class="v-dash-shortcut__hint">{{ __('Perfis e permissões') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
@@ -163,7 +161,6 @@
                         <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
                             <span class="v-dash-shortcut__label">{{ __('Visitas realizadas') }}</span>
-                            <span class="v-dash-shortcut__hint">{{ __('Consulta e filtros') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>

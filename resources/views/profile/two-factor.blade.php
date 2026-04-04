@@ -24,8 +24,8 @@
             @csrf
             <div class="flex gap-3">
                 <button type="submit" id="btn-enable-2fa" name="enable_2fa" value="1"
-                        class="inline-flex flex-1 items-center justify-center gap-2 rounded-md border border-transparent bg-slate-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 disabled:opacity-70 dark:bg-slate-600 dark:hover:bg-slate-500">
-                    <x-heroicon-o-lock-closed class="h-4 w-4 shrink-0" />
+                        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent bg-slate-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 disabled:opacity-70 dark:bg-slate-600 dark:hover:bg-slate-500">
+                    <x-heroicon-o-lock-closed class="h-3.5 w-3.5 shrink-0" />
                     Ativar 2FA
                 </button>
             </div>

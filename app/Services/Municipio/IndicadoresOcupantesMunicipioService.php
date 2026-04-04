@@ -5,7 +5,6 @@ namespace App\Services\Municipio;
 use App\Models\Local;
 use App\Models\Morador;
 use Illuminate\Support\Collection;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Painel de indicadores municipais agregados a partir dos ocupantes cadastrados no Visita Aí.
@@ -83,78 +82,5 @@ class IndicadoresOcupantesMunicipioService
         arsort($out);
 
         return $out;
-    }
-
-    /**
-     * CSV com separador ';' e BOM UTF-8 para planilhas (Excel em PT-BR).
-     * Apenas agregados; linhas suprimidas exportadas como marca textual, sem totais.
-     */
-    public function respostaDownloadCsv(): StreamedResponse
-    {
-        $painel = $this->painelCompleto();
-        $cfg = config('visitaai_municipio.indicadores', []);
-        $labelsFaixa = $cfg['colunas_faixas'] ?? [];
-        $keysFaixa = ['0-11', '12-17', '18-59', '60+', 'sem_info'];
-        $escLabels = config('visitaai_municipio.escolaridade_opcoes', []);
-        $rendaLabels = config('visitaai_municipio.renda_faixa_opcoes', []);
-        $supLabel = (string) ($cfg['csv_suprimido_label'] ?? 'suprimido');
-        $sep = ';';
-        $filename = 'visita-ai-indicadores-ocupantes-'.now()->format('Y-m-d-His').'.csv';
-
-        return new StreamedResponse(function () use ($painel, $cfg, $labelsFaixa, $keysFaixa, $escLabels, $rendaLabels, $supLabel, $sep) {
-            $out = fopen('php://output', 'w');
-            if ($out === false) {
-                return;
-            }
-            fprintf($out, chr(0xEF).chr(0xBB).chr(0xBF));
-
-            $row = fn (array $cols) => fputcsv($out, $cols, $sep);
-
-            $row([(string) ($cfg['csv_titulo'] ?? 'Indicadores agregados')]);
-            $row(['Gerado em', now()->toIso8601String()]);
-            $row(['Mínimo por bairro (supressão)', (string) $painel['minimo_aplicado']]);
-            $row([]);
-
-            $R = $painel['resumo'];
-            $row(['Resumo global']);
-            $row(['Total de ocupantes', (string) $R['total_ocupantes']]);
-            $row(['Imóveis com ocupante', (string) $R['total_imoveis_com_ocupante']]);
-            foreach ($keysFaixa as $k) {
-                $label = $labelsFaixa[$k] ?? $k;
-                $row([$label, (string) ($R['faixas_etarias'][$k] ?? 0)]);
-            }
-            $row([]);
-
-            $row(array_merge(['Bairro (imóvel)', 'Total'], array_map(fn ($k) => $labelsFaixa[$k] ?? $k, $keysFaixa)));
-            foreach ($painel['por_bairro'] as $linha) {
-                if ($linha['suprimido']) {
-                    $row(array_merge([$linha['bairro'], $supLabel], array_fill(0, count($keysFaixa), $supLabel)));
-                } else {
-                    $f = $linha['faixas'] ?? [];
-                    $row(array_merge(
-                        [$linha['bairro'], (string) ($linha['total'] ?? 0)],
-                        array_map(fn ($k) => (string) ($f[$k] ?? 0), $keysFaixa)
-                    ));
-                }
-            }
-            $row([]);
-
-            $row(['Escolaridade informada (código)', 'Quantidade', 'Rótulo']);
-            foreach ($painel['escolaridade'] as $codigo => $qtd) {
-                $row([$codigo, (string) $qtd, (string) ($escLabels[$codigo] ?? $codigo)]);
-            }
-            $row([]);
-
-            $row(['Renda informada (código)', 'Quantidade', 'Rótulo']);
-            foreach ($painel['renda'] as $codigo => $qtd) {
-                $row([$codigo, (string) $qtd, (string) ($rendaLabels[$codigo] ?? $codigo)]);
-            }
-
-            fclose($out);
-        }, 200, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-            'Cache-Control' => 'no-store, private',
-        ]);
     }
 }

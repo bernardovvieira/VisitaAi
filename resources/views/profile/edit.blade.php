@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <x-primary-button type="submit" id="profile-update-btn">Aplicar Alterações</x-primary-button>
+                    <x-primary-button type="submit" id="profile-update-btn" class="!px-3 !py-1.5 !text-xs">Aplicar Alterações</x-primary-button>
                 </div>
             </form>
             <script>
@@ -123,13 +123,13 @@
                 <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">2FA ativado para esta conta.</p>
                 <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
                    onclick="return confirm('Tem certeza que deseja desativar a autenticação em dois fatores?');"
-                   class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg shadow transition">
+                   class="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700">
                     Desativar autenticação em dois fatores
                 </a>
             @else
                 <a href="{{ route('profile.two-factor') }}"
-                   class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-lg shadow transition">
-                   <x-heroicon-o-chevron-right class="h-4 w-4 shrink-0" />
+                   class="inline-flex items-center gap-1.5 rounded-md bg-gray-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500">
+                   <x-heroicon-o-chevron-right class="h-3.5 w-3.5 shrink-0" />
                     Ativar autenticação em dois fatores 
                 </a>
             @endif
@@ -164,7 +164,7 @@
             @elseif(auth()->user()->isGestor())
                 <!-- Link para gestores -->
                 <a href="{{ route('gestor.users.index') }}"
-                   class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg shadow transition">
+                   class="inline-flex items-center rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700">
                     Ir para Usuários
                 </a>
             @endif

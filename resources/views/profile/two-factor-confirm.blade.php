@@ -29,7 +29,7 @@
                 <button type="button"
                         id="btn-copy-secret"
                         data-secret="{{ $secretKey }}"
-                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-1.5 text-[13px] font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
                     Copiar
                 </button>
             </div>
@@ -67,11 +67,11 @@
             </div>
             <div class="flex flex-wrap gap-3">
                 <button type="submit"
-                        class="inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 dark:bg-slate-600 dark:hover:bg-slate-500">
+                        class="inline-flex items-center rounded-md border border-transparent bg-slate-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 dark:bg-slate-600 dark:hover:bg-slate-500">
                     Confirmar e ativar 2FA
                 </button>
                 <a href="{{ route('profile.edit') }}"
-                   class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40">
+                   class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40">
                     Cancelar
                 </a>
             </div>

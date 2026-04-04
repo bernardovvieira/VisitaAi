@@ -7,8 +7,6 @@
     $escLabels = config('visitaai_municipio.escolaridade_opcoes', []);
     $rendaLabels = config('visitaai_municipio.renda_faixa_opcoes', []);
     $celSup = $cfgInd['texto_celula_suprimida'] ?? '-';
-    $canExportCsv = ($painel['resumo']['total_ocupantes'] ?? 0) > 0;
-    $csvHintDisabled = $cfgInd['export_csv_disabled_hint'] ?? '';
     $faixasCounts = [];
     foreach ($keysFaixa as $_k) {
         $faixasCounts[$_k] = (int) (($painel['resumo']['faixas_etarias'][$_k] ?? 0));
@@ -57,36 +55,6 @@
             @endif
         </x-slot>
     </x-page-header>
-
-    <div class="v-card v-card--muted v-card--tight flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div class="min-w-0 flex-1">
-            @if(! $canExportCsv && $csvHintDisabled !== '')
-                <p class="text-xs text-slate-600 dark:text-slate-400">{{ $csvHintDisabled }}</p>
-            @endif
-        </div>
-        <div class="flex shrink-0 flex-col items-stretch gap-1 sm:items-end">
-            @if($canExportCsv)
-                <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-                   class="inline-flex items-center justify-center rounded-md border border-blue-600 bg-blue-50 px-3 py-1.5 text-[13px] font-semibold text-blue-950 shadow-sm transition hover:bg-blue-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:border-blue-500 dark:bg-blue-950/45 dark:text-blue-100 dark:hover:bg-blue-900/50">
-                    <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                    {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
-                </a>
-                @if(filled($cfgInd['export_csv_legenda'] ?? ''))
-                    <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500 dark:text-slate-400">{{ $cfgInd['export_csv_legenda'] }}</p>
-                @endif
-            @else
-                <span class="inline-flex cursor-not-allowed items-center justify-center rounded-md border border-dashed border-blue-300/80 bg-blue-50/50 px-3 py-1.5 text-[13px] font-medium text-blue-800/70 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-200/50"
-                      title="{{ $csvHintDisabled }}"
-                      aria-disabled="true">
-                    <x-heroicon-o-arrow-down-tray class="mr-1.5 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
-                    {{ $cfgInd['export_csv_label'] ?? __('Exportar CSV') }}
-                </span>
-                @if(filled($cfgInd['export_csv_legenda'] ?? ''))
-                    <p class="max-w-[16rem] text-right text-[10px] leading-snug text-slate-500/70 dark:text-slate-400/60">{{ $cfgInd['export_csv_legenda'] }}</p>
-                @endif
-            @endif
-        </div>
-    </div>
 
     <section class="v-card border-amber-200/90 bg-amber-50/95 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
         <p><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>

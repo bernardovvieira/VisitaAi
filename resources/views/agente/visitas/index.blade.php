@@ -202,9 +202,7 @@
             </table>
         </div>
 
-        <div class="border-t border-slate-100 px-4 py-3 dark:border-slate-700/80 sm:px-5">
-            <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
-        </div>
+        <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
         </div>
 </div>
 <script>

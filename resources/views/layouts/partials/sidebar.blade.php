@@ -87,7 +87,7 @@
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Indicadores, relatórios e auditoria')" />
+            <x-sidebar-nav-section :label="__('Análise e relatórios')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.indicadores.ocupantes')"
                                 :active="request()->routeIs('gestor.indicadores.ocupantes*')"
