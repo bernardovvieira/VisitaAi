@@ -698,7 +698,7 @@
         @apply no-underline transition hover:brightness-[0.98] dark:hover:brightness-110;
     }
 
-    /* Trilho de navegação estrutural — fora do visual de cartão (só texto/chevrons no fundo da página) */
+    /* Trilho de navegação estrutural — sem caixa (só links/chevrons no fundo) */
     .v-breadcrumbs {
         @apply mb-0 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
     }

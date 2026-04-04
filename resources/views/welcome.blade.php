@@ -13,7 +13,7 @@
         {{-- Mobile only --}}
         <div class="flex lg:hidden justify-center mt-8">
             <div class="w-64">
-                @include('components.welcome-illustration')
+                <x-welcome-illustration />
             </div>
         </div>
 
@@ -73,7 +73,7 @@
         {{-- Desktop only --}}
         <div class="hidden lg:flex justify-center" id="anim-ilustracao">
             <div class="w-full max-w-md">
-                @include('components.welcome-illustration')
+                <x-welcome-illustration />
             </div>
         </div>
 
