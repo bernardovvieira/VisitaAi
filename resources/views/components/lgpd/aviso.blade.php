@@ -9,9 +9,9 @@
 @endphp
 
 @if($compact)
-<details {{ $attributes->merge(['class' => 'w-full max-w-none rounded-lg border border-slate-200 bg-slate-50/90 text-slate-800 shadow-sm dark:border-slate-600 dark:bg-slate-900/45 dark:text-slate-200']) }}>
-    <summary class="cursor-pointer list-inside list-none px-3 py-2.5 text-xs marker:hidden text-blue-800 dark:text-blue-300 [&::-webkit-details-marker]:hidden sm:text-sm">
-        <span class="border-b border-dotted border-current pb-px font-medium">{{ __('LGPD e tratamento dos dados neste painel') }}</span>
+<details {{ $attributes->merge(['class' => 'w-full max-w-none rounded-xl border border-slate-200/90 bg-white/85 text-slate-800 shadow-sm ring-1 ring-slate-900/[0.04] dark:border-slate-600/80 dark:bg-slate-900/40 dark:text-slate-200 dark:ring-white/[0.06]']) }}>
+    <summary class="cursor-pointer list-inside list-none px-3 py-2.5 text-xs font-medium text-slate-700 marker:hidden transition-colors hover:text-slate-900 dark:text-slate-200 dark:hover:text-white [&::-webkit-details-marker]:hidden sm:text-sm">
+        <span class="border-b border-dotted border-slate-400/80 pb-px dark:border-slate-500/90">{{ __('LGPD e tratamento dos dados neste painel') }}</span>
         <span class="sr-only">{{ __('Abre o texto sobre LGPD e dados.') }}</span>
     </summary>
     <div class="space-y-2 border-t border-slate-200/90 px-3 pb-3 pt-2 text-[11px] leading-relaxed dark:border-slate-600 sm:text-xs">
@@ -20,11 +20,11 @@
         @endif
         <p class="font-semibold leading-snug text-slate-900 dark:text-slate-100">{{ $lgpd['titulo'] ?? '' }}</p>
         <p class="text-slate-700 dark:text-slate-300">{{ $lgpd['resumo_sistema'] ?? '' }}</p>
-        <details class="text-[11px] leading-relaxed sm:text-xs">
-            <summary class="cursor-pointer select-none font-medium text-blue-800 dark:text-blue-300">
-                <span class="border-b border-dotted border-current pb-px">{{ __('Legislação federal e tratamento de dados (expandir)') }}</span>
+        <details class="rounded-md bg-slate-100/60 text-[11px] leading-relaxed dark:bg-slate-800/35 sm:text-xs">
+            <summary class="cursor-pointer select-none px-2 py-1.5 font-medium text-slate-700 transition-colors hover:text-slate-950 dark:text-slate-300 dark:hover:text-slate-100">
+                <span class="border-b border-dotted border-slate-400/75 pb-px dark:border-slate-500/80">{{ __('Legislação federal e tratamento de dados (expandir)') }}</span>
             </summary>
-            <div class="mt-2 max-h-60 space-y-2 overflow-y-auto border-t border-slate-200 pt-2 dark:border-slate-600 sm:max-h-72 sm:mt-3 sm:pt-3">
+            <div class="mt-2 max-h-60 space-y-2 overflow-y-auto border-t border-slate-200/90 px-2 pb-2 pt-2 dark:border-slate-600/80 sm:max-h-72 sm:mt-3 sm:pt-3">
                 <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Quadro normativo federal') }}.</span> {{ $lgpd['quadro_legislacao_federal'] ?? '' }}</p>
                 <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Princípios (LGPD)') }}.</span> {{ $lgpd['principios_lgpd'] ?? '' }}</p>
                 <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Controlador') }}.</span> {{ $lgpd['controlador'] ?? '' }}</p>
@@ -54,11 +54,11 @@
     @if(filled($ctx))
         <p class="mt-2 rounded-md border border-amber-200/90 bg-amber-50/90 p-2 text-xs font-medium leading-relaxed text-amber-950 dark:border-amber-800/70 dark:bg-amber-950/40 dark:text-amber-100">{{ $ctx }}</p>
     @endif
-    <details class="mt-2 text-[11px] leading-relaxed sm:mt-3 sm:text-xs">
-        <summary class="cursor-pointer select-none font-medium text-blue-800 dark:text-blue-300">
-            <span class="border-b border-dotted border-current pb-px">{{ __('Legislação federal e tratamento de dados (expandir)') }}</span>
+    <details class="mt-2 rounded-md bg-slate-100/60 text-[11px] leading-relaxed dark:bg-slate-800/35 sm:mt-3 sm:text-xs">
+        <summary class="cursor-pointer select-none px-2 py-1.5 font-medium text-slate-700 transition-colors hover:text-slate-950 dark:text-slate-300 dark:hover:text-slate-100">
+            <span class="border-b border-dotted border-slate-400/75 pb-px dark:border-slate-500/80">{{ __('Legislação federal e tratamento de dados (expandir)') }}</span>
         </summary>
-        <div class="mt-2 max-h-60 space-y-2 overflow-y-auto border-t border-slate-200 pt-2 dark:border-slate-600 sm:max-h-72 sm:mt-3 sm:pt-3">
+        <div class="mt-2 max-h-60 space-y-2 overflow-y-auto border-t border-slate-200/90 px-2 pb-2 pt-2 dark:border-slate-600/80 sm:max-h-72 sm:mt-3 sm:pt-3">
             <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Quadro normativo federal') }}.</span> {{ $lgpd['quadro_legislacao_federal'] ?? '' }}</p>
             <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Princípios (LGPD)') }}.</span> {{ $lgpd['principios_lgpd'] ?? '' }}</p>
             <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Controlador') }}.</span> {{ $lgpd['controlador'] ?? '' }}</p>

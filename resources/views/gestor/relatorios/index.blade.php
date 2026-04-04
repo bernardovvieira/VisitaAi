@@ -430,10 +430,12 @@
                                 </span>
 
                                 @php
-                                    $revisitaPosterior = $visita->local->visitas()
-                                        ->where('vis_data', '>', $visita->vis_data)
-                                        ->orderBy('vis_data')
-                                        ->first();
+                                    $revisitaPosterior = $visita->local
+                                        ? $visita->local->visitas()
+                                            ->where('vis_data', '>', $visita->vis_data)
+                                            ->orderBy('vis_data')
+                                            ->first()
+                                        : null;
                                 @endphp
 
                                 @if($revisitaPosterior)
@@ -448,10 +450,14 @@
                             @endif
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
-                            <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ __('Bairro/Localidade: :bairro · Cód.: :codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
-                            </div>
+                            @if($visita->local)
+                                <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __('Bairro/Localidade: :bairro · Cód.: :codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
+                                </div>
+                            @else
+                                <p class="text-sm font-medium text-amber-700 dark:text-amber-300">{{ __('Local não disponível para esta visita.') }}</p>
+                            @endif
                         </td>
                         <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
                             <span class="text-sm">{{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: __('Não informado') }}</span>
@@ -498,14 +504,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const REL_I18N = @json([
+@php
+    $relatoriosI18nCharts = [
         'visitas' => __('Visitas'),
         'desconhecido' => __('Desconhecido'),
         'ni' => __('N/I'),
         'indefinida' => __('Indefinida'),
-    ]);
+    ];
+@endphp
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const REL_I18N = @json($relatoriosI18nCharts);
     const visitas = @json($visitasParaGraficos ?? []);
 
     const contagemPorBairro = {};

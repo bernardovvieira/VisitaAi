@@ -111,7 +111,7 @@ class RelatorioController extends Controller
         $doencaMaisRecorrente = $visitas->flatMap->doencas
             ->groupBy('doe_nome')->sortDesc()->map->count()->keys()->first();
 
-        $bairroMaisFrequente = $visitas->groupBy(fn($v) => $v->local->loc_bairro ?? '')
+        $bairroMaisFrequente = $visitas->groupBy(fn ($v) => $v->local?->loc_bairro ?? '')
             ->sortDesc()->map->count()->keys()->first();
 
         $totalLocaisCadastrados = Local::count();
@@ -251,7 +251,7 @@ class RelatorioController extends Controller
             ->values()
             ->first();
 
-        $totalLocaisVisitados = $visitas->pluck('local.loc_codigo_unico')->unique()->count();
+        $totalLocaisVisitados = $visitas->map(fn ($v) => $v->local?->loc_codigo_unico)->filter()->unique()->count();
         $doencasDetectadas = Doenca::all();
         $gestorNome = Auth::user()->use_nome ?? 'Gestor';
 

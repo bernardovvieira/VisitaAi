@@ -123,7 +123,7 @@
         </div>
     </div>
 
-    <x-lgpd.aviso context="painel_indicadores" compact class="max-w-none border-amber-200/40 dark:border-amber-900/30" />
+    <x-lgpd.aviso context="painel_indicadores" compact class="max-w-none" />
 
     @php $Q = $painel['completude']; @endphp
     <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
