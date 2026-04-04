@@ -95,6 +95,8 @@
 
     @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 
+    @include('municipio.locais._painel_sensivel_gestor', ['local' => $local])
+
     {{-- Adesivo --}}
     <section class="v-card mt-6 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>

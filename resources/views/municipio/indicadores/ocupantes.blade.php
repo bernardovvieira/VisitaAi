@@ -6,6 +6,8 @@
     $keysFaixa = ['0-11', '12-17', '18-59', '60+', 'sem_info'];
     $escLabels = config('visitaai_municipio.escolaridade_opcoes', []);
     $rendaLabels = config('visitaai_municipio.renda_faixa_opcoes', []);
+    $corLabels = config('visitaai_municipio.cor_raca_opcoes', []);
+    $trabLabels = config('visitaai_municipio.situacao_trabalho_opcoes', []);
     $celSup = $cfgInd['texto_celula_suprimida'] ?? '-';
     $faixasCounts = [];
     foreach ($keysFaixa as $_k) {
@@ -56,10 +58,82 @@
         </x-slot>
     </x-page-header>
 
+    <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <p class="text-[11px] leading-snug text-slate-600 dark:text-slate-400 max-w-xl">{{ $cfgInd['export_csv_aviso'] ?? '' }}</p>
+        <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
+           class="v-btn-compact v-btn-compact--slate shrink-0 text-sm">
+            <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+            {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
+        </a>
+    </div>
+
     <section class="v-card border-amber-200/90 bg-amber-50/95 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
         <p><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
         <p class="mt-1.5 text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
         <p class="mt-1.5 text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
+        <p class="mt-1.5 text-[10px] leading-snug text-amber-800/70 dark:text-amber-200/65">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
+    </section>
+
+    <x-lgpd.aviso context="painel_indicadores" class="border-amber-200/40 bg-slate-50/95 dark:border-amber-900/30 dark:bg-slate-900/35" />
+
+    @php $Q = $painel['completude']; @endphp
+    <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_completude'] ?? __('Qualidade do preenchimento') }}</h2>
+        @if(filled($cfgInd['subtitulo_completude'] ?? ''))
+            <p class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $cfgInd['subtitulo_completude'] }}</p>
+        @endif
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div>
+                <div class="flex items-baseline justify-between gap-2">
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Data de nascimento') }}</p>
+                    <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_data_nascimento'] }}%</p>
+                </div>
+                <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div class="h-full rounded-full bg-emerald-600 transition-[width] dark:bg-emerald-500" style="width: {{ min(100, $Q['pct_data_nascimento']) }}%"></div>
+                </div>
+                <p class="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">{{ number_format($Q['com_data_nascimento'], 0, ',', '.') }} {{ __('de') }} {{ number_format($Q['total'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $Q['total']) }}</p>
+            </div>
+            <div>
+                <div class="flex items-baseline justify-between gap-2">
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Escolaridade (categoria definida)') }}</p>
+                    <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_escolaridade_informada'] }}%</p>
+                </div>
+                <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div class="h-full rounded-full bg-blue-600 transition-[width] dark:bg-blue-500" style="width: {{ min(100, $Q['pct_escolaridade_informada']) }}%"></div>
+                </div>
+                <p class="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">{{ number_format($Q['com_escolaridade_informada'], 0, ',', '.') }} {{ __('de') }} {{ number_format($Q['total'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $Q['total']) }}</p>
+            </div>
+            <div>
+                <div class="flex items-baseline justify-between gap-2">
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Renda (faixa definida)') }}</p>
+                    <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_renda_informada'] }}%</p>
+                </div>
+                <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div class="h-full rounded-full bg-indigo-600 transition-[width] dark:bg-indigo-500" style="width: {{ min(100, $Q['pct_renda_informada']) }}%"></div>
+                </div>
+                <p class="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">{{ number_format($Q['com_renda_informada'], 0, ',', '.') }} {{ __('de') }} {{ number_format($Q['total'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $Q['total']) }}</p>
+            </div>
+            <div>
+                <div class="flex items-baseline justify-between gap-2">
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Cor/raça informada') }}</p>
+                    <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_cor_raca_informada'] }}%</p>
+                </div>
+                <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div class="h-full rounded-full bg-teal-600 transition-[width] dark:bg-teal-500" style="width: {{ min(100, $Q['pct_cor_raca_informada']) }}%"></div>
+                </div>
+                <p class="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">{{ number_format($Q['com_cor_raca_informada'], 0, ',', '.') }} {{ __('de') }} {{ number_format($Q['total'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $Q['total']) }}</p>
+            </div>
+            <div>
+                <div class="flex items-baseline justify-between gap-2">
+                    <p class="text-xs font-medium text-slate-600 dark:text-slate-300">{{ __('Situação de trabalho informada') }}</p>
+                    <p class="text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $Q['pct_situacao_trabalho_informada'] }}%</p>
+                </div>
+                <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div class="h-full rounded-full bg-amber-600 transition-[width] dark:bg-amber-500" style="width: {{ min(100, $Q['pct_situacao_trabalho_informada']) }}%"></div>
+                </div>
+                <p class="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">{{ number_format($Q['com_situacao_trabalho_informada'], 0, ',', '.') }} {{ __('de') }} {{ number_format($Q['total'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $Q['total']) }}</p>
+            </div>
+        </div>
     </section>
 
     @php $R = $painel['resumo']; @endphp
@@ -156,13 +230,17 @@
     </section>
 
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none lg:col-span-1">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_escolaridade'] ?? 'Escolaridade' }}</h2>
+            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['escolaridade'] as $codigo => $qtd)
-                    <li class="flex justify-between gap-2 border-b border-slate-100 pb-1.5 dark:border-slate-700">
+                    @php
+                        $pctLista = $R['total_ocupantes'] > 0 ? (int) round(100 * $qtd / $R['total_ocupantes']) : 0;
+                    @endphp
+                    <li class="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 border-b border-slate-100 pb-1.5 dark:border-slate-700">
                         <span class="text-gray-700 dark:text-gray-300">{{ $escLabels[$codigo] ?? $codigo }}</span>
-                        <span class="font-semibold text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }}</span>
+                        <span class="shrink-0 text-right font-semibold tabular-nums text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">({{ $pctLista }}%)</span></span>
                     </li>
                 @endforeach
             </ul>
@@ -172,11 +250,15 @@
         </section>
         <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_renda'] ?? 'Renda' }}</h2>
+            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['renda'] as $codigo => $qtd)
-                    <li class="flex justify-between gap-2 border-b border-slate-100 pb-1.5 dark:border-slate-700">
+                    @php
+                        $pctListaR = $R['total_ocupantes'] > 0 ? (int) round(100 * $qtd / $R['total_ocupantes']) : 0;
+                    @endphp
+                    <li class="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 border-b border-slate-100 pb-1.5 dark:border-slate-700">
                         <span class="text-gray-700 dark:text-gray-300">{{ $rendaLabels[$codigo] ?? ($codigo === 'nao_informado' ? ($escLabels['nao_informado'] ?? 'Não informado') : $codigo) }}</span>
-                        <span class="font-semibold text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }}</span>
+                        <span class="shrink-0 text-right font-semibold tabular-nums text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">({{ $pctListaR }}%)</span></span>
                     </li>
                 @endforeach
             </ul>
@@ -185,5 +267,91 @@
             @endif
         </section>
     </div>
+
+    <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_cor_raca'] ?? __('Cor ou raça') }}</h2>
+            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
+            <ul class="mt-2 space-y-1.5 text-sm">
+                @foreach($painel['cor_raca'] ?? [] as $codigo => $qtd)
+                    @php
+                        $pctLista = $R['total_ocupantes'] > 0 ? (int) round(100 * $qtd / $R['total_ocupantes']) : 0;
+                    @endphp
+                    <li class="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 border-b border-slate-100 pb-1.5 dark:border-slate-700">
+                        <span class="text-gray-700 dark:text-gray-300">{{ $corLabels[$codigo] ?? $codigo }}</span>
+                        <span class="shrink-0 text-right font-semibold tabular-nums text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">({{ $pctLista }}%)</span></span>
+                    </li>
+                @endforeach
+            </ul>
+            @if(empty($painel['cor_raca'] ?? []))
+                <p class="mt-2 text-sm text-gray-500">{{ __('Sem dados.') }}</p>
+            @endif
+        </section>
+        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+            <h2 class="v-section-title">{{ $cfgInd['titulo_secao_situacao_trabalho'] ?? __('Situação no trabalho') }}</h2>
+            <p class="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Percentual sobre o total de ocupantes.') }}</p>
+            <ul class="mt-2 space-y-1.5 text-sm">
+                @foreach($painel['situacao_trabalho'] ?? [] as $codigo => $qtd)
+                    @php
+                        $pctListaT = $R['total_ocupantes'] > 0 ? (int) round(100 * $qtd / $R['total_ocupantes']) : 0;
+                    @endphp
+                    <li class="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 border-b border-slate-100 pb-1.5 dark:border-slate-700">
+                        <span class="text-gray-700 dark:text-gray-300">{{ $trabLabels[$codigo] ?? $codigo }}</span>
+                        <span class="shrink-0 text-right font-semibold tabular-nums text-gray-900 dark:text-gray-100">{{ number_format($qtd, 0, ',', '.') }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">({{ $pctListaT }}%)</span></span>
+                    </li>
+                @endforeach
+            </ul>
+            @if(empty($painel['situacao_trabalho'] ?? []))
+                <p class="mt-2 text-sm text-gray-500">{{ __('Sem dados.') }}</p>
+            @endif
+        </section>
+    </div>
+
+    @php
+        $cruz = $painel['cruzamento_escolaridade_renda'];
+        $keysCruzEsc = array_keys($cruz['linhas']);
+        $keysCruzRenda = array_keys($cruz['colunas']);
+    @endphp
+    @if(($cruz['total_cruzamento'] ?? 0) > 0)
+        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+            <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_cruzamento'] ?? __('Escolaridade e renda (cruzamento)') }}</h2>
+            @if(filled($cfgInd['legenda_cruzamento'] ?? ''))
+                <p class="mt-1 text-[10px] leading-snug text-slate-500 dark:text-slate-400">{{ $cfgInd['legenda_cruzamento'] }}</p>
+            @endif
+            <p class="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{{ __('Base') }}: {{ number_format($cruz['total_cruzamento'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $cruz['total_cruzamento']) }}.</p>
+            <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
+                <table class="min-w-full divide-y divide-gray-200 text-xs dark:divide-gray-600 sm:text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 text-left dark:bg-gray-900">
+                            <th scope="col" class="sticky left-0 z-10 min-w-[10rem] border-b border-gray-200 bg-gray-50 px-2 py-2 font-semibold text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">{{ $cfgInd['titulo_secao_escolaridade'] ?? __('Escolaridade') }}</th>
+                            @foreach($keysCruzRenda as $kr)
+                                <th scope="col" class="whitespace-nowrap border-b border-gray-200 bg-gray-50 px-2 py-2 text-center font-semibold text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">{{ $cruz['colunas'][$kr] ?? $kr }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        @foreach($keysCruzEsc as $ke)
+                            <tr>
+                                <th scope="row" class="sticky left-0 z-10 border-b border-gray-100 bg-white px-2 py-2 text-left font-medium text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">{{ $cruz['linhas'][$ke] ?? $ke }}</th>
+                                @foreach($keysCruzRenda as $kr)
+                                    @php $cell = $cruz['celulas'][$ke][$kr] ?? ['count' => 0, 'suprimido' => false, 'pct_total' => 0]; @endphp
+                                    <td class="border-b border-gray-100 px-2 py-2 text-center tabular-nums dark:border-gray-700">
+                                        @if(!empty($cell['suprimido']))
+                                            <span class="text-gray-400 dark:text-gray-500" title="{{ __('Célula suprimida (poucos casos).') }}">{{ $celSup }}</span>
+                                        @else
+                                            <span class="font-semibold text-gray-900 dark:text-gray-100">{{ number_format((int) ($cell['count'] ?? 0), 0, ',', '.') }}</span>
+                                            @if(($cell['count'] ?? 0) > 0 && ($cell['pct_total'] ?? null) !== null)
+                                                <span class="block text-[10px] font-normal text-slate-500 dark:text-slate-400">{{ $cell['pct_total'] }}%</span>
+                                            @endif
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    @endif
 </div>
 @endsection

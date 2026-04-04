@@ -29,6 +29,8 @@ class Morador extends Model
         'mor_data_nascimento',
         'mor_escolaridade',
         'mor_renda_faixa',
+        'mor_cor_raca',
+        'mor_situacao_trabalho',
         'mor_observacao',
     ];
 

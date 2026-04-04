@@ -6,6 +6,8 @@ use App\Helpers\LogHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LocalRequest;
 use App\Models\Local;
+use App\Models\Morador;
+use App\Models\User;
 use App\Services\Municipio\ResumoOcupantesMunicipioService;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -16,13 +18,14 @@ use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class LocalController extends Controller
 {
     public function index(Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         if ($request->has('guardada')) {
@@ -98,7 +101,7 @@ class LocalController extends Controller
 
     public function show(Local $local)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $qrCode = new QrCode(
@@ -128,7 +131,16 @@ class LocalController extends Controller
             ? 'agente.locais.show'
             : 'gestor.locais.show';
 
-        $local->load('moradores');
+        if ($user->isGestor()) {
+            $local->load([
+                'moradores',
+                'visitas' => fn ($q) => $q->select([
+                    'vis_id', 'vis_data', 'vis_ocupantes_observacoes', 'fk_local_id',
+                ])->orderByDesc('vis_data')->orderByDesc('vis_id'),
+            ]);
+        } else {
+            $local->load('moradores');
+        }
         $moradorResumo = app(ResumoOcupantesMunicipioService::class)->resumoParaLocal($local);
 
         return view($view, compact('local', 'qrCodeBase64', 'qrCodeMime', 'moradorResumo'));
@@ -154,6 +166,8 @@ class LocalController extends Controller
     public function store(LocalRequest $request)
     {
         $data = $request->validated();
+        $ocupantes = $data['ocupantes'] ?? [];
+        unset($data['ocupantes']);
 
         do {
             $codigo = mt_rand(10000000, 99999999);
@@ -163,6 +177,7 @@ class LocalController extends Controller
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
 
         $local = Local::create($data);
+        $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : []);
 
         LogHelper::registrar(
             'Cadastro de local',
@@ -197,6 +212,8 @@ class LocalController extends Controller
             $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
             $cepsCadastrados = $this->buildCepsCadastrados($primario->loc_cidade, $primario->loc_estado);
         }
+
+        $local->load('moradores');
 
         return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado', 'cepsCadastrados'));
     }
@@ -242,8 +259,11 @@ class LocalController extends Controller
                 ->with('error', 'O local primário não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.');
         }
         $data = $request->validated();
+        $ocupantes = $data['ocupantes'] ?? [];
+        unset($data['ocupantes']);
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
         $local->update($data);
+        $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : []);
 
         LogHelper::registrar(
             'Atualização de local',
@@ -337,7 +357,7 @@ class LocalController extends Controller
                 $ids[$index] = $local->loc_id;
                 LogHelper::registrar('Sincronização offline', 'Local', 'create', 'Local sincronizado: '.$local->loc_endereco);
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('Local syncStore: '.$e->getMessage());
+                Log::warning('Local syncStore: '.$e->getMessage());
                 $erros[] = ['index' => $index, 'message' => $e->getMessage()];
             }
         }
@@ -347,6 +367,71 @@ class LocalController extends Controller
             'erros' => $erros,
             'ids' => $ids,
         ]);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $rows
+     */
+    private function persistOcupantesNoLocal(Local $local, array $rows): void
+    {
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $morIdRaw = $row['mor_id'] ?? null;
+            $morId = is_numeric($morIdRaw) && (int) $morIdRaw > 0 ? (int) $morIdRaw : null;
+
+            $nome = isset($row['mor_nome']) ? trim((string) $row['mor_nome']) : '';
+            $dn = $row['mor_data_nascimento'] ?? null;
+            $dn = ($dn === '' || $dn === null) ? null : $dn;
+            $esc = $row['mor_escolaridade'] ?? null;
+            $esc = ($esc === '' || $esc === null) ? null : $esc;
+            $renda = $row['mor_renda_faixa'] ?? null;
+            $renda = ($renda === '' || $renda === null) ? null : $renda;
+            $cor = $row['mor_cor_raca'] ?? null;
+            $cor = ($cor === '' || $cor === null) ? null : $cor;
+            $trab = $row['mor_situacao_trabalho'] ?? null;
+            $trab = ($trab === '' || $trab === null) ? null : $trab;
+            $obs = isset($row['mor_observacao']) ? trim((string) $row['mor_observacao']) : '';
+            $obs = $obs === '' ? null : $obs;
+
+            if ($morId) {
+                $m = Morador::query()
+                    ->where('fk_local_id', $local->loc_id)
+                    ->where('mor_id', $morId)
+                    ->first();
+                if (! $m) {
+                    continue;
+                }
+                $m->update([
+                    'mor_nome' => $nome !== '' ? $nome : null,
+                    'mor_data_nascimento' => $dn,
+                    'mor_escolaridade' => $esc,
+                    'mor_renda_faixa' => $renda,
+                    'mor_cor_raca' => $cor,
+                    'mor_situacao_trabalho' => $trab,
+                    'mor_observacao' => $obs,
+                ]);
+
+                continue;
+            }
+
+            $vacuous = $nome === '' && $dn === null && $esc === null && $renda === null && $cor === null && $trab === null && $obs === null;
+            if ($vacuous) {
+                continue;
+            }
+
+            Morador::create([
+                'fk_local_id' => $local->loc_id,
+                'mor_nome' => $nome !== '' ? $nome : null,
+                'mor_data_nascimento' => $dn,
+                'mor_escolaridade' => $esc,
+                'mor_renda_faixa' => $renda,
+                'mor_cor_raca' => $cor,
+                'mor_situacao_trabalho' => $trab,
+                'mor_observacao' => $obs,
+            ]);
+        }
     }
 
     /** Converte valor de número do local para integer ou null (coluna é integer). */

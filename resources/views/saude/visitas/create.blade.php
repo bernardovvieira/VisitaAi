@@ -69,6 +69,7 @@
                         selectedId: {{ old('fk_local_id') ?? 'null' }},
                         selectedDraftId: '',
                         locais: {{ Js::from($locais) }},
+                        oldMoradorObs: @js((object) old('morador_obs', [])),
                         locaisDraft: [],
                         limparSelecao() {
                             this.selectedId = '';
@@ -146,7 +147,28 @@
                         </ul>
                     </div>
                     <input type="hidden" name="fk_local_id" x-bind:value="selectedDraftId ? '' : selectedId">
-                    <input type="hidden" name="local_draft_id" x-bind:value="selectedDraftId"> 
+                    <input type="hidden" name="local_draft_id" x-bind:value="selectedDraftId">
+
+                    <div class="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-600" x-show="selectedId && !selectedDraftId" x-cloak>
+                        <p class="v-section-title text-sm">{{ __('Ocupantes (nesta visita)') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel. Opcional.') }}</p>
+                        <p class="rounded border border-amber-200/80 bg-amber-50/90 p-2 text-xs leading-relaxed text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/35 dark:text-amber-100">{{ config('visitaai_municipio.lgpd.contextos.visitas_observacoes_ocupantes') }}</p>
+                        <template x-for="m in ((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || []" :key="m.mor_id">
+                            <div>
+                                <label class="v-toolbar-label" x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></label>
+                                <textarea
+                                    class="v-input mt-1"
+                                    rows="2"
+                                    x-bind:name="'morador_obs[' + m.mor_id + ']'"
+                                    x-init="$el.value = (oldMoradorObs[String(m.mor_id)] ?? oldMoradorObs[m.mor_id] ?? '')"
+                                    placeholder="{{ __('Informações sobre este ocupante nesta visita (opcional)') }}"
+                                ></textarea>
+                            </div>
+                        </template>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" x-show="selectedId && !selectedDraftId && (!((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || !((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores).length)">
+                            {{ __('Nenhum ocupante cadastrado para este imóvel.') }}
+                        </p>
+                    </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Se o local visitado não estiver na lista, contate um {{ \App\Helpers\MsTerminologia::perfilLabel('agente_endemias') }} para cadastrá-lo.
@@ -578,6 +600,11 @@
                 alert('Selecione o local visitado antes de salvar.');
                 return Promise.reject();
             }
+            var moradorObs = {};
+            form.querySelectorAll('textarea[name^="morador_obs["]').forEach(function(el) {
+                var m = el.name.match(/^morador_obs\[(\d+)\]$/);
+                if (m) moradorObs[m[1]] = el.value || '';
+            });
             var payload = {
                 vis_data: (form.querySelector('input[name="vis_data"]') || {}).value || '',
                 vis_ciclo: (form.querySelector('input[name="vis_ciclo"]') || {}).value || '',
@@ -585,6 +612,7 @@
                 vis_atividade: '7',
                 vis_visita_tipo: (form.querySelector('select[name="vis_visita_tipo"]') || {}).value || '',
                 vis_observacoes: (form.querySelector('textarea[name="vis_observacoes"]') || {}).value || '',
+                morador_obs: moradorObs,
                 vis_pendencias: (form.querySelector('input[name="vis_pendencias"]') || {}).checked ? 1 : 0,
                 vis_coleta_amostra: (form.querySelector('input[name="vis_coleta_amostra"]') || {}).checked ? 1 : 0,
                 vis_amos_inicial: parseInt((form.querySelector('input[name="vis_amos_inicial"]') || {}).value || 0, 10) || null,
@@ -661,6 +689,13 @@
             });
             window.dispatchEvent(new CustomEvent('visita-apply-draft-local', { detail: p }));
             window.dispatchEvent(new CustomEvent('visita-apply-draft-tratamentos', { detail: p.tratamentos || [] }));
+            setTimeout(function() {
+                if (!p.morador_obs || typeof p.morador_obs !== 'object') return;
+                Object.keys(p.morador_obs).forEach(function(id) {
+                    var el = form.querySelector('textarea[name="morador_obs[' + id + ']"]');
+                    if (el) el.value = p.morador_obs[id] != null ? String(p.morador_obs[id]) : '';
+                });
+            }, 250);
         }).catch(function() {});
         }
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { setTimeout(apply, 80); });

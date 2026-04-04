@@ -211,6 +211,8 @@
                 </div>
             </fieldset>
 
+            @include('municipio.locais._form_ocupantes')
+
             <div class="flex justify-end">
                 <button type="submit" id="btn-cadastrar-local"
                         x-bind:disabled="carregando"

@@ -39,6 +39,12 @@
         {{ config('visitaai_municipio.ocupantes.disclaimer') }}
     </section>
 
+    @php
+        $escOpcoes = config('visitaai_municipio.escolaridade_opcoes', []);
+        $rendaOpcoes = config('visitaai_municipio.renda_faixa_opcoes', []);
+        $corOpcoes = config('visitaai_municipio.cor_raca_opcoes', []);
+        $trabOpcoes = config('visitaai_municipio.situacao_trabalho_opcoes', []);
+    @endphp
     <div class="v-card v-card--flush overflow-hidden dark:bg-gray-800">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-700">
@@ -48,6 +54,9 @@
                         <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Nascimento') }}</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Idade') }}</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Escolaridade') }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Renda') }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Cor/raça') }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Trabalho') }}</th>
                         <th scope="col" class="px-4 py-3 text-right font-semibold text-gray-700 dark:text-gray-300">{{ __('Ações') }}</th>
                     </tr>
                 </thead>
@@ -57,7 +66,10 @@
                             <td class="px-4 py-3">{{ $m->mor_nome ?: '-' }}</td>
                             <td class="px-4 py-3 tabular-nums">{{ $m->mor_data_nascimento ? $m->mor_data_nascimento->format('d/m/Y') : '-' }}</td>
                             <td class="px-4 py-3">{{ $m->idadeAnos() !== null ? $m->idadeAnos() . ' ' . __('anos') : '-' }}</td>
-                            <td class="px-4 py-3">{{ $m->mor_escolaridade ? (config('visitaai_municipio.escolaridade_opcoes.' . $m->mor_escolaridade) ?: $m->mor_escolaridade) : '-' }}</td>
+                            <td class="max-w-[11rem] truncate px-4 py-3" title="{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '' }}">{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '-' }}</td>
+                            <td class="max-w-[11rem] truncate px-4 py-3" title="{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '' }}">{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '-' }}</td>
+                            <td class="max-w-[9rem] truncate px-4 py-3" title="{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '' }}">{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '-' }}</td>
+                            <td class="max-w-[11rem] truncate px-4 py-3" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
                             <td class="px-4 py-3 text-right whitespace-nowrap">
                                 <div class="inline-flex justify-end gap-1.5">
                                     <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
@@ -81,7 +93,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-10 text-center text-gray-500 dark:text-gray-400">{{ __('Nenhum ocupante registrado neste imóvel.') }}</td>
+                            <td colspan="8" class="px-4 py-10 text-center text-gray-500 dark:text-gray-400">{{ __('Nenhum ocupante registrado neste imóvel.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

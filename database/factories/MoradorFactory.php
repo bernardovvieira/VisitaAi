@@ -21,6 +21,8 @@ class MoradorFactory extends Factory
             'mor_data_nascimento' => $this->faker->dateTimeBetween('-75 years', '-2 years'),
             'mor_escolaridade' => 'nao_informado',
             'mor_renda_faixa' => 'nao_informado',
+            'mor_cor_raca' => 'nao_informado',
+            'mor_situacao_trabalho' => 'nao_informado',
             'mor_observacao' => null,
         ];
     }

@@ -7,17 +7,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\VisitaRequest;
 use App\Models\Doenca;
 use App\Models\Local;
+use App\Models\User;
 use App\Models\Visita;
+use App\Services\Vigilancia\SugestaoDoencasService;
+use App\Support\VisitaOcupantesObservacao;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class VisitaController extends Controller
 {
     public function index(Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         if ($request->has('enviadas')) {
@@ -86,7 +91,7 @@ class VisitaController extends Controller
             ->appends(['busca' => $busca]);
 
         // NOVO: busca locais com pendência não revisitada
-        $locaisComPendenciasNaoRevisitadas = \App\Models\Local::whereHas('visitas', fn ($q) => $q->where('vis_pendencias', true))
+        $locaisComPendenciasNaoRevisitadas = Local::whereHas('visitas', fn ($q) => $q->where('vis_pendencias', true))
             ->with(['visitas' => fn ($q) => $q->orderByDesc('vis_data')])
             ->get()
             ->filter(function ($local) {
@@ -151,8 +156,9 @@ class VisitaController extends Controller
     {
         $this->authorize('view', $visita);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
+        $visita->load(['local.moradores']);
 
         $view = $user->isAgenteSaude()
             ? 'saude.visitas.show'
@@ -163,15 +169,18 @@ class VisitaController extends Controller
 
     public function create()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
-        $locais = Local::all();
+        $locais = Local::query()
+            ->with(['moradores' => fn ($q) => $q->orderBy('mor_id')])
+            ->orderByDesc('loc_id')
+            ->get();
         $doencas = Doenca::all();
 
         $sugestoesDisponiveis = false;
         if ($user->isAgenteEndemias() || $user->isAgenteSaude()) {
             $sugestoesDisponiveis = Visita::whereHas('doencas')
-                ->where('vis_data', '>=', now()->subMonths(\App\Services\Vigilancia\SugestaoDoencasService::MESES_FREQUENCIA))
+                ->where('vis_data', '>=', now()->subMonths(SugestaoDoencasService::MESES_FREQUENCIA))
                 ->exists()
                 || (Doenca::count() > 0 && Doenca::whereNotNull('doe_sintomas')->exists());
         }
@@ -185,9 +194,10 @@ class VisitaController extends Controller
 
     public function store(VisitaRequest $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $validated = $request->validated();
+        $this->mergeMoradorObservacoesNaVisita($validated, $request);
 
         $existe = Visita::where('fk_usuario_id', $user->use_id)
             ->where('fk_local_id', $validated['fk_local_id'])
@@ -257,7 +267,7 @@ class VisitaController extends Controller
      */
     public function syncPage()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         if (! $user->isAgenteEndemias() && ! $user->isAgenteSaude()) {
             abort(403, 'Acesso negado.');
@@ -282,7 +292,7 @@ class VisitaController extends Controller
     public function syncStore(Request $request)
     {
         try {
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = Auth::user();
             if (! $user->isAgenteEndemias() && ! $user->isAgenteSaude()) {
                 return response()->json(['message' => 'Acesso negado.'], 403);
@@ -318,6 +328,16 @@ class VisitaController extends Controller
                 unset($validated['doencas']);
                 $tratamentos = $validated['tratamentos'] ?? [];
                 unset($validated['tratamentos']);
+
+                $rawMoradorObs = $item['morador_obs'] ?? [];
+                if (is_string($rawMoradorObs)) {
+                    $rawMoradorObs = json_decode($rawMoradorObs, true) ?: [];
+                }
+                $validated['vis_ocupantes_observacoes'] = VisitaOcupantesObservacao::fromInputArray(
+                    is_array($rawMoradorObs) ? $rawMoradorObs : [],
+                    (int) $validated['fk_local_id']
+                );
+                unset($validated['morador_obs']);
 
                 $validated['fk_usuario_id'] = $user->use_id;
                 $validated['vis_coleta_amostra'] = (bool) ($item['vis_coleta_amostra'] ?? false);
@@ -384,9 +404,9 @@ class VisitaController extends Controller
                 'sincronizados' => $sincronizados,
                 'erros' => $erros,
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+        } catch (AuthorizationException $e) {
             throw $e;
         } catch (\Throwable $e) {
             \Log::error('syncStore: '.$e->getMessage(), ['exception' => $e]);
@@ -401,7 +421,7 @@ class VisitaController extends Controller
     /**
      * Normaliza o payload de uma visita vinda do cliente (tratamentos JSON, vis_atividade ACS, etc.).
      */
-    private function prepareVisitaPayloadForSync(array $item, \App\Models\User $user): array
+    private function prepareVisitaPayloadForSync(array $item, User $user): array
     {
         if ($user->use_perfil === 'agente_saude') {
             $item['vis_atividade'] = '7';
@@ -446,20 +466,45 @@ class VisitaController extends Controller
             $item['vis_ciclo'] = null;
         }
 
+        if (isset($item['morador_obs']) && is_string($item['morador_obs'])) {
+            $decoded = json_decode($item['morador_obs'], true);
+            $item['morador_obs'] = is_array($decoded) ? $decoded : [];
+        }
+
         return $item;
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    private function mergeMoradorObservacoesNaVisita(array &$validated, Request $request): void
+    {
+        $raw = $request->input('morador_obs', []);
+        if (! is_array($raw)) {
+            $raw = [];
+        }
+        $validated['vis_ocupantes_observacoes'] = VisitaOcupantesObservacao::fromInputArray(
+            $raw,
+            (int) $validated['fk_local_id']
+        );
+        unset($validated['morador_obs']);
     }
 
     public function edit(Visita $visita)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
-        $locais = Local::all();
+        $visita->load(['local.moradores']);
+        $locais = Local::query()
+            ->with(['moradores' => fn ($q) => $q->orderBy('mor_id')])
+            ->orderByDesc('loc_id')
+            ->get();
         $doencas = Doenca::all();
 
         $sugestoesDisponiveis = false;
         if ($user->isAgenteEndemias() || $user->isAgenteSaude()) {
             $sugestoesDisponiveis = Visita::whereHas('doencas')
-                ->where('vis_data', '>=', now()->subMonths(\App\Services\Vigilancia\SugestaoDoencasService::MESES_FREQUENCIA))
+                ->where('vis_data', '>=', now()->subMonths(SugestaoDoencasService::MESES_FREQUENCIA))
                 ->exists()
                 || (Doenca::count() > 0 && Doenca::whereNotNull('doe_sintomas')->exists());
         }
@@ -473,9 +518,10 @@ class VisitaController extends Controller
 
     public function update(VisitaRequest $request, Visita $visita)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $validated = $request->validated();
+        $this->mergeMoradorObservacoesNaVisita($validated, $request);
 
         $doencas = $validated['doencas'] ?? [];
         unset($validated['doencas']);
@@ -529,7 +575,7 @@ class VisitaController extends Controller
 
     public function destroy(Visita $visita)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $descricao = 'Visita removida do local: '.$visita->local->loc_endereco.', código: '.$visita->local->loc_codigo_unico;
 

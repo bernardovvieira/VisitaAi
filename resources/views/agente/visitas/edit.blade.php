@@ -59,6 +59,7 @@
                         search: '{{ old('fk_local_id') ? '' : ($visita?->local->loc_codigo_unico . ' - ' . $visita?->local->loc_endereco) }}',
                         selectedId: '{{ old('fk_local_id', $visita->fk_local_id ?? '') }}',
                         locais: {{ Js::from($locais) }},
+                        oldMoradorObs: @js((object) old('morador_obs', $visita->vis_ocupantes_observacoes ?? [])),
                         limparSelecao() {
                             if (!this.selectedId) return;
                             this.selectedId = '';
@@ -96,6 +97,27 @@
                         </ul>
                     </div>
                     <input type="hidden" name="fk_local_id" :value="selectedId">
+
+                    <div class="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-600" x-show="selectedId" x-cloak>
+                        <p class="v-section-title text-sm">{{ __('Ocupantes (nesta visita)') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel. Opcional.') }}</p>
+                        <p class="rounded border border-amber-200/80 bg-amber-50/90 p-2 text-xs leading-relaxed text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/35 dark:text-amber-100">{{ config('visitaai_municipio.lgpd.contextos.visitas_observacoes_ocupantes') }}</p>
+                        <template x-for="m in ((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || []" :key="m.mor_id">
+                            <div>
+                                <label class="v-toolbar-label" x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></label>
+                                <textarea
+                                    class="v-input mt-1"
+                                    rows="2"
+                                    x-bind:name="'morador_obs[' + m.mor_id + ']'"
+                                    x-init="$el.value = (oldMoradorObs[String(m.mor_id)] ?? oldMoradorObs[m.mor_id] ?? '')"
+                                    placeholder="{{ __('Informações sobre este ocupante nesta visita (opcional)') }}"
+                                ></textarea>
+                            </div>
+                        </template>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" x-show="selectedId && (!((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || !((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores).length)">
+                            {{ __('Nenhum ocupante cadastrado para este imóvel.') }}
+                        </p>
+                    </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Se o local visitado não estiver na lista, você pode adicioná-lo na seção de <a href="{{ route('agente.locais.create') }}" class="text-gray-800 hover:underline">locais</a>.

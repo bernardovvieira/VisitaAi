@@ -144,6 +144,28 @@
         <p class="text-sm text-gray-900 dark:text-gray-100">{{ $visita->vis_observacoes ?: 'Nenhuma observação registrada.' }}</p>
     </section>
 
+    @php
+        $obsOcup = $visita->vis_ocupantes_observacoes;
+        $obsOcup = is_array($obsOcup) ? $obsOcup : [];
+    @endphp
+    @if(count($obsOcup) > 0)
+        <section class="v-card dark:bg-gray-800 space-y-3">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">{{ __('Ocupantes (nesta visita)') }}</h2>
+            <ul class="space-y-3">
+                @foreach($obsOcup as $mid => $txt)
+                    @if(trim((string) $txt) === '')
+                        @continue
+                    @endif
+                    @php $mor = $visita->local->moradores->firstWhere('mor_id', (int) $mid); @endphp
+                    <li class="rounded-md border border-gray-200 p-3 dark:border-gray-600">
+                        <p class="text-xs font-semibold text-gray-600 dark:text-gray-300">{{ $mor && $mor->mor_nome ? $mor->mor_nome : __('Ocupante #:id', ['id' => $mid]) }}</p>
+                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{{ $txt }}</p>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
+
     {{-- Doenças --}}
     <section class="v-card dark:bg-gray-800 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Doenças Monitoradas na Visita</h2>

@@ -39,6 +39,9 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
     Route::get('visitas/{visita}', [VisitaController::class, 'show'])->name('visitas.show');
 
     Route::get('indicadores/ocupantes', [IndicadoresOcupantesController::class, 'index'])->name('indicadores.ocupantes');
+    Route::get('indicadores/ocupantes/export', [IndicadoresOcupantesController::class, 'exportCsv'])
+        ->middleware('throttle:12,1')
+        ->name('indicadores.ocupantes.export');
 
     Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
     Route::get('relatorios/pdf', fn () => redirect()->route('gestor.relatorios.index')->with('info', 'Use os filtros na página de relatórios e clique em "Gerar relatório em PDF" para gerar o documento.'));

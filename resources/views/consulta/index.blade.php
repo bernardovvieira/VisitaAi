@@ -115,6 +115,8 @@
             </div>
         @endif
     </section>
+
+    <x-lgpd.aviso context="consulta_publica" />
 </div>
 @endsection
 

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Local;
 use App\Models\Morador;
 use App\Models\User;
+use App\Services\Municipio\IndicadoresOcupantesMunicipioService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -24,14 +25,36 @@ class IndicadoresOcupantesTest extends TestCase
     }
 
     #[Test]
-    public function gestor_acessa_painel_indicadores_sem_export_csv(): void
+    public function gestor_ve_botao_export_csv_no_painel(): void
     {
         $user = $this->gestorAprovado();
 
         $response = $this->actingAs($user)->get(route('gestor.indicadores.ocupantes'));
 
         $response->assertOk()
-            ->assertDontSee('Exportar CSV', false);
+            ->assertSeeText((string) config('visitaai_municipio.indicadores.botao_export_csv'), false);
+    }
+
+    #[Test]
+    public function gestor_exporta_csv_com_cruzamento_completo(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create();
+        Morador::factory()->count(2)->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_escolaridade' => 'medio_completo',
+            'mor_renda_faixa' => 'ate_1_sm',
+        ]);
+
+        $raw = $this->actingAs($user)
+            ->get(route('gestor.indicadores.ocupantes.export'))
+            ->assertOk()
+            ->streamedContent();
+
+        $this->assertStringContainsString('AVISO_LEGISLACAO_FEDERAL_EXPORTACAO', $raw);
+        $this->assertStringContainsString('CRUZAMENTO_ESCOLARIDADE_RENDA_COMPLETO', $raw);
+        $this->assertStringContainsString('medio_completo', $raw);
+        $this->assertStringContainsString(',2', $raw);
     }
 
     #[Test]
@@ -60,5 +83,54 @@ class IndicadoresOcupantesTest extends TestCase
         $this->actingAs($ace)
             ->get(route('gestor.indicadores.ocupantes'))
             ->assertForbidden();
+    }
+
+    #[Test]
+    public function painel_indicadores_inclui_completude_e_cruzamento(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create(['loc_bairro' => 'Centro']);
+        Morador::factory()->count(6)->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_escolaridade' => 'medio_completo',
+            'mor_renda_faixa' => 'ate_1_sm',
+        ]);
+
+        $html = $this->actingAs($user)
+            ->get(route('gestor.indicadores.ocupantes'))
+            ->assertOk()
+            ->getContent();
+
+        $tituloCompletude = (string) config('visitaai_municipio.indicadores.titulo_secao_completude', '');
+        $this->assertNotSame('', $tituloCompletude);
+        $this->assertStringContainsString($tituloCompletude, $html);
+
+        $tituloCruzamento = (string) config('visitaai_municipio.indicadores.titulo_secao_cruzamento', '');
+        $this->assertStringContainsString($tituloCruzamento, $html);
+
+        $app = $this->app->make(IndicadoresOcupantesMunicipioService::class);
+        $painel = $app->painelCompleto();
+        $this->assertSame(100, $painel['completude']['pct_escolaridade_informada']);
+        $this->assertSame(100, $painel['completude']['pct_renda_informada']);
+        $cruz = $painel['cruzamento_escolaridade_renda']['celulas']['medio_completo']['ate_1_sm'];
+        $this->assertSame(6, $cruz['count']);
+        $this->assertFalse($cruz['suprimido']);
+    }
+
+    #[Test]
+    public function cruzamento_suprime_celulas_com_poucos_registros(): void
+    {
+        $local = Local::factory()->create();
+        Morador::factory()->count(4)->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_escolaridade' => 'superior_completo',
+            'mor_renda_faixa' => 'acima_3_sm',
+        ]);
+
+        $app = $this->app->make(IndicadoresOcupantesMunicipioService::class);
+        $painel = $app->painelCompleto();
+        $cruz = $painel['cruzamento_escolaridade_renda']['celulas']['superior_completo']['acima_3_sm'];
+        $this->assertTrue($cruz['suprimido']);
+        $this->assertNull($cruz['count']);
     }
 }

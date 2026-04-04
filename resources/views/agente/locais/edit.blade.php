@@ -183,6 +183,8 @@
                 </div>
             </fieldset>
 
+            @include('municipio.locais._form_ocupantes', ['local' => $local])
+
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">Informações Adicionais</legend>
                 <div>

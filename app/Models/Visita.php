@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Visita extends Model
 {
     use HasFactory;
 
     protected $table = 'visitas';
+
     protected $primaryKey = 'vis_id';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -26,6 +28,7 @@ class Visita extends Model
         'vis_imoveis_tratados',
         'vis_depositos_eliminados',
         'vis_observacoes',
+        'vis_ocupantes_observacoes',
         'vis_concluida',
         'fk_local_id',
         'fk_usuario_id',
@@ -35,9 +38,10 @@ class Visita extends Model
     ];
 
     protected $casts = [
-        'vis_pendencias' => 'boolean', 
+        'vis_pendencias' => 'boolean',
         'vis_coleta_amostra' => 'boolean',
         'vis_concluida' => 'boolean',
+        'vis_ocupantes_observacoes' => 'array',
     ];
 
     public function local()
@@ -52,7 +56,7 @@ class Visita extends Model
 
     public function agente()
     {
-        return $this->usuario(); 
+        return $this->usuario();
     }
 
     public function doencas()

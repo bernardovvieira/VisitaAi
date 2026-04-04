@@ -1,7 +1,11 @@
 @php
     $esc = config('visitaai_municipio.escolaridade_opcoes', []);
     $renda = config('visitaai_municipio.renda_faixa_opcoes', []);
+    $cor = config('visitaai_municipio.cor_raca_opcoes', []);
+    $trab = config('visitaai_municipio.situacao_trabalho_opcoes', []);
 @endphp
+
+<x-lgpd.aviso context="ocupantes_cadastro" class="mb-4" />
 
 <div class="space-y-4">
     <div>
@@ -33,6 +37,26 @@
             @endforeach
         </select>
         <x-input-error :messages="$errors->get('mor_renda_faixa')" class="mt-2" />
+    </div>
+    <div>
+        <x-input-label for="mor_cor_raca" value="Cor ou raça (autodeclarada)" />
+        <select id="mor_cor_raca" name="mor_cor_raca" class="v-select mt-1">
+            <option value="">{{ __('Selecionar') }}</option>
+            @foreach($cor as $k => $label)
+                <option value="{{ $k }}" @selected(old('mor_cor_raca', $morador->mor_cor_raca) === $k)>{{ $label }}</option>
+            @endforeach
+        </select>
+        <x-input-error :messages="$errors->get('mor_cor_raca')" class="mt-2" />
+    </div>
+    <div>
+        <x-input-label for="mor_situacao_trabalho" value="Situação no trabalho" />
+        <select id="mor_situacao_trabalho" name="mor_situacao_trabalho" class="v-select mt-1">
+            <option value="">{{ __('Selecionar') }}</option>
+            @foreach($trab as $k => $label)
+                <option value="{{ $k }}" @selected(old('mor_situacao_trabalho', $morador->mor_situacao_trabalho) === $k)>{{ $label }}</option>
+            @endforeach
+        </select>
+        <x-input-error :messages="$errors->get('mor_situacao_trabalho')" class="mt-2" />
     </div>
     <div>
         <x-input-label for="mor_observacao" value="Observações (opcional)" />
