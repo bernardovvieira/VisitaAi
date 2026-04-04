@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Casts\FlexibleStringOrJsonArray;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Doenca extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'doencas';
+
     protected $primaryKey = 'doe_id';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -21,8 +24,8 @@ class Doenca extends Model
     ];
 
     protected $casts = [
-        'doe_sintomas'          => 'array',
-        'doe_transmissao'       => 'array',
-        'doe_medidas_controle'  => 'array',
+        'doe_sintomas' => FlexibleStringOrJsonArray::class,
+        'doe_transmissao' => FlexibleStringOrJsonArray::class,
+        'doe_medidas_controle' => FlexibleStringOrJsonArray::class,
     ];
 }
