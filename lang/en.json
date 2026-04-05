@@ -919,5 +919,14 @@
     "Última visita registrada": "Latest visit recorded",
     "Visitas registradas no sistema": "Visits recorded in the system",
     "Consulta pública com o código do imóvel. Registro digital para ACE e ACS. Indicadores para o planejamento.": "Public lookup with the property code. Digital records for field agents. Indicators for planning.",
-    "Os totais do painel público estão desativados nas configurações. A consulta por código e o acesso ao sistema seguem disponíveis.": "Public dashboard totals are turned off in settings. Property code lookup and system sign-in remain available."
+    "Os totais do painel público estão desativados nas configurações. A consulta por código e o acesso ao sistema seguem disponíveis.": "Public dashboard totals are turned off in settings. Property code lookup and system sign-in remain available.",
+    "ACE e ACS registram visitas em campo, alinhados à Lei 11.350/2006 e às diretrizes nacionais do MS.": "Field staff record visits in line with Law 11.350/2006 and national Ministry of Health guidance.",
+    "Campo e legislação": "Field work and legislation",
+    "Consulta pelo código do imóvel, gestão municipal e registro de campo para ACE e ACS, alinhado às diretrizes do Ministério da Saúde.": "Property code lookup, municipal management, and field records for health agents, aligned with Ministry of Health guidance.",
+    "Consulta pelo código do imóvel, gestão municipal integrada e registro de campo alinhado ao SUS.": "Code-based lookup, integrated municipal management, and field records aligned with the Brazilian Unified Health System (SUS).",
+    "Em destaque": "Highlights",
+    "Fundamentos federais: Leis 11.350/2006 (ACS e ACE), 8.080/1990 (SUS) e 13.709/2018 (LGPD). Orientação técnica: MS / PNCD e arboviroses.": "Federal basis: Laws 11.350/2006 (field agents), 8.080/1990 (SUS), and 13.709/2018 (LGPD). Technical guidance: Ministry of Health, PNCD, and arboviruses.",
+    "Gestor centraliza visitas, território, relatórios e indicadores internos, com acessos restritos por perfil.": "Managers centralize visits, territory, reports, and internal indicators, with role-based access control.",
+    "Morador consulta o histórico de visitas pelo código do imóvel, sem cadastro e sem expor dados clínicos.": "Residents check visit history with the property code—no sign-up and no clinical data exposed online.",
+    "Textos no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde. Alinhado às diretrizes para ACE, ACS e vigilância entomológica.": "Statutes on Planalto; current health guidance on the Ministry of Health portal. Aligned with guidance for field agents and entomological surveillance."
 }
