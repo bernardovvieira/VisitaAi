@@ -16,7 +16,7 @@ services:
     image: mysql:8.0
     container_name: visita-ai-db
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_DATABASE: visita_ai
       MYSQL_USER: visita
       MYSQL_PASSWORD: ${DB_PASSWORD}
@@ -27,7 +27,7 @@ services:
     networks:
       - visitaai_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 10

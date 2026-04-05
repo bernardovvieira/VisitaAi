@@ -199,19 +199,6 @@
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
-                    @php
-                        $__ra = config('tenant_registry.admin_emails', []);
-                        $__showReg = $__ra !== [] && in_array(strtolower((string) Auth::user()->use_email), $__ra, true);
-                    @endphp
-                    @if($__showReg)
-                    <a href="{{ route('registry.admin.index') }}" class="v-dash-shortcut">
-                        <x-heroicon-o-cog-6-tooth class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
-                        <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Registry de tenants') }}</span>
-                        </span>
-                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-                    </a>
-                    @endif
                 </div>
             </section>
         </div>

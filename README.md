@@ -54,7 +54,7 @@ npm ci
 docker compose up -d
 ```
 
-O serviço `db` monta `docker/mysql/init/`: scripts `.sql` correm **só na primeira criação** do volume. O user `visita` recebe `CREATE ON *.*` (útil se testares *tenant registry* localmente). Volume antigo → corre o SQL manualmente como `root` ou recria o volume.
+O serviço `db` pode montar `docker/mysql/init/`: scripts `.sql` correm **só na primeira criação** do volume. Não há `MYSQL_ROOT_PASSWORD` fixo no `docker-compose.yml`: usa-se `MYSQL_RANDOM_ROOT_PASSWORD` (a password de `root` aparece nos logs na primeira subida). Para o dia a dia usa o user `visita` (`DB_*`). Volume antigo → SQL manual com esse user ou recria o volume.
 
 ### 3) Laravel (no host)
 
@@ -90,7 +90,7 @@ O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rod
 
 ### Uma aplicação por cliente (recomendado)
 
-Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL própria** (`APP_URL`), **`APP_KEY` próprio**, **MySQL dedicado** (`DB_*`). Mantém `TENANT_REGISTRY_ENABLED=false` e `REGISTRY_DB_DATABASE` vazio — não uses `tenants:provision` nem `/system/tenant-registry`.
+Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL própria** (`APP_URL`), **`APP_KEY` próprio**, **MySQL dedicado** (`DB_*`).
 
 **Novo cliente:** criar/duplicar a app, apontar o Git, configurar domínio + secrets, `migrate` (o `entrypoint.sh` já corre `migrate` ao arrancar). Opcional no painel: `php artisan migrate --force --no-interaction`.
 
@@ -98,7 +98,7 @@ Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL pr
 
 **Post-deploy:** não uses `migrate:fresh` com dados reais. Opcional: `php artisan config:clear && php artisan route:clear`.
 
-`Dockerfile` + `entrypoint.sh`: build Vite + PHP-FPM. O `entrypoint.sh` corre `migrate`, `route:clear` e `config:clear` ao arrancar; com registry desligado, `registry:migrate` / `tenant-registry:bootstrap` não mudam nada na prática. O `docker-compose.yml` do repo sobe **só MySQL** para dev local.
+`Dockerfile` + `entrypoint.sh`: build Vite + PHP-FPM. O `entrypoint.sh` corre `migrate`, `route:clear` e `config:clear` ao arrancar. O `docker-compose.yml` do repo sobe **só MySQL** para dev local.
 
 #### Post-deploy: migrations e seeds
 
@@ -108,8 +108,6 @@ Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL pr
 |---------|---------------------|
 | **Uma app por cliente** | `php artisan migrate --force --no-interaction` |
 | **Demo / reset controlado** | `migrate` incremental; só `migrate:fresh` + seed se for política explícita dessa instância |
-
-**Alternativa (avançado):** vários clientes **num único** deploy PHP — ligar `TENANT_REGISTRY_ENABLED` e ver secção *Registry opcional* abaixo.
 
 **Primeira vez (nova instância):** rode uma vez manualmente, antes de ir para produção:
 ```bash
@@ -136,16 +134,6 @@ chmod +x deploy.sh   # só na primeira vez
 ./deploy.sh
 ```
 Ou manualmente: `php artisan migrate --force`, `php artisan route:clear`, `php artisan config:clear`.
-
----
-
-## Registry opcional (um PHP, vários municípios)
-
-**Só** se ativares `TENANT_REGISTRY_ENABLED=true`: o subdomínio escolhe o slug; a tabela `registry_tenants` aponta para o schema MySQL; middleware `ResolveTenantFromRegistry` troca a conexão antes do pedido.
-
-Comandos úteis: `php artisan registry:migrate`, `php artisan tenants:provision {slug}`, `php artisan tenants:migrate`, `php artisan tenants:list` — ver comentários em `.env.example` para `REGISTRY_*`, `TENANT_PROVISION_*`, bootstrap. UI `/system/tenant-registry` se `REGISTRY_ADMIN_EMAILS` estiver definido.
-
-**Modo normal (recomendado):** mantém o registry **desligado** — uma app Coolify por cliente, sem esta secção.
 
 ---
 

@@ -11,7 +11,8 @@ services:
       MYSQL_DATABASE: visita_ai
       MYSQL_USER: visita
       MYSQL_PASSWORD: visita
-      MYSQL_ROOT_PASSWORD: root
+      # Sem MYSQL_ROOT_PASSWORD no repo; root fica aleatório (ver logs na 1.ª subida). App usa MYSQL_USER.
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     ports:
       - "3306:3306"
     volumes:

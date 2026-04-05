@@ -2,12 +2,10 @@
 
 use App\Http\Middleware\CheckApproved;
 use App\Http\Middleware\RequirePrimaryLocal;
-use App\Http\Middleware\ResolveTenantFromRegistry;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetAppDisplayName;
 use App\Http\Middleware\TrustProxies;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Application;
@@ -27,17 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withSchedule(function (Schedule $schedule) {
-        if (config('tenant_registry.enabled') && config('tenant_registry.schedule_migrate')) {
-            $schedule->command('tenants:migrate --force')->dailyAt('04:30');
-        }
-    })
     ->withMiddleware(function (Middleware $middleware) {
         // Define explicitamente o grupo "web" (proxy, headers, sessão, CSRF)
         $middleware->group('web', [
             TrustProxies::class,
             SecurityHeaders::class,
-            ResolveTenantFromRegistry::class,
             SetAppDisplayName::class,
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
