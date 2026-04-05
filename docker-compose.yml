@@ -1,5 +1,8 @@
 # MySQL local para desenvolvimento. PHP na máquina host: use DB_HOST=127.0.0.1 no .env (não "db").
 # App dentro da mesma rede Docker que este serviço: DB_HOST=db
+#
+# Produção (Coolify, etc.): credenciais e APP_URL vêm do painel (Secrets + Domains), não valores
+# duplicados no .env da app — ver comentário no topo de .env.example ("o que é dinâmico").
 services:
   db:
     image: mysql:8.0
