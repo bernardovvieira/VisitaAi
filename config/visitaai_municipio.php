@@ -5,9 +5,6 @@
  *
  * NÃO equivale a: e-SUS APS, PEC, Cadastro Territorial ou Ficha de Visita Domiciliar
  * e Territorial. Esses fluxos permanecem nos sistemas federais obrigatórios do município.
- *
- * @see docs/ESUS-SISPNCD-DIFERENCIACAO-E-MEDIDAS.md
- * @see docs/CONFORMIDADE-MS-FLUXO.md
  */
 return [
 

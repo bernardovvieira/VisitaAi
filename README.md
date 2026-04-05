@@ -8,7 +8,7 @@ Sistema desenvolvido para a gestão de visitas de vigilância entomológica e co
 
 - **Locais e visitas** de vigilância entomológica / PNCD (atividades 1–8, LIRAa para ACS onde aplicável).
 - **Doenças monitoradas**, pendências, relatórios, consulta pública por código do imóvel, QR Code.
-- **Ocupantes do imóvel (Visita Aí):** registro opcional vinculado ao cadastro de **locais**, com dados operacionais municipais (faixas etárias agregadas no painel, escolaridade e renda em categorias). **Não** substitui e-SUS APS, PEC, Ficha de Visita Domiciliar e Territorial nem e-SUS Território — ver `docs/CONFORMIDADE-MS-FLUXO.md` (§8) e `docs/ESUS-SISPNCD-DIFERENCIACAO-E-MEDIDAS.md`. Textos e opções de formulário: `config/visitaai_municipio.php`.
+- **Ocupantes do imóvel (Visita Aí):** registro opcional vinculado a **locais**, com dados operacionais municipais agregados no painel. **Não** substitui e-SUS APS, PEC, Ficha de Visita Domiciliar e Territorial nem e-SUS Território. Textos legais e opções: `config/visitaai_municipio.php`.
 
 ### Rotas HTTP
 
@@ -18,16 +18,6 @@ Sistema desenvolvido para a gestão de visitas de vigilância entomológica e co
 
 > **Desenvolvido por:** Bitwise Technologies  
 > **CNPJ:** 49.973.865/0001-23
-
-### Documentação
-
-| Documento | Conteúdo |
-|-----------|----------|
-| **`docs/OPERACAO-INSTANCIAS.md`** | **Produção recomendada:** uma aplicação Coolify por cliente (mesmo Git, `.env` e MySQL por município). |
-| `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md` | Modo *registry* opcional (vários subdomínios num só PHP). |
-| `docs/CONFORMIDADE-MS-FLUXO.md`, `docs/MODELO-NEGOCIO-VENDAS-PREFEITURAS.md`, … | Conformidade, negócio, offline, PDF, etc. |
-
----
 
 ## ⚠️ Requisitos
 
@@ -96,29 +86,19 @@ O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rod
 
 ---
 
-## 🚀 Deploy em produção (push → VPS)
+## 🚀 Deploy em produção (Coolify / VPS)
 
-Guia detalhado: **`docs/OPERACAO-INSTANCIAS.md`** (checklist novo cliente, `.env`, SBX vs prod, pós-deploy).
+### Uma aplicação por cliente (recomendado)
 
-### Modelo operacional recomendado: **uma aplicação Coolify por cliente**
+Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL própria** (`APP_URL`), **`APP_KEY` próprio**, **MySQL dedicado** (`DB_*`). Mantém `TENANT_REGISTRY_ENABLED=false` e `REGISTRY_DB_DATABASE` vazio — não uses `tenants:provision` nem `/system/tenant-registry`.
 
-Cada município (ou demo, sandbox comercial, etc.) tem **o seu próprio recurso** no Coolify: **mesma branch Git**, **subdomínio próprio** (`https://mun.visitaai.cloud`), **`.env` e MySQL dedicados**. Isto simplifica permissões (sem `CREATE DATABASE` na app), isolamento e backups — **sem** *tenant registry*.
+**Novo cliente:** criar/duplicar a app, apontar o Git, configurar domínio + secrets, `migrate` (o `entrypoint.sh` já corre `migrate` ao arrancar). Opcional no painel: `php artisan migrate --force --no-interaction`.
 
-| Por instância | O que configurar |
-|---------------|------------------|
-| **Domínio** | Coolify → Domains → URL canónica do cliente (= `APP_URL`). |
-| **Segredos** | `APP_KEY` **único** por instância; `DB_*` apontando para **a** base daquele cliente; `MAIL_*` conforme política. |
-| **Registry** | Manter `TENANT_REGISTRY_ENABLED=false` (e `REGISTRY_DB_DATABASE` vazio). Não precisas de `tenants:provision` nem de `/system/tenant-registry`. |
-| **Sessão** | Preferir `SESSION_DOMAIN` alinhado ao host (ex. só esse subdomínio ou apex do cliente), em vez de `.domínio` partilhado, se quiseres evitar partilha de cookie entre instâncias. |
-| **Post-deploy** | `php artisan migrate --force --no-interaction` (o `entrypoint` também migra ao arranque). Opcional: `php artisan config:clear && php artisan route:clear`. **Não** uses `migrate:fresh` em produção. |
+**Sandbox vs produção:** duas instâncias (ex. `sbx.*` e produção), bases **separadas** — nunca a mesma base.
 
-**Novo cliente:** duplicar o recurso no Coolify (ou criar de raiz), ligar o mesmo repositório/branch, definir domínio e variáveis, correr migrações/seeds **nessa** base.
+**Post-deploy:** não uses `migrate:fresh` com dados reais. Opcional: `php artisan config:clear && php artisan route:clear`.
 
----
-
-Existe também ambiente de **demo** e código opcional multi-tenant (um processo PHP, várias bases) — ver secção [Multi-tenant (registry)](#multi-tenant-registry-subdomínio--mysql) **só se** voltares a usar esse modo.
-
-**Com Docker (Coolify, etc.):** o `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe; com registry desligado, `registry:migrate` / `tenant-registry:bootstrap` não alteram comportamento útil.
+`Dockerfile` + `entrypoint.sh`: build Vite + PHP-FPM. O `entrypoint.sh` corre `migrate`, `route:clear` e `config:clear` ao arrancar; com registry desligado, `registry:migrate` / `tenant-registry:bootstrap` não mudam nada na prática. O `docker-compose.yml` do repo sobe **só MySQL** para dev local.
 
 #### Post-deploy: migrations e seeds
 
@@ -129,7 +109,7 @@ Existe também ambiente de **demo** e código opcional multi-tenant (um processo
 | **Uma app por cliente** | `php artisan migrate --force --no-interaction` |
 | **Demo / reset controlado** | `migrate` incremental; só `migrate:fresh` + seed se for política explícita dessa instância |
 
-**Alternativa (opcional): vários clientes num único deploy** com subdomínio → várias bases MySQL: secção [Multi-tenant (registry)](#multi-tenant-registry-subdomínio--mysql) e `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`.
+**Alternativa (avançado):** vários clientes **num único** deploy PHP — ligar `TENANT_REGISTRY_ENABLED` e ver secção *Registry opcional* abaixo.
 
 **Primeira vez (nova instância):** rode uma vez manualmente, antes de ir para produção:
 ```bash
@@ -159,79 +139,13 @@ Ou manualmente: `php artisan migrate --force`, `php artisan route:clear`, `php a
 
 ---
 
-## Multi-tenant (registry): subdomínio → MySQL
+## Registry opcional (um PHP, vários municípios)
 
-> **Modo opcional.** A operação recomendada documentada acima é **uma aplicação Coolify por cliente** (`TENANT_REGISTRY_ENABLED=false`). O bloco abaixo mantém-se para quem quiser **um único deploy** a servir **vários** subdomínios com **várias** bases MySQL via tabela `registry_tenants`.
+**Só** se ativares `TENANT_REGISTRY_ENABLED=true`: o subdomínio escolhe o slug; a tabela `registry_tenants` aponta para o schema MySQL; middleware `ResolveTenantFromRegistry` troca a conexão antes do pedido.
 
-Com registry **ligado**, um único processo pode atender **vários municípios**: o **host** (`mun.visitaai.cloud`) escolhe o **slug**; o **registry** indica qual **schema MySQL** usar. O código reconfigura a conexão `mysql` antes de servir o pedido.
+Comandos úteis: `php artisan registry:migrate`, `php artisan tenants:provision {slug}`, `php artisan tenants:migrate`, `php artisan tenants:list` — ver comentários em `.env.example` para `REGISTRY_*`, `TENANT_PROVISION_*`, bootstrap. UI `/system/tenant-registry` se `REGISTRY_ADMIN_EMAILS` estiver definido.
 
-### O que vai no `.env` — **uma vez** (global)
-
-Estas variáveis **habilitam** o modo registry e o provisionamento automático de **novas** bases. **Não** se adiciona um `.env` por cliente; **não** se cria variável `TENANT_*` por município.
-
-| Variável | Função |
-|----------|--------|
-| `TENANT_REGISTRY_ENABLED=true` | Liga resolução por subdomínio + registry. |
-| `REGISTRY_DB_DATABASE` | Base onde existe a tabela `registry_tenants` (pode ser a mesma que `DB_DATABASE` num modelo “uma base só” para demo/registry). |
-| `TENANT_REGISTRY_BASE_DOMAINS` | Lista de FQDN (ex.: `visitaai.cloud`); o primeiro label do host vira slug. |
-| `TENANT_REGISTRY_BOOTSTRAP` (*opcional*) | No arranque do container: garante uma linha inicial no registry (ex. `demo` → `visita_ai`). |
-| `TENANT_PROVISION_ENABLED=true` (*recomendado para vários clientes*) | Permite **criar** schema MySQL (`CREATE DATABASE`), `GRANT` opcional e `migrate` ao **provisionar** um tenant novo (CLI ou UI). Requer utilizador com `CREATE DATABASE` na conexão `tenant_provision` (ver `.env.example`: `TENANT_PROVISION_DB_*` se o user da app não tiver esse privilégio). |
-| `TENANT_DATABASE_PREFIX` | Prefixo do nome automático da base (ex.: `visita_` → slug `x` vira `visita_x`). |
-| `REGISTRY_ADMIN_EMAILS` | E-mails (`users.use_email`) que acedem a `/system/tenant-registry`. |
-| `DB_*` | Credenciais **por defeito** da app; cada linha do registry pode sobrescrever host/user/pass só desse tenant (opcional). |
-
-No **Docker/Coolify**, o `entrypoint.sh` já executa `migrate`, `registry:migrate` e `tenant-registry:bootstrap` (quando ligado). Não é necessário repetir isso no `.env` por cliente.
-
-### O que **não** resolve só o `.env` — **por cada cliente novo**
-
-Adicionar cliente **não** é “editar o `.env` de novo”. É garantir três coisas:
-
-1. **Routing / TLS** — O pedido HTTP tem de chegar à **mesma** app para o host certo (`https://mun.visitaai.cloud`).
-2. **Registry + base de dados** — Tem de existir uma linha em `registry_tenants` (slug → nome do schema) e o schema tem de existir e estar migrado.
-3. **Utilizadores na base desse cliente** — Gestores/ACE na base **daquele** tenant (seed ou cadastro), não “no ar” pelo `.env`.
-
-### Coolify: **só “Domains” não basta**
-
-- Colocar um **novo domínio** em **Domains** no Coolify só configura o **proxy reverso e o certificado** (HTTPS). **Não** cria a base MySQL nem a linha no registry.
-- Se usares **wildcard** (`*.visitaai.cloud`) no DNS e no painel (quando suportado), **novos subdomínios** podem passar a resolver para a app **sem** acrescentar um domínio novo por cliente — mesmo assim precisas do passo de **provisionamento** (abaixo).
-
-### Adicionar um **novo município** (checklist)
-
-1. **Slug** — Ex.: `ibirapuita` → URL `https://ibirapuita.visitaai.cloud` (o slug segue a validação do registry: letras minúsculas, números e hífens).
-2. **DNS / Coolify** — Sem wildcard: adiciona `https://ibirapuita.visitaai.cloud` no **mesmo** serviço que serve a app. Com wildcard: garante DNS `*.visitaai.cloud` → servidor.
-3. **Provisionar base + registry + migrações** — **Uma** destas formas (com `TENANT_PROVISION_ENABLED=true` e credenciais adequadas):
-
-   **Opção A — linha de comando** (típico em produção), dentro do contentor PHP:
-
-   ```bash
-   php artisan tenants:provision ibirapuita --environment=production --display-name="Município de Ibirapuita"
-   ```
-
-   Cria o schema (ex. `visita_ibirapuita`), corre `php artisan migrate` nesse schema e insere a linha no registry.
-
-   **Opção B — interface web** — Utilizador cujo e-mail está em `REGISTRY_ADMIN_EMAILS`: acede a **`/system/tenant-registry`** → **Novo tenant** → preenche slug/ambiente e marca **“Criar base MySQL, permissões e migrações automaticamente”** (só aparece com provisionamento ligado).
-
-   **Opção C — manual** — Criar o schema no MySQL à mão, correr `migrate` nesse schema, inserir a linha no registry pela UI **sem** marcar a opção automática (ou equivalente SQL).
-
-4. **Dados iniciais** — Na base **desse** cliente, criar utilizadores (ex. gestor). Opcional: `php artisan tenants:seed --tenant=ibirapuita --force` se usares seeders por tenant.
-
-5. **Depois de deploys com novas migrações** — Aplicar migrações em **todos** os tenants, por exemplo:
-
-   ```bash
-   php artisan tenants:migrate --force
-   ```
-
-   Ou agendar com `TENANT_REGISTRY_SCHEDULE_MIGRATE=true` e **cron** do Laravel (`schedule:run`).
-
-### Resumo prático
-
-| Pergunta | Resposta |
-|----------|----------|
-| Novo cliente = só alterar `.env`? | **Não.** O `.env` é global; cada cliente precisa de registry + base (CLI, UI ou manual). |
-| Novo cliente = só domínio no Coolify? | **Não.** Domínio só encaminha tráfego; falta provisionar tenant. |
-| Onde “clico” para criar o cliente? | **`tenants:provision {slug}`** ou **`/system/tenant-registry`**, não variáveis novas no `.env`. |
-
-Operação por instância: `docs/OPERACAO-INSTANCIAS.md`. Desenho *registry* (opcional): `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`. Variáveis: `.env.example`.
+**Modo normal (recomendado):** mantém o registry **desligado** — uma app Coolify por cliente, sem esta secção.
 
 ---
 

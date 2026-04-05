@@ -10,8 +10,6 @@ use App\Models\User;
  *
  * Perfil ACS não incluído: cadastro de pessoas no território para APS/PEC permanece no e-SUS;
  * assim evitamos fluxo paralelo conflitante com Ficha de Visita Domiciliar e Territorial.
- *
- * @see docs/CONFORMIDADE-MS-FLUXO.md
  */
 class MoradorPolicy
 {
