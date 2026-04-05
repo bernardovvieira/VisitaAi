@@ -191,7 +191,7 @@
     @endif
 
     {{-- Rodapé --}}
-    <div class="flex flex-col items-center gap-3 border-t border-slate-200/50 pt-8 dark:border-slate-800/70">
+    <div class="flex flex-col items-center gap-3 pt-8">
         <button type="button" id="btn-compartilhar" aria-label="{{ __('Copiar ou compartilhar o link desta página') }}"
                 data-url="{{ url()->current() }}"
                 data-title="{{ config('app.name') }} · {{ __('Consulta do imóvel') }}"
