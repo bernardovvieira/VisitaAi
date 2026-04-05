@@ -19,16 +19,20 @@ Sistema desenvolvido para a gestão de visitas de vigilância entomológica e co
 > **Desenvolvido por:** Bitwise Technologies  
 > **CNPJ:** 49.973.865/0001-23
 
+### Documentação
+
+| Documento | Conteúdo |
+|-----------|----------|
+| **`docs/OPERACAO-INSTANCIAS.md`** | **Produção recomendada:** uma aplicação Coolify por cliente (mesmo Git, `.env` e MySQL por município). |
+| `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md` | Modo *registry* opcional (vários subdomínios num só PHP). |
+| `docs/CONFORMIDADE-MS-FLUXO.md`, `docs/MODELO-NEGOCIO-VENDAS-PREFEITURAS.md`, … | Conformidade, negócio, offline, PDF, etc. |
+
 ---
 
 ## ⚠️ Requisitos
 
-O projeto é executado com **Docker**. Você precisará de:
-
-- **Docker**
-- **Docker Compose**
-
-Não é necessário instalar PHP, Composer, Node ou MySQL na máquina local.
+- **Produção (Coolify):** imagem definida no **`Dockerfile`** (PHP 8.4 + assets); não precisas de PHP na VPS manualmente.
+- **Desenvolvimento local típico:** **Docker** + **Docker Compose** (só MySQL no `docker-compose.yml`) e, na máquina, **PHP 8.4**, **Composer** e **Node** para `artisan` e Vite — ver secção *Instalação local*.
 
 ---
 
@@ -93,6 +97,8 @@ O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rod
 ---
 
 ## 🚀 Deploy em produção (push → VPS)
+
+Guia detalhado: **`docs/OPERACAO-INSTANCIAS.md`** (checklist novo cliente, `.env`, SBX vs prod, pós-deploy).
 
 ### Modelo operacional recomendado: **uma aplicação Coolify por cliente**
 
@@ -225,7 +231,7 @@ Adicionar cliente **não** é “editar o `.env` de novo”. É garantir três c
 | Novo cliente = só domínio no Coolify? | **Não.** Domínio só encaminha tráfego; falta provisionar tenant. |
 | Onde “clico” para criar o cliente? | **`tenants:provision {slug}`** ou **`/system/tenant-registry`**, não variáveis novas no `.env`. |
 
-Documentação de arquitetura e decisões: `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`. Exemplos de variáveis: `.env.example`.
+Operação por instância: `docs/OPERACAO-INSTANCIAS.md`. Desenho *registry* (opcional): `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`. Variáveis: `.env.example`.
 
 ---
 
