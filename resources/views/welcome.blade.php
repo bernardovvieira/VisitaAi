@@ -3,7 +3,7 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.brand'))
+@section('og_title', config('app.name') . ' · ' . __('Página Inicial'))
 @section('og_description', __('Transparência para o cidadão e apoio à vigilância municipal: consulta de visitas, gestão e registro de campo para ACE e ACS, alinhado ao SUS.'))
 
 @section('content')
@@ -24,9 +24,11 @@
                         {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                        <h1 class="welcome-public__title min-w-0 shrink">
-                            {{ __('Bem-vindo(a) ao') }}
-                            <span class="font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
+                        <h1 class="welcome-public__title min-w-0 shrink space-y-1">
+                            <span class="block text-base font-normal text-slate-600 dark:text-slate-300 sm:text-[1.0625rem]">
+                                {{ __('Bem-vindo(a) ao') }}
+                            </span>
+                            <span class="block font-semibold text-slate-900 dark:text-slate-50">{{ config('app.name') }}</span>
                         </h1>
                         <x-public-municipality-pill :local="$local" class="shrink-0" />
                     </div>
