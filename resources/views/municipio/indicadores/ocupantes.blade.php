@@ -46,23 +46,7 @@
 
     <x-flash-alerts />
 
-    <x-page-header :eyebrow="__('Gestão municipal')" :title="$cfgInd['titulo_pagina'] ?? __('Indicadores')">
-        <x-slot name="lead">
-            @if(filled($cfgInd['subtitulo'] ?? '') || filled($cfgInd['subtitulo_detalhe'] ?? ''))
-                <x-ui.disclosure variant="lead">
-                    <x-slot name="summary">
-                        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Sobre este painel') }}</span>
-                    </x-slot>
-                    @if(filled($cfgInd['subtitulo'] ?? ''))
-                        <p>{{ $cfgInd['subtitulo'] }}</p>
-                    @endif
-                    @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
-                        <p>{{ $cfgInd['subtitulo_detalhe'] }}</p>
-                    @endif
-                </x-ui.disclosure>
-            @endif
-        </x-slot>
-    </x-page-header>
+    <x-page-header :eyebrow="__('Gestão municipal')" :title="$cfgInd['titulo_pagina'] ?? __('Indicadores')" />
 
     <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
         <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
@@ -71,16 +55,6 @@
             {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
         </a>
     </div>
-
-    <x-ui.disclosure variant="amber-avisos">
-        <x-slot name="summary">
-            <span class="font-semibold">{{ __('Avisos:') }}</span> {{ __('privacidade, supressão e limites de uso') }}
-        </x-slot>
-        <p class="leading-snug"><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
-        <p class="leading-snug text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
-        <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
-        <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
-    </x-ui.disclosure>
 
     @php $Q = $painel['completude']; @endphp
     <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
@@ -194,6 +168,8 @@
         </summary>
         <div class="mt-2 space-y-1.5 border-t border-slate-200/80 pt-2 dark:border-slate-600">
             <p>{{ __('Deslize a tabela para ver todas as colunas; a coluna do bairro fica fixa.') }}</p>
+            <p class="text-slate-500 dark:text-slate-400">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
+            <p class="text-slate-500 dark:text-slate-400">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
             @if(filled($cfgInd['legenda_mapa_calor_faixa'] ?? ''))
                 <p>{{ $cfgInd['legenda_mapa_calor_faixa'] }}</p>
             @endif

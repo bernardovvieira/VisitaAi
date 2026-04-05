@@ -165,15 +165,15 @@
 
     @if ($visita->doencas->count())
         @foreach ($visita->doencas as $doenca)
-            <div class="border border-gray-300 dark:border-gray-600 rounded-md p-4 bg-gray-50 dark:bg-gray-800 space-y-2">
-                <h3 class="text-md font-semibold text-gray-800 dark:text-gray-100">{{ $doenca->doe_nome }}</h3>
+            <div class="space-y-3 rounded-xl border border-slate-200/90 bg-white p-4 dark:border-slate-600 dark:bg-gray-800/80">
+                <h3 class="text-md font-semibold text-slate-900 dark:text-slate-100">{{ $doenca->doe_nome }}</h3>
 
                 @if (!empty($doenca->doe_sintomas))
-                    <div>
-                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Sintomas') }}:</p>
-                        <div class="flex flex-wrap gap-2 mt-1">
+                    <div class="rounded-lg border border-amber-200/90 bg-amber-50/55 p-3 dark:border-amber-800/45 dark:bg-amber-950/25">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-amber-900/90 dark:text-amber-100/90">{{ __('Sintomas') }}</p>
+                        <div class="mt-2 flex flex-wrap gap-2">
                             @foreach ($doenca->doe_sintomas as $sintoma)
-                                <span class="inline-block rounded bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-900 dark:bg-slate-600 dark:text-slate-100">
+                                <span class="inline-block rounded-md border border-amber-300/80 bg-amber-100/90 px-2 py-0.5 text-xs font-medium text-amber-950 dark:border-amber-600/60 dark:bg-amber-900/40 dark:text-amber-50">
                                     {{ $sintoma }}
                                 </span>
                             @endforeach
@@ -182,11 +182,11 @@
                 @endif
 
                 @if (!empty($doenca->doe_transmissao))
-                    <div>
-                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Modos de transmissão') }}:</p>
-                        <div class="flex flex-wrap gap-2 mt-1">
+                    <div class="rounded-lg border border-sky-200/90 bg-sky-50/55 p-3 dark:border-sky-800/45 dark:bg-sky-950/25">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-sky-900/90 dark:text-sky-100/90">{{ __('Modos de transmissão') }}</p>
+                        <div class="mt-2 flex flex-wrap gap-2">
                             @foreach ($doenca->doe_transmissao as $transmissao)
-                                <span class="inline-block bg-yellow-200 dark:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-xs font-medium px-2 py-0.5 rounded">
+                                <span class="inline-block rounded-md border border-sky-300/80 bg-sky-100/90 px-2 py-0.5 text-xs font-medium text-sky-950 dark:border-sky-600/60 dark:bg-sky-900/40 dark:text-sky-50">
                                     {{ $transmissao }}
                                 </span>
                             @endforeach
@@ -195,11 +195,11 @@
                 @endif
 
                 @if (!empty($doenca->doe_medidas_controle))
-                    <div>
-                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Medidas de controle') }}:</p>
-                        <div class="flex flex-wrap gap-2 mt-1">
+                    <div class="rounded-lg border border-violet-200/90 bg-violet-50/55 p-3 dark:border-violet-800/45 dark:bg-violet-950/25">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-violet-900/90 dark:text-violet-100/90">{{ __('Medidas de controle') }}</p>
+                        <div class="mt-2 flex flex-wrap gap-2">
                             @foreach ($doenca->doe_medidas_controle as $medida)
-                                <span class="inline-block rounded bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-900 dark:bg-slate-600 dark:text-slate-100">
+                                <span class="inline-block rounded-md border border-violet-300/80 bg-violet-100/90 px-2 py-0.5 text-xs font-medium text-violet-950 dark:border-violet-600/60 dark:bg-violet-900/40 dark:text-violet-50">
                                     {{ $medida }}
                                 </span>
                             @endforeach

@@ -410,19 +410,28 @@
             @endif
 
             {{-- Possíveis doenças --}}
+            @php
+                $vDoencaTones = [
+                    'rounded-xl border border-amber-200/90 bg-amber-50/50 p-2.5 dark:border-amber-800/45 dark:bg-amber-950/20',
+                    'rounded-xl border border-sky-200/90 bg-sky-50/50 p-2.5 dark:border-sky-800/45 dark:bg-sky-950/20',
+                    'rounded-xl border border-violet-200/90 bg-violet-50/50 p-2.5 dark:border-violet-800/45 dark:bg-violet-950/20',
+                    'rounded-xl border border-emerald-200/90 bg-emerald-50/50 p-2.5 dark:border-emerald-800/45 dark:bg-emerald-950/20',
+                    'rounded-xl border border-rose-200/90 bg-rose-50/50 p-2.5 dark:border-rose-800/45 dark:bg-rose-950/20',
+                ];
+            @endphp
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">{{ __('Possíveis doenças') }}</legend>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     @foreach ($doencas as $doenca)
-                        <div class="flex items-center">
+                        <div class="{{ $vDoencaTones[$loop->index % 5] }} flex min-h-[2.75rem] items-center gap-2.5">
                             <input type="checkbox"
                                 id="doenca_{{ $doenca->doe_id }}"
                                 name="doencas[]"
                                 value="{{ $doenca->doe_id }}"
                                 {{ in_array($doenca->doe_id, old('doencas', [])) ? 'checked' : '' }}
-                                class="mr-2 text-blue-600 dark:text-blue-400">
-                            <label for="doenca_{{ $doenca->doe_id }}" class="text-sm text-gray-700 dark:text-gray-300">
+                                class="shrink-0 text-blue-600 dark:text-blue-400">
+                            <label for="doenca_{{ $doenca->doe_id }}" class="flex-1 cursor-pointer text-sm font-medium text-slate-800 dark:text-slate-100">
                                 {{ $doenca->doe_nome }}
                             </label>
                         </div>
@@ -529,10 +538,10 @@
                             return;
                         }
                         buttonsWrap.innerHTML = '';
-                        sugestoes.forEach(function(s) {
+                        sugestoes.forEach(function(s, idx) {
                             var bt = document.createElement('button');
                             bt.type = 'button';
-                            bt.className = 'v-chip-suggestion';
+                            bt.className = 'v-chip-suggestion v-chip-suggestion--' + (idx % 5);
                             bt.title = s.motivo || '';
                             bt.textContent = s.nome || '';
                             bt.addEventListener('click', function() {

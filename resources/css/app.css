@@ -426,9 +426,29 @@
         @apply bg-white transition-colors hover:bg-slate-50/95 dark:bg-gray-800 dark:hover:bg-slate-800/55;
     }
 
-    /* Chip gerado em JS (ex.: sugestões de doença na visita) */
+    /* Chip gerado em JS (ex.: sugestões de doença na visita) — tons rotativos alinhados aos blocos de doença */
     .v-chip-suggestion {
-        @apply inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-slate-700;
+        @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
+    }
+
+    .v-chip-suggestion--0 {
+        @apply border-amber-300/90 bg-amber-100 text-amber-950 hover:bg-amber-200/95 dark:border-amber-600/70 dark:bg-amber-950/40 dark:text-amber-50 dark:hover:bg-amber-900/55;
+    }
+
+    .v-chip-suggestion--1 {
+        @apply border-sky-300/90 bg-sky-100 text-sky-950 hover:bg-sky-200/95 dark:border-sky-600/70 dark:bg-sky-950/40 dark:text-sky-50 dark:hover:bg-sky-900/55;
+    }
+
+    .v-chip-suggestion--2 {
+        @apply border-violet-300/90 bg-violet-100 text-violet-950 hover:bg-violet-200/95 dark:border-violet-600/70 dark:bg-violet-950/40 dark:text-violet-50 dark:hover:bg-violet-900/55;
+    }
+
+    .v-chip-suggestion--3 {
+        @apply border-emerald-300/90 bg-emerald-100 text-emerald-950 hover:bg-emerald-200/95 dark:border-emerald-600/70 dark:bg-emerald-950/40 dark:text-emerald-50 dark:hover:bg-emerald-900/55;
+    }
+
+    .v-chip-suggestion--4 {
+        @apply border-rose-300/90 bg-rose-100 text-rose-950 hover:bg-rose-200/95 dark:border-rose-600/70 dark:bg-rose-950/40 dark:text-rose-50 dark:hover:bg-rose-900/55;
     }
 
     /* Item de lista / opção em painel (dropdown nativo estilizado, multiselect) */
