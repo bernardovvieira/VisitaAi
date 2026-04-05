@@ -6,6 +6,8 @@
         <meta name="color-scheme" content="light dark">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="manifest" href="{{ asset('manifest.json') }}">
+        <link rel="icon" type="image/png" href="{{ asset('images/visitaai_rembg.png') }}" sizes="512x512">
+        <link rel="apple-touch-icon" href="{{ asset('images/visitaai_rembg.png') }}" sizes="512x512">
 
         @php
             $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));

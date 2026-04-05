@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="icon" type="image/png" href="{{ asset('images/visitaai_rembg.png') }}" sizes="512x512">
+        <link rel="apple-touch-icon" href="{{ asset('images/visitaai_rembg.png') }}" sizes="512x512">
 
         @php
             $routeName = request()->route()?->getName();
