@@ -32,67 +32,59 @@ Não é necessário instalar PHP, Composer, Node ou MySQL na máquina local.
 
 ---
 
-## 🛠️ Instalação (Docker)
+## 🛠️ Instalação local
 
-Clone o repositório:
+O ficheiro **`docker-compose.yml` deste repo** sobe **apenas MySQL** (desenvolvimento). PHP, Composer e Node correm **na tua máquina** (ou usas **Coolify / imagem** do `Dockerfile` para stack completa).
+
+### 1) Clonar e dependências PHP/JS
 
 ```bash
 git clone https://github.com/bernardovvieira/VisitaAi.git
 cd VisitaAi
-```
-
-Crie o arquivo de ambiente a partir do exemplo:
-
-```bash
 cp .env.example .env
 ```
 
-No `.env`, defina a senha do banco (usada pela aplicação e pelo MySQL no Docker). A conexão já vem compatível com o Docker:
+No `.env`, para o MySQL do Compose use por exemplo:
 
-- `DB_HOST=db`
-- `DB_PORT=3306`
-- `DB_DATABASE=visita_ai`
-- `DB_USERNAME=visita`
-- `DB_PASSWORD=` — **obrigatório:** defina uma senha forte; o `docker-compose` usa esse valor para o MySQL. Nunca commite o `.env`.
-
-Suba os containers:
+- `DB_HOST=127.0.0.1` se o PHP corre **no host** (porta mapeada `3306:3306`), ou `DB_HOST=db` se o PHP estiver noutro container na mesma rede.
+- `DB_PORT=3306`, `DB_DATABASE=visita_ai`, `DB_USERNAME=visita`, `DB_PASSWORD=` — alinha com `MYSQL_*` do `docker-compose.yml`.
 
 ```bash
-docker compose up -d --build
+composer install
+npm ci
 ```
 
-O serviço `db` monta `docker/mysql/init/`, onde o MySQL 8 corre scripts **apenas na primeira criação do volume** (`data` vazio). Aí o user `visita` recebe `CREATE ON *.*` para permitir `php artisan tenants:provision` sem usar root na app. Se o volume MySQL **já existia** antes deste script, execute manualmente o SQL do ficheiro como `root` ou recrie o volume (apaga dados).
-
-Gere a chave da aplicação e rode as migrações **dentro** do container da aplicação:
+### 2) Subir só a base
 
 ```bash
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate
-docker compose exec app php artisan db:seed   # opcional
+docker compose up -d
 ```
 
-Acesse no navegador: [http://localhost](http://localhost) (porta 80, servida pelo Nginx).
+O serviço `db` monta `docker/mysql/init/`: scripts `.sql` correm **só na primeira criação** do volume. O user `visita` recebe `CREATE ON *.*` (útil se testares *tenant registry* localmente). Volume antigo → corre o SQL manualmente como `root` ou recria o volume.
+
+### 3) Laravel (no host)
+
+```bash
+php artisan key:generate
+php artisan migrate
+php artisan db:seed   # opcional
+npm run dev           # noutro terminal — assets Vite; ou `composer run dev` (serve + vite + fila + logs)
+```
+
+Abre a URL do `php artisan serve` (ex. `http://127.0.0.1:8000`) ou a que configurares.
+
+**Produção / stack PHP+Nginx:** usa o **`Dockerfile`** multi-stage (build Vite + PHP-FPM + imagem `web`); no Coolify isso costuma estar definido no serviço, não neste `docker-compose.yml`.
 
 ---
 
-## 🔁 Comandos úteis (Docker)
+## 🔁 Comandos úteis (Docker só MySQL)
 
 ```bash
-# Subir os serviços
-docker compose up -d
-
-# Ver logs
-docker compose logs -f app
-
-# Executar artisan no container
-docker compose exec app php artisan migrate
-docker compose exec app php artisan tinker
-
-# Parar tudo
+docker compose up -d          # MySQL
+docker compose logs -f db
+docker compose exec db mysql -u visita -p visita_ai
 docker compose down
 ```
-
-**Serviços:** `app` (PHP-FPM), `db` (MySQL 8, porta 3307 no host), `web` (Nginx na porta 80).
 
 ### Testes automatizados
 
