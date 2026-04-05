@@ -468,7 +468,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <script src="https://unpkg.com/leaflet-image/leaflet-image.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -545,40 +545,70 @@ document.addEventListener('DOMContentLoaded', function() {
         if (elDoencasVazio) elDoencasVazio.classList.remove('hidden');
     }
 
-    // Mapa de calor
+    // Mapa de calor — só pontos com lat/lng numéricos válidos (NaN não pode passar: quebrava o setView)
+    const parsePontoCalor = (v) => {
+        const loc = v?.local;
+        if (!loc) return null;
+        const rawLat = loc.loc_latitude;
+        const rawLng = loc.loc_longitude;
+        if (rawLat == null || rawLng == null) return null;
+        if (String(rawLat).trim() === '' || String(rawLng).trim() === '') return null;
+        const lat = parseFloat(String(rawLat).trim().replace(',', '.'));
+        const lng = parseFloat(String(rawLng).trim().replace(',', '.'));
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+        if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+        if (lat === 0 && lng === 0) return null;
+        return [lat, lng, 1];
+    };
     const pontos = (Array.isArray(visitas) ? visitas : [])
-        .map(v => {
-            const lat = parseFloat(v?.local?.loc_latitude || 0);
-            const lng = parseFloat(v?.local?.loc_longitude || 0);
-            return lat !== 0 && lng !== 0 ? [lat, lng, 1] : null;
-        })
+        .map(parsePontoCalor)
         .filter(p => p !== null);
 
-    // Cálculo do centro (média dos pontos válidos)
-    let centroLat = -28.65, centroLng = -52.42; // fallback
+    let centroLat = -28.65, centroLng = -52.42;
     if (pontos.length > 0) {
         const total = pontos.length;
         centroLat = pontos.reduce((sum, p) => sum + p[0], 0) / total;
         centroLng = pontos.reduce((sum, p) => sum + p[1], 0) / total;
     }
 
-    // Inicialização do mapa centralizado no centro calculado
-    const mapa = L.map('mapa-calor').setView([centroLat, centroLng], 14);
+    const elMapaCalor = document.getElementById('mapa-calor');
+    let mapaCalor = null;
+    const mapa = elMapaCalor ? L.map('mapa-calor').setView([centroLat, centroLng], 14) : null;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 18,
-    }).addTo(mapa);
-
-    if (pontos.length > 0) {
-        L.heatLayer(pontos, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 17,
-            gradient: { 0.15: '#dbeafe', 0.4: '#60a5fa', 0.65: '#2563eb', 0.85: '#1d4ed8', 1.0: '#1e3a8a' }
+    if (mapa) {
+        mapaCalor = mapa;
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 18,
         }).addTo(mapa);
-    } else {
-        document.getElementById('mapa-calor-vazio').classList.remove('hidden');
+
+        if (pontos.length > 0 && typeof L.heatLayer === 'function') {
+            L.heatLayer(pontos, {
+                radius: 28,
+                blur: 18,
+                maxZoom: 17,
+                minOpacity: 0.35,
+                gradient: { 0.1: '#bfdbfe', 0.35: '#60a5fa', 0.55: '#2563eb', 0.8: '#1d4ed8', 1.0: '#172554' }
+            }).addTo(mapa);
+            try {
+                const bounds = L.latLngBounds(pontos.map(p => [p[0], p[1]]));
+                if (bounds.isValid()) {
+                    mapa.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+                }
+            } catch (e) { /* ignore */ }
+        } else if (pontos.length > 0) {
+            console.warn('Leaflet.heat: L.heatLayer indisponível (script não carregou).');
+        }
+
+        requestAnimationFrame(function () {
+            mapa.invalidateSize();
+            setTimeout(function () { mapa.invalidateSize(); }, 200);
+        });
+    }
+
+    if (pontos.length === 0) {
+        const vazio = document.getElementById('mapa-calor-vazio');
+        if (vazio) vazio.classList.remove('hidden');
     }
 
     // Função para gerar o PDF (exposta globalmente para o botão)
@@ -596,7 +626,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const base64Bairros = canvasBairros && !canvasBairros.classList.contains('hidden') ? canvasBairros.toDataURL('image/png') : '';
         const base64Doencas = canvasDoencas && !canvasDoencas.classList.contains('hidden') ? canvasDoencas.toDataURL('image/png') : '';
         const base64Mapa = await new Promise(resolve => {
-            leafletImage(mapa, function(err, canvas) {
+            if (!mapaCalor || typeof leafletImage !== 'function') {
+                return resolve('');
+            }
+            leafletImage(mapaCalor, function(err, canvas) {
                 if (err || !canvas) {
                     console.error(@json(__('Erro ao capturar o mapa:')), err);
                     return resolve("");
