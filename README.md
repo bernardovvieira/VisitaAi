@@ -102,20 +102,36 @@ O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rod
 
 ## 🚀 Deploy em produção (push → VPS)
 
-Existe um ambiente de **demo** instanciado para testes.
+### Modelo operacional recomendado: **uma aplicação Coolify por cliente**
 
-**Com Docker (Coolify, etc.):** o `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe. Push e o deploy faz o resto.
+Cada município (ou demo, sandbox comercial, etc.) tem **o seu próprio recurso** no Coolify: **mesma branch Git**, **subdomínio próprio** (`https://mun.visitaai.cloud`), **`.env` e MySQL dedicados**. Isto simplifica permissões (sem `CREATE DATABASE` na app), isolamento e backups — **sem** *tenant registry*.
+
+| Por instância | O que configurar |
+|---------------|------------------|
+| **Domínio** | Coolify → Domains → URL canónica do cliente (= `APP_URL`). |
+| **Segredos** | `APP_KEY` **único** por instância; `DB_*` apontando para **a** base daquele cliente; `MAIL_*` conforme política. |
+| **Registry** | Manter `TENANT_REGISTRY_ENABLED=false` (e `REGISTRY_DB_DATABASE` vazio). Não precisas de `tenants:provision` nem de `/system/tenant-registry`. |
+| **Sessão** | Preferir `SESSION_DOMAIN` alinhado ao host (ex. só esse subdomínio ou apex do cliente), em vez de `.domínio` partilhado, se quiseres evitar partilha de cookie entre instâncias. |
+| **Post-deploy** | `php artisan migrate --force --no-interaction` (o `entrypoint` também migra ao arranque). Opcional: `php artisan config:clear && php artisan route:clear`. **Não** uses `migrate:fresh` em produção. |
+
+**Novo cliente:** duplicar o recurso no Coolify (ou criar de raiz), ligar o mesmo repositório/branch, definir domínio e variáveis, correr migrações/seeds **nessa** base.
+
+---
+
+Existe também ambiente de **demo** e código opcional multi-tenant (um processo PHP, várias bases) — ver secção [Multi-tenant (registry)](#multi-tenant-registry-subdomínio--mysql) **só se** voltares a usar esse modo.
+
+**Com Docker (Coolify, etc.):** o `entrypoint.sh` já roda `migrate`, `route:clear` e `config:clear` quando o container sobe; com registry desligado, `registry:migrate` / `tenant-registry:bootstrap` não alteram comportamento útil.
 
 #### Post-deploy: migrations e seeds
 
 **Importante:** não use `migrate:fresh` no post-deploy de produção — toda subida de build apagaria o banco. Use apenas migrações incrementais.
 
-| Instância | URL | Post-deploy (a cada build) |
-|-----------|-----|----------------------------|
-| **Base / Municípios** | visitaai.cloud, ibirapuita.visitaai.cloud | `php artisan migrate --force` |
-| **Demo** | demo.visitaai.cloud | `php artisan migrate --force` (ou `migrate:fresh` + seed se quiser resetar a demo a cada deploy) |
+| Cenário | Post-deploy típico |
+|---------|---------------------|
+| **Uma app por cliente** | `php artisan migrate --force --no-interaction` |
+| **Demo / reset controlado** | `migrate` incremental; só `migrate:fresh` + seed se for política explícita dessa instância |
 
-**Várias instâncias num único deploy (subdomínio → base MySQL):** ver a secção [Multi-tenant (registry): subdomínio → MySQL](#multi-tenant-registry-subdomínio--mysql) e o detalhe de arquitetura em `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`.
+**Alternativa (opcional): vários clientes num único deploy** com subdomínio → várias bases MySQL: secção [Multi-tenant (registry)](#multi-tenant-registry-subdomínio--mysql) e `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`.
 
 **Primeira vez (nova instância):** rode uma vez manualmente, antes de ir para produção:
 ```bash
@@ -147,7 +163,9 @@ Ou manualmente: `php artisan migrate --force`, `php artisan route:clear`, `php a
 
 ## Multi-tenant (registry): subdomínio → MySQL
 
-Um único deploy pode atender **vários municípios**: o **host** (`mun.visitaai.cloud`) escolhe o **slug**; o **registry** (`registry_tenants`) indica qual **schema MySQL** usar. O código liga a conexão `mysql` a esse schema antes de servir o pedido.
+> **Modo opcional.** A operação recomendada documentada acima é **uma aplicação Coolify por cliente** (`TENANT_REGISTRY_ENABLED=false`). O bloco abaixo mantém-se para quem quiser **um único deploy** a servir **vários** subdomínios com **várias** bases MySQL via tabela `registry_tenants`.
+
+Com registry **ligado**, um único processo pode atender **vários municípios**: o **host** (`mun.visitaai.cloud`) escolhe o **slug**; o **registry** indica qual **schema MySQL** usar. O código reconfigura a conexão `mysql` antes de servir o pedido.
 
 ### O que vai no `.env` — **uma vez** (global)
 
