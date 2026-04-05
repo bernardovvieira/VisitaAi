@@ -91,8 +91,8 @@
                         alert(msg);
                         return;
                     } gerarBase64Graficos();"
-                    class="inline-flex items-center gap-2 v-btn-danger px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">
-                    <x-heroicon-o-document-arrow-down class="h-5 w-5 shrink-0" aria-hidden="true" />
+                    class="v-btn-export v-btn-export--pdf">
+                    <x-heroicon-o-document-arrow-down class="h-5 w-5" aria-hidden="true" />
                     {{ __('Gerar relatório em PDF') }}
                 </button>
             </div>

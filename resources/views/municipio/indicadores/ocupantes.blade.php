@@ -50,8 +50,8 @@
 
     <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
         <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-           class="v-btn-compact v-btn-compact--green shrink-0 text-sm !rounded-xl">
-            <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+           class="v-btn-export v-btn-export--sheet no-underline">
+            <x-heroicon-o-arrow-down-tray class="h-5 w-5" aria-hidden="true" />
             {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
         </a>
     </div>
