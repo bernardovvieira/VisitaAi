@@ -188,7 +188,7 @@
     }
 
     .v-toast-connection--ok {
-        @apply bg-blue-600 dark:bg-blue-600;
+        @apply bg-emerald-600 dark:bg-emerald-600;
     }
 
     .v-toast-connection--warn {
