@@ -26,31 +26,31 @@
             @endif
         </p>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0">
+        <div class="v-table-wrap">
+            <table class="v-data-table">
+                <thead>
                     <tr>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Nome</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">CPF</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">E-mail</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Data de Cadastro</th>
-                        <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ação</th>
+                        <th scope="col" class="whitespace-nowrap">{{ __('ID') }}</th>
+                        <th scope="col">{{ __('Nome') }}</th>
+                        <th scope="col">{{ __('CPF') }}</th>
+                        <th scope="col">{{ __('E-mail') }}</th>
+                        <th scope="col">{{ __('Data de Cadastro') }}</th>
+                        <th scope="col" class="text-center">{{ __('Ação') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody>
                     @forelse($pendentes as $u)
-                        <tr class="v-table-row-interactive">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
-                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+                        <tr>
+                            <td class="whitespace-nowrap">
+                                <span class="inline-flex rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold tabular-nums text-slate-800 dark:bg-slate-800 dark:text-slate-200">
                                     #{{ $u->use_id }}
                                 </span>
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_nome }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', $u->use_cpf) }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100"><a href="mailto:{{ $u->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ $u->use_email }}</a></td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $u->use_data_criacao->format('d/m/Y') }}</td>
-                            <td class="p-4 text-center">
+                            <td class="font-medium text-slate-900 dark:text-slate-100">{{ $u->use_nome }}</td>
+                            <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', $u->use_cpf) }}</td>
+                            <td><a href="mailto:{{ $u->use_email }}" class="text-blue-600 hover:underline dark:text-blue-400">{{ $u->use_email }}</a></td>
+                            <td class="tabular-nums">{{ $u->use_data_criacao->format('d/m/Y') }}</td>
+                            <td class="text-center">
                                 <form method="POST" action="{{ route('gestor.approve', $u) }}" class="inline">
                                     @csrf
                                     <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')"
@@ -64,8 +64,10 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-6 text-center text-gray-600 dark:text-gray-400">
-                                {{ __('gestor.pendentes.empty_table') }}
+                            <td colspan="6" class="!p-0">
+                                <div class="px-4 py-8 text-center text-sm text-slate-600 dark:text-slate-400">
+                                    {{ __('gestor.pendentes.empty_table') }}
+                                </div>
                             </td>
                         </tr>
                     @endforelse

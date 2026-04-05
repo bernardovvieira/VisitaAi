@@ -37,31 +37,31 @@
       @endif
     </p>
 
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-100 dark:bg-gray-700">
+    <div class="v-table-wrap">
+      <table class="v-data-table">
+          <thead>
           <tr>
-            <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">ID</th>
-            <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Nome</th>
-            <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Sintomas</th>
-            <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Transmissão</th>
-            <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Medidas</th>
-            <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
+            <th scope="col" class="whitespace-nowrap">ID</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Sintomas</th>
+            <th scope="col">Transmissão</th>
+            <th scope="col">Medidas</th>
+            <th scope="col" class="text-center">Ações</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+        <tbody>
           @forelse($doencas as $doenca)
-            <tr class="v-table-row-interactive">
-              <td class="p-4 text-gray-800 dark:text-gray-100">
-                  <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+            <tr>
+              <td class="whitespace-nowrap">
+                  <span class="inline-flex rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold tabular-nums text-slate-800 dark:bg-slate-800 dark:text-slate-200">
                       #{{ $doenca->doe_id }}
                   </span>
               </td>
-              <td class="p-4 text-gray-800 dark:text-gray-100">{{ $doenca->doe_nome }}</td>
-              <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_sintomas), 30) }}</td>
-              <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_transmissao), 30) }}</td>
-              <td class="p-4 text-gray-800 dark:text-gray-100">{{ Str::limit(implode(', ', $doenca->doe_medidas_controle), 30) }}</td>
-              <td class="p-4 text-center">
+              <td class="font-medium text-slate-900 dark:text-slate-100">{{ $doenca->doe_nome }}</td>
+              <td class="text-slate-700 dark:text-slate-300">{{ Str::limit(implode(', ', $doenca->doe_sintomas), 30) }}</td>
+              <td class="text-slate-700 dark:text-slate-300">{{ Str::limit(implode(', ', $doenca->doe_transmissao), 30) }}</td>
+              <td class="text-slate-700 dark:text-slate-300">{{ Str::limit(implode(', ', $doenca->doe_medidas_controle), 30) }}</td>
+              <td class="text-center">
                 @can('view', $doenca)
                 <a href="{{ route('saude.doencas.show', $doenca) }}"
                     class="v-btn-icon-primary"
@@ -70,14 +70,14 @@
                     <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                 </a>
                 @else
-                  <span class="text-gray-500 text-sm italic">Sem acesso</span>
+                  <span class="text-xs italic text-slate-500 dark:text-slate-400">Sem acesso</span>
                 @endcan
               </td>
             </tr>
           @empty
             <tr>
-              <td colspan="6" class="p-6 text-center text-gray-600 dark:text-gray-400">
-                Nenhuma doença monitorada disponível.
+              <td colspan="6" class="!p-0">
+                <div class="px-4 py-8 text-center text-sm text-slate-600 dark:text-slate-400">Nenhuma doença monitorada disponível.</div>
               </td>
             </tr>
           @endforelse

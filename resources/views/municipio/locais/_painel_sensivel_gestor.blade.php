@@ -24,30 +24,30 @@
         <p class="mt-3 text-sm text-rose-800/80 dark:text-rose-200/80">{{ __('Nenhum ocupante cadastrado neste imóvel.') }}</p>
     @else
         <div class="mt-4 overflow-x-auto rounded-lg ring-1 ring-rose-200/80 dark:ring-rose-800/80">
-            <table class="min-w-full divide-y divide-rose-100 text-xs dark:divide-rose-900/60 sm:text-sm">
+            <table class="min-w-full border-collapse text-[13px] leading-snug text-rose-950 dark:text-rose-50">
                 <thead>
                     <tr class="bg-rose-100/90 text-left dark:bg-rose-950/80">
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">ID</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Nome') }}</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Nascimento') }}</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Escolaridade') }}</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Renda') }}</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Cor/raça') }}</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Trabalho') }}</th>
-                        <th class="px-3 py-2 font-semibold text-rose-950 dark:text-rose-100">{{ __('Obs.') }}</th>
+                        <th class="whitespace-nowrap px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">ID</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Nome') }}</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Nascimento') }}</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Escolaridade') }}</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Renda') }}</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Cor/raça') }}</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Trabalho') }}</th>
+                        <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-rose-900 dark:text-rose-200">{{ __('Obs.') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-rose-100 dark:divide-rose-900/50">
                     @foreach($local->moradores->sortBy('mor_id') as $m)
                         <tr class="bg-white/90 dark:bg-gray-900/50">
-                            <td class="whitespace-nowrap px-3 py-2 font-mono text-xs text-rose-900 dark:text-rose-100/90">{{ $m->mor_id }}</td>
-                            <td class="max-w-[12rem] truncate px-3 py-2 text-rose-950 dark:text-rose-50" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: __('N/D') }}</td>
-                            <td class="whitespace-nowrap px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? __('N/D') }}</td>
-                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $escL[$m->mor_escolaridade] ?? ($m->mor_escolaridade ?? __('N/D')) }}</td>
-                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $rendaL[$m->mor_renda_faixa] ?? ($m->mor_renda_faixa ?? __('N/D')) }}</td>
-                            <td class="max-w-[8rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $corL[$m->mor_cor_raca] ?? ($m->mor_cor_raca ?? __('N/D')) }}</td>
-                            <td class="max-w-[10rem] px-3 py-2 text-rose-900 dark:text-rose-100/90">{{ $trabL[$m->mor_situacao_trabalho] ?? ($m->mor_situacao_trabalho ?? __('N/D')) }}</td>
-                            <td class="max-w-[14rem] whitespace-pre-wrap px-3 py-2 text-xs text-rose-900 dark:text-rose-100/85">{{ $m->mor_observacao ?: __('N/D') }}</td>
+                            <td class="whitespace-nowrap px-3 py-2.5 font-mono text-xs text-rose-900 dark:text-rose-100/90">{{ $m->mor_id }}</td>
+                            <td class="max-w-[12rem] truncate px-3 py-2.5 text-rose-950 dark:text-rose-50" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: __('N/D') }}</td>
+                            <td class="whitespace-nowrap px-3 py-2.5 text-rose-900 dark:text-rose-100/90">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? __('N/D') }}</td>
+                            <td class="max-w-[10rem] px-3 py-2.5 text-rose-900 dark:text-rose-100/90">{{ $escL[$m->mor_escolaridade] ?? ($m->mor_escolaridade ?? __('N/D')) }}</td>
+                            <td class="max-w-[10rem] px-3 py-2.5 text-rose-900 dark:text-rose-100/90">{{ $rendaL[$m->mor_renda_faixa] ?? ($m->mor_renda_faixa ?? __('N/D')) }}</td>
+                            <td class="max-w-[8rem] px-3 py-2.5 text-rose-900 dark:text-rose-100/90">{{ $corL[$m->mor_cor_raca] ?? ($m->mor_cor_raca ?? __('N/D')) }}</td>
+                            <td class="max-w-[10rem] px-3 py-2.5 text-rose-900 dark:text-rose-100/90">{{ $trabL[$m->mor_situacao_trabalho] ?? ($m->mor_situacao_trabalho ?? __('N/D')) }}</td>
+                            <td class="max-w-[14rem] whitespace-pre-wrap px-3 py-2.5 text-xs text-rose-900 dark:text-rose-100/85">{{ $m->mor_observacao ?: __('N/D') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

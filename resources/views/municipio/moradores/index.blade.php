@@ -37,31 +37,31 @@
         $trabOpcoes = config('visitaai_municipio.situacao_trabalho_opcoes', []);
     @endphp
     <x-section-card class="v-card--flush overflow-hidden dark:bg-gray-800">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-900/80">
+        <div class="v-table-wrap">
+            <table class="v-data-table">
+                <thead>
                     <tr>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Nome / identificação') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Nascimento') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Idade') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Escolaridade') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Renda') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Cor/raça') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Trabalho') }}</th>
-                        <th scope="col" class="px-4 py-3 text-right font-semibold text-gray-700 dark:text-gray-300">{{ __('Ações') }}</th>
+                        <th scope="col">{{ __('Nome / identificação') }}</th>
+                        <th scope="col" class="whitespace-nowrap">{{ __('Nascimento') }}</th>
+                        <th scope="col">{{ __('Idade') }}</th>
+                        <th scope="col">{{ __('Escolaridade') }}</th>
+                        <th scope="col">{{ __('Renda') }}</th>
+                        <th scope="col">{{ __('Cor/raça') }}</th>
+                        <th scope="col">{{ __('Trabalho') }}</th>
+                        <th scope="col" class="text-right">{{ __('Ações') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody>
                     @forelse ($moradores as $m)
-                        <tr class="v-table-row-interactive text-gray-800 dark:text-gray-200">
-                            <td class="px-4 py-3">{{ $m->mor_nome ?: '-' }}</td>
-                            <td class="px-4 py-3 tabular-nums">{{ $m->mor_data_nascimento ? $m->mor_data_nascimento->format('d/m/Y') : '-' }}</td>
-                            <td class="px-4 py-3">{{ $m->idadeAnos() !== null ? $m->idadeAnos() . ' ' . __('anos') : '-' }}</td>
-                            <td class="max-w-[11rem] truncate px-4 py-3" title="{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '' }}">{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '-' }}</td>
-                            <td class="max-w-[11rem] truncate px-4 py-3" title="{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '' }}">{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '-' }}</td>
-                            <td class="max-w-[9rem] truncate px-4 py-3" title="{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '' }}">{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '-' }}</td>
-                            <td class="max-w-[11rem] truncate px-4 py-3" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
-                            <td class="px-4 py-3 text-right whitespace-nowrap">
+                        <tr>
+                            <td class="font-medium text-slate-900 dark:text-slate-100">{{ $m->mor_nome ?: '-' }}</td>
+                            <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ $m->mor_data_nascimento ? $m->mor_data_nascimento->format('d/m/Y') : '-' }}</td>
+                            <td class="text-slate-700 dark:text-slate-300">{{ $m->idadeAnos() !== null ? $m->idadeAnos() . ' ' . __('anos') : '-' }}</td>
+                            <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '' }}">{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '-' }}</td>
+                            <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '' }}">{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '-' }}</td>
+                            <td class="max-w-[9rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '' }}">{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '-' }}</td>
+                            <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
+                            <td class="text-right whitespace-nowrap">
                                 <div class="inline-flex justify-end gap-1.5">
                                     <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
                                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
@@ -84,7 +84,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-4 py-10 text-center text-gray-500 dark:text-gray-400">{{ __('Nenhum ocupante registrado neste imóvel.') }}</td>
+                            <td colspan="8" class="!p-0">
+                                <div class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('Nenhum ocupante registrado neste imóvel.') }}</div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

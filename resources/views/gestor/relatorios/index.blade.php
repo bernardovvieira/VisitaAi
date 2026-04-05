@@ -271,8 +271,8 @@
                         alert(msg);
                         return;
                     } gerarBase64Graficos();"
-                    class="inline-flex items-center gap-2 v-btn-danger disabled:cursor-not-allowed disabled:opacity-50">
-                    <x-heroicon-o-document-arrow-down class="h-5 w-5 shrink-0" aria-hidden="true" />
+                    class="v-btn-compact v-btn-compact--green shrink-0 text-sm">
+                    <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ __('Gerar relatório em PDF') }}
                 </button>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>
@@ -375,44 +375,35 @@
     <x-section-card>
     <h2 class="v-section-title mb-4">{{ __('Visitas registradas') }}</h2>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-            <thead class="bg-gray-100 dark:bg-gray-700">
+    <div class="v-table-wrap">
+        <table class="v-data-table">
+            <thead>
                 <tr>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Código') }}</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Data') }}</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Pendência') }}</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Local') }}</th>
-                    <th class="p-4 text-left font-semibold text-gray-700 dark:text-gray-300">{{ __('Atividade') }}</th>
-                    <th class="p-4 text-left align-bottom font-semibold text-gray-700 dark:text-gray-300">
-                        <span class="block leading-tight">{{ __('Profissional') }}</span>
-                        <span class="mt-0.5 block text-[10px] font-normal text-gray-500 dark:text-gray-400">{{ __('ACE ou ACS') }}</span>
+                    <th scope="col" class="whitespace-nowrap">{{ __('Código') }}</th>
+                    <th scope="col">{{ __('Data') }}</th>
+                    <th scope="col">{{ __('Pendência') }}</th>
+                    <th scope="col" class="min-w-[12rem]">{{ __('Local') }}</th>
+                    <th scope="col">{{ __('Atividade') }}</th>
+                    <th scope="col" class="align-bottom">
+                        <span class="block leading-tight normal-case tracking-normal">{{ __('Profissional') }}</span>
+                        <span class="mt-0.5 block text-[10px] font-normal normal-case tracking-normal text-slate-500 dark:text-slate-400">{{ __('ACE ou ACS') }}</span>
                     </th>
-                    <th class="p-4 text-center font-semibold text-gray-700 dark:text-gray-300">{{ __('Ações') }}</th>
+                    <th scope="col" class="w-14 text-center">{{ __('Ações') }}</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody>
                 @forelse ($visitasPaginated as $visita)
-                    <tr class="v-table-row-interactive">
-                        <td class="p-4">
-                            <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
-                                #{{ $visita->vis_id }}
-                            </span>
+                    <tr>
+                        <td class="whitespace-nowrap">
+                            <span class="inline-flex rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold tabular-nums text-slate-800 dark:bg-slate-800 dark:text-slate-200">#{{ $visita->vis_id }}</span>
                         </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
-                            <div class="font-semibold">
-                                {{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}
-                            </div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}
-                            </div>
+                        <td class="leading-tight">
+                            <div class="font-semibold text-slate-900 dark:text-slate-100">{{ \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y') }}</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">{{ \Carbon\Carbon::parse($visita->vis_data)->translatedFormat('l') }}</div>
                         </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100">
+                        <td>
                             @if($visita->vis_pendencias)
-                                <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                    {{ __('Pendente') }}
-                                </span>
-
+                                <span class="inline-flex rounded-md bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-900 dark:bg-red-950/60 dark:text-red-200">{{ __('Pendente') }}</span>
                                 @php
                                     $revisitaPosterior = $visita->local
                                         ? $visita->local->visitas()
@@ -421,37 +412,32 @@
                                             ->first()
                                         : null;
                                 @endphp
-
                                 @if($revisitaPosterior)
-                                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">
-                                        {{ __('Revisitado em :data', ['data' => \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y')]) }}
-                                    </div>
+                                    <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Revisitado em :data', ['data' => \Carbon\Carbon::parse($revisitaPosterior->vis_data)->format('d/m/Y')]) }}</div>
                                 @endif
                             @else
-                                <span class="inline-block rounded bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-900 dark:bg-emerald-900/45 dark:text-emerald-200">
-                                    {{ __('Concluída') }}
-                                </span>
+                                <span class="inline-flex rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-900 dark:bg-emerald-950/45 dark:text-emerald-200">{{ __('Concluída') }}</span>
                             @endif
                         </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
+                        <td class="leading-snug">
                             @if($visita->local)
-                                <div class="font-semibold">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                <div class="font-semibold text-slate-900 dark:text-slate-100">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
+                                <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                                     {{ __('Bairro/Localidade: :bairro · Cód.: :codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
                                 </div>
                             @else
-                                <p class="text-sm font-medium text-amber-700 dark:text-amber-300">{{ __('Local não disponível para esta visita.') }}</p>
+                                <p class="text-xs font-medium text-amber-700 dark:text-amber-300">{{ __('Local não disponível para esta visita.') }}</p>
                             @endif
                         </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
-                            <span class="text-sm">{{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: __('Não informado') }}</span>
+                        <td class="text-slate-600 dark:text-slate-300" title="{{ \App\Helpers\MsTerminologia::atividadeNome($visita->vis_atividade) }}">
+                            {{ \App\Helpers\MsTerminologia::atividadeLabel($visita->vis_atividade) ?: __('Não informado') }}
                         </td>
-                        <td class="p-4 text-gray-800 dark:text-gray-100 whitespace-nowrap">
+                        <td class="whitespace-nowrap text-slate-900 dark:text-slate-100">
                             {{ $visita->usuario->use_nome ?? '-' }}
                         </td>
-                        <td class="p-4 text-center">
+                        <td class="text-center">
                             <a href="{{ route('gestor.visitas.show', $visita) }}"
-                               class="v-btn-icon-primary"
+                               class="v-btn-icon-primary v-btn-icon-primary--lg"
                                title="{{ __('Visualizar') }}"
                                aria-label="{{ __('Visualizar visita') }}">
                                 <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
@@ -460,7 +446,9 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="p-6 text-center text-gray-600 dark:text-gray-400 italic">{{ __('Nenhuma visita encontrada.') }}</td>
+                        <td colspan="7" class="!p-0">
+                            <div class="px-4 py-8 text-center text-sm italic text-slate-600 dark:text-slate-400">{{ __('Nenhuma visita encontrada.') }}</div>
+                        </td>
                     </tr>
                 @endforelse
             </tbody>

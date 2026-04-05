@@ -71,33 +71,33 @@
             @endif
         </p>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700">
+        <div class="v-table-wrap">
+            <table class="v-data-table">
+                <thead>
                     <tr>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Código</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Zona</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Imóvel</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Endereço</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Bairro</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Cidade</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Responsável</th>
-                        <th class="p-4 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Coordenadas</th>
-                        <th class="p-4 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Ações</th>
+                        <th scope="col" class="whitespace-nowrap">{{ __('Código') }}</th>
+                        <th scope="col">{{ __('Zona') }}</th>
+                        <th scope="col">{{ __('Imóvel') }}</th>
+                        <th scope="col" class="min-w-[8rem]">{{ __('Endereço') }}</th>
+                        <th scope="col">{{ __('Bairro') }}</th>
+                        <th scope="col">{{ __('Cidade') }}</th>
+                        <th scope="col">{{ __('Responsável') }}</th>
+                        <th scope="col" class="whitespace-nowrap">{{ __('Coordenadas') }}</th>
+                        <th scope="col" class="text-center">{{ __('Ações') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody>
                     @forelse($locais as $local)
-                        <tr class="v-table-row-interactive">
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
-                                <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 text-xs font-semibold px-2 py-1 rounded">
+                        <tr>
+                            <td class="whitespace-nowrap">
+                                <span class="inline-flex rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold tabular-nums text-slate-800 dark:bg-slate-800 dark:text-slate-200">
                                     #{{ $local->loc_codigo_unico }}
                                 </span>
                                 @if($local->isPrimary())
-                                    <span class="block mt-1 text-xs text-gray-500 dark:text-gray-400" title="Local primário do município">Primário</span>
+                                    <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400" title="Local primário do município">Primário</span>
                                 @endif
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">
+                            <td>
                                 @if ($local->loc_zona == 'U')
                                     <span class="inline-block rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">
                                         Urbana
@@ -108,27 +108,27 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100 leading-tight">
+                            <td class="leading-tight text-slate-700 dark:text-slate-300">
                                 @if ($local->loc_tipo == 'R')
-                                    <div class="text-sm text-gray-600 dark:text-gray-400" title="Residencial">
+                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="Residencial">
                                         Residencial
                                     </div>
                                 @elseif ($local->loc_tipo == 'C')
-                                    <div class="text-sm text-gray-600 dark:text-gray-400" title="Comercial">
+                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="Comercial">
                                         Comercial
                                     </div>
                                 @elseif ($local->loc_tipo == 'T')
-                                    <div class="text-sm text-gray-600 dark:text-gray-400" title="Terreno Baldio">
+                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="Terreno Baldio">
                                         Terreno Baldio
                                     </div>
                                 @endif
                             </td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_bairro }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_cidade }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_responsavel_nome ?? 'Não informado' }}</td>
-                            <td class="p-4 text-gray-800 dark:text-gray-100">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
-                            <td class="p-4 text-center">
+                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</td>
+                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_bairro }}</td>
+                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_cidade }}</td>
+                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_responsavel_nome ?? 'Não informado' }}</td>
+                            <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
+                            <td class="text-center">
                                 <div class="flex flex-wrap items-center justify-center gap-1.5">
                                     <a href="{{ route('agente.locais.show', $local) }}"
                                        class="v-btn-icon-primary"
@@ -159,13 +159,13 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="p-8 text-center">
-                                <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
-                                    <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-3">
-                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-gray-400 dark:text-gray-500" />
+                            <td colspan="9" class="!p-0">
+                                <div class="flex flex-col items-center justify-center px-4 py-10 text-center max-w-sm mx-auto">
+                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700">
+                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
                                     </div>
-                                    <p class="text-gray-600 dark:text-gray-400 font-medium">Nenhum local cadastrado.</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Cadastre o primeiro local para realizar visitas.</p>
+                                    <p class="font-medium text-slate-600 dark:text-slate-400">Nenhum local cadastrado.</p>
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-500">Cadastre o primeiro local para realizar visitas.</p>
                                     <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         Cadastrar local

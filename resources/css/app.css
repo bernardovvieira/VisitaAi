@@ -400,15 +400,18 @@
         @apply border-b border-slate-100/90 bg-white transition-colors hover:bg-slate-50/90 dark:border-slate-800/80 dark:bg-slate-900/20 dark:hover:bg-slate-800/40;
     }
 
-    .v-data-table td {
+    .v-data-table td,
+    .v-data-table tbody th {
         @apply px-3 py-2.5 align-middle text-slate-800 dark:text-slate-100;
     }
 
-    .v-data-table td:first-child {
+    .v-data-table td:first-child,
+    .v-data-table tbody th:first-child {
         @apply pl-4;
     }
 
-    .v-data-table td:last-child {
+    .v-data-table td:last-child,
+    .v-data-table tbody th:last-child {
         @apply pr-4;
     }
 

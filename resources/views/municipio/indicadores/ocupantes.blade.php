@@ -182,16 +182,16 @@
     <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
         <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_bairro'] ?? __('Por bairro') }}</h2>
         <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
-            <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-600">
+            <table class="min-w-full border-collapse text-[13px] leading-snug text-slate-800 dark:text-slate-100">
                 <thead>
-                    <tr class="bg-gray-50 text-left dark:bg-gray-900">
-                        <th scope="col" class="sticky left-0 z-20 min-w-[11rem] border-b border-gray-200 bg-gray-50 px-3 py-2.5 text-left align-bottom font-semibold text-gray-700 shadow-[4px_0_12px_-4px_rgba(15,23,42,0.12)] dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:shadow-[4px_0_12px_-4px_rgba(0,0,0,0.4)]">
-                            <span class="block leading-tight">{{ __('Bairro') }}</span>
-                            <span class="mt-0.5 block text-[10px] font-normal text-slate-500 dark:text-slate-400">{{ __('do imóvel') }}</span>
+                    <tr class="bg-slate-50 text-left dark:bg-slate-900/95">
+                        <th scope="col" class="sticky left-0 z-20 min-w-[11rem] border-b border-slate-200/90 bg-slate-50 px-3 py-2.5 text-left align-bottom text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500 shadow-[4px_0_12px_-4px_rgba(15,23,42,0.12)] dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400 dark:shadow-[4px_0_12px_-4px_rgba(0,0,0,0.4)]">
+                            <span class="block leading-tight normal-case tracking-normal">{{ __('Bairro') }}</span>
+                            <span class="mt-0.5 block text-[10px] font-normal normal-case tracking-normal text-slate-500 dark:text-slate-400">{{ __('do imóvel') }}</span>
                         </th>
-                        <th scope="col" class="whitespace-nowrap border-b border-gray-200 bg-gray-50 px-3 py-3 font-semibold text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">{{ __('Total') }}</th>
+                        <th scope="col" class="whitespace-nowrap border-b border-slate-200/90 bg-slate-50 px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">{{ __('Total') }}</th>
                         @foreach($keysFaixa as $k)
-                            <th scope="col" class="whitespace-nowrap border-b border-gray-200 bg-gray-50 px-3 py-3 font-semibold text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">{{ $labelsFaixa[$k] ?? $k }}</th>
+                            <th scope="col" class="whitespace-nowrap border-b border-slate-200/90 bg-slate-50 px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">{{ $labelsFaixa[$k] ?? $k }}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -319,12 +319,12 @@
                 </div>
             </details>
             <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
-                <table class="min-w-full divide-y divide-gray-200 text-xs dark:divide-gray-600 sm:text-sm">
+                <table class="min-w-full border-collapse text-[13px] leading-snug text-slate-800 dark:text-slate-100">
                     <thead>
-                        <tr class="bg-gray-50 text-left dark:bg-gray-900">
-                            <th scope="col" class="sticky left-0 z-10 min-w-[10rem] border-b border-gray-200 bg-gray-50 px-2 py-2 font-semibold text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">{{ $cfgInd['titulo_secao_escolaridade'] ?? __('Escolaridade') }}</th>
+                        <tr class="bg-slate-50 text-left dark:bg-slate-900/95">
+                            <th scope="col" class="sticky left-0 z-10 min-w-[10rem] border-b border-slate-200/90 bg-slate-50 px-2 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">{{ $cfgInd['titulo_secao_escolaridade'] ?? __('Escolaridade') }}</th>
                             @foreach($keysCruzRenda as $kr)
-                                <th scope="col" class="whitespace-nowrap border-b border-gray-200 bg-gray-50 px-2 py-2 text-center font-semibold text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300">{{ $cruz['colunas'][$kr] ?? $kr }}</th>
+                                <th scope="col" class="whitespace-nowrap border-b border-slate-200/90 bg-slate-50 px-2 py-2.5 text-center text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">{{ $cruz['colunas'][$kr] ?? $kr }}</th>
                             @endforeach
                         </tr>
                     </thead>
