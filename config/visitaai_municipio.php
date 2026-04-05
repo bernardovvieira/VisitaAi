@@ -175,30 +175,4 @@ return [
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Página inicial pública (/) — indicadores agregados
-    |--------------------------------------------------------------------------
-    | Ajuste via .env: VISITAI_WELCOME_PUBLIC_INDICADORES, etc.
-    */
-    'welcome_public' => [
-        /** Exibe o bloco numérico na home. Desligue para esconder totais até o go-live municipal. */
-        'indicadores_habilitados' => filter_var(
-            env('VISITAI_WELCOME_PUBLIC_INDICADORES', 'true'),
-            FILTER_VALIDATE_BOOL
-        ),
-
-        /**
-         * Só mostra a contagem de bairros com visita quando houver pelo menos N visitas
-         * (reduz risco de reidentificação; alinhe ao minimo_registros_bairro se desejar).
-         */
-        'min_visitas_para_exibir_bairros' => (int) env('VISITAI_WELCOME_MIN_VISITAS_BAIRROS', 5),
-
-        /** Se true, valores zero aparecem como "—" em vez de 0 (visual mais limpo no pré-cadastro). */
-        'ocultar_valores_zero' => filter_var(
-            env('VISITAI_WELCOME_OCULTAR_ZEROS', 'false'),
-            FILTER_VALIDATE_BOOL
-        ),
-    ],
-
 ];
