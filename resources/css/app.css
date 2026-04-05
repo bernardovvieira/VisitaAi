@@ -238,6 +238,51 @@
         @apply mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7;
     }
 
+    /* Páginas públicas: coluna editorial alinhada (home / consulta) */
+    .welcome-public {
+        @apply mx-auto w-full max-w-3xl;
+    }
+
+    .welcome-public--extend {
+        @apply max-w-4xl;
+    }
+
+    .welcome-public--wide {
+        @apply max-w-5xl 2xl:max-w-6xl;
+    }
+
+    .welcome-public__hero {
+        @apply border-b border-slate-200/50 pb-8 dark:border-slate-800/70;
+    }
+
+    .welcome-public__hero-row {
+        @apply flex min-w-0 items-start gap-5 sm:gap-8;
+    }
+
+    .welcome-public__logo {
+        @apply h-[3.25rem] w-[3.25rem] shrink-0 object-contain sm:h-16 sm:w-16;
+    }
+
+    .welcome-public__kicker {
+        @apply text-[10px] font-medium uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500;
+    }
+
+    .welcome-public__title {
+        @apply text-balance text-xl font-semibold tracking-[-0.02em] text-slate-900 dark:text-slate-50 sm:text-[1.375rem] sm:leading-snug lg:text-[1.5rem] lg:leading-snug;
+    }
+
+    .welcome-public__lead {
+        @apply max-w-xl text-pretty text-sm font-normal leading-[1.65] text-slate-500 dark:text-slate-400;
+    }
+
+    .welcome-public__surface {
+        @apply rounded-lg border border-slate-200/60 bg-white/70 shadow-none dark:border-slate-700/45 dark:bg-slate-900/35;
+    }
+
+    .welcome-public__link {
+        @apply inline-flex items-center gap-1.5 text-xs font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200;
+    }
+
     .v-topbar {
         @apply sticky top-0 z-20 flex h-[52px] shrink-0 items-center justify-end gap-1 border-b px-3 backdrop-blur-md sm:justify-between sm:px-5;
         border-color: rgb(var(--v-border) / 0.65);

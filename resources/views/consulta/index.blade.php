@@ -4,33 +4,32 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta pública'))
-@section('og_description', __('Consulte, de graça e sem cadastro, as datas das visitas de vigilância feitas no seu imóvel. Use só o código numérico que o ACE ou ACS entregou no endereço.'))
+@section('og_description', __('Consulte em segundos, sem cadastro, quando houve visita de vigilância no seu endereço. Use o código de oito dígitos do comprovante ou informado pelo ACE ou ACS.'))
 
 @section('content')
-<div class="welcome-public w-full min-w-0">
-    <div class="w-full space-y-10 lg:space-y-12">
-        <header class="border-b border-slate-200/80 pb-10 dark:border-slate-700/70">
-            <div class="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:gap-8 lg:gap-10">
+<div class="welcome-public welcome-public--extend w-full min-w-0">
+    <div class="w-full space-y-9 lg:space-y-11">
+        <header class="welcome-public__hero">
+            <div class="welcome-public__hero-row">
                 <img
                     src="{{ asset('images/visitaai_rembg.png') }}"
                     alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
                     width="96"
                     height="96"
-                    class="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+                    class="welcome-public__logo"
                     decoding="async" />
-                <div class="min-w-0 flex-1 space-y-3 sm:space-y-3.5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                <div class="min-w-0 flex-1 space-y-3 pt-0.5">
+                    <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
-                    <x-public-municipality-pill :local="$localPrimario ?? null" />
-                    <h1 class="text-balance text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
+                    <h1 class="welcome-public__title">
                         {{ __('Verificar visitas no imóvel') }}
                     </h1>
-                    <p class="max-w-3xl text-pretty text-[15px] leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
-                        {{ __('Consulte pelo código de oito dígitos do imóvel (o mesmo formato usado na gestão interna do sistema).') }}
+                    <p class="welcome-public__lead">
+                        {{ __('Veja em segundos, de graça e sem criar conta, quando a equipe registrou visita no endereço. Você só precisa do número do comprovante ou do que o ACE ou ACS informou na visita.') }}
                     </p>
-                    <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-                        <x-heroicon-o-arrow-left class="h-4 w-4 shrink-0" aria-hidden="true" />
+                    <a href="{{ url('/') }}" class="welcome-public__link">
+                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                         {{ __('Voltar à página inicial') }}
                     </a>
                 </div>
@@ -39,11 +38,11 @@
 
         <x-flash-alerts />
 
-        <section class="rounded-xl border border-slate-200/90 bg-white/90 p-5 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/50 sm:p-6" aria-labelledby="consulta-codigo-titulo">
+        <section class="welcome-public__surface p-6 sm:p-7" aria-labelledby="consulta-codigo-titulo">
             <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form" class="space-y-4">
-                <h2 id="consulta-codigo-titulo" class="text-base font-bold tracking-tight text-slate-900 dark:text-white">
+                <h2 id="consulta-codigo-titulo" class="welcome-public__title text-[1.0625rem] lg:text-lg">
                     {{ __('Código do imóvel') }}</h2>
-                <label for="codigo" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label for="codigo" class="block text-sm font-normal text-slate-600 dark:text-slate-400">
                     {!! __('Informe o <strong>código numérico</strong> que consta no comprovante ou foi passado pelo ACE ou ACS na visita.') !!}
                     <span class="text-red-500" aria-hidden="true">*</span>
                 </label>
@@ -62,7 +61,7 @@
                         class="v-input max-w-md w-full"
                         aria-describedby="codigo-ajuda"
                     />
-                    <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex shrink-0 items-center justify-center px-5 py-2.5 text-[15px] font-semibold">
+                    <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex shrink-0 items-center justify-center px-5 py-2.5 text-sm font-medium">
                         {{ __('Consultar agora') }}
                     </button>
                 </div>
@@ -72,12 +71,13 @@
                 <p id="codigo-ajuda" class="text-sm text-slate-500 dark:text-slate-400">
                     {{ __('Cada imóvel cadastrado recebe um código exclusivo. Se não tiver o número em mãos, peça orientação na Secretaria Municipal de Saúde ou ao agente no próximo contato.') }}
                 </p>
+                <x-public-municipality-pill :local="$localPrimario ?? null" class="mt-3" />
             </form>
         </section>
 
-        <section class="overflow-hidden rounded-xl border border-slate-200/90 bg-white/90 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/50" aria-labelledby="consulta-doencas-titulo">
-            <div class="border-b border-slate-200/80 p-5 dark:border-slate-700/80 sm:p-6">
-                <h2 id="consulta-doencas-titulo" class="text-base font-bold tracking-tight text-slate-900 dark:text-white">
+        <section class="welcome-public__surface overflow-hidden p-0" aria-labelledby="consulta-doencas-titulo">
+            <div class="border-b border-slate-200/50 p-6 dark:border-slate-800/70 sm:p-7">
+                <h2 id="consulta-doencas-titulo" class="welcome-public__title text-[1.0625rem] lg:text-lg">
                     {{ __('Doenças monitoradas no município') }}</h2>
                 @if($doencasIndisponivel ?? false)
                     <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Lista de doenças indisponível agora; use o formulário acima para consultar visitas.') }}</p>
