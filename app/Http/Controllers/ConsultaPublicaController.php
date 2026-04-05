@@ -28,7 +28,9 @@ class ConsultaPublicaController extends Controller
             $doencasIndisponivel = true;
         }
 
-        return view('consulta.index', compact('doencas', 'doencasIndisponivel'));
+        $localPrimario = Local::query()->orderBy('loc_id')->first();
+
+        return view('consulta.index', compact('doencas', 'doencasIndisponivel', 'localPrimario'));
     }
 
     public function consultaPorCodigo(Request $request)
@@ -101,8 +103,11 @@ class ConsultaPublicaController extends Controller
                 $qrCodeMime = 'image/svg+xml';
             }
 
+            $localPrimario = Local::query()->orderBy('loc_id')->first();
+
             $html = view('consulta.codigo', compact(
                 'local',
+                'localPrimario',
                 'visitas',
                 'resumos',
                 'revisitaPosterior',

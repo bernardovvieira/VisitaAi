@@ -16,9 +16,9 @@
             <img
                 src="{{ asset('images/visitaai_rembg.png') }}"
                 alt=""
-                width="44"
-                height="44"
-                class="h-11 w-11 shrink-0 object-contain opacity-95 dark:opacity-100"
+                width="72"
+                height="72"
+                class="h-14 w-14 shrink-0 object-contain opacity-95 sm:h-16 sm:w-16 dark:opacity-100"
                 aria-hidden="true"
                 decoding="async" />
             <div class="min-w-0 space-y-1">

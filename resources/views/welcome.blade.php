@@ -11,33 +11,27 @@
     <div class="w-full space-y-12 lg:space-y-14">
         {{-- Cabeçalho --}}
         <header class="border-b border-slate-200/80 pb-10 dark:border-slate-700/70" id="welcome-col-principal">
-            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                <div class="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-                    <img
-                        src="{{ asset('images/visitaai_rembg.png') }}"
-                        alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
-                        width="56"
-                        height="56"
-                        class="h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14"
-                        decoding="async" />
-                    <div class="min-w-0 space-y-3">
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-                            {{ __('Vigilância entomológica e controle de vetores') }}
-                        </p>
-                        <h1 class="text-balance text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
-                            {{ __('Bem-vindo(a) ao') }}
-                            <span class="text-blue-600 dark:text-blue-400">{{ config('app.brand') }}</span>
-                        </h1>
-                        <p class="max-w-3xl text-pretty text-[15px] leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
-                            {{ __('Consulta pelo código do imóvel, gestão municipal integrada e registro de campo alinhado ao SUS.') }}
-                        </p>
-                    </div>
-                </div>
-                @if ($local)
-                    <p class="shrink-0 self-start rounded-md border border-slate-200/90 bg-slate-50/90 px-3 py-2 text-sm font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-900/60 dark:text-slate-200">
-                        {{ $local->loc_cidade }}/{{ $local->loc_estado }}
+            <div class="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:gap-8 lg:gap-10">
+                <img
+                    src="{{ asset('images/visitaai_rembg.png') }}"
+                    alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
+                    width="96"
+                    height="96"
+                    class="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+                    decoding="async" />
+                <div class="min-w-0 flex-1 space-y-3 sm:space-y-3.5">
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                        {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
-                @endif
+                    <x-public-municipality-pill :local="$local" />
+                    <h1 class="text-balance text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
+                        {{ __('Bem-vindo(a) ao') }}
+                        <span class="text-blue-600 dark:text-blue-400">{{ config('app.brand') }}</span>
+                    </h1>
+                    <p class="max-w-3xl text-pretty text-[15px] leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
+                        {{ __('Consulta pelo código do imóvel, gestão municipal integrada e registro de campo alinhado ao SUS.') }}
+                    </p>
+                </div>
             </div>
         </header>
 

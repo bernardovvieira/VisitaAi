@@ -8,7 +8,7 @@ class PublicController extends Controller
 {
     public function welcome()
     {
-        $local = Local::first();
+        $local = Local::query()->orderBy('loc_id')->first();
 
         return view('welcome', compact('local'));
     }
