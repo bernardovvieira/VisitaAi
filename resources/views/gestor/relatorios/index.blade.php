@@ -46,44 +46,69 @@
             {{ __('Terminologia e tipos de visita alinhados às recomendações do Ministério da Saúde (vigilância entomológica e controle vetorial). Referências: Lei 11.350/2006; Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas.') }}
         </p>
     </x-section-card>
-    {{-- Filtros e PDF --}}
-    <x-section-card>
-        <h2 class="v-section-title mb-1">{{ __('Filtros e relatório') }}</h2>
-        <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
-        <div
-            x-data="{
-                tipo: '{{ request('tipo_relatorio', 'completo') }}',
-                filtrosAplicados: false,
-                filtrosAlterados: false,
-                appliedParams: { data_unica: '', data_inicio: '', data_fim: '', local_ids: [] },
-                relPdfMsgs: @js([
-                    'filtrosAlterados' => __('Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.'),
-                    'diario' => __('Selecione a data para o relatório diário e clique em Filtrar.'),
-                    'semanal' => __('Selecione as datas de início e fim e clique em Filtrar.'),
-                    'individual' => __('Selecione ao menos um local e clique em Filtrar.'),
-                    'generico' => __('Aplique os filtros antes de gerar o PDF.'),
-                ]),
-                get botaoAtivo() {
-                    if (this.filtrosAlterados) return false;
-                    if (this.tipo === 'completo') return true;
-                    if (this.tipo === 'diario') return (this.appliedParams.data_unica || '') !== '';
-                    if (this.tipo === 'semanal') return (this.appliedParams.data_inicio || '') !== '' && (this.appliedParams.data_fim || '') !== '';
-                    if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
-                    return false;
-                }
-            }"
-            x-init="
-                var p = new URLSearchParams(window.location.search);
-                appliedParams = {
-                    data_unica: p.get('data_unica') || '',
-                    data_inicio: p.get('data_inicio') || '',
-                    data_fim: p.get('data_fim') || '',
-                    local_ids: p.getAll('local_id[]') || []
-                };
-                filtrosAplicados = p.toString() !== '';
-                $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
-            "
-            @@filtro-alterado.window="filtrosAlterados = true">
+
+    <div
+        x-data="{
+            tipo: '{{ request('tipo_relatorio', 'completo') }}',
+            filtrosAplicados: false,
+            filtrosAlterados: false,
+            appliedParams: { data_unica: '', data_inicio: '', data_fim: '', local_ids: [] },
+            relPdfMsgs: @js([
+                'filtrosAlterados' => __('Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.'),
+                'diario' => __('Selecione a data para o relatório diário e clique em Filtrar.'),
+                'semanal' => __('Selecione as datas de início e fim e clique em Filtrar.'),
+                'individual' => __('Selecione ao menos um local e clique em Filtrar.'),
+                'generico' => __('Aplique os filtros antes de gerar o PDF.'),
+            ]),
+            get botaoAtivo() {
+                if (this.filtrosAlterados) return false;
+                if (this.tipo === 'completo') return true;
+                if (this.tipo === 'diario') return (this.appliedParams.data_unica || '') !== '';
+                if (this.tipo === 'semanal') return (this.appliedParams.data_inicio || '') !== '' && (this.appliedParams.data_fim || '') !== '';
+                if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
+                return false;
+            }
+        }"
+        x-init="
+            var p = new URLSearchParams(window.location.search);
+            appliedParams = {
+                data_unica: p.get('data_unica') || '',
+                data_inicio: p.get('data_inicio') || '',
+                data_fim: p.get('data_fim') || '',
+                local_ids: p.getAll('local_id[]') || []
+            };
+            filtrosAplicados = p.toString() !== '';
+            $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
+        "
+        @@filtro-alterado.window="filtrosAlterados = true"
+        class="space-y-4">
+
+        <div class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-start sm:justify-end">
+            <div class="flex max-w-xl flex-col items-end gap-2 text-right sm:max-w-md">
+                <p x-show="filtrosAlterados" x-cloak class="text-sm font-medium text-amber-600 dark:text-amber-400">
+                    {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
+                </p>
+                <button type="button" :disabled="!botaoAtivo"
+                    @@click.prevent="if (!botaoAtivo) {
+                        let msg = filtrosAlterados ? relPdfMsgs.filtrosAlterados : '';
+                        if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = relPdfMsgs.diario;
+                        if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = relPdfMsgs.semanal;
+                        if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = relPdfMsgs.individual;
+                        if (!msg) msg = relPdfMsgs.generico;
+                        alert(msg);
+                        return;
+                    } gerarBase64Graficos();"
+                    class="inline-flex items-center gap-2 v-btn-danger px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50">
+                    <x-heroicon-o-document-arrow-down class="h-5 w-5 shrink-0" aria-hidden="true" />
+                    {{ __('Gerar relatório em PDF') }}
+                </button>
+                <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>
+            </div>
+        </div>
+
+        <x-section-card>
+            <h2 class="v-section-title mb-1">{{ __('Filtros') }}</h2>
+            <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
             <form method="GET" x-ref="formulario" @@submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
                 <div>
@@ -257,28 +282,8 @@
                     <a href="{{ route('gestor.relatorios.index') }}" class="v-btn-secondary h-10 px-5">{{ __('Limpar') }}</a>
                 </div>
             </form>
-            <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
-                <p x-show="filtrosAlterados" x-cloak class="text-sm text-amber-600 dark:text-amber-400 mb-2 font-medium">
-                    {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
-                </p>
-                <button type="button" :disabled="!botaoAtivo"
-                    @@click.prevent="if (!botaoAtivo) {
-                        let msg = filtrosAlterados ? relPdfMsgs.filtrosAlterados : '';
-                        if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = relPdfMsgs.diario;
-                        if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = relPdfMsgs.semanal;
-                        if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = relPdfMsgs.individual;
-                        if (!msg) msg = relPdfMsgs.generico;
-                        alert(msg);
-                        return;
-                    } gerarBase64Graficos();"
-                    class="v-btn-compact v-btn-compact--green shrink-0 text-sm">
-                    <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    {{ __('Gerar relatório em PDF') }}
-                </button>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>
-            </div>
-        </div>
-    </x-section-card>
+        </x-section-card>
+    </div>
 
     {{-- Indicadores (estilo dashboard) --}}
     <section class="space-y-4">
