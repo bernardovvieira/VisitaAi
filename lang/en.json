@@ -902,5 +902,21 @@
     "Zona": "Zone",
     "− Remover tratamento": "− Remove treatment",
     "Área segura do aplicativo": "Secure area",
-    "Última pendência: :d": "Last open follow-up: :d"
+    "Última pendência: :d": "Last open follow-up: :d",
+    "Bairros com visita registrada": "Neighborhoods with at least one registered visit",
+    "Depósitos eliminados (registros nas visitas)": "Eliminated breeding sites (recorded on visits)",
+    "Imóveis com ao menos uma visita": "Properties visited at least once",
+    "Imóveis cadastrados (exceto endereço institucional)": "Registered properties (excluding institutional address)",
+    "Indicadores em tela são totais operacionais agregados. Painéis com ocupantes, bairro a bairro e exportações ficam na área restrita do gestor municipal.": "Figures shown are aggregated operational totals. Occupant panels, per-neighborhood detail, and exports are available in the restricted municipal manager area.",
+    "Leis e normas em síntese": "Laws and norms (summary)",
+    "O Visita Aí apoia vigilância em saúde e controle de vetores. Fundamentos: Lei 11.350/2006 (ACS e ACE), Lei 8.080/1990 (SUS) e Lei 13.709/2018 (LGPD). Portarias e notas técnicas do Ministério da Saúde (arboviroses, PNCD) orientam o operacional.": "Visita Aí supports health surveillance and vector control. Foundations: Law 11.350/2006 (community health and endemic control agents), Law 8.080/1990 (SUS), and Law 13.709/2018 (LGPD). Ministry of Health rules and technical notes (arboviruses, PNCD) guide operations.",
+    "Painel público municipal": "Municipal public dashboard",
+    "Para reduzir risco de reidentificação, o recorte territorial agregado só é exibido com volume mínimo de visitas.": "To reduce re-identification risk, aggregated territory figures appear only once there is a minimum volume of visits.",
+    "Referência nacional em saúde pública e dados": "National reference for public health and data protection",
+    "Textos legais consolidados no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde.": "Consolidated statutes on Planalto; up-to-date health guidance on the Ministry of Health website.",
+    "Transparência · Gestão municipal · Campo conectado": "Transparency · Municipal management · Field teams connected",
+    "Última visita registrada": "Latest visit recorded",
+    "Visitas registradas no sistema": "Visits recorded in the system",
+    "Consulta pública com o código do imóvel. Registro digital para ACE e ACS. Indicadores para o planejamento.": "Public lookup with the property code. Digital records for field agents. Indicators for planning.",
+    "Os totais do painel público estão desativados nas configurações. A consulta por código e o acesso ao sistema seguem disponíveis.": "Public dashboard totals are turned off in settings. Property code lookup and system sign-in remain available."
 }

@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="manifest" href="{{ asset('manifest.json') }}">
 
@@ -45,7 +46,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
 
-        <!-- Páginas públicas (home, consulta): padrão sempre modo claro quando não há preferência salva -->
+        <!-- Páginas públicas (home, consulta): usadas apenas para contexto; tema segue sistema se não houver escolha salva -->
         @if(View::hasSection('public'))
         <script>window.VisitaPublicPage = true;</script>
         @endif
@@ -93,22 +94,37 @@
             window.visitaOfflineAllowedPaths = @json($visitaOfflineAllowed);
         </script>
         @endauth
-        <!-- Tema claro/escuro: aplicado antes da pintura para evitar flash. Em todas as páginas (incl. públicas) respeita localStorage; fallback: preferência do sistema ou claro. -->
+        <!-- Tema: antes da pintura (evita flash). Logado → perfil; senão → localStorage; senão → prefers-color-scheme. Ouve mudanças do SO até o usuário fixar tema no botão. -->
         <script>
-            (function(){
-                var t;
-                if (typeof window.VisitaThemePreference !== 'undefined' && window.VisitaThemePreference) {
-                    t = window.VisitaThemePreference;
-                    try { localStorage.setItem('theme', t); } catch (e) {}
-                } else {
-                    try {
-                        t = (localStorage.getItem('theme') || '').trim();
-                    } catch (e) { t = ''; }
-                    if (t !== 'dark' && t !== 'light') {
-                        t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                    }
+            (function () {
+                function applyDark(on) {
+                    document.documentElement.classList.toggle('dark', !!on);
                 }
-                document.documentElement.classList.toggle('dark', t === 'dark');
+                if (typeof window.VisitaThemePreference !== 'undefined' && window.VisitaThemePreference) {
+                    var tp = window.VisitaThemePreference;
+                    try { localStorage.setItem('theme', tp); } catch (e) {}
+                    applyDark(tp === 'dark');
+                    return;
+                }
+                var stored = '';
+                try { stored = (localStorage.getItem('theme') || '').trim(); } catch (e) { stored = ''; }
+                if (stored === 'dark' || stored === 'light') {
+                    applyDark(stored === 'dark');
+                    return;
+                }
+                var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+                function syncFromOsOrStorage() {
+                    try {
+                        var s = (localStorage.getItem('theme') || '').trim();
+                        if (s === 'dark') { applyDark(true); return; }
+                        if (s === 'light') { applyDark(false); return; }
+                    } catch (e) {}
+                    applyDark(mq && mq.matches);
+                }
+                syncFromOsOrStorage();
+                if (mq && mq.addEventListener) {
+                    mq.addEventListener('change', syncFromOsOrStorage);
+                }
             })();
         </script>
 

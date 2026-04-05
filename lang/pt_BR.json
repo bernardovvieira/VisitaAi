@@ -902,5 +902,21 @@
     "Zona": "Zona",
     "− Remover tratamento": "− Remover tratamento",
     "Área segura do aplicativo": "Área segura do aplicativo",
-    "Última pendência: :d": "Última pendência: :d"
+    "Última pendência: :d": "Última pendência: :d",
+    "Bairros com visita registrada": "Bairros com visita registrada",
+    "Depósitos eliminados (registros nas visitas)": "Depósitos eliminados (registros nas visitas)",
+    "Imóveis com ao menos uma visita": "Imóveis com ao menos uma visita",
+    "Imóveis cadastrados (exceto endereço institucional)": "Imóveis cadastrados (exceto endereço institucional)",
+    "Indicadores em tela são totais operacionais agregados. Painéis com ocupantes, bairro a bairro e exportações ficam na área restrita do gestor municipal.": "Indicadores em tela são totais operacionais agregados. Painéis com ocupantes, bairro a bairro e exportações ficam na área restrita do gestor municipal.",
+    "Leis e normas em síntese": "Leis e normas em síntese",
+    "O Visita Aí apoia vigilância em saúde e controle de vetores. Fundamentos: Lei 11.350/2006 (ACS e ACE), Lei 8.080/1990 (SUS) e Lei 13.709/2018 (LGPD). Portarias e notas técnicas do Ministério da Saúde (arboviroses, PNCD) orientam o operacional.": "O Visita Aí apoia vigilância em saúde e controle de vetores. Fundamentos: Lei 11.350/2006 (ACS e ACE), Lei 8.080/1990 (SUS) e Lei 13.709/2018 (LGPD). Portarias e notas técnicas do Ministério da Saúde (arboviroses, PNCD) orientam o operacional.",
+    "Painel público municipal": "Painel público municipal",
+    "Para reduzir risco de reidentificação, o recorte territorial agregado só é exibido com volume mínimo de visitas.": "Para reduzir risco de reidentificação, o recorte territorial agregado só é exibido com volume mínimo de visitas.",
+    "Referência nacional em saúde pública e dados": "Referência nacional em saúde pública e dados",
+    "Textos legais consolidados no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde.": "Textos legais consolidados no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde.",
+    "Transparência · Gestão municipal · Campo conectado": "Transparência · Gestão municipal · Campo conectado",
+    "Última visita registrada": "Última visita registrada",
+    "Visitas registradas no sistema": "Visitas registradas no sistema",
+    "Consulta pública com o código do imóvel. Registro digital para ACE e ACS. Indicadores para o planejamento.": "Consulta pública com o código do imóvel. Registro digital para ACE e ACS. Indicadores para o planejamento.",
+    "Os totais do painel público estão desativados nas configurações. A consulta por código e o acesso ao sistema seguem disponíveis.": "Os totais do painel público estão desativados nas configurações. A consulta por código e o acesso ao sistema seguem disponíveis."
 }

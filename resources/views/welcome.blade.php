@@ -47,6 +47,30 @@
                 <p class="text-pretty max-w-none text-base font-medium leading-relaxed text-gray-600 dark:text-gray-400 lg:max-w-4xl xl:max-w-5xl">
                     {{ __('Transparência para quem mora no imóvel, indicadores para quem gerencia o município e apoio digital a ACE e ACS. Em um só lugar, com foco em dengue e outras arboviroses.') }}
                 </p>
+
+                {{-- Mini-marketing: três pilares --}}
+                <div
+                    class="welcome-public__marketing mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3"
+                    aria-label="{{ __('Transparência · Gestão municipal · Campo conectado') }}">
+                    <div class="flex items-start gap-3 rounded-2xl border border-slate-200/90 bg-white/80 px-4 py-3 shadow-sm ring-1 ring-slate-900/[0.03] dark:border-slate-600/80 dark:bg-slate-900/50 dark:ring-white/[0.05]">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-800 dark:bg-sky-950/80 dark:text-sky-200" aria-hidden="true">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </span>
+                        <p class="text-sm font-semibold leading-snug text-slate-800 dark:text-slate-100">{{ __('Consulta pública com o código do imóvel. Registro digital para ACE e ACS. Indicadores para o planejamento.') }}</p>
+                    </div>
+                    <div class="flex items-start gap-3 rounded-2xl border border-slate-200/90 bg-white/80 px-4 py-3 shadow-sm ring-1 ring-slate-900/[0.03] dark:border-slate-600/80 dark:bg-slate-900/50 dark:ring-white/[0.05]">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200" aria-hidden="true">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </span>
+                        <p class="text-sm font-semibold leading-snug text-slate-800 dark:text-slate-100">{{ __('Referência nacional em saúde pública e dados') }}</p>
+                    </div>
+                    <div class="flex items-start gap-3 rounded-2xl border border-slate-200/90 bg-white/80 px-4 py-3 shadow-sm ring-1 ring-slate-900/[0.03] dark:border-slate-600/80 dark:bg-slate-900/50 dark:ring-white/[0.05]">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-200" aria-hidden="true">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </span>
+                        <p class="text-sm font-semibold leading-snug text-slate-800 dark:text-slate-100">{{ __('Transparência · Gestão municipal · Campo conectado') }}</p>
+                    </div>
+                </div>
             </header>
 
             {{-- Ações principais (logo após o resumo) --}}
@@ -141,58 +165,127 @@
                 </div>
             </section>
 
-            {{-- Indicadores + base legal em duas colunas no desktop --}}
-            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start lg:gap-8">
-            <div
-                class="welcome-public__insight relative h-full overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/95 via-white to-sky-50/80 px-5 py-4 sm:px-6 sm:py-5 dark:border-indigo-500/30 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-sky-950/30"
-                id="welcome-indicadores"
-                data-aos="fade-up"
-                data-aos-delay="60">
-                <div class="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-indigo-400/20 blur-2xl dark:bg-indigo-400/10" aria-hidden="true"></div>
-                <h2 class="text-sm font-bold text-indigo-950 dark:text-indigo-200">
-                    {{ __('Indicadores municipais no painel do gestor') }}
-                </h2>
-                <p class="mt-2 text-sm leading-relaxed text-indigo-900/85 dark:text-indigo-100/85">
-                    {{ __('Além das visitas, o município dispõe de visões agregadas: produção por período, território (bairros) e dados complementares de ocupação do imóvel quando cadastrados. Sempre com critérios de privacidade na área pública.') }}
-                </p>
-            </div>
+            @php
+                $pi = $publicIndicadores ?? [];
+                $oz = ! empty($pi['ocultar_valores_zero']);
+                $pubIndOn = ($pi['indicadores_habilitados'] ?? true);
+                $welcomeFmt = static function (int $n) use ($oz): string {
+                    if ($oz && $n === 0) {
+                        return '—';
+                    }
 
-            <div class="welcome-public__laws space-y-3" id="anim-conformidade">
-                <section
-                    class="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/30 px-4 py-4 shadow-sm ring-1 ring-slate-900/[0.04] dark:border-slate-600 dark:from-slate-900/75 dark:via-slate-900/50 dark:to-blue-950/20 dark:ring-white/[0.06] sm:px-5 sm:py-5"
-                    aria-labelledby="welcome-laws-heading">
-                    <div class="flex gap-3 sm:gap-4">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-200/90 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                        </div>
-                        <div class="min-w-0">
-                            <h2 id="welcome-laws-heading" class="text-sm font-bold text-slate-900 dark:text-white">
-                                {{ __('Base legal e normas de referência') }}
-                            </h2>
-                            <p class="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                                {{ __('O Visita Aí apoia o trabalho de vigilância em saúde e controle de vetores com respaldo nas leis federais e nas diretrizes do Ministério da Saúde; a consulta pública limita-se a dados não sensíveis do imóvel.') }}
+                    return number_format($n, 0, ',', '.');
+                };
+            @endphp
+            {{-- Indicadores municipais (totais públicos) + base legal em duas colunas --}}
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start lg:gap-8">
+                <div
+                    class="welcome-public__insight relative h-full overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/95 via-white to-sky-50/80 px-5 py-5 sm:px-6 sm:py-6 dark:border-indigo-500/30 dark:from-indigo-950/40 dark:via-slate-900/60 dark:to-sky-950/30"
+                    id="welcome-indicadores"
+                    data-aos="fade-up"
+                    data-aos-delay="60"
+                    aria-labelledby="welcome-indicadores-heading">
+                    <div class="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-indigo-400/15 blur-2xl dark:bg-indigo-400/10" aria-hidden="true"></div>
+                    <div class="relative">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-indigo-600 dark:text-indigo-300">
+                            {{ __('Painel público municipal') }}
+                        </p>
+                        <h2 id="welcome-indicadores-heading" class="mt-1 text-lg font-extrabold tracking-tight text-indigo-950 dark:text-indigo-100">
+                            {{ __('Números consolidados do município.') }}
+                        </h2>
+                        <p class="mt-2 text-sm leading-relaxed text-indigo-900/80 dark:text-indigo-100/80">
+                            {{ __('Indicadores em tela são totais operacionais agregados. Painéis com ocupantes, bairro a bairro e exportações ficam na área restrita do gestor municipal.') }}
+                        </p>
+
+                        @if (! $pubIndOn)
+                            <p class="mt-5 rounded-xl border border-indigo-200/70 bg-white/85 px-4 py-4 text-sm font-medium leading-relaxed text-indigo-900/85 dark:border-indigo-500/30 dark:bg-slate-900/50 dark:text-indigo-100/85">
+                                {{ __('Os totais do painel público estão desativados nas configurações. A consulta por código e o acesso ao sistema seguem disponíveis.') }}
                             </p>
-                            <ul class="mt-3 list-inside list-disc space-y-1.5 text-xs leading-relaxed text-slate-700 marker:text-blue-600 dark:text-slate-300 dark:marker:text-blue-400">
-                                <li>{!! __('Lei nº :lei: Agentes Comunitários de Saúde e de Combate às Endemias (ACS e ACE).', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11350.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">11.350/2006</a>']) !!}</li>
-                                <li>{!! __('Lei nº :lei: diretrizes do SUS e vigilância em saúde.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/leis/l8080.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">8.080/1990</a>']) !!}</li>
-                                <li>{!! __('Lei nº :lei: proteção de dados pessoais (LGPD), inclusive bases para saúde pública.', ['lei' => '<a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" class="font-medium text-blue-700 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">13.709/2018</a>']) !!}</li>
-                                <li>{{ __('Diretrizes nacionais de arboviroses urbanas e Programa Nacional de Controle da Dengue (PNCD), como referência técnica.') }}</li>
-                            </ul>
-                            <p class="mt-3 text-[11px] leading-snug text-slate-500 dark:text-slate-500">
-                                {{ __('Links levam ao texto legal consolidado no Planalto; orientações técnicas atualizadas devem ser consultadas no portal do Ministério da Saúde.') }}
+                        @else
+                        <dl class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            <div class="rounded-xl border border-indigo-200/60 bg-white/90 px-4 py-3 shadow-sm dark:border-indigo-500/25 dark:bg-slate-900/55">
+                                <dt class="text-[11px] font-bold uppercase tracking-wide text-indigo-700/90 dark:text-indigo-300/90">{{ __('Visitas registradas no sistema') }}</dt>
+                                <dd class="mt-1 text-2xl font-extrabold tabular-nums text-indigo-950 dark:text-white">{{ $welcomeFmt((int) ($pi['visitas_total'] ?? 0)) }}</dd>
+                            </div>
+                            <div class="rounded-xl border border-indigo-200/60 bg-white/90 px-4 py-3 shadow-sm dark:border-indigo-500/25 dark:bg-slate-900/55">
+                                <dt class="text-[11px] font-bold uppercase tracking-wide text-indigo-700/90 dark:text-indigo-300/90">{{ __('Imóveis cadastrados (exceto endereço institucional)') }}</dt>
+                                <dd class="mt-1 text-2xl font-extrabold tabular-nums text-indigo-950 dark:text-white">{{ $welcomeFmt((int) ($pi['imoveis_cadastrados'] ?? 0)) }}</dd>
+                            </div>
+                            <div class="rounded-xl border border-indigo-200/60 bg-white/90 px-4 py-3 shadow-sm dark:border-indigo-500/25 dark:bg-slate-900/55">
+                                <dt class="text-[11px] font-bold uppercase tracking-wide text-indigo-700/90 dark:text-indigo-300/90">{{ __('Imóveis com ao menos uma visita') }}</dt>
+                                <dd class="mt-1 text-2xl font-extrabold tabular-nums text-indigo-950 dark:text-white">{{ $welcomeFmt((int) ($pi['imoveis_com_visita'] ?? 0)) }}</dd>
+                            </div>
+                            <div
+                                class="rounded-xl border border-indigo-200/60 bg-white/90 px-4 py-3 shadow-sm dark:border-indigo-500/25 dark:bg-slate-900/55"
+                                @if(!empty($pi['suprimir_detalhes'])) title="{{ __('Para reduzir risco de reidentificação, o recorte territorial agregado só é exibido com volume mínimo de visitas.') }}" @endif>
+                                <dt class="text-[11px] font-bold uppercase tracking-wide text-indigo-700/90 dark:text-indigo-300/90">{{ __('Bairros com visita registrada') }}</dt>
+                                <dd class="mt-1 text-2xl font-extrabold tabular-nums text-indigo-950 dark:text-white">
+                                    @if (!empty($pi['suprimir_detalhes']))
+                                        <span class="text-xl text-indigo-600/80 dark:text-indigo-200/80">—</span>
+                                    @elseif ($oz && (int) ($pi['bairros_com_visita'] ?? 0) === 0)
+                                        <span class="text-xl text-indigo-600/80 dark:text-indigo-200/80">—</span>
+                                    @else
+                                        {{ $welcomeFmt((int) ($pi['bairros_com_visita'] ?? 0)) }}
+                                    @endif
+                                </dd>
+                            </div>
+                            <div class="rounded-xl border border-indigo-200/60 bg-white/90 px-4 py-3 shadow-sm dark:border-indigo-500/25 dark:bg-slate-900/55 sm:col-span-2">
+                                <dt class="text-[11px] font-bold uppercase tracking-wide text-indigo-700/90 dark:text-indigo-300/90">{{ __('Depósitos eliminados (registros nas visitas)') }}</dt>
+                                <dd class="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                                    <span class="text-2xl font-extrabold tabular-nums text-indigo-950 dark:text-white">{{ $welcomeFmt((int) ($pi['depositos_eliminados_total'] ?? 0)) }}</span>
+                                    @if (!empty($pi['ultima_visita']) && ! ($oz && (int) ($pi['visitas_total'] ?? 0) === 0))
+                                        <span class="text-xs font-semibold text-indigo-800/80 dark:text-indigo-200/80">{{ __('Última visita registrada') }}: {{ $pi['ultima_visita']->format('d/m/Y') }}</span>
+                                    @endif
+                                </dd>
+                            </div>
+                        </dl>
+                        @if (!empty($pi['suprimir_detalhes']) && $pubIndOn)
+                            <p class="mt-3 text-xs leading-snug text-indigo-900/70 dark:text-indigo-200/70">
+                                {{ __('Para reduzir risco de reidentificação, o recorte territorial agregado só é exibido com volume mínimo de visitas.') }}
                             </p>
-                        </div>
+                        @endif
+                        @endif
                     </div>
-                </section>
-                <p class="flex items-center gap-2 rounded-lg border border-blue-200/90 bg-blue-50/90 px-3 py-2 text-xs font-semibold text-blue-950 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-100">
-                    <svg class="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                    </svg>
-                    {{ __('Alinhado às diretrizes do Ministério da Saúde para ACE, ACS e vigilância entomológica.') }}
-                </p>
-            </div>
+                </div>
+
+                <div class="welcome-public__laws space-y-3" id="anim-conformidade">
+                    <section
+                        class="welcome-laws-panel relative overflow-hidden rounded-2xl border-2 border-slate-300/80 bg-gradient-to-b from-slate-50 via-white to-slate-50/90 px-4 py-5 shadow-md ring-1 ring-slate-900/[0.06] dark:border-slate-500/50 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950/90 dark:ring-white/[0.08] sm:px-6 sm:py-6"
+                        aria-labelledby="welcome-laws-heading">
+                        <div class="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-slate-400 via-slate-600 to-slate-400 opacity-80 dark:from-slate-500 dark:via-slate-300 dark:to-slate-500" aria-hidden="true"></div>
+                        <div class="flex gap-4">
+                            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-300/60 bg-slate-100 text-slate-700 shadow-inner dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+                                <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                            <div class="min-w-0 flex-1 space-y-3">
+                                <div>
+                                    <h2 id="welcome-laws-heading" class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                        {{ __('Leis e normas em síntese') }}
+                                    </h2>
+                                    <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                                        {{ __('O Visita Aí apoia vigilância em saúde e controle de vetores. Fundamentos: Lei 11.350/2006 (ACS e ACE), Lei 8.080/1990 (SUS) e Lei 13.709/2018 (LGPD). Portarias e notas técnicas do Ministério da Saúde (arboviroses, PNCD) orientam o operacional.') }}
+                                    </p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11350.htm" class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-blue-500 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">Lei 11.350/2006</a>
+                                    <a href="https://www.planalto.gov.br/ccivil_03/leis/l8080.htm" class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-blue-500 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">Lei 8.080/1990</a>
+                                    <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-blue-400 hover:text-blue-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-blue-500 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">LGPD 13.709/2018</a>
+                                </div>
+                                <p class="text-[11px] leading-snug text-slate-500 dark:text-slate-500">
+                                    {{ __('Textos legais consolidados no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde.') }}
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <p class="flex items-center gap-2 rounded-xl border border-blue-200/90 bg-blue-50/90 px-3 py-2.5 text-xs font-semibold text-blue-950 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-100">
+                        <svg class="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        {{ __('Alinhado às diretrizes do Ministério da Saúde para ACE, ACS e vigilância entomológica.') }}
+                    </p>
+                </div>
             </div>
 
             @include('partials.public-copyright-footer', ['footerClass' => 'welcome-public__footer', 'footerId' => 'anim-footer'])

@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         @php
@@ -68,15 +69,31 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
 
-        <!-- Tema: respeita localStorage (igual às páginas públicas); fallback preferência do sistema ou claro -->
+        <!-- Tema: localStorage se existir; senão prefers-color-scheme no carregamento + ao mudar no sistema -->
         <script>
-            (function(){
-                var t = null;
-                try { t = localStorage.getItem('theme'); } catch (e) {}
-                if (t !== 'dark' && t !== 'light') {
-                    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            (function () {
+                function applyDark(on) {
+                    document.documentElement.classList.toggle('dark', !!on);
                 }
-                document.documentElement.classList.toggle('dark', t === 'dark');
+                var stored = '';
+                try { stored = (localStorage.getItem('theme') || '').trim(); } catch (e) { stored = ''; }
+                if (stored === 'dark' || stored === 'light') {
+                    applyDark(stored === 'dark');
+                    return;
+                }
+                var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+                function syncFromOsOrStorage() {
+                    try {
+                        var s = (localStorage.getItem('theme') || '').trim();
+                        if (s === 'dark') { applyDark(true); return; }
+                        if (s === 'light') { applyDark(false); return; }
+                    } catch (e) {}
+                    applyDark(mq && mq.matches);
+                }
+                syncFromOsOrStorage();
+                if (mq && mq.addEventListener) {
+                    mq.addEventListener('change', syncFromOsOrStorage);
+                }
             })();
         </script>
 
