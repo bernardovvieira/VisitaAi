@@ -1,22 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças'), 'url' => route('gestor.doencas.index')], ['label' => __('Cadastrar')]]" />
 
-    <!-- Card introdutório -->
-    <section class="v-card">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Cadastrar Doença</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Selecione as opções relevantes para esta doença.
-        </p>
-    </section>
+    <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Cadastrar doença')" />
 
-    <!-- Formulário de Cadastro -->
-    <section class="v-card space-y-4">
-        @if(session('success'))
-            <x-alert type="success" :message="session('success')" />
-        @endif
+    <x-section-card class="mx-auto max-w-3xl space-y-4">
+        <x-flash-alerts />
 
         <form method="POST" action="{{ route('gestor.doencas.store') }}" class="space-y-6" id="doenca-create-form">
             @csrf
@@ -111,7 +102,7 @@
                 </button>
             </div>
         </form>
-    </section>
+    </x-section-card>
 </div>
 <script>
 (function(){

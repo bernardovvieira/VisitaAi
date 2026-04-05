@@ -22,11 +22,11 @@ class UpdateUserPassword implements UpdatesUserPasswords
             'current_password' => ['required', 'string', 'current_password:web'],
             'password' => $this->passwordRules(),
         ], [
-            'current_password.current_password' => __('The provided password does not match your current password.'),
-            'password.letters' => 'A senha deve conter pelo menos uma letra.',
-            'password.mixed'   => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
-            'password.numbers' => 'A senha deve conter pelo menos um número.',
-            'password.symbols' => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
+            'current_password.current_password' => __('A senha atual não confere com a senha cadastrada.'),
+            'password.letters' => __('A senha deve conter pelo menos uma letra.'),
+            'password.mixed' => __('A senha deve conter pelo menos uma letra maiúscula e uma minúscula.'),
+            'password.numbers' => __('A senha deve conter pelo menos um número.'),
+            'password.symbols' => __('A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).'),
         ])->validateWithBag('updatePassword');
 
         $user->forceFill([

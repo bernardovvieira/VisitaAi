@@ -2,8 +2,8 @@
 
 namespace App\Http\Responses;
 
-use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Illuminate\Http\RedirectResponse;
+use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 
 class RegisterResponse implements RegisterResponseContract
 {
@@ -14,6 +14,6 @@ class RegisterResponse implements RegisterResponseContract
     {
         // redireciona ao dashboard com um flash de sucesso
         return redirect()->intended('/dashboard')
-                         ->with('status', 'Cadastro realizado com sucesso!');
+            ->with('status', __('Cadastro realizado com sucesso!'));
     }
 }

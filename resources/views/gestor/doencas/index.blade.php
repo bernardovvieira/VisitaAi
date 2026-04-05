@@ -13,14 +13,9 @@
         </x-slot>
     </x-page-header>
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts />
 
-    <div class="v-card">
+    <x-section-card>
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="min-w-0 flex-1">
                 <h2 class="v-section-title">{{ __('Doenças monitoradas') }}</h2>
@@ -32,9 +27,9 @@
                 {{ __('Cadastrar doença') }}
             </a>
         </div>
-    </div>
+    </x-section-card>
 
-    <div class="v-card v-card--muted">
+    <x-section-card class="v-card--muted">
         <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
         <div class="mt-1 flex items-center gap-2">
             <input type="text" name="search" id="search" value="{{ old('search', request('search')) }}"
@@ -44,9 +39,9 @@
                    class="v-input" />
             <span id="search-loading-doencas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
         </div>
-    </div>
+    </x-section-card>
 
-    <div class="v-card v-card--flush overflow-hidden">
+    <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total doença(s) cadastrada(s).', ['atual' => $doencas->count(), 'total' => $doencas->total()]) }}
@@ -126,6 +121,6 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
-    </div>
+    </x-section-card>
 </div>
 @endsection

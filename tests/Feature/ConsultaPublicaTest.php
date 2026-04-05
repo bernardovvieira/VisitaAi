@@ -26,7 +26,7 @@ class ConsultaPublicaTest extends TestCase
         $response = $this->get(route('consulta.codigo', ['codigo' => '99999999']));
 
         $response->assertRedirect();
-        $response->assertSessionHas('erro');
+        $response->assertSessionHas('error');
     }
 
     public function test_consulta_codigo_com_imovel_responde_200(): void

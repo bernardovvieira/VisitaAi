@@ -18,7 +18,7 @@ class PasswordController extends Controller
         // 1) Validação
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            'password'         => ['required', Password::defaults(), 'confirmed'],
+            'password' => ['required', Password::defaults(), 'confirmed'],
         ], [
             'current_password.required' => 'Informe a senha atual',
             'current_password.current_password' => 'A senha atual não confere',
@@ -26,7 +26,7 @@ class PasswordController extends Controller
             'password.confirmed' => 'A confirmação de senha não confere',
             'password.min' => 'A nova senha deve ter no mínimo 8 caracteres',
             'password.letters' => 'A senha deve conter pelo menos uma letra.',
-            'password.mixed'   => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
+            'password.mixed' => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
             'password.numbers' => 'A senha deve conter pelo menos um número.',
             'password.symbols' => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
         ]);
@@ -37,6 +37,6 @@ class PasswordController extends Controller
         ]);
 
         // 3) Mensagem de sucesso
-        return back()->with('status', 'Senha atualizada com sucesso!');
+        return back()->with('status', __('Senha atualizada com sucesso!'));
     }
 }

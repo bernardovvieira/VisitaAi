@@ -1,44 +1,29 @@
-<!-- resources/views/gestor/doencas/show.blade.php -->
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-8">
+<div class="v-page">
   <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças'), 'url' => route('agente.doencas.index')], ['label' => __('Visualizar')]]" />
 
-  <!-- Introdução -->
-  <section class="v-card">
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Visão Geral da Doença</h2>
-    <p class="mt-2 text-gray-600 dark:text-gray-400">
-      Esta seção apresenta os detalhes completos de uma doença monitorada no sistema: nome, sintomas, formas de transmissão e medidas de controle.
-    </p>
-  </section>
+  <x-page-header :eyebrow="__('Doenças')" :title="$doenca->doe_nome" />
 
-  <!-- Dados Básicos -->
-  <section class="v-card">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Dados Básicos</h3>
+  <x-section-card :title="__('Registro')">
     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
       <div>
-        <dt class="font-medium">ID do Registro</dt>
+        <dt class="font-medium">{{ __('ID do registro') }}</dt>
         <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $doenca->doe_id }}</dd>
       </div>
       <div>
-        <dt class="font-medium">Nome da Doença</dt>
-        <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $doenca->doe_nome }}</dd>
-      </div>
-      <div>
-        <dt class="font-medium">Criado em</dt>
+        <dt class="font-medium">{{ __('Criado em') }}</dt>
         <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $doenca->created_at->format('d/m/Y H:i') }}</dd>
       </div>
       <div>
-        <dt class="font-medium">Atualizado em</dt>
+        <dt class="font-medium">{{ __('Atualizado em') }}</dt>
         <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $doenca->updated_at->format('d/m/Y H:i') }}</dd>
       </div>
     </dl>
-  </section>
+  </x-section-card>
 
-  <!-- Sintomas -->
-  <section class="v-card">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Sintomas</h3>
+  <x-section-card :title="__('Sintomas')">
     @if(count($doenca->doe_sintomas))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_sintomas as $s)
@@ -46,13 +31,11 @@
         @endforeach
       </div>
     @else
-      <p class="italic text-gray-500 dark:text-gray-400 text-sm">Nenhum sintoma registrado.</p>
+      <p class="italic text-gray-500 dark:text-gray-400 text-sm">{{ __('Nenhum sintoma registrado.') }}</p>
     @endif
-  </section>
+  </x-section-card>
 
-  <!-- Transmissão -->
-  <section class="v-card">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Modos de Transmissão</h3>
+  <x-section-card :title="__('Modos de transmissão')">
     @if(count($doenca->doe_transmissao))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_transmissao as $t)
@@ -60,13 +43,11 @@
         @endforeach
       </div>
     @else
-      <p class="italic text-gray-500 dark:text-gray-400 text-sm">Nenhum modo de transmissão registrado.</p>
+      <p class="italic text-gray-500 dark:text-gray-400 text-sm">{{ __('Nenhum modo de transmissão registrado.') }}</p>
     @endif
-  </section>
+  </x-section-card>
 
-  <!-- Medidas de Controle -->
-  <section class="v-card">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Medidas de Controle</h3>
+  <x-section-card :title="__('Medidas de controle')">
     @if(count($doenca->doe_medidas_controle))
       <div class="flex flex-wrap gap-2">
         @foreach($doenca->doe_medidas_controle as $m)
@@ -74,9 +55,9 @@
         @endforeach
       </div>
     @else
-      <p class="italic text-gray-500 dark:text-gray-400 text-sm">Nenhuma medida de controle registrada.</p>
+      <p class="italic text-gray-500 dark:text-gray-400 text-sm">{{ __('Nenhuma medida de controle registrada.') }}</p>
     @endif
-  </section>
+  </x-section-card>
 
 </div>
 @endsection

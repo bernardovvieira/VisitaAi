@@ -6,18 +6,16 @@
     <x-page-header :eyebrow="__('Gestão municipal')" :title="__('Editar usuário')" />
 
     <!-- Card introdutório -->
-    <section class="v-card">
+    <x-section-card>
         <h2 class="v-section-title">{{ __('Dados da conta') }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Atualize as informações do usuário conforme necessário. Se não desejar alterar a senha, deixe o campo de senha em branco.
         </p>
-    </section>
+    </x-section-card>
 
     <!-- Formulário de Edição -->
-    <section class="v-card space-y-4">
-        @if(session('status'))
-            <x-alert type="success" :message="session('status')" />
-        @endif
+    <x-section-card class="space-y-4">
+        <x-flash-alerts />
 
         @if ($errors->any())
             @php
@@ -119,7 +117,7 @@
                 <x-primary-button type="submit" id="user-edit-btn">{{ __('Salvar alterações') }}</x-primary-button>
             </div>
         </form>
-    </section>
+    </x-section-card>
 
 </div>
 <script>

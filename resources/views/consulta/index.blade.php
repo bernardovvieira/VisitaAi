@@ -10,8 +10,13 @@
 <div class="v-page space-y-6">
     <x-page-header :eyebrow="__('Transparência para a população')" :title="__('Verificar visitas no imóvel')">
         <x-slot name="lead">
-            <p>{{ __('Consulte pelo código de oito dígitos do imóvel (o mesmo formato usado na gestão interna do sistema).') }}</p>
-            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Digite abaixo o código único do imóvel (apenas números). Você verá o endereço cadastrado, um mapa quando houver localização e o histórico de visitas, sem dados clínicos ou informações pessoais sensíveis.') }}</p>
+            <p class="text-sm">{{ __('Consulte pelo código de oito dígitos do imóvel (o mesmo formato usado na gestão interna do sistema).') }}</p>
+            <x-ui.disclosure variant="lead-mt">
+                <x-slot name="summary">
+                    <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('O que aparece após consultar (expandir)') }}</span>
+                </x-slot>
+                <p>{{ __('Digite abaixo o código único do imóvel (apenas números). Você verá o endereço cadastrado, um mapa quando houver localização e o histórico de visitas, sem dados clínicos ou informações pessoais sensíveis.') }}</p>
+            </x-ui.disclosure>
             <a href="{{ url('/') }}" class="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
                 <x-heroicon-o-arrow-left class="h-4 w-4 shrink-0" aria-hidden="true" />
                 {{ __('Voltar à página inicial') }}
@@ -19,12 +24,11 @@
         </x-slot>
     </x-page-header>
 
-    @if (session('erro'))
-        <x-alert type="error" :message="session('erro')" :autodismiss="false" />
-    @endif
+    <x-flash-alerts />
 
+    <x-section-card class="v-card--muted">
     <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
-          class="v-card v-card--muted space-y-4">
+          class="space-y-4">
         <h2 class="v-section-title">{{ __('Código do imóvel') }}</h2>
         <label for="codigo" class="v-toolbar-label">
             {!! __('Informe o <strong>código numérico</strong> que consta no comprovante ou foi passado pelo ACE ou ACS na visita.') !!}
@@ -56,19 +60,18 @@
             {{ __('Cada imóvel cadastrado recebe um código exclusivo. Se não tiver o número em mãos, peça orientação na Secretaria Municipal de Saúde ou ao agente no próximo contato.') }}
         </p>
     </form>
+    </x-section-card>
 
-    <section class="v-card v-card--flush overflow-hidden" aria-labelledby="consulta-doencas-titulo">
+    <x-section-card class="v-card--flush overflow-hidden" aria-labelledby="consulta-doencas-titulo">
         <div class="p-4 sm:p-5">
             <h2 id="consulta-doencas-titulo" class="v-section-title">{{ __('Doenças monitoradas no município') }}</h2>
-            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                @if($doencasIndisponivel ?? false)
-                    {{ __('Não foi possível carregar a lista de doenças neste momento. A consulta pelo código do imóvel acima continua disponível. Se o problema persistir, tente mais tarde ou procure a Secretaria Municipal de Saúde.') }}
-                @elseif($doencas->isEmpty())
-                    {{ __('Aqui serão listadas as doenças que o gestor cadastrou para vigilância municipal, com sintomas, transmissão e o que fazer para se proteger. Enquanto não houver cadastro, a tabela fica vazia.') }}
-                @else
-                    {{ __('Informações de apoio à população: sintomas comuns, como a doença pode ser transmitida e medidas de controle recomendadas pelo município.') }}
-                @endif
-            </p>
+            @if($doencasIndisponivel ?? false)
+                <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Lista de doenças indisponível agora; use o formulário acima para consultar visitas.') }}</p>
+            @elseif($doencas->isEmpty())
+                <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Ainda não há doenças públicas cadastradas pelo município.') }}</p>
+            @else
+                <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Sintomas, transmissão e medidas de controle informados pelo município.') }}</p>
+            @endif
         </div>
 
         @if($doencasIndisponivel ?? false)
@@ -114,9 +117,9 @@
                 </table>
             </div>
         @endif
-    </section>
+    </x-section-card>
 
-    <x-lgpd.aviso context="consulta_publica" />
+    <x-lgpd.aviso context="consulta_publica" :compact="true" />
 </div>
 @endsection
 

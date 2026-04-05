@@ -44,42 +44,35 @@
         ['label' => $cfgInd['titulo_pagina'] ?? __('Indicadores')],
     ]" />
 
-    @if(session('warning'))
-        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
-    @endif
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
+    <x-flash-alerts />
 
     <x-page-header :eyebrow="__('Gestão municipal')" :title="$cfgInd['titulo_pagina'] ?? __('Indicadores')">
         <x-slot name="lead">
             @if(filled($cfgInd['subtitulo'] ?? '') || filled($cfgInd['subtitulo_detalhe'] ?? ''))
-                <details class="text-sm text-slate-600 dark:text-slate-400">
-                    <summary class="cursor-pointer list-inside list-none font-medium text-slate-700 marker:hidden hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100 [&::-webkit-details-marker]:hidden">
-                        {{ __('Sobre este painel') }}
-                    </summary>
-                    <div class="mt-2 space-y-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                        @if(filled($cfgInd['subtitulo'] ?? ''))
-                            <p>{{ $cfgInd['subtitulo'] }}</p>
-                        @endif
-                        @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
-                            <p>{{ $cfgInd['subtitulo_detalhe'] }}</p>
-                        @endif
-                    </div>
-                </details>
+                <x-ui.disclosure variant="lead">
+                    <x-slot name="summary">
+                        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Sobre este painel') }}</span>
+                    </x-slot>
+                    @if(filled($cfgInd['subtitulo'] ?? ''))
+                        <p>{{ $cfgInd['subtitulo'] }}</p>
+                    @endif
+                    @if(filled($cfgInd['subtitulo_detalhe'] ?? ''))
+                        <p>{{ $cfgInd['subtitulo_detalhe'] }}</p>
+                    @endif
+                </x-ui.disclosure>
             @endif
         </x-slot>
     </x-page-header>
 
     <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         @if(filled($cfgInd['export_csv_aviso'] ?? ''))
-            <details class="max-w-xl text-[11px] leading-snug text-slate-600 dark:text-slate-400">
-                <summary class="cursor-pointer list-inside list-none marker:hidden text-blue-800 dark:text-blue-300 [&::-webkit-details-marker]:hidden">
+            <x-ui.disclosure variant="csv-hint">
+                <x-slot name="summary">
                     <span class="border-b border-dotted border-current pb-px font-medium">{{ __('Sobre a exportação CSV') }}</span>
                     <span class="sr-only">{{ __('Abre texto sobre o arquivo exportado.') }}</span>
-                </summary>
-                <p class="mt-1.5">{{ $cfgInd['export_csv_aviso'] }}</p>
-            </details>
+                </x-slot>
+                <p>{{ $cfgInd['export_csv_aviso'] }}</p>
+            </x-ui.disclosure>
         @endif
         <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
            class="v-btn-compact v-btn-compact--green shrink-0 text-sm sm:ms-auto">
@@ -88,19 +81,17 @@
         </a>
     </div>
 
-    <details class="list-none overflow-hidden rounded-lg border border-amber-200/90 bg-amber-50/95 text-[11px] leading-snug text-amber-950 shadow-sm dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
-        <summary class="cursor-pointer list-none px-2.5 py-1.5 text-xs text-amber-950 marker:hidden dark:text-amber-50 [&::-webkit-details-marker]:hidden">
+    <x-ui.disclosure variant="amber-avisos">
+        <x-slot name="summary">
             <span class="font-semibold">{{ __('Avisos:') }}</span> {{ __('privacidade, supressão e limites de uso') }}
-        </summary>
-        <div class="space-y-1 border-t border-amber-200/80 px-2.5 pb-2 pt-1.5 dark:border-amber-800/60">
-            <p class="leading-snug"><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
-            <p class="leading-snug text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
-            <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
-            <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
-        </div>
-    </details>
+        </x-slot>
+        <p class="leading-snug"><span class="font-semibold text-amber-900 dark:text-amber-50">{{ __('Atenção') }}:</span> {{ $cfgInd['aviso'] ?? '' }}</p>
+        <p class="leading-snug text-amber-900/95 dark:text-amber-100/95">{{ $cfgInd['aviso_privacidade'] ?? '' }}</p>
+        <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
+        <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
+    </x-ui.disclosure>
 
-    <div class="v-card border-blue-200/80 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/40 dark:border-blue-900/40 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-blue-950/25">
+    <x-section-card class="border-blue-200/80 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/40 dark:border-blue-900/40 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-blue-950/25">
         <div class="flex gap-3 sm:gap-4">
             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950/90 dark:text-blue-300">
                 <x-heroicon-o-book-open class="h-6 w-6 shrink-0" aria-hidden="true" />
@@ -121,12 +112,12 @@
                 </p>
             </div>
         </div>
-    </div>
+    </x-section-card>
 
     <x-lgpd.aviso context="painel_indicadores" compact class="max-w-none" />
 
     @php $Q = $painel['completude']; @endphp
-    <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+    <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
         <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_completude'] ?? __('Qualidade do preenchimento') }}</h2>
         @if(filled($cfgInd['subtitulo_completude'] ?? ''))
             <details class="mt-1 text-xs text-slate-600 dark:text-slate-400">
@@ -188,18 +179,16 @@
                 <p class="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">{{ number_format($Q['com_situacao_trabalho_informada'], 0, ',', '.') }} {{ __('de') }} {{ number_format($Q['total'], 0, ',', '.') }} {{ trans_choice('ocupante|ocupantes', $Q['total']) }}</p>
             </div>
         </div>
-    </section>
+    </x-section-card>
 
     @php $R = $painel['resumo']; @endphp
     <section class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none">
-            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ __('Total de ocupantes') }}</p>
-            <p class="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ number_format($R['total_ocupantes'], 0, ',', '.') }}</p>
-        </div>
-        <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none">
-            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ __('Imóveis com ocupante') }}</p>
-            <p class="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ number_format($R['total_imoveis_com_ocupante'], 0, ',', '.') }}</p>
-        </div>
+        <x-ui.stat-tile class="shadow-md shadow-slate-200/25 dark:shadow-none" :label="__('Total de ocupantes')">
+            {{ number_format($R['total_ocupantes'], 0, ',', '.') }}
+        </x-ui.stat-tile>
+        <x-ui.stat-tile class="shadow-md shadow-slate-200/25 dark:shadow-none" :label="__('Imóveis com ocupante')">
+            {{ number_format($R['total_imoveis_com_ocupante'], 0, ',', '.') }}
+        </x-ui.stat-tile>
         <div class="v-card v-card--tight shadow-md shadow-slate-200/25 dark:shadow-none sm:col-span-2 lg:col-span-2">
             <div class="flex flex-wrap items-end justify-between gap-2">
                 <p class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ $cfgInd['titulo_secao_faixa_global'] ?? __('Faixa etária') }}</p>
@@ -248,7 +237,7 @@
         </div>
     </details>
 
-    <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+    <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
         <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_bairro'] ?? __('Por bairro') }}</h2>
         <div class="mt-3 overflow-x-auto rounded-lg ring-1 ring-slate-200/80 dark:ring-slate-600">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-600">
@@ -292,10 +281,10 @@
                 </tbody>
             </table>
         </div>
-    </section>
+    </x-section-card>
 
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none lg:col-span-1">
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none lg:col-span-1">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_escolaridade'] ?? __('Escolaridade') }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['escolaridade'] as $codigo => $qtd)
@@ -311,8 +300,8 @@
             @if(empty($painel['escolaridade']))
                 <p class="mt-2 text-sm text-gray-500">{{ __('Sem dados.') }}</p>
             @endif
-        </section>
-        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        </x-section-card>
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_renda'] ?? __('Renda') }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['renda'] as $codigo => $qtd)
@@ -328,11 +317,11 @@
             @if(empty($painel['renda']))
                 <p class="mt-2 text-sm text-gray-500">{{ __('Sem dados.') }}</p>
             @endif
-        </section>
+        </x-section-card>
     </div>
 
     <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_cor_raca'] ?? __('Cor ou raça') }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['cor_raca'] ?? [] as $codigo => $qtd)
@@ -348,8 +337,8 @@
             @if(empty($painel['cor_raca'] ?? []))
                 <p class="mt-2 text-sm text-gray-500">{{ __('Sem dados.') }}</p>
             @endif
-        </section>
-        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        </x-section-card>
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="v-section-title">{{ $cfgInd['titulo_secao_situacao_trabalho'] ?? __('Situação no trabalho') }}</h2>
             <ul class="mt-2 space-y-1.5 text-sm">
                 @foreach($painel['situacao_trabalho'] ?? [] as $codigo => $qtd)
@@ -365,7 +354,7 @@
             @if(empty($painel['situacao_trabalho'] ?? []))
                 <p class="mt-2 text-sm text-gray-500">{{ __('Sem dados.') }}</p>
             @endif
-        </section>
+        </x-section-card>
     </div>
 
     @php
@@ -374,7 +363,7 @@
         $keysCruzRenda = array_keys($cruz['colunas']);
     @endphp
     @if(($cruz['total_cruzamento'] ?? 0) > 0)
-        <section class="v-card v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ $cfgInd['titulo_secao_cruzamento'] ?? __('Escolaridade e renda') }}</h2>
             <details class="mt-1 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
                 <summary class="cursor-pointer list-inside list-none font-medium text-slate-600 marker:hidden dark:text-slate-400 [&::-webkit-details-marker]:hidden">
@@ -419,7 +408,7 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        </x-section-card>
     @endif
 </div>
 @endsection

@@ -8,13 +8,34 @@
         @php
             $routeName = request()->route()?->getName();
             $authMeta = match (true) {
-                in_array($routeName, ['login', 'login.store'], true) => ['title' => config('app.name') . ' · Login', 'desc' => 'Acesse o sistema Visita Aí com CPF ou e-mail. Área de gestores, ACE e ACS.'],
-                $routeName === 'register' => ['title' => config('app.name') . ' · Cadastro', 'desc' => 'Cadastre-se no Visita Aí para atuar como ACE (Agente de Combate às Endemias) ou ACS (Agente Comunitário de Saúde), conforme Lei 11.350/2006.'],
-                $routeName === 'password.request' => ['title' => config('app.name') . ' · Esqueci a Senha', 'desc' => 'Recupere o acesso ao sistema Visita Aí pelo e-mail.'],
-                $routeName === 'password.reset' => ['title' => config('app.name') . ' · Redefinir Senha', 'desc' => 'Defina uma nova senha para sua conta no Visita Aí.'],
-                $routeName === 'verification.notice' => ['title' => config('app.name') . ' · Verificar E-mail', 'desc' => 'Confirme seu e-mail para ativar sua conta no Visita Aí.'],
-                $routeName === 'pendente' => ['title' => config('app.name') . ' · Conta Pendente', 'desc' => 'Sua conta está aguardando aprovação do gestor municipal.'],
-                default => ['title' => config('app.name') . ' · Acesso', 'desc' => 'Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'],
+                in_array($routeName, ['login', 'login.store'], true) => [
+                    'title' => config('app.name').' · '.__('Login'),
+                    'desc' => __('Acesse o sistema Visita Aí com CPF ou e-mail. Área de gestores, ACE e ACS.'),
+                ],
+                $routeName === 'register' => [
+                    'title' => config('app.name').' · '.__('Cadastro'),
+                    'desc' => __('Cadastre-se no Visita Aí para atuar como ACE (Agente de Combate às Endemias) ou ACS (Agente Comunitário de Saúde), conforme Lei 11.350/2006.'),
+                ],
+                $routeName === 'password.request' => [
+                    'title' => config('app.name').' · '.__('Esqueci a Senha'),
+                    'desc' => __('Recupere o acesso ao sistema Visita Aí pelo e-mail.'),
+                ],
+                $routeName === 'password.reset' => [
+                    'title' => config('app.name').' · '.__('Redefinir Senha'),
+                    'desc' => __('Defina uma nova senha para sua conta no Visita Aí.'),
+                ],
+                $routeName === 'verification.notice' => [
+                    'title' => config('app.name').' · '.__('Verificar E-mail'),
+                    'desc' => __('Confirme seu e-mail para ativar sua conta no Visita Aí.'),
+                ],
+                $routeName === 'pendente' => [
+                    'title' => config('app.name').' · '.__('Conta Pendente'),
+                    'desc' => __('Sua conta está aguardando aprovação do gestor municipal.'),
+                ],
+                default => [
+                    'title' => config('app.name').' · '.__('Acesso'),
+                    'desc' => __('Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'),
+                ],
             };
             $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
             $ogUrl = url()->current();
@@ -36,6 +57,7 @@
         <meta property="og:image:height" content="722">
         <meta property="og:image:type" content="image/png">
         <meta property="og:site_name" content="Visita Aí">
+        <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'pt_BR' }}">
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ $authMeta['title'] }}">
@@ -72,9 +94,10 @@
                 </a>
             </div>
 
-            <main id="main-content" tabindex="-1" class="mt-8 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-white/80 px-6 py-6 shadow-[0_8px_30px_rgb(15_23_42/0.08),0_1px_0_rgb(255_255_255/0.7)_inset] backdrop-blur-xl dark:border-slate-700/90 dark:bg-slate-900/75 dark:shadow-[0_8px_30px_rgb(0_0_0/0.45),inset_0_1px_0_rgb(255_255_255/0.06)] sm:mt-10 sm:rounded-[1.25rem]">
+            <x-layouts.auth-panel>
+                <x-flash-alerts />
                 {{ $slot }}
-            </main>
+            </x-layouts.auth-panel>
         </div>
         <x-theme-toggle :floating="true" />
     </body>

@@ -29,7 +29,7 @@ class LocalController extends Controller
         $user = Auth::user();
 
         if ($request->has('guardada')) {
-            session()->flash('warning', 'Local cadastrado no dispositivo com sucesso. Sincronize quando se reconectar.');
+            session()->flash('warning', __('Local cadastrado no dispositivo com sucesso. Sincronize quando se reconectar.'));
 
             return redirect()->to($request->url());
         }
@@ -193,7 +193,7 @@ class LocalController extends Controller
 
         return redirect()
             ->route($redirectRoute)
-            ->with('success', 'Local cadastrado com sucesso.')
+            ->with('success', __('Local cadastrado com sucesso.'))
             ->with('created_local_id', $local->loc_id);
     }
 
@@ -202,7 +202,7 @@ class LocalController extends Controller
         if ($local->isPrimary()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
-                ->with('error', 'O local primário (primeiro cadastrado) não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.');
+                ->with('error', __('O local primário (primeiro cadastrado) não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.'));
         }
         $primario = Local::orderBy('loc_id')->first();
         $cepPermitido = null;
@@ -256,7 +256,7 @@ class LocalController extends Controller
         if ($local->isPrimary()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
-                ->with('error', 'O local primário não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.');
+                ->with('error', __('O local primário não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.'));
         }
         $data = $request->validated();
         $ocupantes = $data['ocupantes'] ?? [];
@@ -274,7 +274,7 @@ class LocalController extends Controller
 
         return redirect()
             ->route('agente.locais.index')
-            ->with('success', 'Local atualizado com sucesso.');
+            ->with('success', __('Local atualizado com sucesso.'));
     }
 
     public function destroy(Local $local)
@@ -282,18 +282,18 @@ class LocalController extends Controller
         if ($local->isPrimary()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
-                ->with('error', 'O local primário (primeiro cadastrado) não pode ser excluído pela interface. Para exclusão ou alterações, entre em contato com o suporte técnico.');
+                ->with('error', __('O local primário (primeiro cadastrado) não pode ser excluído pela interface. Para exclusão ou alterações, entre em contato com o suporte técnico.'));
         }
         if ($local->moradores()->exists()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
-                ->with('error', 'Erro: este local possui ocupantes registrados no Visita Aí e não pode ser excluído.');
+                ->with('error', __('Erro: este local possui ocupantes registrados no Visita Aí e não pode ser excluído.'));
         }
 
         if ($local->visitas()->exists()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
-                ->with('error', 'Erro: este local possui visitas cadastradas e não pode ser excluído.');
+                ->with('error', __('Erro: este local possui visitas cadastradas e não pode ser excluído.'));
         }
 
         $descricao = $local->loc_endereco.', '.($local->loc_numero ?? 'S/N');
@@ -309,7 +309,7 @@ class LocalController extends Controller
 
         return redirect()
             ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
-            ->with('success', 'Local excluído com sucesso.');
+            ->with('success', __('Local excluído com sucesso.'));
     }
 
     /**
@@ -320,7 +320,7 @@ class LocalController extends Controller
     {
         $user = Auth::user();
         if (! $user->isAgenteEndemias() && ! $user->isGestor()) {
-            return response()->json(['message' => 'Acesso negado.'], 403);
+            return response()->json(['message' => __('Acesso negado.')], 403);
         }
         $this->authorize('create', Local::class);
 
@@ -343,7 +343,7 @@ class LocalController extends Controller
             }
             $data = $validator->validated();
             if (Local::where('loc_endereco', $data['loc_endereco'])->exists()) {
-                $erros[] = ['index' => $index, 'message' => 'Já existe um local com este endereço.'];
+                $erros[] = ['index' => $index, 'message' => __('Já existe um local com este endereço.')];
 
                 continue;
             }

@@ -6,21 +6,19 @@
 
     <x-page-header :eyebrow="__('Aprovações')" :title="__('Usuários pendentes')" />
 
-    @if(session('status'))
-        <x-alert type="success" :message="session('status')" />
-    @endif
+    <x-flash-alerts />
 
     <!-- Card introdutório -->
-    <section class="v-card space-y-2 dark:bg-gray-800">
+    <x-section-card class="space-y-2 dark:bg-gray-800">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Gerenciamento de Aprovação</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Nesta tela, você pode visualizar usuários que aguardam aprovação para acessar o sistema.
             Use o botão de confirmação na coluna Ação para liberar o acesso do usuário selecionado.
         </p>
-    </section>
+    </x-section-card>
 
     <!-- Tabela de Pendentes -->
-    <section class="v-card space-y-2 dark:bg-gray-800">
+    <x-section-card class="space-y-2 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             @if($pendentes->total() > 0)
                 Exibindo {{ $pendentes->count() }} de {{ $pendentes->total() }} usuário(s) pendente(s).
@@ -76,7 +74,7 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$pendentes" item-label="usuários pendentes" />
-    </section>
+    </x-section-card>
 
 </div>
 @endsection

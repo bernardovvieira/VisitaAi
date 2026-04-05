@@ -2,14 +2,14 @@
 @php
     $rp = request()->routeIs('gestor.*') ? 'gestor' : 'agente';
 @endphp
-<section class="v-card space-y-3">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
+<x-section-card class="space-y-3">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0 flex-1 space-y-2">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ config('visitaai_municipio.ocupantes.titulo_secao_local') }}</h2>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ config('visitaai_municipio.ocupantes.disclaimer') }}</p>
+            @include('municipio.moradores._disclaimer-ocupantes')
         </div>
         <a href="{{ route($rp . '.locais.moradores.index', $local) }}"
-           class="v-btn-compact v-btn-compact--blue">
+           class="v-btn-compact v-btn-compact--blue shrink-0 self-start">
             {{ config('visitaai_municipio.ocupantes.botao_gerenciar') }} ({{ $moradorResumo['total'] ?? 0 }})
         </a>
     </div>
@@ -22,4 +22,4 @@
             <div><dt class="text-gray-500 dark:text-gray-400">Sem data</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['sem_info'] }}</dd></div>
         </dl>
     @endif
-</section>
+</x-section-card>

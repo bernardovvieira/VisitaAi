@@ -2,18 +2,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Editar')]]" />
 
-    <section class="v-card">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Editar Local</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Preencha os dados do local. Preencha o CEP para preencher automaticamente os campos de endereço, bairro, cidade e estado.
-            Utilize o botão "Minha Localização" para obter as coordenadas do dispositivo.
-        </p>
-    </section>
+    <x-page-header :eyebrow="__('Locais')" :title="__('Editar local')" />
 
-    <section class="v-card space-y-4">
+    <x-ui.disclosure variant="muted-card-simple">
+        <x-slot name="summary">
+            <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('CEP, endereço e localização (expandir)') }}</span>
+        </x-slot>
+        <p>{{ __('Preencha o CEP para completar endereço automaticamente. Use «Minha localização» para coordenadas do dispositivo.') }}</p>
+    </x-ui.disclosure>
+
+    <x-section-card class="space-y-4">
         @if ($errors->any())
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                 <ul class="list-disc list-inside">
@@ -204,7 +205,7 @@
                 </button>
             </div>
         </form>
-    </section>
+    </x-section-card>
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

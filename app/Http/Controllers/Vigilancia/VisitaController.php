@@ -28,9 +28,9 @@ class VisitaController extends Controller
         if ($request->has('enviadas')) {
             $n = (int) $request->input('enviadas');
             $erros = (int) $request->input('erros', 0);
-            $msg = $n.' visita(s) enviada(s) com sucesso.';
+            $msg = __(':n visita(s) enviada(s) com sucesso.', ['n' => $n]);
             if ($erros > 0) {
-                $msg .= ' '.$erros.' não enviada(s) (verifique os dados).';
+                $msg .= ' '.__(':e não enviada(s) (verifique os dados).', ['e' => $erros]);
             }
             session()->flash('success', $msg);
 
@@ -39,7 +39,7 @@ class VisitaController extends Controller
 
         // Visita cadastrada offline: mensagem de sucesso (amarelo) na listagem
         if ($request->has('guardada')) {
-            session()->flash('warning', 'Visita cadastrada no dispositivo com sucesso. Será sincronizada quando a conexão for estabelecida.');
+            session()->flash('warning', __('Visita cadastrada no dispositivo com sucesso. Será sincronizada quando a conexão for estabelecida.'));
 
             return redirect()->to($request->url());
         }
@@ -257,7 +257,7 @@ class VisitaController extends Controller
 
         return redirect()
             ->route($user->isAgenteSaude() ? 'saude.visitas.index' : 'agente.visitas.index')
-            ->with('success', 'Visita registrada com sucesso.')
+            ->with('success', __('Visita registrada com sucesso.'))
             ->with('created_visita_id', $visita->vis_id);
     }
 
@@ -570,7 +570,7 @@ class VisitaController extends Controller
 
         return redirect()
             ->route($user->isAgenteSaude() ? 'saude.visitas.index' : 'agente.visitas.index')
-            ->with('success', 'Visita atualizada com sucesso.');
+            ->with('success', __('Visita atualizada com sucesso.'));
     }
 
     public function destroy(Visita $visita)
@@ -590,6 +590,6 @@ class VisitaController extends Controller
 
         return redirect()
             ->route($user->isAgenteSaude() ? 'saude.visitas.index' : 'agente.visitas.index')
-            ->with('success', 'Visita excluída com sucesso.');
+            ->with('success', __('Visita excluída com sucesso.'));
     }
 }

@@ -12,11 +12,9 @@
         </x-slot>
     </x-page-header>
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
+    <x-flash-alerts />
 
-    <div class="v-card v-card--muted">
+    <x-section-card class="v-card--muted">
         <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
         <div class="mt-1 flex items-center gap-2">
             <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
@@ -26,9 +24,9 @@
                    class="v-input" />
             <span id="search-loading-logs" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
         </div>
-    </div>
+    </x-section-card>
 
-    <div class="v-card v-card--flush overflow-hidden">
+    <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total registro(s) de auditoria.', ['atual' => $logs->count(), 'total' => $logs->total()]) }}
@@ -85,6 +83,6 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$logs" item-label="registros" />
-    </div>
+    </x-section-card>
 </div>
 @endsection

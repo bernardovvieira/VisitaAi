@@ -66,7 +66,7 @@ class MoradorController extends Controller
 
         return redirect()
             ->route($profile.'.locais.moradores.index', $local)
-            ->with('success', 'Ocupante cadastrado com sucesso.');
+            ->with('success', __('Ocupante cadastrado com sucesso.'));
     }
 
     public function edit(Local $local, Morador $morador)
@@ -105,7 +105,7 @@ class MoradorController extends Controller
 
         return redirect()
             ->route($profile.'.locais.moradores.index', $local)
-            ->with('success', 'Ocupante atualizado com sucesso.');
+            ->with('success', __('Ocupante atualizado com sucesso.'));
     }
 
     public function destroy(Local $local, Morador $morador)
@@ -131,6 +131,6 @@ class MoradorController extends Controller
 
         return redirect()
             ->route($profile.'.locais.moradores.index', $local)
-            ->with('success', 'Ocupante excluído com sucesso.');
+            ->with('success', __('Ocupante excluído com sucesso.'));
     }
 }

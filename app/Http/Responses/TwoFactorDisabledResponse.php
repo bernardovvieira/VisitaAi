@@ -10,6 +10,6 @@ class TwoFactorDisabledResponse implements TwoFactorDisabledResponseContract
     public function toResponse($request): RedirectResponse
     {
         return redirect()->route('profile.edit')
-            ->with('success', 'Autenticação em dois fatores (2FA) desativada. Você não precisará mais informar o código do aplicativo ao entrar.');
+            ->with('success', __('Autenticação em dois fatores (2FA) desativada. Você não precisará mais informar o código do aplicativo ao entrar.'));
     }
 }

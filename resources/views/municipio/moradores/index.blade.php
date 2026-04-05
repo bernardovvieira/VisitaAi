@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="mx-auto max-w-7xl space-y-6">
+<div class="v-page">
     <x-breadcrumbs :items="array_filter([
         ['label' => __('Página Inicial'), 'url' => route('dashboard')],
         ['label' => __('Locais'), 'url' => route($profile . '.locais.index')],
@@ -9,35 +9,28 @@
         ['label' => __('Ocupantes')],
     ])" />
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
-    @if(session('warning'))
-        <x-alert type="warning" :message="session('warning')" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts />
 
-    <div class="v-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0 flex-1">
+            <x-page-header :eyebrow="__('Imóvel')" :title="config('visitaai_municipio.ocupantes.titulo_listagem')">
+                <x-slot name="lead">
+                    <p class="text-sm">
+                        <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">{{ $local->loc_codigo_unico }}</span>
+                        <span class="text-slate-500 dark:text-slate-400"> · </span>
+                        <span class="text-slate-600 dark:text-slate-400">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}</span>
+                    </p>
+                </x-slot>
+            </x-page-header>
+        </div>
         <a href="{{ route($profile . '.locais.moradores.create', $local) }}"
-           class="v-btn-compact v-btn-compact--blue">
+           class="v-btn-compact v-btn-compact--blue shrink-0 self-start">
             <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ __('Cadastrar ocupante') }}
         </a>
     </div>
 
-    <section class="v-card space-y-3 dark:bg-gray-800">
-        <h1 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">{{ config('visitaai_municipio.ocupantes.titulo_listagem') }}</h1>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Código do imóvel') }}: <span class="font-mono font-semibold text-gray-900 dark:text-gray-100">{{ $local->loc_codigo_unico }}</span>
-            · {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}
-        </p>
-    </section>
-
-    <section class="v-card border-amber-200/90 bg-amber-50 text-xs leading-relaxed text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100">
-        {{ config('visitaai_municipio.ocupantes.disclaimer') }}
-    </section>
+    @include('municipio.moradores._disclaimer-ocupantes')
 
     @php
         $escOpcoes = config('visitaai_municipio.escolaridade_opcoes', []);
@@ -45,7 +38,7 @@
         $corOpcoes = config('visitaai_municipio.cor_raca_opcoes', []);
         $trabOpcoes = config('visitaai_municipio.situacao_trabalho_opcoes', []);
     @endphp
-    <div class="v-card v-card--flush overflow-hidden dark:bg-gray-800">
+    <x-section-card class="v-card--flush overflow-hidden dark:bg-gray-800">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900/80">
@@ -102,6 +95,6 @@
         @if($moradores->hasPages())
             <div class="border-t border-gray-200 px-4 py-3 dark:border-gray-600">{{ $moradores->links() }}</div>
         @endif
-    </div>
+    </x-section-card>
 </div>
 @endsection

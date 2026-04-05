@@ -5,6 +5,7 @@
 
 @section('content')
 <div class="v-page">
+    @include('visitas.partials._sync-js-strings')
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Sincronizar')]]" />
     <x-page-header :eyebrow="__('Dispositivo')" :title="__('Sincronizar')">
         <x-slot name="lead">
@@ -12,54 +13,58 @@
         </x-slot>
     </x-page-header>
 
-    <section class="v-card">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enviar dados guardados offline</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quando você usar "Guardar no dispositivo para enviar depois" na tela de registrar visita, as visitas aparecerão aqui para enviar.</p>
+    <x-section-card>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Enviar dados guardados offline') }}</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">{{ __('Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.') }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('Quando você usar «:btn» na tela de registrar visita, as visitas aparecerão aqui para enviar.', ['btn' => __('Guardar visita')]) }}</p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
             <button type="button" id="sync-btn"
                     class="v-btn-compact v-btn-compact--blue">
-                Enviar todas agora
+                {{ __('Enviar todas agora') }}
             </button>
             <button type="button" id="sync-clear-btn"
                     class="v-btn-compact v-btn-compact--red">
-                Apagar todas do dispositivo
+                {{ __('Apagar todas do dispositivo') }}
             </button>
             <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
         </div>
-    </section>
+    </x-section-card>
 
     @if(!empty($locaisSyncSubmitUrl))
-    <section class="v-card" id="sync-locais-section"
+    <x-section-card id="sync-locais-section"
              data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Locais guardados no dispositivo</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">Carregando…</p>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Locais guardados no dispositivo') }}</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">{{ __('Carregando…') }}</p>
         <div id="sync-locais-list" class="space-y-2 mt-4"></div>
-    </section>
+    </x-section-card>
     @endif
 
-    <section class="v-card"
+    <x-section-card
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
              data-locais-sync-url="{{ $locaisSyncSubmitUrl ?? '' }}"
              data-csrf-token="{{ csrf_token() }}"
              data-perfil="{{ $perfil }}"
              data-index-url="{{ $visitasIndexRoute }}">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Visitas guardadas no dispositivo</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Visitas guardadas no dispositivo') }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-status">
-            Carregando…
+            {{ __('Carregando…') }}
         </p>
         <div id="sync-list" class="space-y-2 mt-4">
             <!-- Preenchido via JS a partir do IndexedDB -->
         </div>
-        <p id="sync-offline-warning" class="hidden mt-4 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
-            Você está sem internet. Conecte o dispositivo à internet (Wi-Fi ou dados) para poder enviar as visitas.
+        <p id="sync-empty-hint" class="hidden mt-3 text-sm text-gray-500 dark:text-gray-400">
+            {{ __('Para guardar visitas sem internet, use «:btn» no formulário de visita; elas aparecerão nesta lista para envio.', ['btn' => __('Guardar visita')]) }}
         </p>
-    </section>
+        <p id="sync-offline-warning" class="hidden mt-4 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
+            {{ __('Você está sem internet. Conecte o dispositivo à internet (Wi-Fi ou dados) para poder enviar as visitas.') }}
+        </p>
+    </x-section-card>
 </div>
 
 <script>
 (function() {
+    const S = window.__syncStrings || {};
     const DB_NAME = 'VisitaAiOffline';
     const DB_VERSION = 3;
     const STORE_NAME = 'visitas_rascunho';
@@ -171,10 +176,10 @@
         var p = draft.payload || {};
         var data = formatDataDdMmAaaa(p.vis_data || '');
         var localPart = '';
-        if (p.fk_local_id) localPart = ', local ' + p.fk_local_id;
-        else if (p.local_draft_id) localPart = ', local a sincronizar';
+        if (p.fk_local_id) localPart = S.localIdSuffix.replace(':id', String(p.fk_local_id));
+        else if (p.local_draft_id) localPart = S.localPendingSuffix;
         var prefix = index != null ? (index + 1) + '. ' : '';
-        return prefix + 'Visita em ' + data + localPart;
+        return prefix + S.visitEm + data + localPart;
     }
 
     function trashIconSvg() {
@@ -191,12 +196,12 @@
     function renderList(drafts) {
         LIST.innerHTML = '';
         if (drafts.length === 0) {
-            STATUS.textContent = 'Nenhuma visita pendente de envio.';
+            STATUS.textContent = S.visitEmptyPending;
             if (emptyHint) emptyHint.classList.remove('hidden');
             ACTIONS.classList.add('hidden');
             return;
         }
-        STATUS.textContent = 'Você tem ' + drafts.length + ' visita(s) guardada(s) no dispositivo.';
+        STATUS.textContent = S.visitSavedCount.replace(':count', String(drafts.length));
         if (emptyHint) emptyHint.classList.add('hidden');
         ACTIONS.classList.remove('hidden');
         RESULT.textContent = '';
@@ -211,8 +216,8 @@
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'shrink-0 p-1.5 rounded text-gray-500 hover:text-red-600 hover:bg-red-100 dark:hover:text-red-400 dark:hover:bg-red-900/30 transition';
-            btn.setAttribute('title', 'Excluir esta visita do dispositivo');
-            btn.setAttribute('aria-label', 'Excluir');
+            btn.setAttribute('title', S.deleteVisitFromDeviceTitle);
+            btn.setAttribute('aria-label', S.exclude);
             btn.appendChild(trashIconSvg());
             btn.addEventListener('click', function() {
                 var id = d.id;
@@ -221,7 +226,7 @@
                 }).then(function() {
                     if (locaisSection && typeof getAllLocalDrafts === 'function') return getAllLocalDrafts().then(renderLocaisList);
                 }).catch(function(err) {
-                    RESULT.textContent = 'Erro ao excluir: ' + (err.message || '');
+                    RESULT.textContent = S.errorDelete.replace(':message', err.message || '');
                 });
             });
             row.appendChild(btn);
@@ -236,7 +241,7 @@
         if (logr) {
             parts.push(num ? logr + ', ' + num : logr);
         } else if (num) {
-            parts.push('Nº ' + num);
+            parts.push(S.localNumberPrefix + num);
         }
         var bairro = (p.loc_bairro || '').trim();
         var cidade = (p.loc_cidade || '').trim();
@@ -246,7 +251,7 @@
             parts.push(uf ? (cidade ? cidade + '/' + uf : uf) : cidade);
         }
         var line = parts.join(', ');
-        if (!line) line = 'Local sem endereço informado';
+        if (!line) line = S.localNoAddress;
         return (index + 1) + '. ' + line;
     }
 
@@ -254,10 +259,10 @@
         if (!locaisStatusEl || !locaisListEl) return;
         locaisListEl.innerHTML = '';
         if (!locais || locais.length === 0) {
-            locaisStatusEl.textContent = 'Nenhum local pendente de envio.';
+            locaisStatusEl.textContent = S.localEmptyPending;
             return;
         }
-        locaisStatusEl.textContent = 'Você tem ' + locais.length + ' local(is) guardado(s) no dispositivo.';
+        locaisStatusEl.textContent = S.localSavedCount.replace(':count', String(locais.length));
         locais.forEach(function(d, i) {
             var p = d.payload || {};
             var row = document.createElement('div');
@@ -270,15 +275,15 @@
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'shrink-0 p-1.5 rounded text-gray-500 hover:text-red-600 hover:bg-red-100 dark:hover:text-red-400 dark:hover:bg-red-900/30 transition';
-            btn.setAttribute('title', 'Excluir este local do dispositivo');
-            btn.setAttribute('aria-label', 'Excluir');
+            btn.setAttribute('title', S.deleteLocalFromDeviceTitle);
+            btn.setAttribute('aria-label', S.exclude);
             btn.appendChild(trashIconSvg());
             btn.addEventListener('click', function() {
                 var id = d.id;
                 removeLocalDrafts([id]).then(function() {
                     return getAllLocalDrafts().then(renderLocaisList);
                 }).catch(function(err) {
-                    if (RESULT) RESULT.textContent = 'Erro ao excluir: ' + (err.message || '');
+                    if (RESULT) RESULT.textContent = S.errorDelete.replace(':message', err.message || '');
                 });
             });
             row.appendChild(btn);
@@ -289,7 +294,7 @@
     function doSync() {
         var locaisSyncUrlVal = locaisSyncUrl;
         SYNC_BTN.disabled = true;
-        RESULT.textContent = 'Enviando…';
+        RESULT.textContent = S.sending;
 
         // Sempre enviar locais primeiro quando houver pendentes; só depois as visitas (que podem depender do local criado).
         function runSyncLocaisThenVisitas() {
@@ -305,7 +310,17 @@
                     body: body
                 }).then(function(r) {
                     return r.text().then(function(text) {
-                        if (!r.ok) throw new Error(text && text.trim().startsWith('{') ? (JSON.parse(text).message || 'Erro ' + r.status) : 'Erro ' + r.status);
+                        if (!r.ok) {
+                            var fallback = S.errorWithMessage.replace(':code', String(r.status));
+                            var msg = fallback;
+                            if (text && text.trim().startsWith('{')) {
+                                try {
+                                    var j = JSON.parse(text);
+                                    if (j.message) msg = j.message;
+                                } catch (e) { /* ignore bad JSON */ }
+                            }
+                            throw new Error(msg);
+                        }
                         return JSON.parse(text);
                     });
                 }).then(function(data) {
@@ -317,14 +332,14 @@
                     });
                     var syncedLocalIds = localDrafts.filter(function(d, i) { return ids[i] != null; }).map(function(d) { return d.id; });
                     if (errosLocais.length > 0 && syncedLocalIds.length === 0) {
-                        var msg = errosLocais[0].message || 'Erro ao validar local.';
-                        RESULT.textContent = 'Local não enviado: ' + msg;
+                        var msg = errosLocais[0].message || S.errorLocalValidate;
+                        RESULT.textContent = S.localNotSent.replace(':message', msg);
                         SYNC_BTN.disabled = false;
                         throw new Error(msg);
                     }
                     return { syncedLocalIds: syncedLocalIds, draftIdToLocId: draftIdToLocId, errosLocais: errosLocais };
                 }).catch(function(err) {
-                    RESULT.textContent = 'Erro ao sincronizar locais: ' + (err.message || '');
+                    RESULT.textContent = S.errorSyncLocais.replace(':message', err.message || '');
                     throw err;
                 });
             });
@@ -374,9 +389,9 @@
             if (toSend.length === 0) {
                 renderList(drafts);
                 if (locaisSection && getAllLocalDrafts) getAllLocalDrafts().then(renderLocaisList);
-                var msg = 'Nada a enviar.';
-                if (visitasSemLocal > 0) msg = visitasSemLocal + ' visita(s) dependem de local que não foi enviado. Envie o local primeiro (verifique os dados do local).';
-                else if (drafts.length === 0) msg = 'Nada a enviar.';
+                var msg = S.nothingToSend;
+                if (visitasSemLocal > 0) msg = S.visitsNeedLocal.replace(':count', String(visitasSemLocal));
+                else if (drafts.length === 0) msg = S.nothingToSend;
                 RESULT.textContent = msg;
                 SYNC_BTN.disabled = !navigator.onLine;
                 if (window.VisitaOfflineUpdateBanner) window.VisitaOfflineUpdateBanner();
@@ -404,10 +419,10 @@
                     body: body
                 })
                 .then(function(r) {
-                    if (r.status === 419) throw new Error('Sessão expirada. Recarregue a página e tente novamente.');
+                    if (r.status === 419) throw new Error(S.sessionExpiredRetry);
                     if (!r.ok) {
                         return r.text().then(function(text) {
-                            var msg = 'Erro no servidor (' + r.status + '). Tente novamente ou verifique os dados.';
+                            var msg = S.serverErrorStatus.replace(':status', String(r.status));
                             if (text && text.trim().startsWith('{')) {
                                 try {
                                     var data = JSON.parse(text);
@@ -418,7 +433,7 @@
                         });
                     }
                     return r.text().then(function(text) {
-                        if (!text || !text.trim().startsWith('{')) throw new Error('Resposta inválida do servidor.');
+                        if (!text || !text.trim().startsWith('{')) throw new Error(S.invalidServerResponse);
                         return JSON.parse(text);
                     });
                 })
@@ -427,13 +442,13 @@
                         syncedIds.push(d.id);
                     }
                     if ((data.erros || []).length > 0) {
-                        errors.push({ index: index, message: data.erros[0].message || 'Erro' });
+                        errors.push({ index: index, message: data.erros[0].message || S.errorShort });
                     }
                     index++;
                     return sendNext();
                 })
                 .catch(function(err) {
-                    errors.push({ index: index, message: err.message || 'Falha na rede' });
+                    errors.push({ index: index, message: err.message || S.networkFailure });
                     index++;
                     return sendNext();
                 });
@@ -452,14 +467,14 @@
                 renderList(remaining);
                 if (locaisSection && getAllLocalDrafts) getAllLocalDrafts().then(renderLocaisList);
                 if (syncedIds.length > 0) {
-                    RESULT.textContent = 'Os dados foram sincronizados.';
+                    RESULT.textContent = S.syncedOk;
                     if (errors.length > 0 || (typeof errosLocaisSync !== 'undefined' && errosLocaisSync.length > 0)) {
-                        RESULT.textContent += ' Alguns itens não puderam ser enviados (verifique os dados).';
+                        RESULT.textContent += ' ' + S.syncPartialWarning;
                     }
                 } else {
-                    RESULT.textContent = errors.length > 0 ? (errors[0].message || 'Erro ao sincronizar.') : 'Nenhuma visita foi enviada.';
+                    RESULT.textContent = errors.length > 0 ? (errors[0].message || S.syncVisitError) : S.noVisitSent;
                     if (typeof errosLocaisSync !== 'undefined' && errosLocaisSync.length > 0) {
-                        RESULT.textContent += (RESULT.textContent ? ' ' : '') + 'Local não enviado: ' + (errosLocaisSync[0].message || 'verifique os dados.');
+                        RESULT.textContent += (RESULT.textContent ? ' ' : '') + S.localNotSentShort.replace(':message', errosLocaisSync[0].message || S.verifyLocalData);
                     }
                 }
                 SYNC_BTN.disabled = !navigator.onLine;
@@ -468,11 +483,11 @@
                 }
             })
             .catch(function(err) {
-                RESULT.textContent = 'Falha: ' + (err.message || 'sem conexão ou servidor indisponível.');
+                RESULT.textContent = S.failurePrefix.replace(':message', err.message || S.connectionOrServer);
                 SYNC_BTN.disabled = !navigator.onLine;
             });
         }).catch(function(err) {
-            RESULT.textContent = 'Falha: ' + (err.message || '');
+            RESULT.textContent = S.failurePrefix.replace(':message', err.message || '');
             SYNC_BTN.disabled = !navigator.onLine;
         });
     }
@@ -482,25 +497,25 @@
     CLEAR_BTN.addEventListener('click', function() {
         getAllDrafts().then(function(drafts) {
             if (drafts.length === 0) {
-                RESULT.textContent = 'Nenhuma visita guardada para apagar.';
+                RESULT.textContent = S.noVisitsToClear;
                 return;
             }
-            if (!confirm('Apagar as ' + drafts.length + ' visita(s) guardada(s) no dispositivo? Elas não poderão ser recuperadas.')) {
+            if (!confirm(S.confirmClearVisits.replace(':count', String(drafts.length)))) {
                 return;
             }
             var ids = drafts.map(function(d) { return d.id; });
             CLEAR_BTN.disabled = true;
-            RESULT.textContent = 'Apagando…';
+            RESULT.textContent = S.clearing;
             removeDrafts(ids)
                 .then(function() {
-                    RESULT.textContent = 'Dados apagados do dispositivo.';
+                    RESULT.textContent = S.clearedDevice;
                     renderList([]);
                     if (typeof window.VisitaOfflineUpdateBanner === 'function') {
                         window.VisitaOfflineUpdateBanner();
                     }
                 })
                 .catch(function() {
-                    RESULT.textContent = 'Erro ao apagar. Tente novamente.';
+                    RESULT.textContent = S.clearError;
                 })
                 .finally(function() {
                     CLEAR_BTN.disabled = false;
@@ -525,11 +540,11 @@
     updateOfflineWarning();
 
     getAllDrafts().then(renderList).catch(function() {
-        STATUS.textContent = 'Não foi possível carregar as visitas salvas. Verifique se o navegador permite armazenamento local.';
+        STATUS.textContent = S.couldNotLoadSavedVisits;
     });
     if (locaisSection && locaisListEl && locaisStatusEl) {
         getAllLocalDrafts().then(renderLocaisList).catch(function() {
-            locaisStatusEl.textContent = 'Não foi possível carregar os locais.';
+            locaisStatusEl.textContent = S.couldNotLoadLocais;
         });
     }
 })();

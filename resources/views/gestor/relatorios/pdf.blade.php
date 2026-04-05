@@ -1,8 +1,13 @@
+@php
+    $htmlLang = app()->getLocale() === 'en' ? 'en' : 'pt-BR';
+    $nomeSistemaSub = __(config('ms_terminologia.sistema.nome_subtitulo'));
+    $brand = config('app.brand', 'Visita Aí');
+@endphp
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ $htmlLang }}">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de Atividades de Controle Vetorial</title>
+  <title>{{ __('Registro de Atividades de Controle Vetorial') }}</title>
   <style>
     @page { size: A4 landscape; margin: 88px 30px 68px 30px; }
     body { font-family: Arial, sans-serif; font-size: 10px; color: #222; line-height: 1.35; }
@@ -29,7 +34,7 @@
       border-top: 1px solid #ccc;
       padding-top: 4px;
     }
-    .page-number:after { content: "Página " counter(page); }
+    .page-number:after { content: "{{ str_replace('"', '\\"', __('PDF rodapé rótulo página')) }}\00a0" counter(page); }
     main { padding-top: 5px; }
     .bloco-ident {
       border: 1px solid #999;
@@ -77,64 +82,64 @@
 
 @php
   $primeiroLocal = $visitas->first()?->local;
-  $mun = $primeiroLocal?->loc_cidade ?? 'Município';
-  $uf = $primeiroLocal?->loc_estado ?? 'UF';
+  $mun = $primeiroLocal?->loc_cidade ?? __('Município');
+  $uf = $primeiroLocal?->loc_estado ?? __('UF');
   $atividades = \App\Helpers\MsTerminologia::atividadesPncdCodigos();
   $tipoImovel = ['R' => 'R', 'C' => 'C', 'T' => 'TB'];
 @endphp
 
 <header>
-  <h1>Vigilância Entomológica e Controle Vetorial</h1>
-  <h2>Registro de Atividades | Município de {{ $mun }} / {{ $uf }}</h2>
-  <p class="header-nota">{{ config('ms_terminologia.sistema.nome_subtitulo') }}</p>
+  <h1>{{ __('Vigilância Entomológica e Controle Vetorial') }}</h1>
+  <h2>{{ __('Registro de Atividades | Município de :mun / :uf', ['mun' => $mun, 'uf' => $uf]) }}</h2>
+  <p class="header-nota">{{ $nomeSistemaSub }}</p>
 </header>
 
 <footer>
   <div class="page-number"></div>
-  Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) | Ministério da Saúde.@if(strtoupper($uf ?? '') === 'RS') No âmbito estadual, em conformidade com a SES-RS e o CEVS.@endif<br>
-  Documento gerado por {{ config('ms_terminologia.sistema.nome_subtitulo') }} (Visita Aí) em {{ now()->format('d/m/Y H:i') }}.
+  {{ __('Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) | Ministério da Saúde.') }}@if(strtoupper($uf ?? '') === 'RS') {{ __('No âmbito estadual, em conformidade com a SES-RS e o CEVS.') }}@endif<br>
+  {{ __('Documento gerado por :sub (:app) em :data.', ['sub' => $nomeSistemaSub, 'app' => $brand, 'data' => now()->format('d/m/Y H:i')]) }}
 </footer>
 
 <main>
   <div class="bloco-ident">
     <table>
       <tr>
-        <td><span class="label">Município:</span>{{ $mun }} / {{ $uf }}</td>
-        <td><span class="label">Data do relatório:</span>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}@if($data_inicio != $data_fim) a {{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}@endif</td>
+        <td><span class="label">{{ __('Município:') }}</span>{{ $mun }} / {{ $uf }}</td>
+        <td><span class="label">{{ __('Data do relatório:') }}</span>{{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}@if($data_inicio != $data_fim) {{ __('PDF relatório entre datas') }} {{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}@endif</td>
       </tr>
       @if(!empty($bairrosPdf))
       <tr>
-        <td colspan="2"><span class="label">Bairro(s) filtrado(s):</span>{{ is_array($bairrosPdf) ? implode(', ', $bairrosPdf) : $bairrosPdf }}</td>
+        <td colspan="2"><span class="label">{{ __('Bairro(s) filtrado(s):') }}</span>{{ is_array($bairrosPdf) ? implode(', ', $bairrosPdf) : $bairrosPdf }}</td>
       </tr>
       @endif
       <tr>
-        <td><span class="label">Total de visitas no período:</span>{{ $visitas->count() }}</td>
-        <td><span class="label">Tipo de relatório:</span>{{ $titulo }}</td>
+        <td><span class="label">{{ __('Total de visitas no período:') }}</span>{{ $visitas->count() }}</td>
+        <td><span class="label">{{ __('Tipo de relatório:') }}</span>{{ $titulo }}</td>
       </tr>
     </table>
   </div>
 
-  <div class="titulo-secao">Vigilância Entomológica e Controle Vetorial</div>
+  <div class="titulo-secao">{{ __('Vigilância Entomológica e Controle Vetorial') }}</div>
   <table class="tabela-principal">
     <thead>
       <tr>
         <th style="width:2%">#</th>
-        <th style="width:4%">Data</th>
-        <th style="width:2.5%">Ciclo</th>
-        <th style="width:5%">Atividade</th>
-        <th style="width:2%">N/R</th>
-        <th style="width:2%">Conc.</th>
-        <th style="width:2%">Quart.</th>
-        <th style="width:2%">Seq.</th>
-        <th style="width:2%">Lado</th>
-        <th style="width:5%" class="text-left">Bairro</th>
-        <th style="width:10%" class="text-left">Logradouro</th>
-        <th style="width:2.5%">Nº</th>
-        <th style="width:6%" class="text-left">Compl.</th>
-        <th style="width:3.5%">Cód.</th>
-        <th style="width:2%">Tipo</th>
-        <th style="width:2%">Zona</th>
-        <th style="width:2.5%">Pend.</th>
+        <th style="width:4%">{{ __('Data') }}</th>
+        <th style="width:2.5%">{{ __('Ciclo') }}</th>
+        <th style="width:5%">{{ __('Atividade') }}</th>
+        <th style="width:2%">{{ __('N/R') }}</th>
+        <th style="width:2%">{{ __('Conc.') }}</th>
+        <th style="width:2%">{{ __('Quart.') }}</th>
+        <th style="width:2%">{{ __('Seq.') }}</th>
+        <th style="width:2%">{{ __('Lado') }}</th>
+        <th style="width:5%" class="text-left">{{ __('Bairro') }}</th>
+        <th style="width:10%" class="text-left">{{ __('Logradouro') }}</th>
+        <th style="width:2.5%">{{ __('Nº') }}</th>
+        <th style="width:6%" class="text-left">{{ __('Compl.') }}</th>
+        <th style="width:3.5%">{{ __('Cód.') }}</th>
+        <th style="width:2%">{{ __('Tipo') }}</th>
+        <th style="width:2%">{{ __('Zona') }}</th>
+        <th style="width:2.5%">{{ __('Pend.') }}</th>
         <th style="width:1.2%">A1</th>
         <th style="width:1.2%">A2</th>
         <th style="width:1.2%">B</th>
@@ -142,12 +147,12 @@
         <th style="width:1.2%">D1</th>
         <th style="width:1.2%">D2</th>
         <th style="width:1.2%">E</th>
-        <th style="width:4.5%">Amostra</th>
-        <th style="width:2%">Tub.</th>
-        <th style="width:4.5%">Dep.Elim.</th>
-        <th style="width:2.5%">Coleta</th>
-        <th style="width:12%" class="text-left">Tratamento</th>
-        <th style="width:7%" class="text-left">Profissional (ACE/ACS)</th>
+        <th style="width:4.5%">{{ __('Amostra') }}</th>
+        <th style="width:2%">{{ __('Tub.') }}</th>
+        <th style="width:4.5%">{{ __('Dep.Elim.') }}</th>
+        <th style="width:2.5%">{{ __('Coleta') }}</th>
+        <th style="width:12%" class="text-left">{{ __('Tratamento') }}</th>
+        <th style="width:7%" class="text-left">{{ __('Profissional (ACE/ACS)') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -159,8 +164,8 @@
           if (!empty($t->trat_forma)) $p[] = $t->trat_forma;
           if (!empty($t->trat_tipo)) $p[] = '(' . $t->trat_tipo . ')';
           if (isset($t->qtd_gramas) && $t->qtd_gramas > 0) $p[] = $t->qtd_gramas . 'g';
-          if (isset($t->qtd_depositos_tratados) && $t->qtd_depositos_tratados > 0) $p[] = $t->qtd_depositos_tratados . ' dep';
-          if (isset($t->qtd_cargas) && $t->qtd_cargas > 0) $p[] = $t->qtd_cargas . ' carg';
+          if (isset($t->qtd_depositos_tratados) && $t->qtd_depositos_tratados > 0) $p[] = $t->qtd_depositos_tratados . ' ' . __('PDF tratamento dep abrev');
+          if (isset($t->qtd_cargas) && $t->qtd_cargas > 0) $p[] = $t->qtd_cargas . ' ' . __('PDF tratamento carg abrev');
           return implode(' ', $p);
         })->filter()->implode('; ');
         $amostra = trim(($visita->vis_amos_inicial ?? '') . '-' . ($visita->vis_amos_final ?? ''));
@@ -172,18 +177,18 @@
         <td>{{ $visita->vis_ciclo ?? '-' }}</td>
         <td>{{ $atividades[$visita->vis_atividade ?? ''] ?? '-' }}</td>
         <td>{{ $visita->vis_visita_tipo === 'R' ? 'R' : ($visita->vis_visita_tipo === 'N' ? 'N' : '-') }}</td>
-        <td>{{ (($visita->vis_pendencias ?? false) ? ($visita->vis_concluida ?? false) : true) ? 'S' : 'N' }}</td>
+        <td>{{ (($visita->vis_pendencias ?? false) ? ($visita->vis_concluida ?? false) : true) ? __('PDF coluna concluída sim') : __('PDF coluna concluída não') }}</td>
         <td>{{ $loc?->loc_quarteirao ?? '-' }}</td>
         <td>{{ $loc?->loc_sequencia ?? '-' }}</td>
         <td>{{ $loc?->loc_lado ?? '-' }}</td>
         <td class="text-left">{{ $loc?->loc_bairro ?? '-' }}</td>
         <td class="text-left">{{ $loc?->loc_endereco ?? '-' }}</td>
-        <td>{{ $loc?->loc_numero ?? 'S/N' }}</td>
+        <td>{{ $loc?->loc_numero ?? __('S/N') }}</td>
         <td class="text-left">{{ $loc?->loc_complemento ?? '-' }}</td>
         <td>{{ $loc?->loc_codigo_unico ?? '-' }}</td>
         <td>{{ $loc ? ($tipoImovel[$loc->loc_tipo ?? ''] ?? $loc->loc_tipo ?? '-') : '-' }}</td>
-        <td>{{ $loc && $loc->loc_zona === 'U' ? 'Urb' : ($loc && $loc->loc_zona === 'R' ? 'Rur' : '-') }}</td>
-        <td>{{ ($visita->vis_pendencias ?? false) ? 'Sim' : 'Não' }}</td>
+        <td>{{ $loc && $loc->loc_zona === 'U' ? __('PDF zona urb abrev') : ($loc && $loc->loc_zona === 'R' ? __('PDF zona rur abrev') : '-') }}</td>
+        <td>{{ ($visita->vis_pendencias ?? false) ? __('Sim') : __('Não') }}</td>
         <td>{{ $visita->insp_a1 ?? 0 }}</td>
         <td>{{ $visita->insp_a2 ?? 0 }}</td>
         <td>{{ $visita->insp_b ?? 0 }}</td>
@@ -194,7 +199,7 @@
         <td>{{ $amostra }}</td>
         <td>{{ $visita->vis_qtd_tubitos ?? '-' }}</td>
         <td>{{ $visita->vis_depositos_eliminados ?? 0 }}</td>
-        <td>{{ ($visita->vis_coleta_amostra ?? false) ? 'Sim' : 'Não' }}</td>
+        <td>{{ ($visita->vis_coleta_amostra ?? false) ? __('Sim') : __('Não') }}</td>
         <td class="text-left">{{ $tratText ?: '-' }}</td>
         <td class="text-left">{{ $visita->usuario?->use_nome ?? '-' }}</td>
       </tr>
@@ -203,17 +208,17 @@
   </table>
 
   <div class="legenda">
-    <strong>Atividade (MS):</strong> {{ implode(', ', array_values($atividades)) }} &nbsp;|&nbsp;
-    <strong>N/R:</strong> N-Normal, R-Recuperação (conforme Diretriz MS) &nbsp;|&nbsp;
-    <strong>Conc.:</strong> Concluída S/N (sem pendência = S) &nbsp;|&nbsp;
-    <strong>Cód.:</strong> Código único do imóvel &nbsp;|&nbsp;
-    <strong>Tipo (imóvel):</strong> R-Residencial, C-Comercial, T-Terreno Baldio (PE = atividade 8, não tipo de imóvel) &nbsp;|&nbsp;
-    <strong>Pend.:</strong> Pendência (recusado, fechado ou retorno) &nbsp;|&nbsp;
-    <strong>A1 a E:</strong> Depósitos inspecionados por tipo (classificação LIRAa | MS) &nbsp;|&nbsp;
-    <strong>Amostra:</strong> Inicial-Final (LIRAa) &nbsp;|&nbsp;
-    <strong>Dep.Elim.:</strong> Depósitos eliminados &nbsp;|&nbsp;
-    <strong>Tub.:</strong> Tubitos &nbsp;|&nbsp;
-    <strong>Coleta:</strong> Coleta de amostra Sim/Não
+    <strong>{{ __('PDF legenda atividade') }}</strong> {{ implode(', ', array_values($atividades)) }} &nbsp;|&nbsp;
+    <strong>{{ __('PDF legenda nr') }}</strong> {{ __('PDF legenda nr texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('PDF legenda conc') }}</strong> {{ __('PDF legenda conc texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('Cód.') }}</strong> {{ __('PDF legenda código texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('PDF legenda tipo imóvel') }}</strong> {{ __('PDF legenda tipo imóvel texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('Pend.') }}</strong> {{ __('PDF legenda pend texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('PDF legenda a1e') }}</strong> {{ __('PDF legenda a1e texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('Amostra') }}</strong> {{ __('PDF legenda amostra texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('Dep.Elim.') }}</strong> {{ __('PDF legenda dep elim texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('Tub.') }}</strong> {{ __('PDF legenda tub texto') }} &nbsp;|&nbsp;
+    <strong>{{ __('Coleta') }}</strong> {{ __('PDF legenda coleta texto') }}
   </div>
 </main>
 </body>

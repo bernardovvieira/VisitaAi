@@ -14,7 +14,12 @@
 <div class="v-page max-w-5xl space-y-6">
     <x-page-header :eyebrow="__('Consulta pública')" :title="__('Visitas registradas neste endereço')">
         <x-slot name="lead">
-            <p>{{ __('Os dados abaixo são apenas informativos: localização cadastrada, datas das visitas, tipo de atividade em campo e se havia pendência na época, no mesmo padrão resumido visto na gestão interna, sem identificar o profissional.') }}</p>
+            <x-ui.disclosure variant="lead">
+                <x-slot name="summary">
+                    <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Sobre os dados exibidos (expandir)') }}</span>
+                </x-slot>
+                <p>{{ __('Os dados abaixo são apenas informativos: localização cadastrada, datas das visitas, tipo de atividade em campo e se havia pendência na época, no mesmo padrão resumido visto na gestão interna, sem identificar o profissional.') }}</p>
+            </x-ui.disclosure>
             <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
                     class="v-btn-secondary mt-4 inline-flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold">
                 <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
@@ -39,7 +44,7 @@
 
     {{-- Imóvel consultado --}}
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch">
-        <section class="v-card flex h-full flex-col">
+        <x-section-card class="flex h-full flex-col">
             <div class="space-y-3 text-sm text-slate-800 dark:text-slate-100">
                 <h2 class="v-section-title mb-1">{{ __('Imóvel consultado') }}</h2>
                 <p>
@@ -71,18 +76,18 @@
                     <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_codigo_unico }}</span>
                 </p>
             </div>
-        </section>
-        <section class="v-card flex h-full min-h-0 flex-col" aria-label="{{ __('Mapa do imóvel') }}">
+        </x-section-card>
+        <x-section-card class="flex h-full min-h-0 flex-col" aria-label="{{ __('Mapa do imóvel') }}">
             <h2 class="v-section-title mb-3 shrink-0">{{ __('Localização no mapa') }}</h2>
             <div class="relative min-h-[13rem] flex-1 w-full overflow-hidden md:min-h-0" id="mapa-local" role="region" aria-label="{{ __('Mapa interativo') }}"></div>
-        </section>
+        </x-section-card>
     </div>
 
     {{-- Histórico de visitas (colunas alinhadas à listagem interna, sem profissional) --}}
-    <section class="v-card v-card--flush overflow-hidden">
+    <x-section-card class="v-card--flush overflow-hidden">
         <div class="p-4 sm:p-5">
             <h2 class="v-section-title">{{ __('Histórico de visitas') }}</h2>
-            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Lista ordenada da mais recente para a mais antiga. “Pendente” e “Concluída” usam o mesmo critério da gestão interna; a coluna atividade reproduz o registro de campo.') }}</p>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Ordenado da visita mais recente para a mais antiga.') }}</p>
         </div>
 
         @if ($visitas->isEmpty())
@@ -129,11 +134,11 @@
                 </table>
             </div>
         @endif
-    </section>
+    </x-section-card>
 
     {{-- Resumos para o cidadão (texto neutro, sem dados sensíveis) --}}
     @if (!empty($resumos) && count($resumos) > 0)
-    <section class="v-card">
+    <x-section-card>
         <h2 class="v-section-title mb-2">{{ __('Resumo em linguagem simples') }}</h2>
         <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">
             {{ __('Texto gerado a partir do registro da visita, sem dados pessoais sensíveis. Para dúvidas ou reclamações, procure a Secretaria Municipal de Saúde.') }}
@@ -155,21 +160,18 @@
                 @endif
             @endforeach
         </div>
-    </section>
+    </x-section-card>
     @endif
 
-    {{-- Informativo institucional --}}
-    <section class="v-card space-y-2 border-amber-200/80 bg-amber-50/90 text-sm text-amber-950 shadow-sm dark:border-amber-800/60 dark:bg-amber-950/30 dark:text-amber-100">
-        <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Limites desta consulta') }}</h2>
-        <p class="leading-relaxed">
-            {{ __('A consulta pública mostra somente o que está vinculado ao código do imóvel: endereço cadastrado, datas de visita e status (pendente ou concluída). Não exibe diagnósticos, nomes de moradores ou outros dados protegidos.') }}
-        </p>
-        <p class="leading-relaxed">
-            {{ __('Para orientação sanitária, segunda via de documentos ou reclamações, fale com a Secretaria Municipal de Saúde do seu município.') }}
-        </p>
-    </section>
+    <x-ui.disclosure variant="amber-card">
+        <x-slot name="summary">
+            <span class="border-b border-dotted border-amber-800/50 pb-px dark:border-amber-400/50">{{ __('Limites desta consulta e onde buscar ajuda (expandir)') }}</span>
+        </x-slot>
+        <p>{{ __('A consulta pública mostra somente o que está vinculado ao código do imóvel: endereço cadastrado, datas de visita e status (pendente ou concluída). Não exibe diagnósticos, nomes de moradores ou outros dados protegidos.') }}</p>
+        <p>{{ __('Para orientação sanitária, segunda via de documentos ou reclamações, fale com a Secretaria Municipal de Saúde do seu município.') }}</p>
+    </x-ui.disclosure>
 
-    <x-lgpd.aviso context="consulta_publica" class="mt-6" />
+    <x-lgpd.aviso context="consulta_publica" class="mt-6" :compact="true" />
 
     {{-- Rodapé --}}
     <div class="flex flex-col items-center gap-3 border-t border-slate-200/80 pt-8 dark:border-slate-700/80">

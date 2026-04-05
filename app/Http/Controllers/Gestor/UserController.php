@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Gestor;
 
+use App\Helpers\LogHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\LogHelper;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
     use AuthorizesRequests;
 
     public function index()
@@ -63,7 +62,7 @@ class UserController extends Controller
 
             $query->where(function ($q) use ($search, $perfis) {
                 $q->where('use_nome', 'like', "%{$search}%")
-                  ->orWhere('use_email', 'like', "%{$search}%");
+                    ->orWhere('use_email', 'like', "%{$search}%");
 
                 if ($perfis !== null) {
                     $q->orWhereIn('use_perfil', $perfis);
@@ -98,10 +97,10 @@ class UserController extends Controller
             'Cadastro de usuário',
             'Usuário',
             'create',
-            'Usuário criado: ' . $dados['use_nome'] . ' (' . $dados['use_email'] . ')'
+            'Usuário criado: '.$dados['use_nome'].' ('.$dados['use_email'].')'
         );
 
-        return redirect()->route('gestor.users.index')->with('status', 'Usuário cadastrado com sucesso.');
+        return redirect()->route('gestor.users.index')->with('status', __('Usuário cadastrado com sucesso.'));
     }
 
     public function edit(User $user)
@@ -114,25 +113,25 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $this->authorize('update', $user);
-    
+
         $dados = $request->validated();
-    
-        if (!empty($dados['use_senha'])) {
+
+        if (! empty($dados['use_senha'])) {
             $dados['use_senha'] = Hash::make($dados['use_senha']);
         } else {
             unset($dados['use_senha']);
         }
-    
+
         $user->update($dados);
 
         LogHelper::registrar(
             'Atualização de usuário',
             'Usuário',
             'update',
-            'Usuário atualizado: ' . $user->use_nome . ' (ID: ' . $user->use_id . ')'
+            'Usuário atualizado: '.$user->use_nome.' (ID: '.$user->use_id.')'
         );
-    
-        return redirect()->route('gestor.users.index')->with('status', 'Usuário atualizado com sucesso.');
+
+        return redirect()->route('gestor.users.index')->with('status', __('Usuário atualizado com sucesso.'));
     }
 
     public function destroy(User $user)
@@ -141,17 +140,17 @@ class UserController extends Controller
 
         // Bloquear o usuário de se auto anonimizar
         if ($user->use_id == Auth::id()) {
-            return redirect()->route('gestor.users.index')->with('error', 'Você não pode anonimizar a si mesmo.');
-        }       
+            return redirect()->route('gestor.users.index')->with('error', __('Você não pode anonimizar a si mesmo.'));
+        }
 
         // Anonimizar
         $user->update([
-            'use_nome'       => 'Anonimizado (ref. ' . $user->use_id . ')',
-            'use_email'      => 'Anonimizado (ref. ' . $user->use_id . ')',
-            'use_cpf'        => 'Anonimizado (ref. ' . $user->use_id . ')',
-            'use_senha'      => Hash::make('senha_anonima_' . $user->use_id),
-            'use_aprovado'   => false,
-            'fk_gestor_id'   => null, 
+            'use_nome' => 'Anonimizado (ref. '.$user->use_id.')',
+            'use_email' => 'Anonimizado (ref. '.$user->use_id.')',
+            'use_cpf' => 'Anonimizado (ref. '.$user->use_id.')',
+            'use_senha' => Hash::make('senha_anonima_'.$user->use_id),
+            'use_aprovado' => false,
+            'fk_gestor_id' => null,
             'use_data_anonimizacao' => now(),
         ]);
 
@@ -159,9 +158,9 @@ class UserController extends Controller
             'Anonimização de usuário',
             'Usuário',
             'delete',
-            'Usuário anonimizado: ID ' . $user->use_id
+            'Usuário anonimizado: ID '.$user->use_id
         );
 
-        return redirect()->route('gestor.users.index')->with('status', 'Usuário anonimizado com sucesso.');
+        return redirect()->route('gestor.users.index')->with('status', __('Usuário anonimizado com sucesso.'));
     }
 }

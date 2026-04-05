@@ -1,17 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('gestor.locais.index')], ['label' => __('Visualizar')]]" />
 
-    <section class="v-card">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Detalhes do Local</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Informações completas do local registrado no sistema.
-        </p>
-    </section>
+    <x-page-header :eyebrow="__('Locais')" :title="__('Imóvel cadastrado')">
+        <x-slot name="lead">
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+                <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">{{ $local->loc_codigo_unico }}</span>
+                <span class="text-slate-400"> · </span>
+                {{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}
+            </p>
+        </x-slot>
+    </x-page-header>
 
-    <section class="v-card space-y-5">
+    <x-section-card class="space-y-5">
+        <h2 class="v-section-title">{{ __('Dados cadastrais') }}</h2>
         <dl class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div>
                 <dt class="font-medium">Código Único do Imóvel</dt>
@@ -91,14 +95,14 @@
                 A posição exibida é baseada nas coordenadas fornecidas.
             </p>
         </div>
-    </section>
+    </x-section-card>
 
     @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 
     @include('municipio.locais._painel_sensivel_gestor', ['local' => $local])
 
     {{-- Adesivo --}}
-    <section class="v-card mt-6 space-y-4">
+    <x-section-card class="mt-6 space-y-4">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-2">Adesivo para Consulta Pública</h2>
         <div class="flex justify-center p-8 bg-gray-100 dark:bg-gray-800">
             <div id="adesivo" class="w-[300px] bg-white p-6 text-center shadow-sm text-gray-800">
@@ -125,7 +129,7 @@
                 O adesivo pode ser impresso e colado no local para facilitar o acesso à consulta pública.
             </p>
         </div>
-    </section>
+    </x-section-card>
 
 </div>
 

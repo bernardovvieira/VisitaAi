@@ -5,7 +5,7 @@
     $trab = config('visitaai_municipio.situacao_trabalho_opcoes', []);
 @endphp
 
-<x-lgpd.aviso context="ocupantes_cadastro" class="mb-4" />
+<x-lgpd.aviso context="ocupantes_cadastro" class="mb-4" :compact="true" />
 
 <div class="space-y-4">
     <div>

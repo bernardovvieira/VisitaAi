@@ -23,8 +23,11 @@ class MsTerminologia
         if ($p !== null) {
             $curto = $p['label_curto'] ?? $p['label_abrev'] ?? $perfil;
             $sigla = $p['sigla'] ?? $p['label_abrev'] ?? '';
-            return $sigla !== '' ? $curto . ' (' . $sigla . ')' : $curto;
+            $s = $sigla !== '' ? $curto.' ('.$sigla.')' : $curto;
+
+            return __($s);
         }
+
         return ucfirst(str_replace('_', ' ', $perfil));
     }
 
@@ -37,7 +40,7 @@ class MsTerminologia
             return '';
         }
         if ($perfil === 'gestor') {
-            return 'Gestor';
+            return __('Gestor');
         }
         if ($perfil === 'agente_endemias') {
             return 'ACE';
@@ -45,6 +48,7 @@ class MsTerminologia
         if ($perfil === 'agente_saude') {
             return 'ACS';
         }
+
         return self::perfilSigla($perfil) ?: ucfirst(str_replace('_', ' ', $perfil));
     }
 
@@ -57,6 +61,7 @@ class MsTerminologia
             return '';
         }
         $p = Config::get("ms_terminologia.perfis.{$perfil}", []);
+
         return $p['sigla'] ?? $p['label_abrev'] ?? '';
     }
 
@@ -69,7 +74,12 @@ class MsTerminologia
             return null;
         }
         $p = Config::get("ms_terminologia.perfis.{$perfil}", []);
-        return $p['nota_ms'] ?? null;
+        $nota = $p['nota_ms'] ?? null;
+        if ($nota === null || $nota === '') {
+            return null;
+        }
+
+        return __($nota);
     }
 
     /**
@@ -81,7 +91,9 @@ class MsTerminologia
             return '';
         }
         $at = Config::get("ms_terminologia.atividades_pncd.{$codigoAtividade}", []);
-        return $at['label'] ?? $at['codigo'] ?? $codigoAtividade;
+        $label = $at['label'] ?? $at['codigo'] ?? $codigoAtividade;
+
+        return __($label);
     }
 
     /**
@@ -93,6 +105,7 @@ class MsTerminologia
             return '';
         }
         $at = Config::get("ms_terminologia.atividades_pncd.{$codigoAtividade}", []);
+
         return $at['codigo'] ?? $codigoAtividade;
     }
 
@@ -105,7 +118,9 @@ class MsTerminologia
             return '';
         }
         $at = Config::get("ms_terminologia.atividades_pncd.{$codigoAtividade}", []);
-        return $at['nome'] ?? $at['codigo'] ?? $codigoAtividade;
+        $nome = $at['nome'] ?? $at['codigo'] ?? $codigoAtividade;
+
+        return __($nome);
     }
 
     /**
@@ -118,6 +133,7 @@ class MsTerminologia
         foreach ($at as $k => $v) {
             $out[$k] = $v['codigo'] ?? $k;
         }
+
         return $out;
     }
 
@@ -131,6 +147,7 @@ class MsTerminologia
         foreach ($at as $k => $v) {
             $out[$k] = $v['label'] ?? $v['codigo'] ?? $k;
         }
+
         return $out;
     }
 
@@ -143,7 +160,9 @@ class MsTerminologia
             return '';
         }
         $v = Config::get("ms_terminologia.visita_tipo.{$tipo}", []);
-        return $v['label'] ?? $tipo;
+        $label = $v['label'] ?? $tipo;
+
+        return __($label);
     }
 
     /**

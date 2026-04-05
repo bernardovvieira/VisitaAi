@@ -7,16 +7,16 @@
 
 @section('content')
 <div class="v-page space-y-5">
+    @include('visitas.partials._form-js-strings')
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas'), 'url' => route('agente.visitas.index')], ['label' => __('Editar')]]" />
 
-    <section class="v-card dark:bg-gray-800">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Editar Visita</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Atualize os dados da visita, incluindo local, data e possíveis doenças.
-        </p>
-    </section>
+    <x-page-header :eyebrow="__('Registro em campo')" :title="__('Editar visita')">
+        <x-slot name="lead">
+            <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Atualize local, data, tratamentos e doenças monitoradas.') }}</p>
+        </x-slot>
+    </x-page-header>
 
-    <section class="v-card space-y-6 dark:bg-gray-800">
+    <x-section-card class="space-y-6 dark:bg-gray-800">
         @if ($errors->any())
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                 <ul class="list-disc list-inside">
@@ -32,27 +32,27 @@
             @method('PUT')
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Dados Básicos</legend>
+                <legend class="v-section-title mb-2">{{ __('Dados básicos') }}</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="vis_data" class="v-toolbar-label">Data da Visita <span class="text-red-500">*</span></label>
+                        <label for="vis_data" class="v-toolbar-label">{{ __('Data da visita') }} <span class="text-red-500">*</span></label>
                         <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', optional($visita)->vis_data) }}" required
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="vis_ciclo" class="v-toolbar-label">Ciclo/Ano <span class="text-red-500">*</span></label>
+                        <label for="vis_ciclo" class="v-toolbar-label">{{ __('Ciclo/ano') }} <span class="text-red-500">*</span></label>
                         <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo', optional($visita)->vis_ciclo) }}" required
                             class="v-input mt-1"
-                            placeholder="mm/aa">
+                            placeholder="{{ __('mm/aa') }}">
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    O ciclo deve ser informado no formato "mm/aa", por exemplo, "01/{{ now()->format('y') }}" para a primeira referência do ano de {{ now()->year }}.
+                    {{ __('O ciclo deve ser informado no formato «mm/aa», por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
                 </p>
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Localização</legend>
+                <legend class="v-section-title mb-2">{{ __('Localização') }}</legend>
                 <div class="col-span-1 sm:col-span-2"
                     x-data="{
                         open: false,
@@ -70,9 +70,9 @@
                     }"
                     x-init="$watch('search', () => open = true)">
 
-                    <label for="fk_local_id" class="v-toolbar-label">Local Visitado <span class="text-red-500">*</span></label>
+                    <label for="fk_local_id" class="v-toolbar-label">{{ __('Local visitado') }} <span class="text-red-500">*</span></label>
                     <div class="relative mt-1">
-                        <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="Buscar local..." required
+                        <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="{{ __('Buscar local...') }}" required
                             class="v-input">
 
                         <ul x-show="open" @click.away="open = false" x-cloak class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto"
@@ -88,9 +88,9 @@
                             })" :key="local.loc_id">
                                 <li>
                                     <button type="button"
-                                            @click="selectedId = local.loc_id; search = 'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || ''); open = false"
+                                            @click="selectedId = local.loc_id; search = window.__visitaFormatLocalLine(local); open = false"
                                             class="v-list-item-hover block w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-100">
-                                        <span x-text="'Cód. ' + (local.loc_codigo_unico || '') + ' - ' + (local.loc_endereco || '') + ', ' + (local.loc_numero ?? 'S/N') + ' - ' + (local.loc_bairro || '') + ', ' + (local.loc_cidade || '') + '/' + (local.loc_estado || '')"></span>
+                                        <span x-text="window.__visitaFormatLocalLine(local)"></span>
                                     </button>
                                 </li>
                             </template>
@@ -101,7 +101,7 @@
                     <div class="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-600" x-show="selectedId" x-cloak>
                         <p class="v-section-title text-sm">{{ __('Ocupantes (nesta visita)') }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel. Opcional.') }}</p>
-                        <p class="rounded border border-amber-200/80 bg-amber-50/90 p-2 text-xs leading-relaxed text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/35 dark:text-amber-100">{{ config('visitaai_municipio.lgpd.contextos.visitas_observacoes_ocupantes') }}</p>
+                        @include('municipio.partials._lgpd-visitas-obs-ocupantes')
                         <template x-for="m in ((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || []" :key="m.mor_id">
                             <div>
                                 <label class="v-toolbar-label" x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></label>
@@ -120,98 +120,98 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Se o local visitado não estiver na lista, você pode adicioná-lo na seção de <a href="{{ route('agente.locais.create') }}" class="text-gray-800 hover:underline">locais</a>.
+                    {!! __('Se o local visitado não estiver na lista, você pode adicioná-lo na seção de :link.', ['link' => '<a href="'.e(route('agente.locais.create')).'" class="text-gray-800 hover:underline">'.__('locais').'</a>']) !!}
                 </p>
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Atividades</legend>
+                <legend class="v-section-title mb-2">{{ __('Atividades') }}</legend>
                 <div>
-                    <label for="vis_atividade" class="v-toolbar-label">Atividade <span class="text-red-500">*</span></label>
+                    <label for="vis_atividade" class="v-toolbar-label">{{ __('Atividade') }} <span class="text-red-500">*</span></label>
                     <select id="vis_atividade" name="vis_atividade" required
                             class="v-select mt-1">
-                        <option value="">Selecione...</option>
+                        <option value="">{{ __('Selecione…') }}</option>
                         @foreach(config('ms_terminologia.atividades_pncd') as $cod => $at)
-                            <option value="{{ $cod }}" {{ old('vis_atividade', $visita->vis_atividade ?? '') == $cod ? 'selected' : '' }}>{{ $at['codigo'] }} | {{ $at['nome'] }}</option>
+                            <option value="{{ $cod }}" {{ old('vis_atividade', $visita->vis_atividade ?? '') == $cod ? 'selected' : '' }}>{{ $at['codigo'] }} · {{ __($at['nome']) }}</option>
                         @endforeach
                     </select>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Atividades conforme Diretrizes Nacionais (MS). LIRAa (7) é método simplificado de vigilância entomológica.
+                        {{ __('Atividades conforme Diretrizes Nacionais (MS). LIRAa (7) é método simplificado de vigilância entomológica.') }}
                     </p>
                 </div>
             </fieldset>
 
             <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
                 <div>
-                    <label for="vis_visita_tipo" class="v-toolbar-label">Tipo da visita</label>
+                    <label for="vis_visita_tipo" class="v-toolbar-label">{{ __('Tipo da visita') }}</label>
                     <select name="vis_visita_tipo" id="vis_visita_tipo"
                             class="v-select mt-1">
-                        <option value="">Selecione...</option>
+                        <option value="">{{ __('Selecione…') }}</option>
                         @foreach(config('ms_terminologia.visita_tipo') as $tipoVal => $tipoConf)
-                            <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo', $visita->vis_visita_tipo ?? '') == $tipoVal ? 'selected' : '' }}>{{ $tipoConf['label'] }}</option>
+                            <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo', $visita->vis_visita_tipo ?? '') == $tipoVal ? 'selected' : '' }}>{{ __($tipoConf['label']) }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Depósitos Inspecionados</legend>
+                <legend class="v-section-title mb-2">{{ __('Depósitos inspecionados') }}</legend>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     @foreach (['a1', 'a2', 'b', 'c', 'd1', 'd2', 'e'] as $tipo)
                         <div>
-                            <label for="insp_{{ $tipo }}" class="block text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Depósito {{ strtoupper($tipo) }}</label>
+                            <label for="insp_{{ $tipo }}" class="block text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">{{ __('Depósito :tipo', ['tipo' => strtoupper($tipo)]) }}</label>
                             <input id="insp_{{ $tipo }}" name="insp_{{ $tipo }}" type="number" min="0" value="{{ old('insp_' . $tipo, optional($visita)->{'insp_' . $tipo}) }}"
                                 class="v-input mt-1">
                         </div>
                     @endforeach
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Os depósitos são classificados como:
+                    {{ __('Os depósitos são classificados como:') }}
                 </p>
                 <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <p>A1: depósitos elevados com água (caixas d’água, tambores).</p>
-                        <p>A2: depósitos ao nível do solo (cisternas, filtros, barris).</p>
-                        <p>B: pequenos móveis (vasos, pratos, pingadeiras, fontes).</p>
-                        <p>C: fixos ou de difícil remoção (calhas, ralos, lajes).</p>
+                        <p>{{ __('A1: depósitos elevados com água (caixas d’água, tambores).') }}</p>
+                        <p>{{ __('A2: depósitos ao nível do solo (cisternas, filtros, barris).') }}</p>
+                        <p>{{ __('B: pequenos móveis (vasos, pratos, pingadeiras, fontes).') }}</p>
+                        <p>{{ __('C: fixos ou de difícil remoção (calhas, ralos, lajes).') }}</p>
                     </div>
                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <p>D1: pneus e materiais rodantes.</p>
-                        <p>D2: lixo, sucatas e entulho.</p>
-                        <p>E: naturais (oclusões em árvores, folhas, rochas).</p>
+                        <p>{{ __('D1: pneus e materiais rodantes.') }}</p>
+                        <p>{{ __('D2: lixo, sucatas e entulho.') }}</p>
+                        <p>{{ __('E: naturais (oclusões em árvores, folhas, rochas).') }}</p>
                     </div>
                 </div>
                 <div>
-                    <label for="vis_depositos_eliminados" class="v-toolbar-label">Depósitos Eliminados</label>
+                    <label for="vis_depositos_eliminados" class="v-toolbar-label">{{ __('Depósitos eliminados') }}</label>
                     <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados', optional($visita)->vis_depositos_eliminados) }}"
                         class="v-input mt-1">
                 </div>
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Coleta de Amostra</legend>
+                <legend class="v-section-title mb-2">{{ __('Coleta de amostra') }}</legend>
                 <div class="flex items-center mt-6">
                     <input type="checkbox" name="vis_coleta_amostra" id="vis_coleta_amostra" value="1" {{ old('vis_coleta_amostra', optional($visita)->vis_coleta_amostra) ? 'checked' : '' }}
                         class="mr-2 text-blue-600 dark:text-blue-400">
-                    <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">Houve coleta de amostra?</label>
+                    <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">{{ __('Houve coleta de amostra?') }}</label>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 pb-4">
-                    Se marcado, você poderá informar o número de amostra inicial e final, além da quantidade de tubitos utilizados.
+                    {{ __('Se marcado, você poderá informar o número de amostra inicial e final, além da quantidade de tubitos utilizados.') }}
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="vis_amos_inicial" class="v-toolbar-label">Número de Amostra Inicial</label>
+                        <label for="vis_amos_inicial" class="v-toolbar-label">{{ __('Número de amostra inicial') }}</label>
                         <input type="number" name="vis_amos_inicial" id="vis_amos_inicial" min="0" value="{{ old('vis_amos_inicial', optional($visita)->vis_amos_inicial) }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="vis_amos_final" class="v-toolbar-label">Número de Amostra Final</label>
+                        <label for="vis_amos_final" class="v-toolbar-label">{{ __('Número de amostra final') }}</label>
                         <input type="number" name="vis_amos_final" id="vis_amos_final" min="0" value="{{ old('vis_amos_final', optional($visita)->vis_amos_final) }}"
                             class="v-input mt-1">
                     </div>
                 </div>
                 <div>
-                    <label for="vis_qtd_tubitos" class="v-toolbar-label">Quantidade de Tubitos Utilizados</label>
+                    <label for="vis_qtd_tubitos" class="v-toolbar-label">{{ __('Quantidade de tubitos utilizados') }}</label>
                     <input type="number" name="vis_qtd_tubitos" id="vis_qtd_tubitos" min="0" value="{{ old('vis_qtd_tubitos', optional($visita)->vis_qtd_tubitos) }}"
                         class="v-input mt-1">
                 </div>
@@ -219,16 +219,16 @@
 
             {{-- Tratamentos --}}
             <div x-data="{ exibirTratamentos: {{ old('tratamentos') || ($visita->tratamentos && count($visita->tratamentos)) ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', json_encode($visita->tratamentos ?? [])) }} }" class="space-y-4">
-                <label class="v-toolbar-label">Tratamentos Realizados</label>
+                <label class="v-toolbar-label">{{ __('Tratamentos realizados') }}</label>
 
                 <template x-if="tratamentos.length === 0">
                     <div class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
-                        Nenhum tratamento foi informado. Caso tenha realizado algum, clique no botão abaixo.
+                        {{ __('Nenhum tratamento foi informado. Caso tenha realizado algum, clique no botão abaixo.') }}
                         <div class="mt-2">
                             <button type="button"
                                     @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
                                     class="v-btn-compact v-btn-compact--blue">
-                                + Adicionar Tratamento
+                                {{ __('+ Adicionar tratamento') }}
                             </button>
                         </div>
                     </div>
@@ -240,7 +240,7 @@
                             <div class="p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 space-y-4">
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                                     <div>
-                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Forma</label>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Forma') }}</label>
                                         <select :name="`tratamentos[${i}][trat_forma]`"
                                                 x-model="t.trat_forma"
                                                 @change="
@@ -255,17 +255,17 @@
                                                     }
                                                 "
                                                 class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
-                                            <option value="Focal">Focal</option>
-                                            <option value="Perifocal">Perifocal</option>
+                                            <option value="Focal">{{ __('Focal') }}</option>
+                                            <option value="Perifocal">{{ __('Perifocal') }}</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Tipo</label>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipo') }}</label>
                                         <input type="text" :name="`tratamentos[${i}][trat_tipo]`" x-model="t.trat_tipo" readonly
                                             class="v-input mt-1 cursor-not-allowed bg-slate-200/90 opacity-90 dark:bg-slate-800 dark:text-slate-100">
                                     </div>
                                     <div x-show="t.trat_forma === 'Focal'">
-                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Linha</label>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Linha') }}</label>
                                         <select :name="`tratamentos[${i}][linha]`" x-model="t.linha"
                                                 class="mt-1 w-full rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm">
                                             <option value="1">1</option>
@@ -276,12 +276,12 @@
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="t.trat_forma === 'Focal'">
                                     <div>
-                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade (gramas)</label>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Quantidade (gramas)') }}</label>
                                         <input type="number" min="0" :name="`tratamentos[${i}][qtd_gramas]`" x-model="t.qtd_gramas"
                                             class="v-input mt-1">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Depósitos Tratados</label>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Depósitos tratados') }}</label>
                                         <input type="number" min="0" :name="`tratamentos[${i}][qtd_depositos_tratados]`" x-model="t.qtd_depositos_tratados"
                                             class="v-input mt-1">
                                     </div>
@@ -289,7 +289,7 @@
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="t.trat_forma === 'Perifocal'">
                                     <div>
-                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Quantidade de Cargas</label>
+                                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Quantidade de cargas') }}</label>
                                         <input type="number" min="0" :name="`tratamentos[${i}][qtd_cargas]`" x-model="t.qtd_cargas"
                                             class="v-input mt-1">
                                     </div>
@@ -298,7 +298,7 @@
                                 <div class="flex justify-end">
                                     <button type="button" @click="tratamentos.splice(i, 1)"
                                             class="v-btn-compact v-btn-compact--red">
-                                        - Remover Tratamento
+                                        {{ __('− Remover tratamento') }}
                                     </button>
                                 </div>
                             </div>
@@ -308,7 +308,7 @@
                             <button type="button"
                                     @click="tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
                                     class="v-btn-compact v-btn-compact--blue">
-                                + Adicionar Tratamento
+                                {{ __('+ Adicionar tratamento') }}
                             </button>
                         </div>
                     </div>
@@ -320,7 +320,7 @@
                 </template>
 
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Para um tratamento ser considerado válido e adicionado na base de dados, é necessário preencher todos os campos relacionados.
+                    {{ __('Para um tratamento ser considerado válido e adicionado na base de dados, é necessário preencher todos os campos relacionados.') }}
                 </p>
             </div>
 
@@ -329,16 +329,16 @@
             <div id="sugestoes-doencas-wrap" class="space-y-2" data-sugestoes-url="{{ route('agente.sugestoes-doencas') }}" data-local-id="{{ $visita->fk_local_id }}">
                 <div class="flex flex-wrap gap-2 items-center">
                     <button type="button" id="btn-sugestoes-doencas" class="text-sm font-medium text-slate-600 underline decoration-slate-300 underline-offset-2 hover:text-slate-900 dark:text-slate-400 dark:decoration-slate-600 dark:hover:text-slate-200">
-                        Ver sugestões de doenças para este imóvel
+                        {{ __('Ver sugestões de doenças para este imóvel') }}
                     </button>
                 </div>
                 <div id="sugestoes-doencas-result" class="space-y-2" style="display:none;">
-                    <div id="sugestoes-doencas-loading" class="text-sm text-gray-500 dark:text-gray-400">Buscando…</div>
+                    <div id="sugestoes-doencas-loading" class="text-sm text-gray-500 dark:text-gray-400">{{ __('Buscando…') }}</div>
                     <div id="sugestoes-doencas-erro" class="text-sm text-red-600 dark:text-red-400" style="display:none;"></div>
-                    <div id="sugestoes-doencas-empty" class="text-sm text-gray-500 dark:text-gray-400" style="display:none;">Nenhuma sugestão para este imóvel.</div>
+                    <div id="sugestoes-doencas-empty" class="text-sm text-gray-500 dark:text-gray-400" style="display:none;">{{ __('Nenhuma sugestão para este imóvel.') }}</div>
                     <div id="sugestoes-doencas-list" class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-600 space-y-3" style="display:none;">
-                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">Sugestões com base nos dados já cadastrados</p>
-                        <p class="text-xs text-gray-600 dark:text-gray-400">O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ __('Sugestões com base nos dados já cadastrados') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('O sistema sugere doenças com base no histórico do imóvel, nas visitas do município e nas palavras que você escreveu nas observações.') }}</p>
                         <div id="sugestoes-doencas-buttons" class="flex flex-wrap gap-2 items-center"></div>
                     </div>
                 </div>
@@ -347,7 +347,7 @@
 
             {{-- Doenças Monitoradas --}}
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Possíveis doenças</legend>
+                <legend class="v-section-title mb-2">{{ __('Possíveis doenças') }}</legend>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     @foreach ($doencas as $doenca)
@@ -366,39 +366,39 @@
                 </div>
 
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Marque as possíveis doenças relacionadas à visita, se houver. Por exemplo, se há algum morador no local com suspeita de dengue.
+                    {{ __('Marque as possíveis doenças relacionadas à visita, se houver. Por exemplo, se há algum morador no local com suspeita de dengue.') }}
                 </p>
             </fieldset>
 
             <div class="space-y-3">
-                <label class="v-toolbar-label">Pendências</label>
+                <label class="v-toolbar-label">{{ __('Pendências') }}</label>
                 <div class="flex items-center pt-4">
                     <input type="checkbox" name="vis_pendencias" id="vis_pendencias" value="1" {{ old('vis_pendencias', optional($visita)->vis_pendencias) ? 'checked' : '' }}
                         class="mr-2 text-blue-600 dark:text-blue-400">
-                    <label for="vis_pendencias" class="text-sm text-gray-700 dark:text-gray-300">Houve alguma pendência na visita?</label>
+                    <label for="vis_pendencias" class="text-sm text-gray-700 dark:text-gray-300">{{ __('Houve alguma pendência na visita?') }}</label>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 pb-4">
-                    Se marcado, você pode informar as pendências no campo de observações abaixo.
+                    {{ __('Se marcado, você pode informar as pendências no campo de observações abaixo.') }}
                 </p>
             </div>
 
             <div>
-                <label for="vis_observacoes" class="v-toolbar-label">Observações</label>
+                <label for="vis_observacoes" class="v-toolbar-label">{{ __('Observações') }}</label>
                 <textarea name="vis_observacoes" id="vis_observacoes" rows="5"
                         class="v-input mt-1">{{ old('vis_observacoes', optional($visita)->vis_observacoes) }}</textarea>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.
+                {{ __('Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.') }}
             </p>
 
             <div class="flex justify-end">
                 <button type="submit"
                         class="v-btn-primary px-6">
-                    Atualizar Visita
+                    {{ __('Atualizar visita') }}
                 </button>
             </div>
         </form>
-    </section>
+    </x-section-card>
 </div>
 
 <script>
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var fullUrl = url + '?local_id=' + encodeURIComponent(localId) + '&observacoes=' + encodeURIComponent(obs);
         fetch(fullUrl)
             .then(function(r) {
-                if (!r.ok) throw new Error('Erro ' + r.status);
+                if (!r.ok) throw new Error((window.__visitaFormStrings.errorWithStatus || '').replace(':status', String(r.status)));
                 return r.json();
             })
             .then(function(data) {
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(function(e) {
                 loading.style.display = 'none';
-                erroEl.textContent = e.message || 'Falha ao carregar.';
+                erroEl.textContent = e.message || window.__visitaFormStrings.fetchDiseaseSuggestionsFailed;
                 erroEl.style.display = '';
             });
     });

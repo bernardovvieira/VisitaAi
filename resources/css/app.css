@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 /*
- * Design system — padrão ERP / console operacional:
- * canvas neutro, superfícies elevadas, hierarquia tipográfica (eyebrow → título → corpo),
- * KPIs densos, tabelas com cabeçalho fixo visual, acento azul para ação primária.
+ * Design system — console minimalista e refinado:
+ * canvas quase plano, cartões com hairline + sombra mínima, tipografia sem excesso de peso,
+ * hierarquia eyebrow → título → corpo, tabelas uniformes com hover discreto, azul só onde guia ação.
  */
 @layer base {
     @media (prefers-reduced-motion: reduce) {
@@ -15,9 +15,9 @@
     }
 
     :root {
-        --v-canvas: 241 245 249; /* slate-100 */
+        --v-canvas: 248 250 252; /* slate-50 — base mais limpa */
         --v-surface: 255 255 255;
-        --v-surface-muted: 248 250 252; /* slate-50 */
+        --v-surface-muted: 248 250 252;
         --v-border: 226 232 240; /* slate-200 */
         --v-border-strong: 203 213 225; /* slate-300 */
         --v-text: 15 23 42; /* slate-900 */
@@ -202,13 +202,13 @@
         @apply min-h-0 flex-1 overflow-y-auto;
         scrollbar-gutter: stable;
         scrollbar-width: thin;
-        scrollbar-color: rgb(var(--v-border-strong) / 0.9) transparent;
-        /* Gradiente suave (estilo Aviagest) com leve tom azul — mantém identidade Visita Aí */
+        scrollbar-color: rgb(var(--v-border-strong) / 0.65) transparent;
+        /* Fundo quase sólido: leve nuance no canto (minimalista, sem “vidro” no canvas) */
         background: linear-gradient(
-            145deg,
+            165deg,
             rgb(var(--v-canvas) / 1) 0%,
-            rgb(248 250 252) 42%,
-            rgb(239 246 255 / 0.45) 100%
+            rgb(251 252 253) 52%,
+            rgb(248 250 252) 100%
         );
         background-attachment: fixed;
     }
@@ -230,77 +230,74 @@
     }
 
     .dark .v-app-main {
-        background: linear-gradient(145deg, rgb(3 7 18) 0%, rgb(15 23 42 / 0.96) 52%, rgb(15 23 42 / 0.88) 100%);
+        background: linear-gradient(165deg, rgb(3 7 18) 0%, rgb(15 23 42 / 0.98) 100%);
         background-attachment: fixed;
     }
 
     .v-app-main-inner {
-        @apply mx-auto max-w-7xl px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-6;
+        @apply mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7;
     }
 
     .v-topbar {
-        @apply sticky top-0 z-20 flex h-[52px] shrink-0 items-center justify-end gap-1 border-b px-2 backdrop-blur-xl sm:justify-between sm:px-4;
-        border-color: rgb(var(--v-border) / 0.85);
-        background-color: rgb(var(--v-surface) / 0.86);
-        box-shadow:
-            0 1px 0 0 rgb(var(--v-border) / 0.35),
-            inset 0 1px 0 0 rgb(255 255 255 / 0.45);
+        @apply sticky top-0 z-20 flex h-[52px] shrink-0 items-center justify-end gap-1 border-b px-3 backdrop-blur-md sm:justify-between sm:px-5;
+        border-color: rgb(var(--v-border) / 0.65);
+        background-color: rgb(var(--v-surface) / 0.92);
+        box-shadow: 0 1px 0 0 rgb(15 23 42 / 0.04);
     }
 
     .dark .v-topbar {
-        background-color: rgb(var(--v-surface) / 0.82);
-        box-shadow:
-            0 1px 0 0 rgb(0 0 0 / 0.28),
-            inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+        background-color: rgb(var(--v-surface) / 0.88);
+        box-shadow: 0 1px 0 0 rgb(0 0 0 / 0.35);
     }
 
     .v-page {
-        @apply mx-auto max-w-7xl space-y-5;
+        @apply mx-auto max-w-7xl space-y-6;
     }
 
     .v-page-header {
-        @apply mb-5 pb-0;
+        @apply mb-0 border-b border-slate-200/80 pb-5 dark:border-slate-700/70;
     }
 
     .v-page-eyebrow {
-        @apply mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-600 dark:text-blue-400;
+        @apply mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400;
     }
 
     .v-page-title {
-        @apply text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl;
-        letter-spacing: -0.02em;
-        line-height: 1.15;
+        @apply text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl;
+        letter-spacing: -0.025em;
+        line-height: 1.2;
     }
 
     .v-page-lead {
-        @apply mt-2 max-w-3xl text-sm leading-relaxed;
+        @apply mt-3 max-w-2xl text-sm leading-relaxed;
         color: rgb(var(--v-text-muted) / 1);
     }
 
+    /* Título de secção / fieldset: peso médio, sem gritar */
     .v-section-title {
-        @apply text-[13px] font-semibold text-slate-900 dark:text-slate-100;
+        @apply text-sm font-semibold tracking-tight text-slate-800 dark:text-slate-100;
     }
 
-    /* Superfície de trabalho — cartão com vidro e profundidade (alinhado ao painel “fino”) */
+    /* Rótulo de grupo denso (tabelas, meta): microcaption discreto */
+    .v-label-micro {
+        @apply text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400;
+    }
+
+    /* Cartão: superfície plana, borda fina, sombra quase imperceptível */
     .v-card {
-        @apply overflow-hidden p-4 shadow-sm sm:p-5;
+        @apply overflow-hidden p-5 sm:p-6;
         border-radius: var(--v-radius-2xl);
-        border: 1px solid rgb(var(--v-border) / 0.92);
-        background-color: rgb(var(--v-surface) / 0.94);
-        box-shadow:
-            0 2px 8px rgb(15 23 42 / 0.06),
-            0 1px 2px rgb(15 23 42 / 0.03),
-            inset 0 1px 0 rgb(255 255 255 / 0.55);
-        backdrop-filter: blur(12px) saturate(150%);
-        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        border: 1px solid rgb(var(--v-border) / 0.75);
+        background-color: rgb(var(--v-surface) / 1);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+        backdrop-filter: blur(10px) saturate(120%);
+        -webkit-backdrop-filter: blur(10px) saturate(120%);
     }
 
     .dark .v-card {
-        background-color: rgb(var(--v-surface) / 0.9);
-        box-shadow:
-            0 2px 10px rgb(0 0 0 / 0.38),
-            0 1px 2px rgb(0 0 0 / 0.22),
-            inset 0 1px 0 rgb(255 255 255 / 0.05);
+        background-color: rgb(var(--v-surface) / 0.92);
+        border-color: rgb(var(--v-border) / 0.55);
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     }
 
     .v-card--muted {
@@ -326,33 +323,27 @@
 
     /* Legado: painel único com secções (preferir vários .v-card) */
     .v-panel {
-        @apply overflow-hidden border bg-white/95 dark:border-slate-700 dark:bg-slate-900/80;
+        @apply overflow-hidden border bg-white dark:border-slate-700 dark:bg-slate-900/80;
         border-radius: var(--v-radius-2xl);
-        border-color: rgb(var(--v-border) / 0.92);
-        box-shadow:
-            0 2px 8px rgb(15 23 42 / 0.06),
-            0 1px 2px rgb(15 23 42 / 0.03),
-            inset 0 1px 0 rgb(255 255 255 / 0.55);
-        backdrop-filter: blur(12px) saturate(150%);
-        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        border-color: rgb(var(--v-border) / 0.75);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+        backdrop-filter: blur(10px) saturate(120%);
+        -webkit-backdrop-filter: blur(10px) saturate(120%);
     }
 
     .dark .v-panel {
-        box-shadow:
-            0 2px 10px rgb(0 0 0 / 0.38),
-            0 1px 2px rgb(0 0 0 / 0.22),
-            inset 0 1px 0 rgb(255 255 255 / 0.05);
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     }
 
-    /* Navegação lateral — trilho com profundidade e leve vidro (marca escura + acento azul ativo) */
+    /* Navegação lateral — silhueta contínua, sombra contida */
     .v-sidebar-rail {
-        @apply border-r border-white/[0.06] text-slate-200 shadow-2xl dark:shadow-none;
-        background: linear-gradient(180deg, rgb(2 6 23) 0%, rgb(15 23 42 / 0.97) 55%, rgb(2 6 23) 100%);
-        backdrop-filter: blur(18px) saturate(140%);
-        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        @apply border-r border-white/[0.06] text-slate-200 dark:shadow-none;
+        background: linear-gradient(180deg, rgb(2 6 23) 0%, rgb(15 23 42 / 0.98) 50%, rgb(2 6 23) 100%);
+        backdrop-filter: blur(12px) saturate(125%);
+        -webkit-backdrop-filter: blur(12px) saturate(125%);
         box-shadow:
-            inset -1px 0 0 rgb(255 255 255 / 0.04),
-            4px 0 24px rgb(0 0 0 / 0.2);
+            inset -1px 0 0 rgb(255 255 255 / 0.03),
+            2px 0 16px rgb(0 0 0 / 0.12);
     }
 
     .v-panel-section {
@@ -385,16 +376,16 @@
     }
 
     .v-data-table thead {
-        @apply sticky top-0 z-[2] bg-slate-100 dark:bg-slate-800;
-        box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.85);
+        @apply sticky top-0 z-[2] bg-slate-50 dark:bg-slate-800/95;
+        box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.6);
     }
 
     .dark .v-data-table thead {
-        box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.75);
+        box-shadow: 0 1px 0 0 rgb(var(--v-border) / 0.5);
     }
 
     .v-data-table th {
-        @apply whitespace-nowrap px-3 py-2.5 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300;
+        @apply whitespace-nowrap px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500 dark:text-slate-400;
     }
 
     .v-data-table th:first-child {
@@ -406,15 +397,7 @@
     }
 
     .v-data-table tbody tr {
-        @apply border-b border-slate-100 bg-white transition-colors hover:bg-blue-50/40 dark:border-slate-800 dark:bg-slate-900/30 dark:hover:bg-slate-800/55;
-    }
-
-    .v-data-table tbody tr:nth-child(even) {
-        @apply bg-slate-50/70 dark:bg-slate-900/45;
-    }
-
-    .v-data-table tbody tr:nth-child(even):hover {
-        @apply bg-blue-50/50 dark:bg-slate-800/55;
+        @apply border-b border-slate-100/90 bg-white transition-colors hover:bg-slate-50/90 dark:border-slate-800/80 dark:bg-slate-900/20 dark:hover:bg-slate-800/40;
     }
 
     .v-data-table td {
@@ -435,12 +418,12 @@
 
     /* Linha com hover em tabelas legadas (min-w-full divide-y) — alinhado ao .v-data-table */
     .v-table-row-interactive {
-        @apply transition-colors hover:bg-blue-50/45 dark:hover:bg-slate-800/65;
+        @apply transition-colors hover:bg-slate-50/95 dark:hover:bg-slate-800/50;
     }
 
     /* Mesmo padrão com célula bairro fixa (indicadores ocupantes) — use com `group` na <tr> */
     .v-table-row-interactive-sticky {
-        @apply bg-white transition-colors hover:bg-blue-50/45 dark:bg-gray-800 dark:hover:bg-slate-800/65;
+        @apply bg-white transition-colors hover:bg-slate-50/95 dark:bg-gray-800 dark:hover:bg-slate-800/55;
     }
 
     /* Chip gerado em JS (ex.: sugestões de doença na visita) */
@@ -468,13 +451,13 @@
     .v-dashboard-kpi {
         @apply relative flex min-h-[4.25rem] gap-2.5 overflow-hidden p-3;
         border-radius: var(--v-radius-md);
-        border: 1px solid rgb(var(--v-border) / 0.9);
+        border: 1px solid rgb(var(--v-border) / 0.75);
         background-color: rgb(var(--v-surface) / 1);
-        box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.03);
     }
 
     .dark .v-dashboard-kpi {
-        box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
     }
 
     .v-dashboard-kpi__icon {
@@ -503,11 +486,11 @@
 
     /* Atalhos — lista de tarefas ERP */
     .v-dashboard-action {
-        @apply flex items-center gap-2 border px-3 py-2 text-left text-[13px] font-semibold text-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
+        @apply flex items-center gap-2 border px-3 py-2 text-left text-[13px] font-medium text-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
         border-radius: var(--v-radius-md);
-        border-color: rgb(var(--v-border) / 1);
+        border-color: rgb(var(--v-border) / 0.8);
         background-color: rgb(var(--v-surface) / 1);
-        box-shadow: 0 1px 1px 0 rgb(15 23 42 / 0.03);
+        box-shadow: 0 1px 1px 0 rgb(15 23 42 / 0.02);
     }
 
     .v-dashboard-action:hover {
@@ -566,7 +549,7 @@
      * KPIs só tipografia, atalhos em cartão horizontal). Cores de acento seguem o azul do produto.
      */
     .v-dash {
-        @apply flex min-w-0 max-w-full flex-col gap-5;
+        @apply flex min-w-0 max-w-full flex-col gap-6;
     }
 
     .v-dash-header {
@@ -578,12 +561,12 @@
     }
 
     .v-dash-eyebrow {
-        @apply mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400;
+        @apply mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400;
     }
 
     .v-dash-title {
-        @apply m-0 text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl;
-        letter-spacing: -0.02em;
+        @apply m-0 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl;
+        letter-spacing: -0.025em;
     }
 
     .v-dash-sub {
@@ -592,20 +575,14 @@
     }
 
     .v-dash-card {
-        @apply flex flex-col rounded-2xl border border-slate-200/95 bg-white/90 p-5 shadow-sm dark:border-slate-600 dark:bg-slate-900/75;
-        box-shadow:
-            0 2px 8px rgb(15 23 42 / 0.07),
-            0 1px 2px rgb(15 23 42 / 0.04),
-            inset 0 1px 0 rgb(255 255 255 / 0.55);
-        backdrop-filter: blur(14px) saturate(155%);
-        -webkit-backdrop-filter: blur(14px) saturate(155%);
+        @apply flex flex-col rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-600/70 dark:bg-slate-900/70;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
     }
 
     .dark .v-dash-card {
-        box-shadow:
-            0 2px 8px rgb(0 0 0 / 0.4),
-            0 1px 2px rgb(0 0 0 / 0.28),
-            inset 0 1px 0 rgb(255 255 255 / 0.06);
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     }
 
     .v-dash-card__head {
@@ -613,7 +590,7 @@
     }
 
     .v-dash-card__title {
-        @apply m-0 text-base font-bold text-slate-900 dark:text-slate-100;
+        @apply m-0 text-base font-semibold text-slate-900 dark:text-slate-100;
     }
 
     .v-dash-card__sub {
@@ -630,29 +607,22 @@
     }
 
     .v-kpi-card-agi {
-        @apply flex flex-col gap-1 rounded-2xl border border-slate-200/95 bg-white/90 p-5 dark:border-slate-600 dark:bg-slate-900/75;
-        box-shadow:
-            0 2px 8px rgb(15 23 42 / 0.06),
-            0 1px 2px rgb(15 23 42 / 0.03),
-            inset 0 1px 0 rgb(255 255 255 / 0.5);
-        backdrop-filter: blur(12px) saturate(150%);
-        -webkit-backdrop-filter: blur(12px) saturate(150%);
+        @apply flex flex-col gap-1 rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-600/70 dark:bg-slate-900/70;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
     }
 
     .dark .v-kpi-card-agi {
-        box-shadow:
-            0 2px 8px rgb(0 0 0 / 0.38),
-            0 1px 2px rgb(0 0 0 / 0.22),
-            inset 0 1px 0 rgb(255 255 255 / 0.05);
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     }
 
     .v-kpi-card-agi__label {
-        @apply text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400;
-        letter-spacing: 0.05em;
+        @apply text-[11px] font-medium uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400;
     }
 
     .v-kpi-card-agi__value {
-        @apply text-2xl font-extrabold tabular-nums text-slate-900 dark:text-slate-50;
+        @apply text-2xl font-semibold tabular-nums text-slate-900 dark:text-slate-50;
         letter-spacing: -0.02em;
         line-height: 1.1;
     }
@@ -698,24 +668,21 @@
     }
 
     .v-dash-shortcut {
-        @apply flex h-full min-h-0 min-w-0 max-w-full items-center gap-2 overflow-hidden rounded-xl border border-slate-200/95 bg-white/90 px-3 py-2.5 text-inherit no-underline transition dark:border-slate-600 dark:bg-slate-900/75;
-        box-shadow:
-            0 2px 8px rgb(15 23 42 / 0.06),
-            0 1px 2px rgb(15 23 42 / 0.03),
-            inset 0 1px 0 rgb(255 255 255 / 0.5);
+        @apply flex h-full min-h-0 min-w-0 max-w-full items-center gap-2 overflow-hidden rounded-xl border border-slate-200/80 bg-white px-3 py-2.5 text-inherit no-underline transition dark:border-slate-600/70 dark:bg-slate-900/70;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
     }
 
     .v-dash-shortcut:hover {
-        @apply border-blue-300/80 shadow-md dark:border-blue-500/35;
+        @apply border-slate-300/90 bg-slate-50/80 dark:border-slate-500 dark:bg-slate-800/60;
     }
 
     .v-dash-shortcut--primary {
-        @apply border-blue-600 bg-blue-600 text-white shadow-md dark:border-blue-500 dark:bg-blue-600;
-        box-shadow: 0 2px 10px rgb(37 99 235 / 0.35);
+        @apply border-blue-600 bg-blue-600 text-white dark:border-blue-600 dark:bg-blue-600;
+        box-shadow: 0 1px 3px rgb(37 99 235 / 0.25);
     }
 
     .v-dash-shortcut--primary:hover {
-        @apply border-blue-700 bg-blue-700 dark:border-blue-400 dark:bg-blue-500;
+        @apply border-blue-700 bg-blue-700 shadow-md dark:border-blue-500 dark:bg-blue-500;
     }
 
     .v-dash-shortcut--primary .v-dash-shortcut__chevron {
@@ -739,7 +706,7 @@
     }
 
     .v-dash-shortcut__label {
-        @apply min-w-0 text-[13px] font-semibold leading-tight text-slate-900 dark:text-slate-50;
+        @apply min-w-0 text-[13px] font-medium leading-tight text-slate-900 dark:text-slate-50;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -781,19 +748,19 @@
         @apply no-underline transition hover:brightness-[0.98] dark:hover:brightness-110;
     }
 
-    /* Trilho de navegação estrutural — sem caixa (só links/chevrons no fundo) */
+    /* Trilho de navegação estrutural — respiro antes do título */
     .v-breadcrumbs {
-        @apply mb-0 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
+        @apply mb-4 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
     }
 
     /* ─── Componentes Blade: botões ───────────────────────────────────────── */
     .v-btn-primary {
-        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-blue-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
-        box-shadow: 0 2px 10px rgb(37 99 235 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.15);
+        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 1px 2px rgb(37 99 235 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.12);
     }
 
     .v-btn-primary:hover:not(:disabled) {
-        box-shadow: 0 4px 16px rgb(37 99 235 / 0.38), inset 0 1px 0 rgb(255 255 255 / 0.18);
+        box-shadow: 0 2px 8px rgb(37 99 235 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.15);
     }
 
     .v-btn-success {
@@ -845,12 +812,10 @@
     }
 
     .v-btn-secondary {
-        @apply inline-flex items-center justify-center rounded-xl border border-slate-200/95 bg-white/90 px-3.5 py-2 text-[13px] font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
-        box-shadow:
-            0 1px 3px rgb(15 23 42 / 0.06),
-            inset 0 1px 0 rgb(255 255 255 / 0.55);
-        backdrop-filter: blur(10px) saturate(140%);
-        -webkit-backdrop-filter: blur(10px) saturate(140%);
+        @apply inline-flex items-center justify-center rounded-xl border border-slate-200/90 bg-white px-3.5 py-2 text-[13px] font-medium text-slate-800 transition hover:border-slate-300 hover:bg-slate-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+        backdrop-filter: blur(6px) saturate(120%);
+        -webkit-backdrop-filter: blur(6px) saturate(120%);
     }
 
     .v-btn-danger {
@@ -947,7 +912,7 @@
 
     /* Alertas inline (x-alert) */
     .v-alert {
-        @apply mb-4 rounded-xl border px-3.5 py-2.5 text-sm font-medium leading-snug shadow-sm backdrop-blur-sm;
+        @apply mb-4 rounded-xl border px-3.5 py-2.5 text-sm font-medium leading-snug shadow-none backdrop-blur-sm;
     }
 
     .v-alert--success {
@@ -960,6 +925,10 @@
 
     .v-alert--error {
         @apply border-red-300/90 bg-red-50/90 text-red-950 dark:border-red-800 dark:bg-red-950/40 dark:text-red-50;
+    }
+
+    .v-alert--info {
+        @apply border-slate-300/90 bg-slate-50/95 text-slate-800 dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-100;
     }
 
     /* Cookie banner / blocos informativos públicos */

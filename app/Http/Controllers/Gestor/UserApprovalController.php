@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Gestor;
 
+use App\Helpers\LogHelper;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Helpers\LogHelper;
+use Illuminate\View\View;
 
 class UserApprovalController extends Controller
 {
@@ -34,7 +34,7 @@ class UserApprovalController extends Controller
 
         // Atualiza o usuário: marca aprovado e define quem aprovou
         $user->update([
-            'use_aprovado'  => true,
+            'use_aprovado' => true,
             'fk_gestor_id' => $gestorId,
         ]);
 
@@ -42,9 +42,9 @@ class UserApprovalController extends Controller
             'Aprovação de usuário',
             'Usuário',
             'approve',
-            'Usuário aprovado: ' . $user->use_nome . ' (ID: ' . $user->use_id . ')'
+            'Usuário aprovado: '.$user->use_nome.' (ID: '.$user->use_id.')'
         );
 
-        return back()->with('status', 'Usuário aprovado com sucesso!');
+        return back()->with('status', __('Usuário aprovado com sucesso!'));
     }
 }

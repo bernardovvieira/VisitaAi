@@ -1,6 +1,7 @@
 <x-guest-layout>
-    <x-alert type="success" :message="session('status')" />
-    <x-alert type="error" :message="$errors->first('register')" />
+    @if ($errors->has('register'))
+        <x-alert type="error" :title="__('Erro')" :message="$errors->first('register')" />
+    @endif
 
     @if ($errors->any() && ! $errors->has('register'))
         @php

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -11,6 +10,7 @@ use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\TwoFactorConfirmedResponse;
 use App\Http\Responses\TwoFactorDisabledResponse;
 use App\Http\Responses\TwoFactorEnabledResponse;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use Laravel\Fortify\Contracts\TwoFactorConfirmedResponse as TwoFactorConfirmedResponseContract;
 use Laravel\Fortify\Contracts\TwoFactorDisabledResponse as TwoFactorDisabledResponseContract;
 use Laravel\Fortify\Contracts\TwoFactorEnabledResponse as TwoFactorEnabledResponseContract;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -55,12 +55,12 @@ class FortifyServiceProvider extends ServiceProvider
 
         //
         // 0) Define quais views o Fortify deve usar
-        Fortify::loginView(fn() => view('auth.login'));
-        Fortify::registerView(fn() => view('auth.register'));
-        Fortify::requestPasswordResetLinkView(fn() => view('auth.forgot-password'));
-        Fortify::resetPasswordView(fn($request) => view('auth.reset-password', ['request' => $request]));
-        Fortify::verifyEmailView(fn() => view('auth.verify-email'));
-        Fortify::confirmPasswordView(fn() => view('auth.confirm-password'));
+        Fortify::loginView(fn () => view('auth.login'));
+        Fortify::registerView(fn () => view('auth.register'));
+        Fortify::requestPasswordResetLinkView(fn () => view('auth.forgot-password'));
+        Fortify::resetPasswordView(fn ($request) => view('auth.reset-password', ['request' => $request]));
+        Fortify::verifyEmailView(fn () => view('auth.verify-email'));
+        Fortify::confirmPasswordView(fn () => view('auth.confirm-password'));
         Fortify::twoFactorChallengeView('auth.two-factor-challenge');
 
         //
@@ -75,28 +75,28 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::authenticateUsing(function (Request $request) {
             $request->validate([
                 'use_email' => 'required|string',
-                'password'  => 'required|string',
+                'password' => 'required|string',
             ], [
-                'use_email.required' => 'O campo CPF ou e-mail é obrigatório.',
-                'password.required' => 'O campo senha é obrigatório.',
+                'use_email.required' => __('O campo CPF ou e-mail é obrigatório.'),
+                'password.required' => __('O campo senha é obrigatório.'),
             ]);
 
-            $login    = (string) $request->input('use_email');
+            $login = (string) $request->input('use_email');
             $password = (string) $request->input('password');
 
             $user = User::where('use_email', $login)
-                        ->orWhere('use_cpf',   $login)
-                        ->first();
+                ->orWhere('use_cpf', $login)
+                ->first();
 
             if (! $user) {
                 throw ValidationException::withMessages([
-                    'use_email' => 'Usuário não encontrado.',
+                    'use_email' => __('Usuário não encontrado.'),
                 ]);
             }
 
             if (! Hash::check($password, $user->use_senha)) {
                 throw ValidationException::withMessages([
-                    'password' => 'Senha incorreta.',
+                    'password' => __('Senha incorreta.'),
                 ]);
             }
 
@@ -109,6 +109,7 @@ class FortifyServiceProvider extends ServiceProvider
             $key = Str::transliterate(
                 Str::lower($request->input('use_email')).'|'.$request->ip()
             );
+
             return Limit::perMinute(3)->by($key);
         });
 
@@ -116,7 +117,7 @@ class FortifyServiceProvider extends ServiceProvider
         // 4) Throttle two-factor
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)
-                        ->by($request->session()->get('login.id'));
+                ->by($request->session()->get('login.id'));
         });
     }
 }

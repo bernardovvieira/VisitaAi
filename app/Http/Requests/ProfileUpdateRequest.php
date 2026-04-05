@@ -43,9 +43,9 @@ class ProfileUpdateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'nome',
-            'tema' => 'preferência de tema',
-            'email' => 'e-mail',
+            'name' => __('Nome'),
+            'tema' => __('Preferência de tema'),
+            'email' => __('E-mail'),
         ];
     }
 
@@ -55,10 +55,10 @@ class ProfileUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.unique' => 'Este endereço de e-mail já está em uso por outro usuário.',
-            'name.required' => 'O nome é obrigatório.',
-            'email.required' => 'O e-mail é obrigatório.',
-            'email.email' => 'Informe um e-mail válido.',
+            'email.unique' => __('Este endereço de e-mail já está em uso por outro usuário.'),
+            'name.required' => __('O nome é obrigatório'),
+            'email.required' => __('O e-mail é obrigatório.'),
+            'email.email' => __('Informe um e-mail válido.'),
         ];
     }
 }

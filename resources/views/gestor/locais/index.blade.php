@@ -13,24 +13,16 @@
         </x-slot>
     </x-page-header>
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
-    @if(session('warning'))
-        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts />
 
     @if(!empty($coordenadasDuplicadas))
-        <div class="v-card v-alert-erp border-amber-200/60 dark:border-amber-900/40" role="alert">
+        <x-ui.callout variant="amber" class="v-alert-erp border-amber-200/60 dark:border-amber-900/40" role="alert">
             <p class="text-sm font-medium text-amber-950 dark:text-amber-100">{{ __('Coordenadas duplicadas') }}</p>
             <p class="mt-1 text-sm text-amber-900/90 dark:text-amber-200/85">{{ __('Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.') }}</p>
-        </div>
+        </x-ui.callout>
     @endif
 
-    <div class="v-card v-card--muted">
+    <x-section-card class="v-card--muted">
         <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
         <div class="mt-1 flex items-center gap-2">
             <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
@@ -40,9 +32,9 @@
                    class="v-input" />
             <span id="search-loading-gestor-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
         </div>
-    </div>
+    </x-section-card>
 
-    <div class="v-card v-card--flush overflow-hidden">
+    <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
@@ -125,11 +117,11 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
-    </div>
+    </x-section-card>
 
-    <div class="v-card v-card--muted v-hint-card">
+    <x-section-card class="v-card--muted v-hint-card">
         <h3 class="v-section-title">{{ __('O que significa "Primário"?') }}</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
-    </div>
+    </x-section-card>
 </div>
 @endsection

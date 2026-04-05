@@ -104,6 +104,13 @@ function isOnline() {
     return typeof navigator !== 'undefined' && navigator.onLine;
 }
 
+function offlineT(key, fallback) {
+    if (typeof window !== 'undefined' && window.VisitaI18n && window.VisitaI18n[key]) {
+        return window.VisitaI18n[key];
+    }
+    return fallback;
+}
+
 function showPendingBanner(count, syncPageUrl) {
     if (count === 0 || !isOnline()) {
         hidePendingBanner();
@@ -112,9 +119,12 @@ function showPendingBanner(count, syncPageUrl) {
     let el = document.getElementById('visita-offline-pending-banner');
     if (el) {
         const msg = el.querySelector('[data-pending-msg]');
-        if (msg) msg.textContent = 'Há pendências a serem sincronizadas para o sistema. ';
+        if (msg) {
+            msg.textContent = offlineT('offlinePendingMsg', 'Há pendências a serem sincronizadas para o sistema.');
+        }
         const link = el.querySelector('a[data-sync-link]');
         if (link && syncPageUrl) link.setAttribute('href', syncPageUrl);
+        if (link) link.textContent = offlineT('offlineSendNow', 'Enviar agora');
         return;
     }
     el = document.createElement('div');
@@ -123,15 +133,15 @@ function showPendingBanner(count, syncPageUrl) {
     el.className = 'bg-amber-500 text-amber-900 px-4 py-3 flex flex-wrap items-center justify-center gap-3 text-sm font-medium shadow';
     const span = document.createElement('span');
     span.setAttribute('data-pending-msg', '');
-    span.textContent = 'Há pendências a serem sincronizadas para o sistema. ';
+    span.textContent = offlineT('offlinePendingMsg', 'Há pendências a serem sincronizadas para o sistema.');
     const a = document.createElement('a');
     a.setAttribute('data-sync-link', '');
     a.setAttribute('href', syncPageUrl || '#');
     a.className = 'underline font-semibold hover:no-underline';
-    a.textContent = 'Enviar agora';
+    a.textContent = offlineT('offlineSendNow', 'Enviar agora');
     const btn = document.createElement('button');
     btn.setAttribute('type', 'button');
-    btn.setAttribute('aria-label', 'Fechar');
+    btn.setAttribute('aria-label', offlineT('offlineCloseLabel', 'Fechar'));
     btn.className = 'ml-2 px-2 py-1 rounded bg-amber-600 hover:bg-amber-700 text-amber-900';
     btn.textContent = '\u2715';
     btn.addEventListener('click', () => el.remove());

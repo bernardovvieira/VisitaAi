@@ -30,6 +30,6 @@ class RequirePrimaryLocal
 
         return redirect()
             ->route('gestor.locais.create')
-            ->with('info', 'Cadastre o local primário do município (ex.: prefeitura ou secretaria de saúde) para iniciar o uso do sistema.');
+            ->with('info', __('Cadastre o local primário do município (ex.: prefeitura ou secretaria de saúde) para iniciar o uso do sistema.'));
     }
 }

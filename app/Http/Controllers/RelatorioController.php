@@ -2,30 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Models\Visita;
-use App\Models\Local;
-use App\Models\Doenca;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
+use App\Models\Doenca;
+use App\Models\Local;
+use App\Models\Visita;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class RelatorioController extends Controller
 {
-    /**
-     * @param \Illuminate\Http\Request $request
-     */
     public function index(Request $request)
     {
         $request->validate([
             'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
-            'local_id'       => ['nullable'],
-        'local_id.*'     => ['integer', 'exists:locais,loc_id'],
-            'data_unica'     => ['nullable', 'date'],
-            'data_inicio'    => ['nullable', 'date'],
-            'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio'],
-            'bairro'         => ['nullable'],
+            'local_id' => ['nullable'],
+            'local_id.*' => ['integer', 'exists:locais,loc_id'],
+            'data_unica' => ['nullable', 'date'],
+            'data_inicio' => ['nullable', 'date'],
+            'data_fim' => ['nullable', 'date', 'after_or_equal:data_inicio'],
+            'bairro' => ['nullable'],
         ]);
         $bairroInput = $request->input('bairro');
         if (is_string($bairroInput)) {
@@ -38,7 +35,7 @@ class RelatorioController extends Controller
         $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
 
         $localIds = array_filter(array_map('intval', (array) $request->input('local_id', [])));
-        if ($tipo === 'individual' && !empty($localIds)) {
+        if ($tipo === 'individual' && ! empty($localIds)) {
             $query->whereIn('fk_local_id', $localIds);
         } elseif ($tipo === 'diario' && $request->filled('data_unica')) {
             $query->whereDate('vis_data', $request->data_unica);
@@ -58,7 +55,7 @@ class RelatorioController extends Controller
             }
         }
 
-        if (!empty($bairroInput)) {
+        if (! empty($bairroInput)) {
             $query->whereHas('local', function ($q) use ($bairroInput) {
                 $q->whereIn('loc_bairro', $bairroInput);
             });
@@ -66,11 +63,11 @@ class RelatorioController extends Controller
 
         $visitasPaginated = (clone $query)->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->paginate(15)->withQueryString();
         $visitas = $query->get();
-        $filtrosAplicados = $request->hasAny(['data_inicio', 'data_fim', 'data_unica']) || !empty($bairroInput) || !empty($localIds);
+        $filtrosAplicados = $request->hasAny(['data_inicio', 'data_fim', 'data_unica']) || ! empty($bairroInput) || ! empty($localIds);
 
         if ($visitas->isEmpty() && $filtrosAplicados) {
             return redirect()->route('gestor.relatorios.index')->with([
-                'error' => 'Nenhuma visita encontrada para os filtros aplicados.',
+                'error' => __('Nenhuma visita encontrada para os filtros aplicados.'),
                 'limpar_filtros' => true,
             ]);
         }
@@ -92,14 +89,13 @@ class RelatorioController extends Controller
 
         $totalVisitas = $visitas->count();
         $locaisComFoco = $visitas->filter(function ($visita) {
-            return (
+            return
                 ($visita->insp_a1 > 0 || $visita->insp_a2 > 0 || $visita->insp_b > 0 ||
                  $visita->insp_c > 0 || $visita->insp_d1 > 0 || $visita->insp_d2 > 0 ||
                  $visita->insp_e > 0) &&
                 ($visita->vis_depositos_eliminados < ($visita->insp_a1 + $visita->insp_a2 +
                     $visita->insp_b + $visita->insp_c + $visita->insp_d1 + $visita->insp_d2 +
-                    $visita->insp_e))
-            );
+                    $visita->insp_e));
         })->count();
 
         $totalComPendencia = $visitas->where('vis_pendencias', true)->count();
@@ -115,7 +111,7 @@ class RelatorioController extends Controller
             ->sortDesc()->map->count()->keys()->first();
 
         $totalLocaisCadastrados = Local::count();
-        $visitasComTratamento = $visitas->filter(fn($v) => $v->tratamentos->isNotEmpty())->count();
+        $visitasComTratamento = $visitas->filter(fn ($v) => $v->tratamentos->isNotEmpty())->count();
         $totalDepEliminados = $visitas->sum('vis_depositos_eliminados');
 
         $totalTratamentos = $visitas->flatMap->tratamentos->count();
@@ -124,11 +120,13 @@ class RelatorioController extends Controller
         $bairros = Local::select('loc_bairro')->distinct()->whereNotNull('loc_bairro')->orderBy('loc_bairro')->pluck('loc_bairro')->map(fn ($b) => trim((string) $b))->filter(fn ($b) => $b !== '')->values()->toArray();
         $locaisParaSelect = Local::has('visitas')->withCount('visitas')->orderBy('loc_bairro')->orderBy('loc_endereco')->orderBy('loc_numero')->get();
         $locaisParaSelectArray = $locaisParaSelect->map(function ($loc) {
-            $endereco = trim(($loc->loc_endereco ?? '') . ($loc->loc_numero ? ', ' . $loc->loc_numero : ''));
+            $endereco = trim(($loc->loc_endereco ?? '').($loc->loc_numero ? ', '.$loc->loc_numero : ''));
             $codigo = $loc->loc_codigo_unico ?? '-';
             $bairro = $loc->loc_bairro ?? '-';
             $qtd = $loc->visitas_count ?? 0;
-            $label = ($endereco ?: '-') . ', ' . $bairro . ', Cód. ' . $codigo . ($qtd > 0 ? ' (' . $qtd . ' visita' . ($qtd !== 1 ? 's' : '') . ')' : '');
+            $visitPart = $qtd > 0 ? ' ('.__(':n visita(s)', ['n' => $qtd]).')' : '';
+            $label = ($endereco ?: '-').', '.$bairro.', '.__('Cód.').' '.$codigo.$visitPart;
+
             return ['id' => $loc->loc_id, 'label' => $label];
         })->values()->toArray();
 
@@ -155,29 +153,26 @@ class RelatorioController extends Controller
         ));
     }
 
-    /**
-     * @param \Illuminate\Http\Request $request
-     */
     public function gerarPdf(Request $request)
     {
         $tipo = $request->input('tipo_relatorio', 'completo');
 
         $request->validate([
             'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
-            'local_id'       => ['nullable'],
-            'local_id.*'   => ['integer', 'exists:locais,loc_id'],
-            'data_unica'     => ['nullable', 'date', Rule::requiredIf($tipo === 'diario')],
-            'data_inicio'    => ['nullable', 'date', Rule::requiredIf($tipo === 'semanal')],
-            'data_fim'       => ['nullable', 'date', 'after_or_equal:data_inicio', Rule::requiredIf($tipo === 'semanal')],
-            'bairro'         => ['nullable'],
+            'local_id' => ['nullable'],
+            'local_id.*' => ['integer', 'exists:locais,loc_id'],
+            'data_unica' => ['nullable', 'date', Rule::requiredIf($tipo === 'diario')],
+            'data_inicio' => ['nullable', 'date', Rule::requiredIf($tipo === 'semanal')],
+            'data_fim' => ['nullable', 'date', 'after_or_equal:data_inicio', Rule::requiredIf($tipo === 'semanal')],
+            'bairro' => ['nullable'],
         ], [
-            'data_unica.required_if' => 'Informe a data para o relatório diário.',
-            'data_inicio.required_if' => 'Informe a data de início para o relatório por período.',
-            'data_fim.required_if' => 'Informe a data de fim para o relatório por período.',
+            'data_unica.required_if' => __('Informe a data para o relatório diário.'),
+            'data_inicio.required_if' => __('Informe a data de início para o relatório por período.'),
+            'data_fim.required_if' => __('Informe a data de fim para o relatório por período.'),
         ]);
 
         if (Visita::count() === 0) {
-            return redirect()->route('gestor.relatorios.index')->with('error', 'Não há visitas cadastradas no sistema. Cadastre visitas para gerar relatórios.');
+            return redirect()->route('gestor.relatorios.index')->with('error', __('Não há visitas cadastradas no sistema. Cadastre visitas para gerar relatórios.'));
         }
         $bairroPdf = $request->input('bairro');
         $bairrosPdf = is_array($bairroPdf) ? array_filter($bairroPdf) : ($bairroPdf !== null && $bairroPdf !== '' ? [$bairroPdf] : []);
@@ -186,9 +181,9 @@ class RelatorioController extends Controller
 
         $localIdsPdf = array_filter(array_map('intval', (array) $request->input('local_id', [])));
         if ($tipo === 'individual' && empty($localIdsPdf)) {
-            return redirect()->route('gestor.relatorios.index')->with('error', 'Selecione ao menos um local para o relatório individual.');
+            return redirect()->route('gestor.relatorios.index')->with('error', __('Selecione ao menos um local para o relatório individual.'));
         }
-        if ($tipo === 'individual' && !empty($localIdsPdf)) {
+        if ($tipo === 'individual' && ! empty($localIdsPdf)) {
             $query->whereIn('fk_local_id', $localIdsPdf)->orderBy('vis_data', 'desc');
             $visitas = $query->get();
             $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
@@ -203,7 +198,7 @@ class RelatorioController extends Controller
                 $query->whereBetween('vis_data', [$data_inicio, $data_fim]);
             }
 
-            if (!empty($bairrosPdf)) {
+            if (! empty($bairrosPdf)) {
                 $query->whereHas('local', function ($q) use ($bairrosPdf) {
                     $q->whereIn('loc_bairro', $bairrosPdf);
                 });
@@ -213,7 +208,7 @@ class RelatorioController extends Controller
         }
 
         if ($visitas->isEmpty()) {
-            return redirect()->route('gestor.relatorios.index')->with('error', 'Nenhuma visita encontrada para os critérios selecionados. Não foi possível gerar o PDF.');
+            return redirect()->route('gestor.relatorios.index')->with('error', __('Nenhuma visita encontrada para os critérios selecionados. Não foi possível gerar o PDF.'));
         }
 
         $base64Keys = [
@@ -226,11 +221,13 @@ class RelatorioController extends Controller
             $val = $request->input($key);
             if ($val === null || $val === '') {
                 $sanitizedBase64[$key] = null;
+
                 continue;
             }
             $val = (string) $val;
-            if (strlen($val) > $maxBase64Len || !preg_match('/^[A-Za-z0-9+\/=]+$/', $val)) {
+            if (strlen($val) > $maxBase64Len || ! preg_match('/^[A-Za-z0-9+\/=]+$/', $val)) {
                 $sanitizedBase64[$key] = null;
+
                 continue;
             }
             $sanitizedBase64[$key] = $val;
@@ -247,35 +244,39 @@ class RelatorioController extends Controller
         $doencaMaisFrequente = $visitas->flatMap->doencas
             ->countBy('doe_nome')
             ->sortDesc()
-            ->map(fn($qtd, $nome) => ['nome' => $nome, 'quantidade' => $qtd])
+            ->map(fn ($qtd, $nome) => ['nome' => $nome, 'quantidade' => $qtd])
             ->values()
             ->first();
 
         $totalLocaisVisitados = $visitas->map(fn ($v) => $v->local?->loc_codigo_unico)->filter()->unique()->count();
         $doencasDetectadas = Doenca::all();
-        $gestorNome = Auth::user()->use_nome ?? 'Gestor';
+        $gestorNome = Auth::user()->use_nome ?? __('Gestor');
 
         $titulo = match ($tipo) {
-            'individual' => 'Relatório Individual',
-            'diario'     => 'Relatório Diário',
-            'semanal'    => 'Relatório Semanal',
-            default      => 'Relatório Completo'
+            'individual' => __('Relatório Individual'),
+            'diario' => __('Relatório Diário'),
+            'semanal' => __('Relatório Semanal'),
+            default => __('Relatório Completo'),
         };
 
         if ($tipo === 'individual') {
-            $locaisSel = !empty($localIdsPdf) ? Local::whereIn('loc_id', $localIdsPdf)->get() : collect();
-            $periodo = $locaisSel->isEmpty() ? 'Local(is)' : 'Local(is): ' . $locaisSel->map(fn ($l) => trim(($l->loc_endereco ?? '') . ($l->loc_numero ? ', ' . $l->loc_numero : '') . ', ' . ($l->loc_bairro ?? '')))->join(' | ');
+            $locaisSel = ! empty($localIdsPdf) ? Local::whereIn('loc_id', $localIdsPdf)->get() : collect();
+            $periodo = $locaisSel->isEmpty()
+                ? __('Local(is)')
+                : __('Local(is): :lista', [
+                    'lista' => $locaisSel->map(fn ($l) => trim(($l->loc_endereco ?? '').($l->loc_numero ? ', '.$l->loc_numero : '').', '.($l->loc_bairro ?? '')))->join(' | '),
+                ]);
         } elseif ($tipo === 'diario') {
-            $periodo = 'Data: ' . $data_inicio;
+            $periodo = __('Data: :d', ['d' => $data_inicio]);
         } elseif ($tipo === 'semanal') {
-            $periodo = 'Período: ' . $data_inicio . ' até ' . $data_fim;
+            $periodo = __('Período: :i até :f', ['i' => $data_inicio, 'f' => $data_fim]);
         } else {
-            $periodo = 'Período: ' . $data_inicio . ' até ' . $data_fim;
+            $periodo = __('Período: :i até :f', ['i' => $data_inicio, 'f' => $data_fim]);
         }
 
-        $descricao = $titulo . ' - ' . $periodo;
-        if (!empty($bairrosPdf) && $tipo !== 'individual') {
-            $descricao .= ' - Bairros: ' . implode(', ', $bairrosPdf);
+        $descricao = $titulo.' - '.$periodo;
+        if (! empty($bairrosPdf) && $tipo !== 'individual') {
+            $descricao .= ' - '.__('Bairros:').' '.implode(', ', $bairrosPdf);
         }
 
         LogHelper::registrar(
@@ -304,5 +305,5 @@ class RelatorioController extends Controller
             'titulo',
             'tipo'
         ))->setPaper('a4', 'landscape')->stream('relatorio-visitas.pdf');
-    } 
+    }
 }

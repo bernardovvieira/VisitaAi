@@ -20,20 +20,10 @@
         </x-slot>
     </x-page-header>
 
-    @if(session('error'))
-        <div class="v-card border-red-200 bg-red-50/95 text-red-900 dark:border-red-900/50 dark:bg-red-950/35 dark:text-red-100" role="alert">
-            <p class="text-sm font-semibold">{{ __('Erro') }}</p>
-            <p class="mt-1 text-sm">{{ session('error') }}</p>
-        </div>
-    @endif
-    @if(session('info'))
-        <div class="v-card v-card--muted border-slate-200 dark:border-slate-600" role="status">
-            <p class="text-sm text-slate-800 dark:text-slate-100">{{ session('info') }}</p>
-        </div>
-    @endif
+    <x-flash-alerts />
 
     @if($sem_visitas ?? false)
-        <div class="v-card">
+        <x-section-card>
             <div class="v-empty-state py-12">
                 <div class="v-empty-state__icon h-20 w-20" aria-hidden="true">
                     <x-heroicon-o-document-text class="h-10 w-10 shrink-0" />
@@ -48,16 +38,16 @@
                     {{ __('Ir para visitas') }}
                 </a>
             </div>
-        </div>
+        </x-section-card>
     @else
-    <div class="v-card v-card--muted v-card--tight sm:p-4">
+    <x-section-card class="v-card--muted v-card--tight sm:p-4">
         <p class="v-toolbar-label mb-1">{{ __('Alinhamento normativo') }}</p>
         <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
             {{ __('Terminologia e tipos de visita alinhados às recomendações do Ministério da Saúde (vigilância entomológica e controle vetorial). Referências: Lei 11.350/2006; Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas.') }}
         </p>
-    </div>
+    </x-section-card>
     {{-- Filtros e PDF --}}
-    <div class="v-card">
+    <x-section-card>
         <h2 class="v-section-title mb-1">{{ __('Filtros e relatório') }}</h2>
         <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
         <div
@@ -288,7 +278,7 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>
             </div>
         </div>
-    </div>
+    </x-section-card>
 
     {{-- Indicadores (estilo dashboard) --}}
     <section class="space-y-4">
@@ -297,53 +287,47 @@
             <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Valores conforme filtros aplicados.') }}</p>
         </div>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            <div class="v-card v-card--tight">
-                <div class="flex items-center gap-2">
+            <x-ui.stat-tile :heading="__('Total de visitas')">
+                <x-slot name="icon">
                     <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Total de visitas') }}</h3>
-                </div>
-                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalVisitas }}</p>
-            </div>
-            <div class="v-card v-card--tight">
-                <div class="flex items-center gap-2">
+                </x-slot>
+                {{ $totalVisitas }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Visitas com pendência')">
+                <x-slot name="icon">
                     <x-heroicon-o-clock class="h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400" />
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Visitas com pendência') }}</h3>
-                </div>
-                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $percentualPendencias }}% <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ $totalComPendencia }})</span></p>
-            </div>
-            <div class="v-card v-card--tight">
-                <div class="flex items-center gap-2">
+                </x-slot>
+                {{ $percentualPendencias }}% <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ $totalComPendencia }})</span>
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Depósitos eliminados')">
+                <x-slot name="icon">
                     <x-heroicon-o-building-office-2 class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Depósitos eliminados') }}</h3>
-                </div>
-                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalDepEliminados }}</p>
-            </div>
-            <div class="v-card v-card--tight">
-                <div class="flex items-center gap-2">
+                </x-slot>
+                {{ $totalDepEliminados }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Visitas com tratamento')">
+                <x-slot name="icon">
                     <x-heroicon-o-check-circle class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Visitas com tratamento') }}</h3>
-                </div>
-                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $visitasComTratamento }}</p>
-            </div>
-            <div class="v-card v-card--tight">
-                <div class="flex items-center gap-2">
+                </x-slot>
+                {{ $visitasComTratamento }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Coletas realizadas')">
+                <x-slot name="icon">
                     <x-heroicon-o-beaker class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Coletas realizadas') }}</h3>
-                </div>
-                <p class="mt-2 text-xl font-bold tabular-nums text-slate-900 dark:text-slate-50">{{ $totalComColeta }}</p>
-            </div>
-            <div class="v-card v-card--tight">
-                <div class="flex items-center gap-2">
+                </x-slot>
+                {{ $totalComColeta }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Bairro com mais ocorrências')" valueClass="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
+                <x-slot name="icon">
                     <x-heroicon-o-map-pin class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" />
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Bairro com mais ocorrências') }}</h3>
-                </div>
-                <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">{{ $bairroMaisFrequente ?: __('N/D') }}</p>
-            </div>
+                </x-slot>
+                {{ $bairroMaisFrequente ?: __('N/D') }}
+            </x-ui.stat-tile>
         </div>
     </section>
 
     {{-- Gráficos: apenas os 4 mais relevantes para o relatório --}}
-    <section class="v-card">
+    <x-section-card>
         <h2 class="v-section-title mb-4 text-base">{{ __('Análise visual') }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:grid-rows-2 sm:auto-rows-fr">
             <div class="flex flex-col min-h-[13rem]">
@@ -375,20 +359,20 @@
                 </div>
             </div>
         </div>
-    </section>
+    </x-section-card>
 
     {{-- Mapa de calor --}}
-    <section class="v-card">
+    <x-section-card>
         <h2 class="v-section-title mb-1">{{ __('Mapa de calor') }}</h2>
         <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Concentração de visitas no território.') }}</p>
         <div class="relative h-64 w-full overflow-hidden rounded-lg border" style="border-color: rgb(var(--v-border) / 1);">
             <div id="mapa-calor" class="w-full h-full rounded-lg"></div>
             <p id="mapa-calor-vazio" class="hidden absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/80 rounded-lg m-0">{{ __('Nenhuma visita com localização no período.') }}</p>
         </div>
-    </section>
+    </x-section-card>
 
     {{-- Tabela de visitas --}}
-    <section class="v-card">
+    <x-section-card>
     <h2 class="v-section-title mb-4">{{ __('Visitas registradas') }}</h2>
 
     <div class="overflow-x-auto">
@@ -489,7 +473,7 @@
     @if(isset($visitasPaginated) && $visitasPaginated->total() == 0)
         <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">{{ __('Nenhuma visita no período.') }}</p>
     @endif
-</section>
+    </x-section-card>
 
 </div>
     @endif

@@ -10,7 +10,7 @@
             $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));
             $ogTitle = $ogTitle ?: config('app.name');
             $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
-            $ogDescription = $ogDescription ?: 'Sistema de apoio à vigilância entomológica e controle vetorial municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.';
+            $ogDescription = $ogDescription ?: __('Sistema de apoio à vigilância entomológica e controle vetorial municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.');
             $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
             $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
             $ogUrl = url()->current();
@@ -32,7 +32,7 @@
         <meta property="og:image:height" content="722">
         <meta property="og:image:type" content="image/png">
         <meta property="og:site_name" content="Visita Aí">
-        <meta property="og:locale" content="pt_BR">
+        <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'pt_BR' }}">
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:url" content="{{ $ogUrl }}">
@@ -122,7 +122,7 @@
             .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
         </style>
     </head>
-    <body class="font-sans antialiased text-[15px] leading-relaxed {{ View::hasSection('public') ? 'bg-white' : 'bg-slate-50' }} dark:bg-gray-950">
+    <body class="font-sans antialiased text-[14px] leading-relaxed sm:text-[15px] {{ View::hasSection('public') ? 'bg-white' : 'bg-slate-50' }} dark:bg-gray-950">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         @if (View::hasSection('public'))
             <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-gray-900 dark:via-gray-900 dark:to-slate-950">
@@ -242,11 +242,23 @@
         @if(View::hasSection('public'))
             <x-cookie-banner />
         @endif
+        @php
+            $visitaI18n = [
+                'connectionLostRedirect' => __('Conexão perdida. Redirecionando para a página inicial.'),
+                'connectionLost' => __('Conexão perdida.'),
+                'connectionRestored' => __('Conexão reestabelecida.'),
+                'offlinePendingMsg' => __('Há pendências a serem sincronizadas para o sistema.'),
+                'offlineSendNow' => __('Enviar agora'),
+                'offlineCloseLabel' => __('Fechar'),
+            ];
+        @endphp
         <script>
+        window.VisitaI18n = @json($visitaI18n);
         (function() {
             var pingUrl = "{{ url(route('ping')) }}";
             var pingTimeoutMs = 1200;
             var lastOnline;
+            var i18n = window.VisitaI18n || {};
 
             function showConnectionToast(msg, isError) {
                 var el = document.createElement('div');
@@ -269,13 +281,13 @@
                     var ok = allowed.some(function(a) { return a === p; });
                     if (!ok && (p.indexOf('/agente/visitas') === 0 || p.indexOf('/agente/locais') === 0 || p.indexOf('/saude/visitas') === 0)) ok = true;
                     if (!ok) {
-                        if (wasOnline) showConnectionToast('Conexão perdida. Redirecionando para a página inicial.', true);
+                        if (wasOnline) showConnectionToast(i18n.connectionLostRedirect || '', true);
                         window.location.href = window.visitaOfflineRedirect;
                         return;
                     }
-                    if (wasOnline) showConnectionToast('Conexão perdida.', true);
+                    if (wasOnline) showConnectionToast(i18n.connectionLost || '', true);
                 } else if (o && wasOffline) {
-                    showConnectionToast('Conexão reestabelecida.', false);
+                    showConnectionToast(i18n.connectionRestored || '', false);
                 }
                 var ev = new CustomEvent('visita-connection-change', { detail: { online: o }, bubbles: true });
                 document.dispatchEvent(ev);

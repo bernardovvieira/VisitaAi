@@ -21,10 +21,10 @@ class ResetUserPassword implements ResetsUserPasswords
         Validator::make($input, [
             'password' => $this->passwordRules(),
         ], [
-            'password.letters' => 'A senha deve conter pelo menos uma letra.',
-            'password.mixed'   => 'A senha deve conter pelo menos uma letra maiúscula e uma minúscula.',
-            'password.numbers' => 'A senha deve conter pelo menos um número.',
-            'password.symbols' => 'A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).',
+            'password.letters' => __('A senha deve conter pelo menos uma letra.'),
+            'password.mixed' => __('A senha deve conter pelo menos uma letra maiúscula e uma minúscula.'),
+            'password.numbers' => __('A senha deve conter pelo menos um número.'),
+            'password.symbols' => __('A senha deve conter pelo menos um caractere especial (ex.: @, #, $, !).'),
         ])->validate();
 
         $user->forceFill([

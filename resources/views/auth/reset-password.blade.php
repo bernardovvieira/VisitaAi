@@ -6,8 +6,6 @@
         {{ __('Defina uma nova senha forte para sua conta.') }}
     </p>
 
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
     <form method="POST" action="{{ route('password.store') }}" id="reset-password-form"
           data-msg-match-ok="{{ __('Senhas conferem.') }}"
           data-msg-match-bad="{{ __('As senhas não conferem.') }}"

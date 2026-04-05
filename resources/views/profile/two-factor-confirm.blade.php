@@ -8,7 +8,7 @@
         <x-alert type="error" :message="$errors->first() ?: optional($errors->confirmTwoFactorAuthentication)->first('code')" />
     @endif
 
-    <div class="v-card space-y-4">
+    <x-section-card class="space-y-4">
         <h3 class="v-section-title flex items-center gap-2">
             <x-heroicon-o-lock-closed class="h-5 w-5 shrink-0 text-amber-500" />
             Adicione a conta no seu app
@@ -76,7 +76,7 @@
                 </a>
             </div>
         </form>
-    </div>
+    </x-section-card>
 </div>
 
 <script>

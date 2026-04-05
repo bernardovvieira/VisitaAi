@@ -9,14 +9,14 @@
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças')]]" />
     <x-page-header :eyebrow="__('Referência epidemiológica')" :title="__('Doenças')" />
 
-  <section class="v-card">
+  <x-section-card>
     <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</h2>
     <p class="mt-2 text-gray-600 dark:text-gray-400">
       Consulte as doenças que você pode registrar nas visitas. Clique em Ver detalhes para mais informações.
     </p> 
-  </section>
+  </x-section-card>
 
-  <section class="v-card">
+  <x-section-card>
     <div class="flex flex-col sm:flex-row sm:items-end gap-4">
       <div class="flex-1">
         <label for="search" class="v-toolbar-label mb-1">Busca inteligente</label>
@@ -26,10 +26,10 @@
                class="v-input">
       </div>
     </div>
-  </section>
+  </x-section-card>
 
   <!-- bring the summary inside the same styled section -->
-  <section class="v-card">
+  <x-section-card>
     <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
       Exibindo {{ $doencas->count() }} de {{ $doencas->total() }} doença(s) monitorada(s).
       @if(request('search'))
@@ -85,6 +85,6 @@
       </table>
     </div>
     <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
-  </section>
+  </x-section-card>
 </div>
 @endsection

@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Doenca;
-use Illuminate\Http\Request;
-use App\Http\Requests\DoencaRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\LogHelper;
+use App\Http\Requests\DoencaRequest;
+use App\Models\Doenca;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DoencaController extends Controller
 {
-    
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $search = trim((string) $request->input('search'));
-    
+
         $query = Doenca::query();
         if ($search !== '') {
-            $term = '%' . $search . '%';
+            $term = '%'.$search.'%';
             $query->where(function ($q) use ($term) {
                 $q->where('doe_nome', 'like', $term)
-                  ->orWhere('doe_sintomas', 'like', $term)
-                  ->orWhere('doe_transmissao', 'like', $term)
-                  ->orWhere('doe_medidas_controle', 'like', $term);
+                    ->orWhere('doe_sintomas', 'like', $term)
+                    ->orWhere('doe_transmissao', 'like', $term)
+                    ->orWhere('doe_medidas_controle', 'like', $term);
             });
         }
         $doencas = $query->paginate(10)->appends(['search' => $search]);
@@ -43,13 +43,13 @@ class DoencaController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
     }
-    
+
     /**
      * Display the specified resource.
      */
     public function show(Doenca $doenca)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         if ($user && $user->isAgenteEndemias()) {
@@ -72,7 +72,7 @@ class DoencaController extends Controller
         $optionsSintomas = [
             'Febre alta', 'Febre baixa', 'Dor de cabeça', 'Dor atrás dos olhos',
             'Dor muscular', 'Dor nas articulações', 'Manchas vermelhas na pele',
-            'Conjuntivite', 'Náusea', 'Vômito', 'Coceira', 'Fadiga', 'Cefaleia'
+            'Conjuntivite', 'Náusea', 'Vômito', 'Coceira', 'Fadiga', 'Cefaleia',
         ];
 
         $optionsTransmissao = [
@@ -80,7 +80,7 @@ class DoencaController extends Controller
             'Transmissão sexual',
             'Transmissão vertical (gestante para o feto)',
             'Contato direto',
-            'Hemocontato (sangue)'
+            'Hemocontato (sangue)',
         ];
 
         $optionsMedidas = [
@@ -92,7 +92,7 @@ class DoencaController extends Controller
             'Proteção da gestante',
             'Acompanhamento médico',
             'Vacinação',
-            'Campanhas de conscientização'
+            'Campanhas de conscientização',
         ];
 
         return view('gestor.doencas.create', compact(
@@ -109,19 +109,19 @@ class DoencaController extends Controller
     {
         // Só os campos validados serão retornados
         $data = $request->validated();
-    
+
         Doenca::create($data);
 
         LogHelper::registrar(
             'Cadastro de doença',
             'Doença',
             'create',
-            'Doença cadastrada: ' . $data['doe_nome']
+            'Doença cadastrada: '.$data['doe_nome']
         );
-    
+
         return redirect()
             ->route('gestor.doencas.index')
-            ->with('success', 'Doença cadastrada com sucesso.');
+            ->with('success', __('Doença cadastrada com sucesso.'));
     }
 
     /**
@@ -136,13 +136,13 @@ class DoencaController extends Controller
             'Dispneia', 'Odinofagia', 'Congestão nasal', 'Coriza',
             'Anosmia', 'Ageusia', 'Náusea', 'Vômito', 'Diarreia',
             'Sudorese noturna', 'Rigidez de nuca', 'Rash cutâneo',
-            'Dor abdominal', 'Conjuntivite'
+            'Dor abdominal', 'Conjuntivite',
         ];
         $optionsTransmissao = [
             'Contato direto', 'Gotículas respiratórias', 'Aerossois (transmissão aérea)',
             'Água contaminada', 'Alimentos contaminados', 'Fômites',
             'Vetor biológico', 'Vetor mecânico', 'Transmissão vertical',
-            'Hemocontato (sangue)', 'Transmissão sexual'
+            'Hemocontato (sangue)', 'Transmissão sexual',
         ];
         $optionsMedidas = [
             'Higienização das mãos', 'Máscara cirúrgica', 'Máscara N95/FFP2',
@@ -151,7 +151,7 @@ class DoencaController extends Controller
             'Distanciamento físico', 'Ventilação adequada',
             'Limpeza e desinfecção', 'Controle de vetores',
             'Vacinação', 'WASH (água, saneamento e higiene)',
-            'Educação em saúde', 'Vigilância entomológica'
+            'Educação em saúde', 'Vigilância entomológica',
         ];
 
         return view('gestor.doencas.edit', compact(
@@ -173,12 +173,12 @@ class DoencaController extends Controller
             'Atualização de doença',
             'Doença',
             'update',
-            'Doença atualizada: ' . $doenca->doe_nome
+            'Doença atualizada: '.$doenca->doe_nome
         );
-    
+
         return redirect()
             ->route('gestor.doencas.index')
-            ->with('success', 'Doença atualizada com sucesso.');
+            ->with('success', __('Doença atualizada com sucesso.'));
     }
 
     /**
@@ -194,12 +194,11 @@ class DoencaController extends Controller
             'Exclusão de doença',
             'Doença',
             'delete',
-            'Doença excluída: ' . $nome
+            'Doença excluída: '.$nome
         );
 
         return redirect()
             ->route('gestor.doencas.index')
-            ->with('success', 'Doença excluída com sucesso.');
+            ->with('success', __('Doença excluída com sucesso.'));
     }
-
 }

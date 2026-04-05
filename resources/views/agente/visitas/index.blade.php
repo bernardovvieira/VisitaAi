@@ -19,26 +19,21 @@
         </x-slot>
     </x-page-header>
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-        @if(session('created_visita_id'))
-            <div class="mt-2 flex flex-wrap gap-3">
-                <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver visita registrada') }}</a>
-            </div>
-        @endif
-    @endif
-    @if(session('warning'))
-        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts>
+        <x-slot name="afterSuccess">
+            @if(session('created_visita_id'))
+                <div class="mt-2 flex flex-wrap gap-3">
+                    <a href="{{ route('agente.visitas.show', session('created_visita_id')) }}" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver visita registrada') }}</a>
+                </div>
+            @endif
+        </x-slot>
+    </x-flash-alerts>
 
     <div id="visita-offline-pending-alert" class="hidden rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100" role="alert">
         <span id="visita-offline-pending-alert-msg"></span>
     </div>
 
-        <div class="v-card flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <x-section-card class="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <div class="min-w-0 flex-1">
                 <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Ações rápidas') }}</h2>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Cadastrar visita ou enviar rascunhos guardados no aparelho.') }}</p>
@@ -57,11 +52,10 @@
                     </a>
                 </span>
             </div>
-        </div>
+        </x-section-card>
 
         @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-            <div class="v-card border-amber-200/70 bg-amber-50/90 dark:border-amber-800/60 dark:bg-amber-950/30">
-                <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Pendências sem revisita') }}</h2>
+            <x-ui.callout variant="amber" :title="__('Pendências sem revisita')">
                 <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
                     @foreach ($locaisComPendenciasNaoRevisitadas as $local)
                         @php
@@ -75,10 +69,10 @@
                         </li>
                     @endforeach
                 </ul>
-            </div>
+            </x-ui.callout>
         @endif
 
-        <div class="v-card v-card--muted">
+        <x-section-card class="v-card--muted">
             <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
             <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
@@ -88,9 +82,9 @@
                        class="v-input" />
                 <span id="search-loading" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-        </div>
+        </x-section-card>
 
-        <div class="v-card v-card--flush overflow-hidden">
+        <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}
@@ -203,7 +197,7 @@
         </div>
 
         <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
-        </div>
+        </x-section-card>
 </div>
 <script>
 (function() {

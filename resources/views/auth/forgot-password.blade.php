@@ -4,17 +4,9 @@
     </div>
 
     @if (session('status'))
-        <div class="mb-4 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800" role="alert">
-            <p class="font-medium text-blue-800 dark:text-blue-200 flex items-center gap-2">
-                <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {{ session('status') }}
-            </p>
-            <p class="mt-2 text-sm text-blue-700 dark:text-blue-300">
-                {{ __('Não recebeu o e-mail? Verifique a pasta de spam ou solicite um novo link em alguns minutos.') }}
-            </p>
-        </div>
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            {{ __('Não recebeu o e-mail? Verifique a pasta de spam ou solicite um novo link em alguns minutos.') }}
+        </p>
     @endif
 
     <form method="POST" action="{{ route('password.email') }}" id="forgot-password-form" data-label-sending="{{ __('Enviando…') }}">

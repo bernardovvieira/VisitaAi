@@ -8,34 +8,29 @@
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')" />
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-        @if(session('created_local_id'))
-            <div class="flex flex-wrap gap-3 mt-2">
-                <a href="{{ route('agente.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">Ver local cadastrado</a>
-            </div>
-        @endif
-    @endif
-    @if(session('warning'))
-        <x-alert type="warning" :message="session('warning')" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts>
+        <x-slot name="afterSuccess">
+            @if(session('created_local_id'))
+                <div class="mt-2 flex flex-wrap gap-3">
+                    <a href="{{ route('agente.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver local cadastrado') }}</a>
+                </div>
+            @endif
+        </x-slot>
+    </x-flash-alerts>
 
     <div id="locais-offline-pending-alert" class="hidden p-3 mb-4 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800" role="alert">
         <span id="locais-offline-pending-alert-msg"></span>
     </div>
 
     @if(!empty($coordenadasDuplicadas))
-        <div class="v-card v-alert-erp mb-4 border-amber-200/60 dark:border-amber-900/40" role="alert">
+        <x-ui.callout variant="amber" class="v-alert-erp mb-4 border-amber-200/60 dark:border-amber-900/40" role="alert">
             <p class="text-sm font-medium text-amber-950 dark:text-amber-100">{{ __('Coordenadas duplicadas') }}</p>
             <p class="mt-1 text-sm text-amber-900/90 dark:text-amber-200/85">{{ __('Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.') }}</p>
-        </div>
+        </x-ui.callout>
     @endif
 
     <!-- Card introdutório -->
-    <section class="v-card">
+    <x-section-card>
         <h2 class="v-section-title">Locais de visitação</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
             Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.
@@ -48,10 +43,10 @@
             <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
             Cadastrar Local
         </a>
-    </section>
+    </x-section-card>
 
     <!-- Busca (filtra ao digitar) -->
-    <section class="v-card">
+    <x-section-card>
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
                 <label for="search" class="v-toolbar-label mb-1">Busca inteligente</label>
@@ -65,10 +60,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </x-section-card>
 
     <!-- Tabela de Locais -->
-    <section class="v-card">
+    <x-section-card>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             Exibindo {{ $locais->count() }} de {{ $locais->total() }} local(is) cadastrados.
             @if(request('search'))
@@ -183,12 +178,12 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
-    </section>
+    </x-section-card>
 
-    <section class="v-card">
+    <x-section-card>
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
         <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
-    </section>
+    </x-section-card>
 </div>
 <script>
 (function() {

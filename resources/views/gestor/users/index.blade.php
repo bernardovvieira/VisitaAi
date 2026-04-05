@@ -8,24 +8,18 @@
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Usuários')]]" />
     <x-page-header :eyebrow="__('Gestão de acesso')" :title="__('Usuários')" />
 
-    @if(session('status'))
-        <x-alert type="success" :message="session('status')" />
-    @endif
+    <x-flash-alerts />
 
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
-
-    <section class="v-card space-y-3">
+    <x-section-card class="space-y-3">
         <h2 class="v-section-title">{{ __('Usuários do sistema') }}</h2>
         <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{!!
             __('gestor.users.intro', [
                 'link' => '<a href="'.e(route('gestor.pendentes')).'" class="font-semibold text-blue-600 hover:underline dark:text-blue-400">'.e(__('Cadastros pendentes')).'</a>',
             ])
         !!}</p>
-    </section>
+    </x-section-card>
 
-    <section class="v-card v-card--muted">
+    <x-section-card class="v-card--muted">
         <label for="search" class="v-toolbar-label mb-2">{{ __('Busca inteligente') }}</label>
         <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
             <div class="min-w-0 flex-1">
@@ -37,9 +31,9 @@
             </div>
             <span id="search-loading-users" class="hidden text-sm text-slate-500 dark:text-slate-400 sm:pb-2" aria-live="polite">{{ __('Buscando…') }}</span>
         </div>
-    </section>
+    </x-section-card>
 
-    <section class="v-card v-card--flush overflow-hidden">
+    <x-section-card class="v-card--flush overflow-hidden">
         @php
             $total = $usuarios->total();
             $count = $usuarios->count();
@@ -141,9 +135,9 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$usuarios" :item-label="__('usuários')" />
-    </section>
+    </x-section-card>
 
-    <section class="v-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <x-section-card class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <h2 class="v-section-title">{{ __('Usuários pendentes') }}</h2>
             <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
@@ -154,6 +148,6 @@
             <x-heroicon-o-chevron-right class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ __('Ir para cadastros pendentes') }}
         </a>
-    </section>
+    </x-section-card>
 </div>
 @endsection

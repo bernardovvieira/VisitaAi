@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Helpers\LogHelper;
 
 class ProfileController extends Controller
 {
@@ -28,7 +28,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-    
+
         $user->use_nome = $request->validated()['name'];
         $user->use_email = $request->validated()['email'];
         $user->use_tema = $request->validated()['tema'];
@@ -39,10 +39,10 @@ class ProfileController extends Controller
             'Atualização de perfil',
             'Usuário',
             'update',
-            'Usuário atualizou nome para: ' . $user->use_nome . ', email: ' . $user->use_email
+            'Usuário atualizou nome para: '.$user->use_nome.', email: '.$user->use_email
         );
-    
-        return Redirect::route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
+
+        return Redirect::route('profile.edit')->with('success', __('Perfil atualizado com sucesso!'));
     }
 
     /**
@@ -67,7 +67,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         if (method_exists($user, 'hasEnabledTwoFactorAuthentication') && $user->hasEnabledTwoFactorAuthentication()) {
-            return Redirect::route('profile.edit')->with('status', 'A autenticação em dois fatores já está ativa.');
+            return Redirect::route('profile.edit')->with('status', __('A autenticação em dois fatores já está ativa.'));
         }
 
         return view('profile.two-factor');
@@ -83,12 +83,12 @@ class ProfileController extends Controller
 
         if (empty($user->two_factor_secret)) {
             return Redirect::route('profile.two-factor')
-                ->with('error', 'Ative a autenticação em dois fatores primeiro.');
+                ->with('error', __('Ative a autenticação em dois fatores primeiro.'));
         }
 
         if (! is_null($user->two_factor_confirmed_at ?? null)) {
             return Redirect::route('profile.edit')
-                ->with('success', 'Autenticação em dois fatores já está ativa.');
+                ->with('success', __('Autenticação em dois fatores já está ativa.'));
         }
 
         $qrCodeSvg = $user->twoFactorQrCodeSvg();

@@ -2,37 +2,34 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Cadastrar')]]" />
 
     @if($isPrimario ?? false)
-    <section class="v-card v-card--muted">
+    <x-section-card class="v-card--muted">
         <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
             <x-heroicon-o-information-circle class="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" />
-            Local de referência do município
+            {{ __('Local de referência do município') }}
         </h2>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Este é o primeiro local e define cidade/estado do sistema. Sugerimos a prefeitura ou a secretaria de saúde. Não poderá ser editado nem excluído pela interface; para alterações, entre em contato com o suporte.
+            {{ __('Este é o primeiro local e define cidade/estado do sistema. Sugerimos a prefeitura ou a secretaria de saúde. Não poderá ser editado nem excluído pela interface; para alterações, entre em contato com o suporte.') }}
         </p>
-    </section>
+    </x-section-card>
     @endif
 
-    <section class="v-card">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ ($isPrimario ?? false) ? 'Cadastrar local de referência' : 'Cadastrar Local' }}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            <strong>Sem internet?</strong> Use o botão &quot;Guardar local&quot; para salvar no dispositivo e sincronize depois na aba Sincronizar.<br>
-            <b>Nota:</b> Antes de ir a campo, abra esta tela pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.
-        </p>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Preencha os dados do local. Preencha o CEP para preencher automaticamente os campos de endereço, bairro, cidade e estado.
-            Utilize o botão "Minha Localização" para obter as coordenadas do dispositivo.
-        </p>
-    </section>
+    <x-page-header :eyebrow="__('Locais')" :title="($isPrimario ?? false) ? __('Cadastrar local de referência') : __('Cadastrar local')" />
 
-    <section class="v-card space-y-4">
-        @if(session('success'))
-            <x-alert type="success" :message="session('success')" />
-        @endif
+    <x-ui.disclosure variant="muted-card">
+        <x-slot name="summary">
+            <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Modo offline, CEP e localização (expandir)') }}</span>
+        </x-slot>
+        <p><strong>{{ __('Sem internet?') }}</strong> {{ __('Use o botão «Guardar local» para salvar no dispositivo e sincronize depois na aba Sincronizar.') }}</p>
+        <p><strong>{{ __('Nota:') }}</strong> {{ __('Antes de ir a campo, abra esta tela pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.') }}</p>
+        <p>{{ __('Preencha o CEP para completar endereço automaticamente. Use «Minha localização» para coordenadas do dispositivo.') }}</p>
+    </x-ui.disclosure>
+
+    <x-section-card class="space-y-4">
+        <x-flash-alerts />
 
         @if ($errors->any())
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -221,7 +218,7 @@
                 </button>
             </div>
         </form>
-    </section>
+    </x-section-card>
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

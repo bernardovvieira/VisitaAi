@@ -3,12 +3,6 @@
         {{ __('Obrigado por se cadastrar! Antes de começar, verifique seu e-mail clicando no link que enviamos.') }}
     </div>
 
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200 text-sm font-medium" role="alert">
-            {{ __('Um novo link de verificação foi enviado para o e-mail informado.') }}
-        </div>
-    @endif
-
     <div class="flex items-center justify-between gap-4 flex-wrap">
         <form method="POST" action="{{ route('verification.send') }}" id="verify-email-resend-form"
               data-label-sending="{{ __('Enviando…') }}">

@@ -32,7 +32,6 @@
             'mor_observacao' => '',
         ]];
     }
-    $disclaimer = config('visitaai_municipio.ocupantes.disclaimer', '');
     $emptyRow = [
         'mor_id' => null,
         'mor_nome' => '',
@@ -45,12 +44,10 @@
     ];
 @endphp
 
-<x-lgpd.aviso context="ocupantes_cadastro" class="mb-4" />
+<x-lgpd.aviso context="ocupantes_cadastro" class="mb-4" :compact="true" />
 <fieldset class="space-y-3 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
     <legend class="v-section-title mb-2">{{ __('Ocupantes do imóvel (Visita Aí)') }}</legend>
-    @if(filled($disclaimer))
-        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $disclaimer }}</p>
-    @endif
+    @include('municipio.moradores._disclaimer-ocupantes')
     <div x-data="{
         rows: {{ Js::from($ocupantesRows) }},
         esc: {{ Js::from($esc) }},

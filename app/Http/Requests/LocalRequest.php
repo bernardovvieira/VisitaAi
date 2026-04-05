@@ -41,13 +41,13 @@ class LocalRequest extends FormRequest
 
                     $response = Http::timeout(5)->get("https://viacep.com.br/ws/{$cepNormalizado}/json/");
                     if (! $response->successful()) {
-                        $fail('Não foi possível validar o CEP. Tente novamente.');
+                        $fail(__('Não foi possível validar o CEP. Tente novamente.'));
 
                         return;
                     }
                     $data = $response->json();
                     if (isset($data['erro']) && $data['erro']) {
-                        $fail('CEP inválido.');
+                        $fail(__('CEP inválido.'));
 
                         return;
                     }
@@ -58,7 +58,10 @@ class LocalRequest extends FormRequest
                     $estadoPrimario = strtoupper(trim($primario->loc_estado ?? ''));
 
                     if ($this->normalizeStr($localidade) !== $cidadePrimario || $uf !== $estadoPrimario) {
-                        $fail('O CEP informado não pertence ao município do local primário ('.$primario->loc_cidade.'/'.$primario->loc_estado.').');
+                        $fail(__('O CEP informado não pertence ao município do local primário (:city/:state).', [
+                            'city' => $primario->loc_cidade,
+                            'state' => $primario->loc_estado,
+                        ]));
                     }
                 },
             ],

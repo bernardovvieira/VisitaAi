@@ -13,19 +13,10 @@
         </x-slot>
     </x-page-header>
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
-    @if(session('warning'))
-        <x-alert type="warning" :message="session('warning')" :autodismiss="false" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts />
 
     @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-        <div class="v-card border-amber-200/70 bg-amber-50/90 dark:border-amber-800/60 dark:bg-amber-950/30">
-            <h2 class="text-sm font-semibold text-amber-950 dark:text-amber-100">{{ __('Pendências sem revisita') }}</h2>
+        <x-ui.callout variant="amber" :title="__('Pendências sem revisita')">
             <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada e sem visita posterior.') }}</p>
             <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
                 @foreach ($locaisComPendenciasNaoRevisitadas as $local)
@@ -40,10 +31,10 @@
                     </li>
                 @endforeach
             </ul>
-        </div>
+        </x-ui.callout>
     @endif
 
-        <div class="v-card v-card--muted">
+        <x-section-card class="v-card--muted">
             <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
             <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
@@ -53,9 +44,9 @@
                        class="v-input" />
                 <span id="search-loading-gestor-visitas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-        </div>
+        </x-section-card>
 
-        <div class="v-card v-card--flush overflow-hidden">
+        <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}
@@ -151,6 +142,6 @@
         </div>
 
         <x-pagination-relatorio :paginator="$visitas->appends(request()->query())" item-label="visitas" />
-        </div>
+        </x-section-card>
 </div>
 @endsection

@@ -8,11 +8,18 @@
     $local->loadMissing(['moradores', 'visitas']);
     $porMorId = $local->moradores->keyBy('mor_id');
 @endphp
-<section class="v-card border-rose-200/90 bg-rose-50/80 text-sm dark:border-rose-900/80 dark:bg-rose-950/40">
+<x-section-card class="border-rose-200/90 bg-rose-50/80 text-sm dark:border-rose-900/80 dark:bg-rose-950/40">
     <h2 class="text-base font-semibold text-rose-950 dark:text-rose-100">{{ $cfg['painel_sensivel_gestor_titulo'] ?? '' }}</h2>
-    <p class="mt-1 text-xs leading-relaxed text-rose-900/90 dark:text-rose-100/90">{{ $cfg['painel_sensivel_gestor_texto'] ?? '' }}</p>
+    @if(filled(trim((string) ($cfg['painel_sensivel_gestor_texto'] ?? ''))))
+        <x-ui.disclosure variant="rose" class="mt-2">
+            <x-slot name="summary">
+                <span class="border-b border-dotted border-rose-700/50 pb-px dark:border-rose-400/50">{{ __('Orientação de uso e confidencialidade deste painel') }}</span>
+            </x-slot>
+            <p class="text-xs leading-relaxed">{{ $cfg['painel_sensivel_gestor_texto'] }}</p>
+        </x-ui.disclosure>
+    @endif
 
-    <x-lgpd.aviso context="painel_gestor_sensivel" class="mt-4 border-slate-200/90 dark:border-slate-500/50" />
+    <x-lgpd.aviso context="painel_gestor_sensivel" class="mt-4 border-slate-200/90 dark:border-slate-500/50" :compact="true" />
 
     @if($local->moradores->isEmpty())
         <p class="mt-3 text-sm text-rose-800/80 dark:text-rose-200/80">{{ __('Nenhum ocupante cadastrado neste imóvel.') }}</p>
@@ -76,4 +83,4 @@
             @endforeach
         </ul>
     @endif
-</section>
+</x-section-card>

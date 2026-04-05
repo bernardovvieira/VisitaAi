@@ -1,7 +1,4 @@
 <x-guest-layout>
-    {{-- BANNER DE STATUS (logout ou link de reset enviado) --}}
-    <x-alert type="success" :message="session('status')" />
-
     <form method="POST"
           action="{{ route('login.store') }}"
           class="max-w-md mx-auto mt-8"

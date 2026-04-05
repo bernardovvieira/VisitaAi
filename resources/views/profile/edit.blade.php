@@ -4,32 +4,22 @@
 <div class="v-page space-y-5">
     <x-page-header :eyebrow="__('Conta e segurança')" :title="__('Meu perfil')" />
 
-    @if(session('success'))
-        <x-alert type="success" :message="session('success')" />
-    @endif
-    @if(session('status') === 'two-factor-authentication-enabled')
-        <x-alert type="success" message="Autenticação em dois fatores (2FA) ativada com sucesso. Na próxima sessão você precisará informar o código do aplicativo autenticador." />
-    @elseif(session('status'))
-        <x-alert type="success" :message="session('status')" />
-    @endif
-    @if(session('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+    <x-flash-alerts />
 
     <!-- Mensagem de Contexto -->
-    <section class="v-card space-y-2 dark:bg-gray-800">
+    <x-section-card class="space-y-2 dark:bg-gray-800">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Olá, {{ Auth::user()->use_nome }}!</h2>
         <p class="text-gray-600 dark:text-gray-400">
             Aqui você pode atualizar seus dados pessoais, como nome e e-mail. Algumas informações, como CPF e perfil, são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se precisar de ajuda, entre em contato com a Bitwise Technologies (suporte técnico).
         </p>
-    </section>
+    </x-section-card>
 
     <!-- Grid: coluna esquerda = 2 cards empilhados; coluna direita = Atualizar Dados -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {{-- Coluna esquerda: Informações pessoais + Acesso e status --}}
         <div class="space-y-6">
             {{-- Card: Informações pessoais --}}
-            <div class="v-card space-y-4 dark:bg-gray-800">
+            <x-section-card class="space-y-4 dark:bg-gray-800">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                     <x-heroicon-o-user class="mr-2 mt-px h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                     Informações pessoais
@@ -40,10 +30,10 @@
                     <div class="flex justify-between"><dt class="font-medium">Nome</dt><dd>{{ Auth::user()->use_nome }}</dd></div>
                     <div class="flex justify-between"><dt class="font-medium">E-mail</dt><dd><a href="mailto:{{ Auth::user()->use_email }}" class="text-gray-600 dark:text-gray-400 hover:underline">{{ Auth::user()->use_email }}</a></dd></div>
                 </dl>
-            </div>
+            </x-section-card>
 
             {{-- Card: Acesso e status --}}
-            <div class="v-card space-y-4 dark:bg-gray-800">
+            <x-section-card class="space-y-4 dark:bg-gray-800">
                 <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                     <x-heroicon-o-shield-check class="mr-2 mt-px h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                     Acesso e status
@@ -53,11 +43,11 @@
                     <div class="flex justify-between"><dt class="font-medium">Registrado em</dt><dd>{{ Auth::user()->use_data_criacao->format('d/m/Y') }}</dd></div>
                     <div class="flex justify-between"><dt class="font-medium">Status</dt><dd>@if (Auth::user()->use_aprovado) <span class="font-semibold text-emerald-600 dark:text-emerald-400">Ativo</span> @else <span class="font-semibold text-amber-600 dark:text-amber-400">Pendente</span> @endif</dd></div>
                 </dl>
-            </div>
+            </x-section-card>
         </div>
 
         {{-- Coluna direita: Atualizar Dados --}}
-        <div class="v-card space-y-6 dark:bg-gray-800">
+        <x-section-card class="space-y-6 dark:bg-gray-800">
             <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                 <x-heroicon-o-pencil-square class="mr-2 h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                 Atualizar Dados
@@ -105,11 +95,11 @@
                 if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Salvando…'; });
             })();
             </script>
-        </div>
+        </x-section-card>
     </div>
 
     {{-- Card: Autenticação em dois fatores (2FA) --}}
-    <div class="v-card space-y-4 dark:bg-gray-800">
+    <x-section-card class="space-y-4 dark:bg-gray-800">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
             <x-heroicon-o-lock-closed class="mr-2 h-5 w-5 shrink-0 text-amber-500" />
             Autenticação em dois fatores (2FA)
@@ -136,20 +126,20 @@
         @else
             <p class="text-sm text-gray-500 dark:text-gray-400">2FA não está disponível neste ambiente.</p>
         @endif
-    </div>
+    </x-section-card>
 
     <!-- Texto de Informação -->
-    <div class="v-card v-card--muted text-sm text-slate-900 dark:text-slate-100" role="alert">
+    <x-section-card class="v-card--muted text-sm text-slate-900 dark:text-slate-100" role="alert">
         <h4 class="text-base font-semibold mb-2">Informações Importantes</h4>
         <ul class="list-disc list-inside space-y-2">
             <li>Algumas informações são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se necessário, entre em contato com a Bitwise Technologies (suporte).</li>
             <li>Para alterar sua senha, utilize a opção <strong>"Esqueci minha senha"</strong> na tela de login.</li>
             <li>A gestão de permissões de acesso é realizada apenas por <strong>gestores</strong> no menu "Usuários".</li>
         </ul>
-    </div>
+    </x-section-card>
 
     {{-- Card: Anonimizar Conta --}}
-    <div class="v-card space-y-4 dark:bg-gray-800">
+    <x-section-card class="space-y-4 dark:bg-gray-800">
         <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
             <x-heroicon-o-shield-exclamation class="mr-2 h-5 w-5 shrink-0 text-red-500" />
             Anonimizar Conta
@@ -169,6 +159,6 @@
                 </a>
             @endif
         </div>
-    </div>
+    </x-section-card>
 </div>
 @endsection
