@@ -15,29 +15,18 @@
     <div class="w-full space-y-9 lg:space-y-11">
         <header class="welcome-public__hero">
             <div class="welcome-public__hero-row">
-                <div class="flex w-full shrink-0 flex-col items-stretch gap-3 sm:w-auto sm:items-start">
+                <div class="flex shrink-0 flex-col items-start gap-4">
                     <img
                         src="{{ asset('images/visitaai_rembg.png') }}"
                         alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
                         width="96"
                         height="96"
-                        class="welcome-public__logo self-start"
+                        class="welcome-public__logo"
                         decoding="async" />
-                    <div class="flex w-full flex-wrap items-center gap-x-4 gap-y-2 sm:w-auto">
-                        <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
-                                class="welcome-public__link-btn">
-                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                            {{ __('Baixar cartão com QR Code') }}
-                        </button>
-                        <a href="{{ url('/') }}" class="welcome-public__link">
-                            <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                            {{ __('Voltar à página inicial') }}
-                        </a>
-                        <a href="{{ route('consulta.index') }}" class="welcome-public__link">
-                            <x-heroicon-o-magnifying-glass class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                            {{ __('Consultar outro código') }}
-                        </a>
-                    </div>
+                    <a href="{{ url('/') }}" class="welcome-public__link">
+                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
+                        {{ __('Voltar à página inicial') }}
+                    </a>
                 </div>
                 <div class="min-w-0 flex-1 space-y-3 pt-0.5">
                     <p class="welcome-public__kicker">
@@ -55,6 +44,17 @@
                     <p class="welcome-public__lead">
                         {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos e sem identificar o profissional.') }}
                     </p>
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-200/50 pt-3 dark:border-slate-800/70">
+                        <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
+                                class="welcome-public__link-btn">
+                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
+                            {{ __('Baixar cartão com QR Code') }}
+                        </button>
+                        <a href="{{ route('consulta.index') }}" class="welcome-public__link">
+                            <x-heroicon-o-magnifying-glass class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
+                            {{ __('Consultar outro código') }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </header>

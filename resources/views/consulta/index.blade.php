@@ -32,10 +32,7 @@
                         <h1 class="welcome-public__title min-w-0 shrink">
                             {{ __('Verificar visitas no imóvel') }}
                         </h1>
-                        <div class="flex flex-wrap items-center gap-2 shrink-0">
-                            <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
-                            <x-public-municipality-pill :local="$localPrimario ?? null" />
-                        </div>
+                        <x-public-municipality-pill :local="$localPrimario ?? null" class="shrink-0" />
                     </div>
                     <p class="welcome-public__lead">
                         {{ __('Grátis e sem cadastro: informe o código do comprovante ou o que o ACE ou ACS passou na visita.') }}
@@ -69,7 +66,7 @@
                         class="v-input max-w-md w-full"
                         aria-describedby="codigo-ajuda"
                     />
-                    <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex shrink-0 items-center justify-center px-5 py-2.5 text-sm font-medium">
+                    <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex shrink-0 items-center justify-center px-3.5 py-1.5 text-xs font-medium sm:px-4 sm:py-2">
                         {{ __('Consultar agora') }}
                     </button>
                 </div>
@@ -79,7 +76,6 @@
                 <p id="codigo-ajuda" class="text-sm text-slate-500 dark:text-slate-400">
                     {{ __('Cada imóvel cadastrado recebe um código exclusivo. Se não tiver o número em mãos, peça orientação na Secretaria Municipal de Saúde ou ao agente no próximo contato.') }}
                 </p>
-                <x-public-municipality-pill :local="$localPrimario ?? null" class="mt-3" />
             </form>
         </section>
 
