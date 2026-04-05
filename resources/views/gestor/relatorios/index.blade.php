@@ -40,13 +40,6 @@
             </div>
         </x-section-card>
     @else
-    <x-section-card class="v-card--muted v-card--tight sm:p-4">
-        <p class="v-toolbar-label mb-1">{{ __('Alinhamento normativo') }}</p>
-        <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-            {{ __('Terminologia e tipos de visita alinhados às recomendações do Ministério da Saúde (vigilância entomológica e controle vetorial). Referências: Lei 11.350/2006; Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas.') }}
-        </p>
-    </x-section-card>
-
     <div
         x-data="{
             tipo: '{{ request('tipo_relatorio', 'completo') }}',
@@ -102,7 +95,6 @@
                     <x-heroicon-o-document-arrow-down class="h-5 w-5 shrink-0" aria-hidden="true" />
                     {{ __('Gerar relatório em PDF') }}
                 </button>
-                <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>
             </div>
         </div>
 
