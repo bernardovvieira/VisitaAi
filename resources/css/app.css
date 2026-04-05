@@ -283,6 +283,11 @@
         @apply inline-flex items-center gap-1.5 text-xs font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200;
     }
 
+    /* Mesmo visual dos links públicos, para <button> (ex.: baixar QR) */
+    .welcome-public__link-btn {
+        @apply inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-left text-xs font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 dark:text-slate-400 dark:hover:text-slate-200;
+    }
+
     .v-topbar {
         @apply sticky top-0 z-20 flex h-[52px] shrink-0 items-center justify-end gap-1 border-b px-3 backdrop-blur-md sm:justify-between sm:px-5;
         border-color: rgb(var(--v-border) / 0.65);

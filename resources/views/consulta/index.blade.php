@@ -28,9 +28,15 @@
                     <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
-                    <h1 class="welcome-public__title">
-                        {{ __('Verificar visitas no imóvel') }}
-                    </h1>
+                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                        <h1 class="welcome-public__title min-w-0 shrink">
+                            {{ __('Verificar visitas no imóvel') }}
+                        </h1>
+                        <div class="flex flex-wrap items-center gap-2 shrink-0">
+                            <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
+                            <x-public-municipality-pill :local="$localPrimario ?? null" />
+                        </div>
+                    </div>
                     <p class="welcome-public__lead">
                         {{ __('Grátis e sem cadastro: informe o código do comprovante ou o que o ACE ou ACS passou na visita.') }}
                     </p>

@@ -23,34 +23,38 @@
                         height="96"
                         class="welcome-public__logo self-start"
                         decoding="async" />
-                    <div class="flex w-full flex-wrap items-stretch gap-2 sm:w-auto">
+                    <div class="flex w-full flex-wrap items-center gap-x-4 gap-y-2 sm:w-auto">
                         <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
-                                class="v-btn-secondary inline-flex min-w-0 flex-1 items-center justify-center gap-2 px-4 py-2 text-sm font-medium sm:flex-initial">
-                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                                class="welcome-public__link-btn">
+                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                             {{ __('Baixar cartão com QR Code') }}
                         </button>
-                        <a href="{{ url('/') }}"
-                           class="v-btn-secondary inline-flex min-w-0 flex-1 items-center justify-center gap-2 px-4 py-2 text-sm font-medium sm:flex-initial">
-                            <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                        <a href="{{ url('/') }}" class="welcome-public__link">
+                            <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                             {{ __('Voltar à página inicial') }}
                         </a>
+                        <a href="{{ route('consulta.index') }}" class="welcome-public__link">
+                            <x-heroicon-o-magnifying-glass class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
+                            {{ __('Consultar outro código') }}
+                        </a>
                     </div>
-                    <a href="{{ route('consulta.index') }}" class="welcome-public__link">
-                        <x-heroicon-o-magnifying-glass class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                        {{ __('Consultar outro código') }}
-                    </a>
                 </div>
                 <div class="min-w-0 flex-1 space-y-3 pt-0.5">
                     <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
-                    <h1 class="welcome-public__title">
-                        {{ __('Visitas registradas neste endereço') }}
-                    </h1>
+                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                        <h1 class="welcome-public__title min-w-0 shrink">
+                            {{ __('Visitas registradas neste endereço') }}
+                        </h1>
+                        <div class="flex flex-wrap items-center gap-2 shrink-0">
+                            <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
+                            <x-public-municipality-pill :local="$localPrimario ?? null" />
+                        </div>
+                    </div>
                     <p class="welcome-public__lead">
                         {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos e sem identificar o profissional.') }}
                     </p>
-                    <x-public-municipality-pill :local="$localPrimario ?? null" class="pt-0.5" />
                 </div>
             </div>
         </header>
