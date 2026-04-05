@@ -4,20 +4,26 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta pública'))
-@section('og_description', __('Consulte em segundos, sem cadastro, quando houve visita de vigilância no seu endereço. Use o código de oito dígitos do comprovante ou informado pelo ACE ou ACS.'))
+@section('og_description', __('Consulta gratuita, sem cadastro. Use o código do comprovante ou informado pelo ACE ou ACS.'))
 
 @section('content')
 <div class="welcome-public welcome-public--extend w-full min-w-0">
     <div class="w-full space-y-9 lg:space-y-11">
         <header class="welcome-public__hero">
             <div class="welcome-public__hero-row">
-                <img
-                    src="{{ asset('images/visitaai_rembg.png') }}"
-                    alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
-                    width="96"
-                    height="96"
-                    class="welcome-public__logo"
-                    decoding="async" />
+                <div class="flex shrink-0 flex-col items-start gap-4">
+                    <img
+                        src="{{ asset('images/visitaai_rembg.png') }}"
+                        alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
+                        width="96"
+                        height="96"
+                        class="welcome-public__logo"
+                        decoding="async" />
+                    <a href="{{ url('/') }}" class="welcome-public__link">
+                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
+                        {{ __('Voltar à página inicial') }}
+                    </a>
+                </div>
                 <div class="min-w-0 flex-1 space-y-3 pt-0.5">
                     <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
@@ -26,12 +32,8 @@
                         {{ __('Verificar visitas no imóvel') }}
                     </h1>
                     <p class="welcome-public__lead">
-                        {{ __('Veja em segundos, de graça e sem criar conta, quando a equipe registrou visita no endereço. Você só precisa do número do comprovante ou do que o ACE ou ACS informou na visita.') }}
+                        {{ __('Grátis e sem cadastro: informe o código do comprovante ou o que o ACE ou ACS passou na visita.') }}
                     </p>
-                    <a href="{{ url('/') }}" class="welcome-public__link">
-                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                        {{ __('Voltar à página inicial') }}
-                    </a>
                 </div>
             </div>
         </header>

@@ -28,7 +28,7 @@
                         <span class="font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
                     </h1>
                     <p class="welcome-public__lead">
-                        {{ __('Plataforma municipal de vigilância entomológica: transparência para quem mora no imóvel e ferramentas integradas para a equipe de campo — ACE e ACS no ritmo do SUS.') }}
+                        {{ __('Vigilância entomológica municipal: consulta para o morador e apoio à equipe ACE e ACS no SUS.') }}
                     </p>
                     <x-public-municipality-pill :local="$local" class="pt-0.5" />
                 </div>
