@@ -77,7 +77,7 @@
         <section class="border-t border-slate-200/50 pt-9 dark:border-slate-800/70" aria-labelledby="welcome-laws-heading">
             <h2 id="welcome-laws-heading" class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                 {{ __('Leis e normas em síntese') }}</h2>
-            <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+            <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400 lg:max-w-3xl xl:max-w-4xl">
                 {{ __('Fundamentos federais: Leis 11.350/2006 (ACS e ACE), 8.080/1990 (SUS) e 13.709/2018 (LGPD). Orientação técnica: MS / PNCD e arboviroses.') }}
             </p>
             <div class="mt-4 flex flex-wrap gap-2">
