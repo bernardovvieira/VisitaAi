@@ -23,18 +23,21 @@
                         height="96"
                         class="welcome-public__logo self-start"
                         decoding="async" />
-                    <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
-                            class="v-btn-secondary inline-flex w-full items-center justify-center gap-2 px-4 py-2 text-sm font-medium sm:w-auto sm:justify-start">
-                        <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                        {{ __('Baixar cartão com QR Code') }}
-                    </button>
+                    <div class="flex w-full flex-wrap items-stretch gap-2 sm:w-auto">
+                        <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
+                                class="v-btn-secondary inline-flex min-w-0 flex-1 items-center justify-center gap-2 px-4 py-2 text-sm font-medium sm:flex-initial">
+                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                            {{ __('Baixar cartão com QR Code') }}
+                        </button>
+                        <a href="{{ url('/') }}"
+                           class="v-btn-secondary inline-flex min-w-0 flex-1 items-center justify-center gap-2 px-4 py-2 text-sm font-medium sm:flex-initial">
+                            <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                            {{ __('Voltar à página inicial') }}
+                        </a>
+                    </div>
                     <a href="{{ route('consulta.index') }}" class="welcome-public__link">
                         <x-heroicon-o-magnifying-glass class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                         {{ __('Consultar outro código') }}
-                    </a>
-                    <a href="{{ url('/') }}" class="welcome-public__link">
-                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                        {{ __('Voltar à página inicial') }}
                     </a>
                 </div>
                 <div class="min-w-0 flex-1 space-y-3 pt-0.5">

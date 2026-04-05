@@ -23,14 +23,16 @@
                     <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
-                    <h1 class="welcome-public__title">
-                        {{ __('Bem-vindo(a) ao') }}
-                        <span class="font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
-                    </h1>
+                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                        <h1 class="welcome-public__title min-w-0 shrink">
+                            {{ __('Bem-vindo(a) ao') }}
+                            <span class="font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
+                        </h1>
+                        <x-public-municipality-pill :local="$local" class="shrink-0" />
+                    </div>
                     <p class="welcome-public__lead">
                         {{ __('Vigilância entomológica municipal: consulta para o morador e apoio à equipe ACE e ACS no SUS.') }}
                     </p>
-                    <x-public-municipality-pill :local="$local" class="pt-0.5" />
                 </div>
             </div>
         </header>
