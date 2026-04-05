@@ -38,7 +38,7 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-6 flex w-full flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-200/50 pt-5 dark:border-slate-800/70 sm:mt-7">
+            <div class="mt-6 flex w-full flex-wrap items-center gap-x-4 gap-y-2 sm:mt-7">
                 <a href="{{ url('/') }}" class="welcome-public__link">
                     <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                     {{ __('Voltar à página inicial') }}
