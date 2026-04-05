@@ -160,7 +160,6 @@
                     <div class="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-600" x-show="selectedId && !selectedDraftId" x-cloak>
                         <p class="v-section-title text-sm">{{ __('Ocupantes (nesta visita)') }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel. Opcional.') }}</p>
-                        @include('municipio.partials._lgpd-visitas-obs-ocupantes')
                         <template x-for="m in ((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || []" :key="m.mor_id">
                             <div>
                                 <label class="v-toolbar-label" x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></label>

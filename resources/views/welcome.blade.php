@@ -195,30 +195,7 @@
             </div>
             </div>
 
-            {{-- Rodapé: marcas + crédito --}}
-            <footer class="welcome-public__footer border-t border-slate-200/80 pt-6 dark:border-slate-700/80" id="anim-footer">
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div class="flex items-center gap-3">
-                        <img
-                            src="{{ asset('images/visitaai_rembg.png') }}"
-                            alt=""
-                            width="40"
-                            height="40"
-                            class="h-9 w-9 object-contain opacity-90 dark:opacity-95"
-                            aria-hidden="true"
-                            decoding="async" />
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                            <span class="font-semibold text-gray-700 dark:text-gray-300">{{ config('app.brand') }}</span>
-                            <span class="mx-1.5 text-gray-300 dark:text-gray-600" aria-hidden="true">·</span>
-                            &copy; {{ date('Y') }}
-                        </p>
-                    </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                        {{ __('Desenvolvido por') }}
-                        <a href="https://bitwise.dev.br" target="_blank" rel="noopener noreferrer" class="font-medium text-gray-700 underline-offset-2 hover:text-blue-600 hover:underline dark:text-gray-300 dark:hover:text-blue-400">Bitwise Technologies</a>
-                    </p>
-                </div>
-            </footer>
+            @include('partials.public-copyright-footer', ['footerClass' => 'welcome-public__footer', 'footerId' => 'anim-footer'])
         </div>
 
     </div>

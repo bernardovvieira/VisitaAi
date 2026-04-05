@@ -1,9 +1,9 @@
 @props(['paginator', 'itemLabel' => 'registros'])
 
 @if($paginator->total() > 0)
-    <div class="v-pagination-wrap border-t border-slate-100 px-4 py-2.5 dark:border-slate-700/80 sm:px-5">
+    <div class="v-pagination-wrap border-t border-slate-100 px-3 py-1.5 dark:border-slate-700/80 sm:px-4">
         <div class="v-pagination-bar">
-            <p class="v-pagination-meta">
+            <p class="v-pagination-meta leading-snug">
                 Mostrando {{ $paginator->firstItem() }} a {{ $paginator->lastItem() }} de {{ $paginator->total() }} {{ $itemLabel }}
                 <strong class="ml-1 font-semibold text-slate-800 dark:text-slate-200">· {{ __('Página') }} {{ $paginator->currentPage() }} {{ __('de') }} {{ $paginator->lastPage() }}</strong>
             </p>

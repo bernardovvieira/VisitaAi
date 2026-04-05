@@ -10,9 +10,8 @@
         ['label' => __('Editar')],
     ])" />
 
-    <x-section-card class="mx-auto max-w-3xl space-y-4">
+    <x-section-card class="w-full space-y-4">
         <x-page-header :eyebrow="__('Ocupantes')" :title="__('Editar ocupante')" />
-        @include('municipio.moradores._disclaimer-ocupantes')
         <form method="post" action="{{ route($profile . '.locais.moradores.update', [$local, $morador]) }}" class="space-y-6">
             @csrf
             @method('patch')

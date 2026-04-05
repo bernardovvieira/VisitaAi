@@ -40,9 +40,9 @@
     @if($pendentesCount > 0 || $visitasComPendencia > 0)
         <div class="v-dash-alert-stack" role="region" aria-label="{{ __('Requer atenção') }}">
             @if($pendentesCount > 0)
-                <a href="{{ route('gestor.pendentes') }}" class="v-dash-alert v-dash-alert--success">
+                <a href="{{ route('gestor.pendentes') }}" class="v-dash-alert v-dash-alert--warn">
                     <x-heroicon-o-exclamation-triangle class="h-5 w-5 shrink-0 opacity-90" aria-hidden="true" />
-                    <span>{{ __(':n cadastro(s) de campo aguardando aprovação', ['n' => $pendentesCount]) }}</span>
+                    <span>{{ __('gestor.dashboard.pending_field_staff', ['n' => $pendentesCount]) }}</span>
                     <x-heroicon-o-arrow-right class="ml-auto h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
                 </a>
             @endif
@@ -66,7 +66,7 @@
                 <span class="v-kpi-card-agi__hint">{{ __('Aprovados no sistema') }}</span>
             </div>
             <div class="v-kpi-card-agi {{ $pendentesCount > 0 ? 'v-kpi-card-agi--warn' : '' }}">
-                <span class="v-kpi-card-agi__label">{{ __('Cadastros pendentes') }}</span>
+                <span class="v-kpi-card-agi__label">{{ __('Pendentes') }}</span>
                 <span class="v-kpi-card-agi__value">{{ $pendentesCount }}</span>
                 <span class="v-kpi-card-agi__hint">{{ __('ACE/ACS sem aprovação') }}</span>
             </div>
@@ -121,7 +121,7 @@
                     </table>
                 </div>
                 <p class="mt-auto flex justify-center pt-4">
-                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-btn-primary inline-flex items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold no-underline">{{ __('Ver painel completo de indicadores') }}</a>
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="text-sm font-medium text-blue-600 underline decoration-blue-500/50 underline-offset-2 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">{{ __('Ver painel completo de indicadores') }}</a>
                 </p>
             @else
                 <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('Ainda não há ocupantes registrados por bairro.') }}</p>

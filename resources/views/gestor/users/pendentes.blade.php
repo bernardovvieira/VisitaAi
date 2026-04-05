@@ -10,10 +10,9 @@
 
     <!-- Card introdutório -->
     <x-section-card class="space-y-2 dark:bg-gray-800">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Gerenciamento de Aprovação</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('gestor.pendentes.intro_title') }}</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            Nesta tela, você pode visualizar usuários que aguardam aprovação para acessar o sistema.
-            Use o botão de confirmação na coluna Ação para liberar o acesso do usuário selecionado.
+            {{ __('gestor.pendentes.intro_lead') }}
         </p>
     </x-section-card>
 
@@ -21,9 +20,9 @@
     <x-section-card class="space-y-2 dark:bg-gray-800">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
             @if($pendentes->total() > 0)
-                Exibindo {{ $pendentes->count() }} de {{ $pendentes->total() }} usuário(s) pendente(s).
+                {{ __('gestor.pendentes.table_summary', ['visible' => $pendentes->count(), 'total' => $pendentes->total()]) }}
             @else
-                Nenhum usuário pendente no momento.
+                {{ __('gestor.pendentes.empty_table') }}
             @endif
         </p>
 
@@ -66,14 +65,14 @@
                     @empty
                         <tr>
                             <td colspan="6" class="p-6 text-center text-gray-600 dark:text-gray-400">
-                                Nenhum usuário pendente no momento.
+                                {{ __('gestor.pendentes.empty_table') }}
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <x-pagination-relatorio :paginator="$pendentes" item-label="usuários pendentes" />
+        <x-pagination-relatorio :paginator="$pendentes" :item-label="__('gestor.pendentes.pagination_item')" />
     </x-section-card>
 
 </div>

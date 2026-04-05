@@ -6,7 +6,6 @@
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div class="min-w-0 flex-1 space-y-2">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ config('visitaai_municipio.ocupantes.titulo_secao_local') }}</h2>
-            @include('municipio.moradores._disclaimer-ocupantes')
         </div>
         <a href="{{ route($rp . '.locais.moradores.index', $local) }}"
            class="v-btn-compact v-btn-compact--blue shrink-0 self-start">

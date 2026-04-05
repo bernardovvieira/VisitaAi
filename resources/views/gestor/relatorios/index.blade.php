@@ -271,8 +271,8 @@
                         alert(msg);
                         return;
                     } gerarBase64Graficos();"
-                    class="v-btn-danger gap-1.5 disabled:cursor-not-allowed disabled:opacity-50">
-                    <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+                    class="inline-flex items-center gap-2 v-btn-danger disabled:cursor-not-allowed disabled:opacity-50">
+                    <x-heroicon-o-document-arrow-down class="h-5 w-5 shrink-0" aria-hidden="true" />
                     {{ __('Gerar relatório em PDF') }}
                 </button>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('Filtre os dados e clique no botão para gerar o documento.') }}</p>

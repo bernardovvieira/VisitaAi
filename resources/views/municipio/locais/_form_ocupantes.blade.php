@@ -44,10 +44,8 @@
     ];
 @endphp
 
-<x-lgpd.aviso context="ocupantes_cadastro" class="mb-4" :compact="true" />
 <fieldset class="space-y-3 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
     <legend class="v-section-title mb-2">{{ __('Ocupantes do imóvel (Visita Aí)') }}</legend>
-    @include('municipio.moradores._disclaimer-ocupantes')
     <div x-data="{
         rows: {{ Js::from($ocupantesRows) }},
         esc: {{ Js::from($esc) }},

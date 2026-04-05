@@ -64,18 +64,9 @@
         </x-slot>
     </x-page-header>
 
-    <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        @if(filled($cfgInd['export_csv_aviso'] ?? ''))
-            <x-ui.disclosure variant="csv-hint">
-                <x-slot name="summary">
-                    <span class="border-b border-dotted border-current pb-px font-medium">{{ __('Sobre a exportação CSV') }}</span>
-                    <span class="sr-only">{{ __('Abre texto sobre o arquivo exportado.') }}</span>
-                </x-slot>
-                <p>{{ $cfgInd['export_csv_aviso'] }}</p>
-            </x-ui.disclosure>
-        @endif
+    <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
         <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-           class="v-btn-compact v-btn-compact--green shrink-0 text-sm sm:ms-auto">
+           class="v-btn-compact v-btn-compact--green shrink-0 text-sm">
             <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
         </a>
@@ -90,31 +81,6 @@
         <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n registros por bairro para exibir totais.', ['n' => $painel['minimo_aplicado']]) }}</p>
         <p class="text-[10px] leading-snug text-amber-800/75 dark:text-amber-200/70">{{ __('Mínimo de :n ocupantes por célula no cruzamento escolaridade × renda para exibir o número (evita identificação).', ['n' => $painel['cruzamento_escolaridade_renda']['minimo_celula_aplicado'] ?? 5]) }}</p>
     </x-ui.disclosure>
-
-    <x-section-card class="border-blue-200/80 bg-gradient-to-br from-slate-50/95 via-white to-blue-50/40 dark:border-blue-900/40 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-blue-950/25">
-        <div class="flex gap-3 sm:gap-4">
-            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950/90 dark:text-blue-300">
-                <x-heroicon-o-book-open class="h-6 w-6 shrink-0" aria-hidden="true" />
-            </div>
-            <div class="min-w-0">
-                <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ __('Legislação e finalidade deste painel') }}</h2>
-                <p class="mt-1.5 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('Os indicadores reúnem apenas dados cadastrados no Visita Aí, com agregação e supressão configuradas pelo município para reduzir risco de reidentificação, em linha com a LGPD e a LAI.') }}
-                </p>
-                <ul class="mt-3 list-inside list-disc space-y-1 text-xs leading-relaxed text-slate-700 marker:text-blue-600 dark:text-slate-300 dark:marker:text-blue-400">
-                    <li>{{ __('Lei nº 8.080/1990 (SUS): atividades de vigilância em saúde e informação para gestão.') }}</li>
-                    <li>{{ __('Lei nº 11.350/2006: ACS e ACE; registro de ações de campo compatível com a organização municipal.') }}</li>
-                    <li>{{ __('Lei nº 13.709/2018 (LGPD): bases legais para tratamento em saúde pública e cautelas do art. 6º (necessidade, adequação, segurança).') }}</li>
-                    <li>{{ __('Lei nº 12.527/2011 (LAI): classificação e uso interno de informações estatísticas agregadas, quando aplicável.') }}</li>
-                </ul>
-                <p class="mt-3 text-[11px] leading-snug text-slate-500 dark:text-slate-500">
-                    {{ __('As descrições por seção abaixo podem ser ajustadas em configuração municipal; a base normativa federal permanece como referência.') }}
-                </p>
-            </div>
-        </div>
-    </x-section-card>
-
-    <x-lgpd.aviso context="painel_indicadores" compact class="max-w-none" />
 
     @php $Q = $painel['completude']; @endphp
     <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">

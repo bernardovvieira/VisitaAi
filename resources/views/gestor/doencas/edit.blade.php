@@ -6,7 +6,7 @@
 
     <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Editar doença')" />
 
-    <x-section-card class="mx-auto max-w-3xl space-y-4">
+    <x-section-card class="w-full space-y-4">
         <x-flash-alerts />
 
         <form method="POST" action="{{ route('gestor.doencas.update', $doenca) }}" class="space-y-6" id="doenca-edit-form">
@@ -25,11 +25,11 @@
             </div>
 
             <!-- Sintomas -->
-            <div>
-                <label class="v-toolbar-label mb-1">
+            <div class="rounded-xl border border-amber-200/90 bg-amber-50/55 p-4 dark:border-amber-800/45 dark:bg-amber-950/25">
+                <label class="v-toolbar-label mb-2">
                     Sintomas <span class="text-red-500">*</span>
                 </label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                     @foreach($optionsSintomas as $opt)
                         <label class="inline-flex items-center space-x-2">
                             <input
@@ -49,11 +49,11 @@
             </div>
 
             <!-- Transmissão -->
-            <div>
-                <label class="v-toolbar-label mb-1">
+            <div class="rounded-xl border border-sky-200/90 bg-sky-50/55 p-4 dark:border-sky-800/45 dark:bg-sky-950/25">
+                <label class="v-toolbar-label mb-2">
                     Modos de Transmissão <span class="text-red-500">*</span>
                 </label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                     @foreach($optionsTransmissao as $opt)
                         <label class="inline-flex items-center space-x-2">
                             <input
@@ -73,11 +73,11 @@
             </div>
 
             <!-- Medidas de Controle -->
-            <div>
-                <label class="v-toolbar-label mb-1">
+            <div class="rounded-xl border border-violet-200/90 bg-violet-50/55 p-4 dark:border-violet-800/45 dark:bg-violet-950/25">
+                <label class="v-toolbar-label mb-2">
                     Medidas de Controle <span class="text-red-500">*</span>
                 </label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                     @foreach($optionsMedidas as $opt)
                         <label class="inline-flex items-center space-x-2">
                             <input

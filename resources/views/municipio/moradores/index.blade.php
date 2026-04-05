@@ -30,8 +30,6 @@
         </a>
     </div>
 
-    @include('municipio.moradores._disclaimer-ocupantes')
-
     @php
         $escOpcoes = config('visitaai_municipio.escolaridade_opcoes', []);
         $rendaOpcoes = config('visitaai_municipio.renda_faixa_opcoes', []);

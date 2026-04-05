@@ -171,8 +171,6 @@
         <p>{{ __('Para orientação sanitária, segunda via de documentos ou reclamações, fale com a Secretaria Municipal de Saúde do seu município.') }}</p>
     </x-ui.disclosure>
 
-    <x-lgpd.aviso context="consulta_publica" class="mt-6" :compact="true" />
-
     {{-- Rodapé --}}
     <div class="flex flex-col items-center gap-3 border-t border-slate-200/80 pt-8 dark:border-slate-700/80">
         <a href="{{ route('consulta.index') }}"
@@ -188,6 +186,8 @@
             <span id="btn-copiar-texto">{{ __('Copiar ou compartilhar link') }}</span>
         </button>
     </div>
+
+    @include('partials.public-copyright-footer', ['footerClass' => 'mt-8'])
 
 </div>
 

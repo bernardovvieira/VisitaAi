@@ -19,7 +19,6 @@
         </x-ui.disclosure>
     @endif
 
-    <x-lgpd.aviso context="painel_gestor_sensivel" class="mt-4 border-slate-200/90 dark:border-slate-500/50" :compact="true" />
 
     @if($local->moradores->isEmpty())
         <p class="mt-3 text-sm text-rose-800/80 dark:text-rose-200/80">{{ __('Nenhum ocupante cadastrado neste imóvel.') }}</p>

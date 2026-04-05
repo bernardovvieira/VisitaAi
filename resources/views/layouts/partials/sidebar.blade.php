@@ -101,7 +101,7 @@
                                 :active="request()->routeIs('gestor.pendentes')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-exclamation-triangle class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Cadastros pendentes') }}</span>
+                    <span class="truncate">{{ __('Pendentes') }}</span>
                 </x-sidebar-link>
             </div>
             <div x-show="online" x-cloak>

@@ -111,5 +111,5 @@ return [
     'Transmissão' => 'Transmission',
     'Um novo link de verificação foi enviado para o e-mail informado.' => 'A new verification link was sent to the email provided.',
     'Urbana' => 'Urban',
-    'Usuários pendentes' => 'Pending users',
+    'Usuários pendentes' => 'Pending',
 ];

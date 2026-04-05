@@ -212,7 +212,6 @@
                         <main id="main-content" class="v-app-main text-slate-800 dark:text-slate-100" tabindex="-1" x-bind:inert="sidebarOpen">
                             <div class="v-app-main-inner">
                                 @yield('content')
-                                @include('layouts.partials.lgpd-footer-auth')
                             </div>
                         </main>
                     </div>

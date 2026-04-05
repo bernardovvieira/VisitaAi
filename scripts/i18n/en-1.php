@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    ':n cadastro(s) de campo aguardando aprovação' => ':n field staff registration(s) awaiting approval',
+    'gestor.dashboard.pending_field_staff' => ':n field staff pending approval',
     ':n visita(s) com pendência aberta' => ':n visit(s) with open follow-up',
     'A consulta pública mostra somente o que está vinculado ao código do imóvel: endereço cadastrado, datas de visita e status (pendente ou concluída). Não exibe diagnósticos, nomes de moradores ou outros dados protegidos.' => 'This public lookup only shows data linked to the property code: registered address, visit dates, and status (pending or completed). It does not show diagnoses, residents’ names, or other protected data.',
     'ACE ou ACS' => 'ACE or ACS',
@@ -44,7 +44,7 @@ return [
     'Cadastrar visita ou enviar rascunhos guardados no aparelho.' => 'Register a visit or send drafts saved on the device.',
     'Cadastro territorial' => 'Territorial registry',
     'Cadastros municipais' => 'Municipal registries',
-    'Cadastros pendentes' => 'Pending registrations',
+    'Cadastros pendentes' => 'Pending',
     'Campo' => 'Field work',
     'Cancelar' => 'Cancel',
     'Central LIRAa' => 'LIRAa hub',

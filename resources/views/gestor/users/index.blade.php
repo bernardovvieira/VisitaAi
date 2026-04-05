@@ -14,7 +14,7 @@
         <h2 class="v-section-title">{{ __('Usuários do sistema') }}</h2>
         <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{!!
             __('gestor.users.intro', [
-                'link' => '<a href="'.e(route('gestor.pendentes')).'" class="font-semibold text-blue-600 hover:underline dark:text-blue-400">'.e(__('Cadastros pendentes')).'</a>',
+                'link' => '<a href="'.e(route('gestor.pendentes')).'" class="font-semibold text-blue-600 hover:underline dark:text-blue-400">'.e(__('Pendentes')).'</a>',
             ])
         !!}</p>
     </x-section-card>
@@ -146,7 +146,7 @@
         </div>
         <a href="{{ route('gestor.pendentes') }}" class="v-btn-primary inline-flex shrink-0 items-center justify-center gap-2 px-5 py-2.5 text-[13px] font-semibold">
             <x-heroicon-o-chevron-right class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ __('Ir para cadastros pendentes') }}
+            {{ __('Ir para pendentes') }}
         </a>
     </x-section-card>
 </div>

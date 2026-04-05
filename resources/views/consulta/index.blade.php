@@ -119,7 +119,7 @@
         @endif
     </x-section-card>
 
-    <x-lgpd.aviso context="consulta_publica" :compact="true" />
+    @include('partials.public-copyright-footer', ['footerClass' => 'mt-8'])
 </div>
 @endsection
 
