@@ -12,22 +12,16 @@
     $linhaPopup = $local->loc_endereco.', '.$numeroExibicao;
 @endphp
 <div class="welcome-public welcome-public--wide w-full min-w-0">
-    <div class="w-full space-y-9 lg:space-y-11">
+    <div class="w-full space-y-11 lg:space-y-12">
         <header class="welcome-public__hero">
             <div class="welcome-public__hero-row">
-                <div class="flex shrink-0 flex-col items-start gap-4">
-                    <img
-                        src="{{ asset('images/visitaai_rembg.png') }}"
-                        alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
-                        width="96"
-                        height="96"
-                        class="welcome-public__logo"
-                        decoding="async" />
-                    <a href="{{ url('/') }}" class="welcome-public__link">
-                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                        {{ __('Voltar à página inicial') }}
-                    </a>
-                </div>
+                <img
+                    src="{{ asset('images/visitaai_rembg.png') }}"
+                    alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
+                    width="96"
+                    height="96"
+                    class="welcome-public__logo"
+                    decoding="async" />
                 <div class="min-w-0 flex-1 space-y-3 pt-0.5">
                     <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
@@ -35,16 +29,18 @@
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
                             {{ __('Visitas registradas neste endereço') }}
+                            <span class="font-medium text-slate-800 dark:text-slate-100"> {{ config('app.brand') }}</span>
                         </h1>
-                        <div class="flex flex-wrap items-center gap-2 shrink-0">
-                            <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
-                            <x-public-municipality-pill :local="$localPrimario ?? null" />
-                        </div>
+                        <x-public-municipality-pill :local="$localPrimario ?? null" class="shrink-0" />
                     </div>
                     <p class="welcome-public__lead">
                         {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos e sem identificar o profissional.') }}
                     </p>
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-200/50 pt-3 dark:border-slate-800/70">
+                    <a href="{{ url('/') }}" class="welcome-public__link">
+                        <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
+                        {{ __('Voltar à página inicial') }}
+                    </a>
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
                         <button type="button" id="btn-baixar-card" aria-label="{{ __('Baixar cartão com QR Code para colar no imóvel') }}"
                                 class="welcome-public__link-btn">
                             <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
