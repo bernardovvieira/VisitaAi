@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Controllers\Auth\ConfirmPasswordOverride;
+use App\Support\Tenancy\HostSlugResolver;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -17,6 +18,13 @@ class AppServiceProvider extends ServiceProvider
     {
         // POST /user/confirm-password: confirma com use_senha, sem query por coluna 'login'
         $this->app->bind(FortifyController::class, ConfirmPasswordOverride::class);
+
+        $this->app->singleton(HostSlugResolver::class, function () {
+            return new HostSlugResolver(
+                config('tenant_registry.base_domains', []),
+                config('tenant_registry.dev_slug'),
+            );
+        });
     }
 
     /**

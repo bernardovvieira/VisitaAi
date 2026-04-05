@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use Pdo\Mysql;
 
 return [
 
@@ -59,7 +60,31 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::ATTR_TIMEOUT => 5,
-                (PHP_VERSION_ID >= 80500 ? Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        /*
+        | Base só com registry_tenants (slug → database do tenant). Ver config/tenant_registry.php
+        */
+        'registry' => [
+            'driver' => 'mysql',
+            'url' => env('REGISTRY_DB_URL'),
+            'host' => env('REGISTRY_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('REGISTRY_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('REGISTRY_DB_DATABASE'),
+            'username' => env('REGISTRY_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('REGISTRY_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket' => env('REGISTRY_DB_SOCKET', env('DB_SOCKET', '')),
+            'charset' => env('REGISTRY_DB_CHARSET', env('DB_CHARSET', 'utf8mb4')),
+            'collation' => env('REGISTRY_DB_COLLATION', env('DB_COLLATION', 'utf8mb4_unicode_ci')),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::ATTR_TIMEOUT => 5,
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
@@ -79,7 +104,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                (PHP_VERSION_ID >= 80500 ? Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 

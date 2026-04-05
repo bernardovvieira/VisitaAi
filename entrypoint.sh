@@ -11,4 +11,6 @@ php artisan route:clear 2>/dev/null || true
 php artisan config:clear 2>/dev/null || true
 # Migrations ao subir o container (evita post-deploy separado que pode dar timeout no Coolify)
 php artisan migrate --force --no-interaction 2>/dev/null || true
+# Registry multi-tenant: tabela registry_tenants (ignora falha se REGISTRY_DB_* não estiver definido)
+php artisan registry:migrate --force --no-interaction 2>/dev/null || true
 exec "$@"

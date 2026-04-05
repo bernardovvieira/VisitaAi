@@ -113,6 +113,8 @@ Existe um ambiente de **demo** instanciado para testes.
 | **Base / Municípios** | visitaai.cloud, ibirapuita.visitaai.cloud | `php artisan migrate --force` |
 | **Demo** | demo.visitaai.cloud | `php artisan migrate --force` (ou `migrate:fresh` + seed se quiser resetar a demo a cada deploy) |
 
+**Várias instâncias num único deploy (subdomínio → base MySQL):** opcional via *tenant registry* (`TENANT_REGISTRY_ENABLED`, `REGISTRY_DB_*`, comandos `registry:migrate`, `tenants:migrate`, UI `/system/tenant-registry`). Ver `docs/MULTI-TENANT-SUBDOMINIO-DESIGN.md`.
+
 **Primeira vez (nova instância):** rode uma vez manualmente, antes de ir para produção:
 ```bash
 php artisan migrate:fresh --force && php artisan db:seed --class=AdminBaseSeeder --force   # base/municípios

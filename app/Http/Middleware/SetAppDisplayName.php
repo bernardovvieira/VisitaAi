@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Local;
+use App\Models\RegistryTenant;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Local;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,10 +22,42 @@ class SetAppDisplayName
 
     public function handle(Request $request, Closure $next): Response
     {
+        $tenant = app()->bound('registry.tenant') ? app('registry.tenant') : null;
+
+        if ($tenant instanceof RegistryTenant) {
+            if (filled($tenant->brand)) {
+                config(['app.brand' => $tenant->brand]);
+            }
+            if (filled($tenant->display_name)) {
+                config(['app.name' => $tenant->display_name]);
+            } else {
+                $prefixo = $this->resolvePrefixoForRegistryTenant($tenant);
+                config(['app.name' => 'Visita Aí - '.$prefixo.self::SUFIXO]);
+            }
+
+            return $next($request);
+        }
+
         $prefixo = $this->resolvePrefixo();
-        config(['app.name' => 'Visita Aí - ' . $prefixo . self::SUFIXO]);
+        config(['app.name' => 'Visita Aí - '.$prefixo.self::SUFIXO]);
 
         return $next($request);
+    }
+
+    private function resolvePrefixoForRegistryTenant(RegistryTenant $tenant): string
+    {
+        try {
+            if (DB::connection()->getPdo() && Local::exists()) {
+                $cidade = Local::query()->orderBy('loc_id')->value('loc_cidade');
+                if ($cidade) {
+                    return $cidade;
+                }
+            }
+        } catch (\Throwable) {
+            // DB indisponível
+        }
+
+        return $tenant->slug;
     }
 
     private function resolvePrefixo(): string
