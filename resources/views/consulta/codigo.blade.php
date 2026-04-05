@@ -22,7 +22,7 @@
                     height="96"
                     class="welcome-public__logo"
                     decoding="async" />
-                <div class="min-w-0 flex-1 space-y-3 pt-0.5">
+                <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
                         {{ __('Vigilância entomológica e controle de vetores') }}
                     </p>
