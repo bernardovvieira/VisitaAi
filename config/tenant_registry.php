@@ -52,6 +52,8 @@ return [
     /*
     | Arranque automático (deploy): criar/atualizar 1 linha em registry_tenants.
     | Útil com mesma base para app + registry (REGISTRY_DB_DATABASE = DB_DATABASE).
+    | Com TENANT_PROVISION_ENABLED=true e bootstrap apontando para base != registry,
+    | também CREATE DATABASE + migrate nessa base antes do updateOrCreate.
     | artisan tenant-registry:bootstrap (e o entrypoint Docker chama após registry:migrate).
     */
     'bootstrap_enabled' => filter_var(env('TENANT_REGISTRY_BOOTSTRAP', false), FILTER_VALIDATE_BOOLEAN),

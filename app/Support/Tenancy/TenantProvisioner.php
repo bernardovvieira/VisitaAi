@@ -67,26 +67,54 @@ class TenantProvisioner
             throw new InvalidArgumentException(__('Base inválida: coincide com a base do registry.'));
         }
 
-        $this->createDatabaseAndGrants($database);
-
         $row = $this->toRegistryAttributes($attributes, $slug, $environment, $database);
 
-        $ghost = new RegistryTenant($row);
-        TenantConnection::configureMysqlFromRegistryTenant($ghost);
-
-        if ($runMigrate) {
-            $code = Artisan::call('migrate', ['--force' => true]);
-            if ($code !== 0) {
-                try {
-                    $this->dropDatabase($database);
-                } catch (\Throwable) {
-                }
-
-                throw new InvalidArgumentException(__('Falha ao executar migrate no novo tenant.'));
+        try {
+            $this->createTenantSchemaAndMigrate($database, $runMigrate);
+        } catch (\Throwable $e) {
+            try {
+                $this->dropDatabase($database);
+            } catch (\Throwable) {
             }
+            throw $e;
         }
 
         return RegistryTenant::query()->create($row);
+    }
+
+    /**
+     * Garante schema MySQL + migrate no arranque (bootstrap), quando o tenant usa base dedicada.
+     * Com uma única base (tenant = registry), não faz nada — o entrypoint já migrou.
+     */
+    public function ensureTenantMysqlSchemaForBootstrap(string $database, bool $runMigrate = true): void
+    {
+        if (! config('tenant_registry.provision_enabled')) {
+            return;
+        }
+
+        $this->assertDatabaseNameSafe($database);
+        $registryDb = (string) config('database.connections.registry.database');
+        if ($registryDb !== '' && $database === $registryDb) {
+            return;
+        }
+
+        $this->createTenantSchemaAndMigrate($database, $runMigrate);
+    }
+
+    private function createTenantSchemaAndMigrate(string $database, bool $runMigrate): void
+    {
+        $this->assertDatabaseNameSafe($database);
+        $this->createDatabaseAndGrants($database);
+        if (! $runMigrate) {
+            return;
+        }
+
+        $ghost = new RegistryTenant(['database' => $database]);
+        TenantConnection::configureMysqlFromRegistryTenant($ghost);
+        $code = Artisan::call('migrate', ['--force' => true]);
+        if ($code !== 0) {
+            throw new InvalidArgumentException(__('Falha ao executar migrate na base do tenant.'));
+        }
     }
 
     private function assertDatabaseNameSafe(string $database): void

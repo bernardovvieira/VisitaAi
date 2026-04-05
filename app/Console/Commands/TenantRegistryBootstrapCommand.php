@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\RegistryTenant;
+use App\Support\Tenancy\TenantProvisioner;
 use Illuminate\Console\Command;
 
 class TenantRegistryBootstrapCommand extends Command
@@ -31,6 +32,14 @@ class TenantRegistryBootstrapCommand extends Command
 
         if ($slug === '' || $database === '') {
             $this->error('Defina TENANT_REGISTRY_BOOTSTRAP_SLUG e base (ou DB_DATABASE).');
+
+            return self::FAILURE;
+        }
+
+        try {
+            app(TenantProvisioner::class)->ensureTenantMysqlSchemaForBootstrap($database, true);
+        } catch (\Throwable $e) {
+            $this->error($e->getMessage());
 
             return self::FAILURE;
         }
