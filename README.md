@@ -61,6 +61,8 @@ Suba os containers:
 docker compose up -d --build
 ```
 
+O serviço `db` monta `docker/mysql/init/`, onde o MySQL 8 corre scripts **apenas na primeira criação do volume** (`data` vazio). Aí o user `visita` recebe `CREATE ON *.*` para permitir `php artisan tenants:provision` sem usar root na app. Se o volume MySQL **já existia** antes deste script, execute manualmente o SQL do ficheiro como `root` ou recrie o volume (apaga dados).
+
 Gere a chave da aplicação e rode as migrações **dentro** do container da aplicação:
 
 ```bash
