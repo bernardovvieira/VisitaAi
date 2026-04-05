@@ -49,4 +49,21 @@ return [
     */
     'schedule_migrate' => filter_var(env('TENANT_REGISTRY_SCHEDULE_MIGRATE', false), FILTER_VALIDATE_BOOLEAN),
 
+    /*
+    | Arranque automático (deploy): criar/atualizar 1 linha em registry_tenants.
+    | Útil com mesma base para app + registry (REGISTRY_DB_DATABASE = DB_DATABASE).
+    | artisan tenant-registry:bootstrap (e o entrypoint Docker chama após registry:migrate).
+    */
+    'bootstrap_enabled' => filter_var(env('TENANT_REGISTRY_BOOTSTRAP', false), FILTER_VALIDATE_BOOLEAN),
+
+    'bootstrap_slug' => env('TENANT_REGISTRY_BOOTSTRAP_SLUG', 'demo'),
+
+    'bootstrap_database' => env('TENANT_REGISTRY_BOOTSTRAP_DATABASE') ?: env('DB_DATABASE'),
+
+    'bootstrap_environment' => env('TENANT_REGISTRY_BOOTSTRAP_ENV', 'production'),
+
+    'bootstrap_display_name' => env('TENANT_REGISTRY_BOOTSTRAP_DISPLAY_NAME'),
+
+    'bootstrap_brand' => env('TENANT_REGISTRY_BOOTSTRAP_BRAND'),
+
 ];
