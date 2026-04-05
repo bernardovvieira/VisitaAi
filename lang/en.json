@@ -842,7 +842,7 @@
     "Usuários": "Users",
     "usuários": "users",
     "Usuários do sistema": "System users",
-    "Usuários pendentes": "Pending",
+    "Usuários pendentes": "Pending users",
     "Utilizamos cookies para melhorar sua experiência, lembrar suas preferências (como tema claro/escuro) e garantir o funcionamento do sistema. Ao continuar, você concorda com o uso de cookies essenciais.": "We use cookies to improve your experience, remember your preferences (such as light/dark theme), and keep the site working. By continuing, you agree to essential cookies.",
     "Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.": "Use this field for additional visit notes such as conditions found, difficulties, or recommendations.",
     "Valores conforme filtros aplicados.": "Values reflect applied filters.",
@@ -933,5 +933,9 @@
     "Fundamentos federais: Leis 11.350/2006 (ACS e ACE), 8.080/1990 (SUS) e 13.709/2018 (LGPD). Orientação técnica: MS / PNCD e arboviroses.": "Federal basis: Laws 11.350/2006 (field agents), 8.080/1990 (SUS), and 13.709/2018 (LGPD). Technical guidance: Ministry of Health, PNCD, and arboviruses.",
     "Gestor centraliza visitas, território, relatórios e indicadores internos, com acessos restritos por perfil.": "Managers centralize visits, territory, reports, and internal indicators, with role-based access control.",
     "Morador consulta o histórico de visitas pelo código do imóvel, sem cadastro e sem expor dados clínicos.": "Residents check visit history with the property code—no sign-up and no clinical data exposed online.",
-    "Textos no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde. Alinhado às diretrizes para ACE, ACS e vigilância entomológica.": "Statutes on Planalto; current health guidance on the Ministry of Health portal. Aligned with guidance for field agents and entomological surveillance."
+    "Textos no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde. Alinhado às diretrizes para ACE, ACS e vigilância entomológica.": "Statutes on Planalto; current health guidance on the Ministry of Health portal. Aligned with guidance for field agents and entomological surveillance.",
+    "Ativar autenticação em dois fatores (2FA)": "Enable two-factor authentication (2FA)",
+    "Ative a 2FA com aplicativo autenticador para proteger sua conta.": "Turn on 2FA with an authenticator app to protect your account.",
+    "Configurar autenticador": "Set up authenticator",
+    "Escaneie o QR code ou use a chave manual e confirme com o código de 6 dígitos.": "Scan the QR code or use the manual key, then confirm with the 6-digit code from your app."
 }

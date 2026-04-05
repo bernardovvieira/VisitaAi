@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Editar visita'))
+@section('og_description', __('Atualize dados da visita registrada: local, data, tratamentos e doenças monitoradas.'))
+
 @section('head')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

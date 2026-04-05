@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Editar doença'))
+@section('og_description', __('Edição de cadastro municipal de doença e sintomas.'))
+
 @section('content')
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças'), 'url' => route('gestor.doencas.index')], ['label' => __('Editar')]]" />

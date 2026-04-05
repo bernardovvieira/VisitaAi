@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Confirme sua senha'))
+@section('og_description', __('Confirmação de senha para acessar área segura do aplicativo.'))
+
 @section('content')
 <div class="v-page space-y-5">
     <x-page-header :title="__('Confirme sua senha')" />

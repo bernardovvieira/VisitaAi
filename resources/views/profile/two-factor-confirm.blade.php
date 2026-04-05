@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Configurar autenticador'))
+@section('og_description', __('Escaneie o QR code ou use a chave manual e confirme com o código de 6 dígitos.'))
+
 @section('content')
 <div class="v-page space-y-5">
-    <x-page-header title="Configurar autenticador" />
+    <x-page-header :title="__('Configurar autenticador')" />
 
     @if($errors->any())
         <x-alert type="error" :message="$errors->first() ?: optional($errors->confirmTwoFactorAuthentication)->first('code')" />

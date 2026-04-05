@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Editar usuário'))
+@section('og_description', __('Atualização de dados e permissões do usuário municipal.'))
+
 @section('content')
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Usuários'), 'url' => route('gestor.users.index')], ['label' => __('Editar')]]" />

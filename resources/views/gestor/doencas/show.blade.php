@@ -1,6 +1,9 @@
 <!-- resources/views/gestor/doencas/show.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . $doenca->doe_nome)
+@section('og_description', __('Detalhes da doença monitorada: sintomas e registro municipal.'))
+
 @section('content')
 <div class="v-page">
   <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças'), 'url' => route('gestor.doencas.index')], ['label' => __('Visualizar')]]" />

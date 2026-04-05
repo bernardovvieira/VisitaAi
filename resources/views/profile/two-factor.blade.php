@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Ativar autenticação em dois fatores (2FA)'))
+@section('og_description', __('Ative a 2FA com aplicativo autenticador para proteger sua conta.'))
+
 @section('content')
 <div class="v-page space-y-5">
-    <x-page-header title="Ativar autenticação em dois fatores (2FA)" />
+    <x-page-header :title="__('Ativar autenticação em dois fatores (2FA)')" />
 
     @if($errors->any())
         <x-alert type="error" :message="implode(' ', $errors->all())" />

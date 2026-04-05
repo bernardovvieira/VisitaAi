@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Editar ocupante'))
+@section('og_description', __('Atualizar dados do ocupante no imóvel.'))
+
 @section('content')
 <div class="v-page">
     <x-breadcrumbs :items="array_filter([

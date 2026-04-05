@@ -1,6 +1,9 @@
 <!-- resources/views/agente/locais/create.blade.php -->
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . (($isPrimario ?? false) ? __('Cadastrar local de referência') : __('Cadastrar local')))
+@section('og_description', __('Cadastro de imóvel para visitas de vigilância entomológica e controle vetorial.'))
+
 @section('content')
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Cadastrar')]]" />

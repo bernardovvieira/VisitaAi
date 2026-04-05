@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Locais') . ' · ' . $local->loc_codigo_unico)
+@section('og_description', __('Detalhes do imóvel cadastrado: endereço, código único e dados de visitação.'))
+
 @section('content')
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Visualizar')]]" />

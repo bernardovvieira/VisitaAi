@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Meu perfil'))
+@section('og_description', __('Atualize nome, e-mail e configurações da sua conta.'))
+
 @section('content')
 <div class="v-page space-y-5">
     <x-page-header :eyebrow="__('Conta e segurança')" :title="__('Meu perfil')" />

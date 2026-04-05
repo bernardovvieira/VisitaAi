@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('og_title', config('app.name') . ' · ' . __('Registrar visita'))
+@section('og_description', __('Formulário de registro de visita LIRAa (Levantamento de Índice Rápido para Aedes aegypti).'))
+
 @section('head')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
