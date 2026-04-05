@@ -28,7 +28,17 @@ class RegistryTenantRequest extends FormRequest
                 Rule::unique(RegistryTenant::class)->ignore($id),
             ],
             'environment' => ['required', Rule::in(['sandbox', 'production'])],
-            'database' => ['required', 'string', 'max:128'],
+            'provision_database' => ['sometimes', 'boolean'],
+            'database' => [
+                'nullable',
+                'string',
+                'max:128',
+                Rule::requiredIf(
+                    fn () => ! ($this->routeIs('registry.admin.store')
+                        && $this->boolean('provision_database')
+                        && config('tenant_registry.provision_enabled'))
+                ),
+            ],
             'db_host' => ['nullable', 'string', 'max:255'],
             'db_username' => ['nullable', 'string', 'max:128'],
             'db_password' => ['nullable', 'string', 'max:255'],
@@ -43,6 +53,7 @@ class RegistryTenantRequest extends FormRequest
     {
         $this->merge([
             'active' => $this->boolean('active'),
+            'provision_database' => $this->boolean('provision_database'),
         ]);
     }
 }

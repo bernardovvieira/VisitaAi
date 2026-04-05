@@ -21,11 +21,45 @@
         @error('environment')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
 
+    @if(($canProvision ?? false) && ! $isEdit)
+        <div class="flex items-start gap-2 rounded-lg border border-slate-200 bg-slate-50/80 p-3 dark:border-slate-600 dark:bg-slate-900/40">
+            <input id="provision_database" name="provision_database" type="checkbox" value="1" class="mt-1 rounded border-slate-300"
+                   @checked(old('provision_database')) />
+            <div class="min-w-0">
+                <label for="provision_database" class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ __('Criar base MySQL, permissões e migrações automaticamente') }}</label>
+                <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">
+                    {{ __('Schema sugerido:') }} <code class="rounded bg-white px-1 py-0.5 font-mono text-xs dark:bg-slate-800">{{ config('tenant_registry.database_prefix') }}<span id="database-slug-hint">{{ old('slug', $tenant->slug) ?: '…' }}</span></code>
+                    — {{ __('requer utilizador MySQL com CREATE DATABASE ou credenciais em TENANT_PROVISION_DB_*') }}.
+                </p>
+            </div>
+        </div>
+    @endif
+
     <div>
         <label for="database" class="v-toolbar-label">MySQL database <span class="text-red-500">*</span></label>
-        <input id="database" name="database" type="text" value="{{ old('database', $tenant->database) }}" required class="v-input mt-1 font-mono text-sm" />
+        <input id="database" name="database" type="text" value="{{ old('database', $tenant->database) }}"
+               class="v-input mt-1 font-mono text-sm" autocomplete="off" />
         @error('database')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+        @if(($canProvision ?? false) && ! $isEdit)
+            <p class="mt-1 text-xs text-slate-500">{{ __('Opcional se marcar a opção acima (nome gerado a partir do slug).') }}</p>
+        @endif
     </div>
+
+    @if(($canProvision ?? false) && ! $isEdit)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var slugEl = document.getElementById('slug');
+                var hint = document.getElementById('database-slug-hint');
+                if (!slugEl || !hint) return;
+                function sync() {
+                    var s = (slugEl.value || '').trim();
+                    hint.textContent = s ? s.replace(/-/g, '_') : '…';
+                }
+                slugEl.addEventListener('input', sync);
+                sync();
+            });
+        </script>
+    @endif
 
     <div>
         <label for="db_host" class="v-toolbar-label">{{ __('Host MySQL (opcional)') }}</label>

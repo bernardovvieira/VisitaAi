@@ -88,6 +88,30 @@ return [
             ]) : [],
         ],
 
+        /*
+        | Conexão para CREATE DATABASE / GRANT (utilizador com privilégios de admin no MySQL).
+        | Por defeito = mesmas credenciais que DB_*; use TENANT_PROVISION_DB_* se a app usar user sem CREATE.
+        */
+        'tenant_provision' => [
+            'driver' => 'mysql',
+            'host' => env('TENANT_PROVISION_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('TENANT_PROVISION_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('TENANT_PROVISION_DB_DATABASE', 'information_schema'),
+            'username' => env('TENANT_PROVISION_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('TENANT_PROVISION_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket' => env('TENANT_PROVISION_DB_SOCKET', env('DB_SOCKET', '')),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::ATTR_TIMEOUT => 5,
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

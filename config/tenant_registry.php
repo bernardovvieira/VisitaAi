@@ -66,4 +66,18 @@ return [
 
     'bootstrap_brand' => env('TENANT_REGISTRY_BOOTSTRAP_BRAND'),
 
+    /*
+    | Criar schema MySQL + migrate + linha no registry (CLI tenants:provision ou UI).
+    */
+    'provision_enabled' => filter_var(env('TENANT_PROVISION_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+
+    'database_prefix' => rtrim((string) env('TENANT_DATABASE_PREFIX', 'visita_'), '_').'_',
+
+    /*
+    | Após CREATE DATABASE, opcional: GRANT ALL para o user da app (nome MySQL).
+    */
+    'provision_grant_app_username' => env('TENANT_PROVISION_GRANT_APP_USERNAME', env('DB_USERNAME')),
+
+    'provision_grant_app_host' => env('TENANT_PROVISION_GRANT_APP_HOST', '%'),
+
 ];

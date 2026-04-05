@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegistryTenantRequest;
 use App\Models\RegistryTenant;
+use App\Support\Tenancy\TenantProvisioner;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -19,11 +20,28 @@ class RegistryTenantAdminController extends Controller
 
     public function create(): View
     {
-        return view('registry_admin.create', ['tenant' => new RegistryTenant]);
+        return view('registry_admin.create', [
+            'tenant' => new RegistryTenant,
+            'canProvision' => (bool) config('tenant_registry.provision_enabled'),
+        ]);
     }
 
     public function store(RegistryTenantRequest $request): RedirectResponse
     {
+        if ($request->boolean('provision_database') && config('tenant_registry.provision_enabled')) {
+            try {
+                app(TenantProvisioner::class)->provisionNewTenant(
+                    $this->validatedToAttributes($request),
+                    true
+                );
+            } catch (\Throwable $e) {
+                return back()->withInput()->withErrors(['store' => $e->getMessage()]);
+            }
+
+            return redirect()->route('registry.admin.index')
+                ->with('status', __('Tenant criado: base MySQL, migrações e registo concluídos.'));
+        }
+
         $data = $this->validatedToAttributes($request);
 
         try {
@@ -70,6 +88,10 @@ class RegistryTenantAdminController extends Controller
     private function validatedToAttributes(RegistryTenantRequest $request, bool $isUpdate = false): array
     {
         $data = $request->validated();
+        unset($data['provision_database']);
+        if (isset($data['database']) && trim((string) $data['database']) === '') {
+            unset($data['database']);
+        }
         $rawJson = $data['settings_json'] ?? null;
         unset($data['settings_json']);
 
