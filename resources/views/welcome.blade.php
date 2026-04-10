@@ -31,7 +31,7 @@
                         <x-public-municipality-pill :local="$local" class="shrink-0" />
                     </div>
                     <p class="welcome-public__lead">
-                        {{ __('O Visita Aí reúne consulta ao cidadão, cadastro municipal de imóveis e endereços, registro de visitas de campo (incluindo vigilância entomológica/PNCD quando o município usa) e dados complementares do imóvel. Partes que se combinam, mas não dependem uma da outra.') }}
+                        {{ __('O Visita Aí reúne consulta ao cidadão, cadastro municipal de imóveis e endereços, registro de visitas de campo, vigilância entomológica e PNCD conforme adotados pelo município, e dados complementares do imóvel. Módulos integrados, sem dependência obrigatória entre si.') }}
                     </p>
                 </div>
             </div>
@@ -70,13 +70,13 @@
                 <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                     {{ __('Campo e legislação') }}</h3>
                 <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('ACE e ACS registram visitas em campo quando o município utiliza esse fluxo (Lei 11.350/2006; diretrizes do MS/PNCD). O cadastro de locais e dados do imóvel pode apoiar outras necessidades municipais, com ou sem visita vetorial.') }}
+                    {{ __('ACE e ACS registram visitas em campo quando o município utiliza esse fluxo, nos termos da Lei 11.350/2006 e das diretrizes do MS e do PNCD. O cadastro de locais e dados do imóvel pode apoiar outras necessidades municipais, com ou sem visita vetorial.') }}
                 </p>
             </article>
         </section>
 
         <p class="max-w-3xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-            {{ __('Os módulos de visitas de vigilância em saúde e de cadastro municipal de imóveis (dados socioeconômicos complementares) são independentes: cada município define o que utiliza, conforme legislação e planejamento local.') }}
+            {{ __('Os módulos de visitas de vigilância em saúde e de cadastro municipal de imóveis, com dados socioeconômicos complementares, são independentes: cada município define o que utiliza, conforme legislação e planejamento local.') }}
         </p>
 
         {{-- Base legal compacta, largura total --}}

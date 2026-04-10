@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta pública'))
-@section('og_description', __('Consulta pública pelo código do imóvel: gratuita, sem cadastro e sem dados clínicos. Histórico de visitas de campo (vigilância em saúde quando o município utiliza). Cadastro complementar do imóvel não aparece aqui: só o vinculado à transparência das visitas.'))
+@section('og_description', __('Consulta pública pelo código do imóvel: gratuita, sem cadastro e sem dados clínicos. Histórico de visitas de campo e vigilância em saúde, conforme a operação municipal. Cadastro complementar do imóvel não aparece aqui: só o vinculado à transparência das visitas.'))
 
 @section('content')
 <div class="welcome-public welcome-public--extend w-full min-w-0">
@@ -46,7 +46,7 @@
 
         <x-flash-alerts />
 
-        <section class="welcome-public__surface p-6 sm:p-7" aria-labelledby="consulta-codigo-titulo">
+        <section class="welcome-public__surface consulta-public-card consulta-public-card--codigo p-6 sm:p-7" aria-labelledby="consulta-codigo-titulo">
             <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form" class="space-y-4">
                 <h2 id="consulta-codigo-titulo" class="welcome-public__title text-[1.0625rem] lg:text-lg">
                     {{ __('Código do imóvel') }}</h2>
@@ -82,7 +82,7 @@
             </form>
         </section>
 
-        <section class="welcome-public__surface overflow-hidden p-0" aria-labelledby="consulta-doencas-titulo">
+        <section class="welcome-public__surface consulta-public-card consulta-public-card--doencas overflow-hidden p-0" aria-labelledby="consulta-doencas-titulo">
             <div class="border-b border-slate-200/50 p-6 dark:border-slate-800/70 sm:p-7">
                 <h2 id="consulta-doencas-titulo" class="welcome-public__title text-[1.0625rem] lg:text-lg">
                     {{ __('Doenças monitoradas no município') }}</h2>

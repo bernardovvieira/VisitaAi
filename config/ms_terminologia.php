@@ -20,12 +20,12 @@ return [
     */
     'sistema' => [
         /*
-         * Escopo do produto: visitas de campo (inclui PNCD / vetores quando o município usa) +
-         * cadastro municipal de imóveis e dados complementares (ocupantes, perfil socioeconômico), que não
-         * dependem do uso entomológico.
+         * Escopo: visitas de campo com PNCD e vetores conforme adoção municipal;
+         * cadastro municipal de imóveis e dados complementares de ocupantes e perfil socioeconômico,
+         * independentes do uso entomológico.
          */
-        'nome_subtitulo' => 'Imóveis, visitas de campo e cadastro complementar do imóvel, com apoio à vigilância entomológica e controle vetorial (PNCD/MS) quando aplicável',
-        'nota_ms' => 'O módulo de visitas pode seguir as diretrizes do Ministério da Saúde (vigilância em saúde, arboviroses, PNCD). O cadastro de imóveis e dados complementares (ocupantes, informações socioeconômicas) é autônomo: apoia gestão e políticas municipais e pode ser usado com ou sem registro de visita vetorial.',
+        'nome_subtitulo' => 'Imóveis, visitas de campo e cadastro complementar do imóvel, com apoio à vigilância entomológica e ao controle vetorial PNCD e MS, conforme a configuração municipal.',
+        'nota_ms' => 'O módulo de visitas pode seguir as diretrizes do Ministério da Saúde: vigilância em saúde, arboviroses e PNCD. O cadastro de imóveis e dados complementares de ocupantes e informações socioeconômicas é autônomo: apoia gestão e políticas municipais e pode ser usado com ou sem registro de visita vetorial.',
     ],
 
     /*

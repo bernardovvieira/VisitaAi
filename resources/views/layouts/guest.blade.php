@@ -108,7 +108,7 @@
     </head>
     <body class="font-sans text-slate-900 antialiased dark:text-slate-100">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
-        <div class="flex min-h-screen flex-col items-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-4 pt-6 sm:justify-center sm:px-6 sm:pt-0 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        <div class="auth-guest-layout flex min-h-screen flex-col items-center px-4 pt-6 sm:justify-center sm:px-6 sm:pt-0">
             <div class="flex flex-col items-center gap-3">
                 <x-application-logo />
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">

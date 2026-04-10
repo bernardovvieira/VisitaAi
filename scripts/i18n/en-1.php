@@ -116,7 +116,7 @@ return [
     'Gestão municipal' => 'Municipal management',
     'Governança' => 'Governance',
     'Histórico de visitas' => 'Visit history',
-    'Consulta pública em :cidade/:uf: visitas de campo (vigilância em saúde quando aplicável), datas e status, sem dados clínicos e sem cadastro complementar do imóvel na área pública.' => 'Public lookup in :cidade/:uf: field visits (health surveillance when applicable), dates and status, with no clinical data and no complementary property records on the public page.',
+    'Consulta pública em :cidade/:uf: visitas de campo, vigilância em saúde conforme a operação municipal, datas e status, sem dados clínicos e sem cadastro complementar do imóvel na área pública.' => 'Public lookup in :cidade/:uf: field visits, health surveillance per municipal operation, dates and status, with no clinical data and no complementary property records on the public page.',
     'Informações completas da visita registrada no sistema.' => 'Complete information for the visit registered in the system.',
     'Inteligência municipal' => 'Municipal intelligence',
     'Levantamento LIRAa' => 'LIRAa survey',

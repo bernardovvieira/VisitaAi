@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta do imóvel'))
-@section('og_description', isset($local) ? __('Consulta pública em :cidade/:uf: visitas de campo (vigilância em saúde quando aplicável), datas e status, sem dados clínicos e sem cadastro complementar do imóvel na área pública.', ['cidade' => $local->loc_cidade, 'uf' => $local->loc_estado]) : __('Consulta pública pelo código do imóvel. Transparência sobre visitas de campo, sem cadastro complementar na página pública.'))
+@section('og_description', isset($local) ? __('Consulta pública em :cidade/:uf: visitas de campo, vigilância em saúde conforme a operação municipal, datas e status, sem dados clínicos e sem cadastro complementar do imóvel na área pública.', ['cidade' => $local->loc_cidade, 'uf' => $local->loc_estado]) : __('Consulta pública pelo código do imóvel. Transparência sobre visitas de campo, sem cadastro complementar na página pública.'))
 
 @section('content')
 @php

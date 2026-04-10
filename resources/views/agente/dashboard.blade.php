@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]))
-@section('og_description', __('Painel do :perfil. Visitas de campo (inclui PNCD quando aplicável), locais e cadastro complementar do imóvel. Use o que o município definiu. Lei 11.350/2006 e diretrizes MS.', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]))
+@section('og_description', __('Painel do :perfil. Visitas de campo, PNCD conforme habilitação municipal, locais e cadastro complementar do imóvel. Use o que o município definiu. Lei 11.350/2006 e diretrizes MS.', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]))
 
 @section('content')
 @php

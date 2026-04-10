@@ -45,7 +45,7 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Imóveis e cadastro')" :hint="__('Menu lateral: imóveis legenda')" />
+            <x-sidebar-nav-section :label="__('Imóveis e cadastro')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.locais.index')"
                                 :active="request()->routeIs('gestor.locais.*')"
@@ -63,7 +63,7 @@
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Vigilância e relatórios')" :hint="__('Menu lateral: vigilância legenda')" />
+            <x-sidebar-nav-section :label="__('Vigilância e relatórios')" />
             <x-sidebar-link :href="route('gestor.visitas.index')"
                             :active="request()->routeIs('gestor.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -121,7 +121,7 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Imóveis')" :hint="__('Menu lateral agente: imóveis legenda')" />
+            <x-sidebar-nav-section :label="__('Imóveis')" />
             <x-sidebar-link :href="route('agente.locais.index')"
                             :active="request()->routeIs('agente.locais.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -129,7 +129,7 @@
                 <span class="truncate">{{ __('Locais') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Vigilância no campo')" :hint="__('Menu lateral agente: vigilância legenda')" />
+            <x-sidebar-nav-section :label="__('Vigilância no campo')" />
             <x-sidebar-link :href="route('agente.visitas.index')"
                             :active="request()->routeIs('agente.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -163,7 +163,7 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('LIRAa')" :hint="__('Menu lateral ACS: liraa legenda')" />
+            <x-sidebar-nav-section :label="__('LIRAa')" />
             <x-sidebar-link :href="route('saude.visitas.index')"
                             :active="request()->routeIs('saude.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">

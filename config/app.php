@@ -42,7 +42,7 @@ return [
     |
     */
 
-    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade}. Escopo: imóveis, visitas e cadastro municipal (SUS / PNCD quando aplicável)
+    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade}. Escopo: imóveis, visitas, cadastro municipal e PNCD conforme configuração local
     // Sobrescrito pelo middleware SetAppDisplayName em requests web (usa cidade do 1º Local quando aplicável)
     'name' => env('APP_DISPLAY_NAME') ?: match (strtolower(trim((string) (env('APP_INSTANCE_TYPE') ?? '')))) {
         'base' => 'Visita Aí - Base - Imóveis, visitas e cadastro municipal (saúde pública / PNCD)',
