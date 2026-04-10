@@ -19,6 +19,10 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        if (! config('features.open_registration')) {
+            abort(404);
+        }
+
         return view('auth.register');
     }
 
@@ -27,6 +31,10 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if (! config('features.open_registration')) {
+            abort(404);
+        }
+
         /* -----------------------------------------------------------------
          |  0. Normaliza CPF (só dígitos → formato 000.000.000-00) para
          |     validação e armazenamento consistentes (evita duplicados por máscara)

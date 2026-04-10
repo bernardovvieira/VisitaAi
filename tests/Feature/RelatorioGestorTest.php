@@ -36,6 +36,8 @@ class RelatorioGestorTest extends TestCase
 
         $this->actingAs($this->gestorAprovado())
             ->get(route('gestor.relatorios.index'))
-            ->assertOk();
+            ->assertOk()
+            ->assertSee(__('Cadastro complementar do imóvel'))
+            ->assertSee(__('Imóveis no período: cadastro complementar'));
     }
 }

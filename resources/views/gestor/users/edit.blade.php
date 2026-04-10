@@ -12,7 +12,7 @@
     <x-section-card>
         <h2 class="v-section-title">{{ __('Dados da conta') }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Atualize as informações do usuário conforme necessário. Se não desejar alterar a senha, deixe o campo de senha em branco.
+            {{ __('Atualize as informações do usuário conforme necessário. Se não desejar alterar a senha, deixe o campo de senha em branco.') }}
         </p>
     </x-section-card>
 
@@ -23,19 +23,19 @@
         @if ($errors->any())
             @php
                 $fieldLabels = [
-                    'use_nome' => 'Nome',
-                    'use_email' => 'E-mail',
-                    'use_perfil' => 'Perfil',
-                    'use_senha' => 'Nova senha',
-                    'use_senha_confirmation' => 'Confirmar nova senha',
+                    'use_nome' => __('Nome'),
+                    'use_email' => __('E-mail'),
+                    'use_perfil' => __('Perfil'),
+                    'use_senha' => __('Nova senha'),
+                    'use_senha_confirmation' => __('Confirmar nova senha'),
                 ];
                 $errorFields = array_unique($errors->keys());
                 $labels = array_map(fn ($k) => $fieldLabels[$k] ?? $k, $errorFields);
             @endphp
-            <div class="px-4 py-3 rounded-lg bg-red-600 dark:bg-red-700 text-white text-sm" role="alert">
-                <p class="font-medium">Corrija os erros nos campos indicados abaixo.</p>
+            <div class="rounded-lg bg-red-600 px-4 py-3 text-sm text-white dark:bg-red-700" role="alert">
+                <p class="font-medium">{{ __('Corrija os erros nos campos indicados abaixo.') }}</p>
                 @if (count($labels) > 0)
-                    <p class="mt-1 opacity-90">Campos com erro: {{ implode(', ', $labels) }}.</p>
+                    <p class="mt-1 opacity-90">{{ __('Campos com erro:') }} {{ implode(', ', $labels) }}.</p>
                 @endif
             </div>
         @endif

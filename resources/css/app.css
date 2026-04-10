@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /*
- * Design system — console minimalista e refinado:
+ * Design system: console minimalista e refinado:
  * canvas quase plano, cartões com hairline + sombra mínima, tipografia sem excesso de peso,
  * hierarquia eyebrow → título → corpo, tabelas uniformes com hover discreto, azul só onde guia ação.
  */
@@ -15,7 +15,7 @@
     }
 
     :root {
-        --v-canvas: 248 250 252; /* slate-50 — base mais limpa */
+        --v-canvas: 248 250 252; /* slate-50: base mais limpa */
         --v-surface: 255 255 255;
         --v-surface-muted: 248 250 252;
         --v-border: 226 232 240; /* slate-200 */
@@ -123,7 +123,7 @@
     }
 }
 
-/* Scroll do menu lateral — barra fina, não invade o conteúdo */
+/* Scroll do menu lateral: barra fina, não invade o conteúdo */
 .sidebar-nav-scroll {
     scrollbar-gutter: stable;
     scrollbar-width: thin;
@@ -182,7 +182,7 @@
         }
     }
 
-    /* Toast de conexão (JS em layouts.app — ping / offline) */
+    /* Toast de conexão (JS em layouts.app: ping / offline) */
     .v-toast-connection {
         @apply fixed left-1/2 top-4 z-[100] max-w-[min(100vw-2rem,28rem)] -translate-x-1/2 rounded-xl px-4 py-3 text-center text-sm font-medium text-white shadow-lg;
     }
@@ -390,7 +390,7 @@
         box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     }
 
-    /* Navegação lateral — silhueta contínua, sombra contida */
+    /* Navegação lateral: silhueta contínua, sombra contida */
     .v-sidebar-rail {
         @apply border-r border-white/[0.06] text-slate-200 dark:shadow-none;
         background: linear-gradient(180deg, rgb(2 6 23) 0%, rgb(15 23 42 / 0.98) 50%, rgb(2 6 23) 100%);
@@ -420,7 +420,7 @@
         background-color: rgb(var(--v-surface) / 1);
     }
 
-    /* Tabela — hierarquia clara, cabeçalho fixo no scroll horizontal, linhas legíveis */
+    /* Tabela: hierarquia clara, cabeçalho fixo no scroll horizontal, linhas legíveis */
     .v-table-wrap {
         @apply overflow-x-auto;
         -webkit-overflow-scrolling: touch;
@@ -474,17 +474,17 @@
         @apply border-b-0;
     }
 
-    /* Linha com hover em tabelas legadas (min-w-full divide-y) — alinhado ao .v-data-table */
+    /* Linha com hover em tabelas legadas (min-w-full divide-y): alinhado ao .v-data-table */
     .v-table-row-interactive {
         @apply transition-colors hover:bg-slate-50/95 dark:hover:bg-slate-800/50;
     }
 
-    /* Mesmo padrão com célula bairro fixa (indicadores ocupantes) — use com `group` na <tr> */
+    /* Mesmo padrão com célula bairro fixa (indicadores ocupantes): use com `group` na <tr> */
     .v-table-row-interactive-sticky {
         @apply bg-white transition-colors hover:bg-slate-50/95 dark:bg-gray-800 dark:hover:bg-slate-800/55;
     }
 
-    /* Chip gerado em JS (ex.: sugestões de doença na visita) — tons rotativos alinhados aos blocos de doença */
+    /* Chip gerado em JS (ex.: sugestões de doença na visita): tons rotativos alinhados aos blocos de doença */
     .v-chip-suggestion {
         @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
     }
@@ -525,7 +525,7 @@
         @apply bg-slate-800/60;
     }
 
-    /* KPI / métrica — estilo painel ERP (denso, valor em destaque) */
+    /* KPI / métrica: estilo painel ERP (denso, valor em destaque) */
     .v-dashboard-kpi {
         @apply relative flex min-h-[4.25rem] gap-2.5 overflow-hidden p-3;
         border-radius: var(--v-radius-md);
@@ -562,7 +562,7 @@
         @apply bg-violet-100 text-violet-900 dark:bg-violet-950 dark:text-violet-200;
     }
 
-    /* Atalhos — lista de tarefas ERP */
+    /* Atalhos: lista de tarefas ERP */
     .v-dashboard-action {
         @apply flex items-center gap-2 border px-3 py-2 text-left text-[13px] font-medium text-slate-800 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35;
         border-radius: var(--v-radius-md);
@@ -623,7 +623,7 @@
     }
 
     /*
-     * Dashboard “fino” — hierarquia Aviagest (stack vertical, cartões com profundidade,
+     * Dashboard “fino”: hierarquia Aviagest (stack vertical, cartões com profundidade,
      * KPIs só tipografia, atalhos em cartão horizontal). Cores de acento seguem o azul do produto.
      */
     .v-dash {
@@ -738,7 +738,7 @@
         }
     }
 
-    /* 3 colunas só em viewport largo — em sidebar do gestor, xl ainda é estreito */
+    /* 3 colunas só em viewport largo: em sidebar do gestor, xl ainda é estreito */
     @media (min-width: 1536px) {
         .v-dash-shortcuts--tight {
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -826,7 +826,7 @@
         @apply no-underline transition hover:brightness-[0.98] dark:hover:brightness-110;
     }
 
-    /* Trilho de navegação estrutural — respiro antes do título */
+    /* Trilho de navegação estrutural: respiro antes do título */
     .v-breadcrumbs {
         @apply mb-4 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
     }
@@ -889,6 +889,14 @@
         @apply h-9 w-9 rounded-xl dark:focus-visible:ring-offset-gray-900;
     }
 
+    .v-btn-icon-slate {
+        @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
+    }
+
+    .v-btn-icon-danger {
+        @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60 dark:focus-visible:ring-offset-slate-900;
+    }
+
     .v-btn-secondary {
         @apply inline-flex items-center justify-center rounded-xl border border-slate-200/90 bg-white px-3.5 py-2 text-[13px] font-medium text-slate-800 transition hover:border-slate-300 hover:bg-slate-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
         box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
@@ -901,7 +909,7 @@
         box-shadow: 0 2px 8px rgb(220 38 38 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.12);
     }
 
-    /* Par de CTAs de exportação: CSV (planilha) + PDF — mesmo peso visual */
+    /* Par de CTAs de exportação: CSV (planilha) + PDF: mesmo peso visual */
     .v-btn-export {
         @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-semibold tracking-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900;
     }
@@ -1001,7 +1009,7 @@
         @apply bg-blue-50/95 dark:bg-slate-800/95;
     }
 
-    /* Paginação (relatórios): sem margem/topo extra — o wrapper do componente traz o separador */
+    /* Paginação (relatórios): sem margem/topo extra: o wrapper do componente traz o separador */
     .v-pagination-bar {
         @apply flex flex-wrap items-center justify-between gap-3;
     }
@@ -1064,7 +1072,7 @@
     }
 }
 
-/* Consulta pública — mapa Leaflet (bundle Vite) */
+/* Consulta pública: mapa Leaflet (bundle Vite) */
 .consulta-leaflet-pin {
     background: none !important;
     border: none !important;

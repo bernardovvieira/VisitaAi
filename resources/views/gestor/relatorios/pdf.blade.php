@@ -119,6 +119,33 @@
     </table>
   </div>
 
+  @php
+    $graficosPdf = array_values(array_filter([
+      $graficoBairrosBase64 ?? null,
+      $graficoDoencasBase64 ?? null,
+      $mapaCalorBase64 ?? null,
+      $graficoDiasBase64 ?? null,
+      $graficoTratamentosBase64 ?? null,
+    ]));
+  @endphp
+  @if(count($graficosPdf) > 0)
+  <div class="titulo-secao">{{ __('Análise visual') }}</div>
+  <table style="width:100%; border-collapse:collapse; margin-bottom:12px; table-layout:fixed;">
+    @foreach(array_chunk($graficosPdf, 2) as $par)
+    <tr>
+      @foreach($par as $src)
+      <td style="width:50%; vertical-align:top; padding:4px 6px 10px 0; border:none;">
+        <img src="{{ $src }}" alt="" style="width:100%; max-height:150px; object-fit:contain;" />
+      </td>
+      @endforeach
+      @if(count($par) === 1)
+      <td style="width:50%; border:none;"></td>
+      @endif
+    </tr>
+    @endforeach
+  </table>
+  @endif
+
   <div class="titulo-secao">{{ __('Vigilância Entomológica e Controle Vetorial') }}</div>
   <table class="tabela-principal">
     <thead>
@@ -206,6 +233,42 @@
       @endforeach
     </tbody>
   </table>
+
+  @if(isset($imoveisComplementoResumo) && $imoveisComplementoResumo->isNotEmpty())
+  <div class="titulo-secao">{{ __('PDF seção cadastro complementar') }}</div>
+  <p style="font-size:9px;color:#555;margin:0 0 8px;line-height:1.35;">{{ __('PDF seção cadastro complementar nota') }}</p>
+  <table class="tabela-principal" style="font-size:8px;">
+    <thead>
+      <tr>
+        <th style="width:6%" class="text-left">{{ __('Cód.') }}</th>
+        <th style="width:18%" class="text-left">{{ __('Logradouro') }}</th>
+        <th style="width:8%">{{ __('Nº') }}</th>
+        <th style="width:10%" class="text-left">{{ __('Bairro') }}</th>
+        <th style="width:5%">{{ __('Ocup.') }}</th>
+        <th style="width:6%">{{ __('Socioecon.') }}</th>
+        <th style="width:7%">{{ __('Decl. mor.') }}</th>
+        <th style="width:20%" class="text-left">{{ __('Faixa renda familiar') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($imoveisComplementoResumo as $locPdf)
+        @php
+          $lsePdf = $locPdf->socioeconomico;
+        @endphp
+        <tr>
+          <td class="text-left">{{ $locPdf->loc_codigo_unico ?? '-' }}</td>
+          <td class="text-left">{{ $locPdf->loc_endereco ?? '-' }}</td>
+          <td>{{ $locPdf->loc_numero ?? __('S/N') }}</td>
+          <td class="text-left">{{ $locPdf->loc_bairro ?? '-' }}</td>
+          <td>{{ (int) ($locPdf->moradores_count ?? 0) }}</td>
+          <td>{{ $lsePdf ? __('Sim') : __('Não') }}</td>
+          <td>{{ $lsePdf && $lsePdf->lse_n_moradores_declarado !== null ? $lsePdf->lse_n_moradores_declarado : '-' }}</td>
+          <td class="text-left">{{ $lsePdf && $lsePdf->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit((string) $lsePdf->lse_renda_familiar_faixa, 42) : '-' }}</td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
+  @endif
 
   <div class="legenda">
     <strong>{{ __('PDF legenda atividade') }}</strong> {{ implode(', ', array_values($atividades)) }} &nbsp;|&nbsp;

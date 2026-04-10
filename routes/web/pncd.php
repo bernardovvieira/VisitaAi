@@ -20,6 +20,10 @@ Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->
         ->except(['show'])
         ->middleware('can:viewAny,App\Models\Local');
 
+    Route::get('locais/{local}/ficha-socioeconomica.pdf', [LocalController::class, 'fichaSocioeconomicaPdf'])
+        ->name('locais.ficha-socioeconomica-pdf')
+        ->middleware(['can:view,local', 'throttle:30,1']);
+
     Route::get('locais/{local}', [LocalController::class, 'show'])
         ->name('locais.show')
         ->middleware('can:view,local');

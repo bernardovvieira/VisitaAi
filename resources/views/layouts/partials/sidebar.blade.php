@@ -45,13 +45,7 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Campo')" />
-            <x-sidebar-link :href="route('gestor.visitas.index')"
-                            :active="request()->routeIs('gestor.visitas.*')"
-                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Visitas') }}</span>
-            </x-sidebar-link>
+            <x-sidebar-nav-section :label="__('Imóveis e cadastro')" :hint="__('Menu lateral: imóveis legenda')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.locais.index')"
                                 :active="request()->routeIs('gestor.locais.*')"
@@ -61,6 +55,22 @@
                 </x-sidebar-link>
             </div>
             <div x-show="online" x-cloak>
+                <x-sidebar-link :href="route('gestor.indicadores.ocupantes')"
+                                :active="request()->routeIs('gestor.indicadores.ocupantes*')"
+                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                    <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                    <span class="truncate">{{ __('Indicadores dos imóveis') }}</span>
+                </x-sidebar-link>
+            </div>
+
+            <x-sidebar-nav-section :label="__('Vigilância e relatórios')" :hint="__('Menu lateral: vigilância legenda')" />
+            <x-sidebar-link :href="route('gestor.visitas.index')"
+                            :active="request()->routeIs('gestor.visitas.*')"
+                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                <span class="truncate">{{ __('Visitas de campo') }}</span>
+            </x-sidebar-link>
+            <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.doencas.index')"
                                 :active="request()->routeIs('gestor.doencas.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -68,34 +78,16 @@
                     <span class="truncate">{{ __('Doenças') }}</span>
                 </x-sidebar-link>
             </div>
-
-            <x-sidebar-nav-section :label="__('Análise e relatórios')" />
-            <div x-show="online" x-cloak>
-                <x-sidebar-link :href="route('gestor.indicadores.ocupantes')"
-                                :active="request()->routeIs('gestor.indicadores.ocupantes*')"
-                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                    <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Indicadores') }}</span>
-                </x-sidebar-link>
-            </div>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.relatorios.index')"
                                 :active="request()->routeIs('gestor.relatorios.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-document-text class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Relatórios') }}</span>
-                </x-sidebar-link>
-            </div>
-            <div x-show="online" x-cloak>
-                <x-sidebar-link :href="route('gestor.logs.index')"
-                                :active="request()->routeIs('gestor.logs.*')"
-                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                    <x-heroicon-o-clipboard-document-check class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Auditoria') }}</span>
+                    <span class="truncate">{{ __('Relatórios de vigilância') }}</span>
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Equipe e aprovações')" />
+            <x-sidebar-nav-section :label="__('Equipe e sistema')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.pendentes')"
                                 :active="request()->routeIs('gestor.pendentes')"
@@ -112,6 +104,14 @@
                     <span class="truncate">{{ __('Usuários') }}</span>
                 </x-sidebar-link>
             </div>
+            <div x-show="online" x-cloak>
+                <x-sidebar-link :href="route('gestor.logs.index')"
+                                :active="request()->routeIs('gestor.logs.*')"
+                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                    <x-heroicon-o-clipboard-document-check class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                    <span class="truncate">{{ __('Auditoria') }}</span>
+                </x-sidebar-link>
+            </div>
         @elseif ($u->isAgenteEndemias())
             <x-sidebar-nav-section :label="__('Geral')" :first="true" />
             <x-sidebar-link :href="route('dashboard')"
@@ -121,18 +121,20 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Campo')" />
-            <x-sidebar-link :href="route('agente.visitas.index')"
-                            :active="request()->routeIs('agente.visitas.*')"
-                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Visitas') }}</span>
-            </x-sidebar-link>
+            <x-sidebar-nav-section :label="__('Imóveis')" :hint="__('Menu lateral agente: imóveis legenda')" />
             <x-sidebar-link :href="route('agente.locais.index')"
                             :active="request()->routeIs('agente.locais.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
                 <span class="truncate">{{ __('Locais') }}</span>
+            </x-sidebar-link>
+
+            <x-sidebar-nav-section :label="__('Vigilância no campo')" :hint="__('Menu lateral agente: vigilância legenda')" />
+            <x-sidebar-link :href="route('agente.visitas.index')"
+                            :active="request()->routeIs('agente.visitas.*')"
+                            @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                <span class="truncate">{{ __('Visitas de campo') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('agente.doencas.index')"
@@ -161,7 +163,7 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('LIRAa')" />
+            <x-sidebar-nav-section :label="__('LIRAa')" :hint="__('Menu lateral ACS: liraa legenda')" />
             <x-sidebar-link :href="route('saude.visitas.index')"
                             :active="request()->routeIs('saude.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">

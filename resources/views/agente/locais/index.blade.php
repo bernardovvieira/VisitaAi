@@ -31,17 +31,17 @@
 
     <!-- Card introdutório -->
     <x-section-card>
-        <h2 class="v-section-title">Locais de visitação</h2>
+        <h2 class="v-section-title">{{ __('Locais de visitação') }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.
+            {{ __('Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.') }}
         </p>
         <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            <strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.
+            {!! __('<strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.') !!}
         </p>
         <a href="{{ route('agente.locais.create') }}"
            class="v-btn-compact v-btn-compact--blue mt-4">
             <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-            Cadastrar Local
+            {{ __('Cadastrar local') }}
         </a>
     </x-section-card>
 
@@ -49,14 +49,14 @@
     <x-section-card>
         <div class="flex flex-col sm:flex-row sm:items-end gap-4">
             <div class="flex-1">
-                <label for="search" class="v-toolbar-label mb-1">Busca inteligente</label>
+                <label for="search" class="v-toolbar-label mb-1">{{ __('Busca inteligente') }}</label>
                 <div class="flex items-center gap-2">
                     <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                            data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
                            data-live-loading-id="search-loading-locais"
-                           placeholder="Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)..."
+                           placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
                            class="v-input">
-                    <span id="search-loading-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">Buscando…</span>
+                    <span id="search-loading-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">{{ __('Buscando…') }}</span>
                 </div>
             </div>
         </div>
@@ -65,9 +65,9 @@
     <!-- Tabela de Locais -->
     <x-section-card>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Exibindo {{ $locais->count() }} de {{ $locais->total() }} local(is) cadastrados.
+            {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
             @if(request('search'))
-                <span class="text-gray-500">Resultados para: <strong>{{ request('search') }}</strong></span>
+                <span class="text-gray-500">{{ __('Resultados para:') }} <strong>{{ request('search') }}</strong></span>
             @endif
         </p>
 
@@ -94,39 +94,39 @@
                                     #{{ $local->loc_codigo_unico }}
                                 </span>
                                 @if($local->isPrimary())
-                                    <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400" title="Local primário do município">Primário</span>
+                                    <span class="mt-1 block text-xs text-slate-500 dark:text-slate-400" title="{{ __('Local primário do município') }}">{{ __('Primário') }}</span>
                                 @endif
                             </td>
                             <td>
                                 @if ($local->loc_zona == 'U')
                                     <span class="inline-block rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">
-                                        Urbana
+                                        {{ __('Urbana') }}
                                     </span>
                                 @elseif ($local->loc_zona == 'R')
                                     <span class="inline-block rounded bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-900/70 dark:text-amber-200">
-                                        Rural
+                                        {{ __('Rural') }}
                                     </span>
                                 @endif
                             </td>
                             <td class="leading-tight text-slate-700 dark:text-slate-300">
                                 @if ($local->loc_tipo == 'R')
-                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="Residencial">
-                                        Residencial
+                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="{{ __('Residencial') }}">
+                                        {{ __('Residencial') }}
                                     </div>
                                 @elseif ($local->loc_tipo == 'C')
-                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="Comercial">
-                                        Comercial
+                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="{{ __('Comercial') }}">
+                                        {{ __('Comercial') }}
                                     </div>
                                 @elseif ($local->loc_tipo == 'T')
-                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="Terreno Baldio">
-                                        Terreno Baldio
+                                    <div class="text-xs text-slate-600 dark:text-slate-400" title="{{ __('Terreno baldio') }}">
+                                        {{ __('Terreno baldio') }}
                                     </div>
                                 @endif
                             </td>
-                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_endereco }}, @if($local->loc_numero) {{ $local->loc_numero }} @else N/A @endif</td>
+                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_endereco }}, @if($local->loc_numero){{ $local->loc_numero }}@else<span class="text-slate-500">{{ __('N/D') }}</span>@endif</td>
                             <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_bairro }}</td>
                             <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_cidade }}</td>
-                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_responsavel_nome ?? 'Não informado' }}</td>
+                            <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_responsavel_nome ?? __('Não informado') }}</td>
                             <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="text-center">
                                 <div class="flex flex-wrap items-center justify-center gap-1.5">
@@ -138,7 +138,7 @@
                                     </a>
                                     @if(!$local->isPrimary())
                                     <a href="{{ route('agente.locais.edit', $local) }}"
-                                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                        class="v-btn-icon-slate"
                                         title="{{ __('Editar') }}"
                                         aria-label="{{ __('Editar local') }}">
                                         <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
@@ -146,8 +146,8 @@
                                     <form method="POST" action="{{ route('agente.locais.destroy', $local) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.')"
-                                                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+                                        <button type="submit" onclick="return confirm(@json(__('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.')))"
+                                                class="v-btn-icon-danger"
                                                 title="{{ __('Excluir') }}"
                                                 aria-label="{{ __('Excluir local') }}">
                                                 <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
@@ -164,11 +164,11 @@
                                     <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700">
                                         <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
                                     </div>
-                                    <p class="font-medium text-slate-600 dark:text-slate-400">Nenhum local cadastrado.</p>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-500">Cadastre o primeiro local para realizar visitas.</p>
+                                    <p class="font-medium text-slate-600 dark:text-slate-400">{{ __('Nenhum local cadastrado.') }}</p>
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-500">{{ __('Cadastre o primeiro local para realizar visitas.') }}</p>
                                     <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                                        Cadastrar local
+                                        {{ __('Cadastrar local') }}
                                     </a>
                                 </div>
                             </td>
@@ -181,8 +181,8 @@
     </x-section-card>
 
     <x-section-card>
-        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">O que significa &quot;Primário&quot;?</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).</p>
+        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">{{ __('O que significa "Primário"?') }}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
     </x-section-card>
 </div>
 <script>
@@ -199,7 +199,8 @@
         if (typeof window.VisitaOfflineGetLocalPendingCount !== 'function') return;
         window.VisitaOfflineGetLocalPendingCount('agente').then(function(count) {
             if (count > 0) {
-                msgEl.textContent = 'Você tem ' + count + ' local(is) guardado(s) no dispositivo. Sincronize quando se reconectar.';
+                var tpl = @json(__('Você tem :num local(is) guardado(s) no dispositivo. Sincronize quando se reconectar.'));
+                msgEl.textContent = tpl.replace(':num', String(count));
                 alertEl.classList.remove('hidden');
             } else { alertEl.classList.add('hidden'); }
         }).catch(function() { alertEl.classList.add('hidden'); });

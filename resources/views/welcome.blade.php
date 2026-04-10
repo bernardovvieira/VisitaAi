@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Página Inicial'))
-@section('og_description', __('Transparência para o cidadão e apoio à vigilância municipal: consulta de visitas, gestão e registro de campo para ACE e ACS, alinhado ao SUS.'))
+@section('og_description', __('Consulta pública, gestão municipal, visitas de campo e cadastro complementar do imóvel. Módulos integráveis: transparência para o morador, cadastro municipal de imóveis e equipes ACE/ACS no SUS, sem reduzir o uso a apenas vigilância entomológica.'))
 
 @section('content')
 <div class="welcome-public w-full min-w-0">
@@ -21,7 +21,7 @@
                     decoding="async" />
                 <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
-                        {{ __('Vigilância entomológica e controle de vetores') }}
+                        {{ __('Imóveis, visitas e cadastro municipal') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
@@ -31,7 +31,7 @@
                         <x-public-municipality-pill :local="$local" class="shrink-0" />
                     </div>
                     <p class="welcome-public__lead">
-                        {{ __('Vigilância entomológica municipal: consulta para o morador e apoio à equipe ACE e ACS no SUS.') }}
+                        {{ __('O Visita Aí reúne consulta ao cidadão, cadastro municipal de imóveis e endereços, registro de visitas de campo (incluindo vigilância entomológica/PNCD quando o município usa) e dados complementares do imóvel. Partes que se combinam, mas não dependem uma da outra.') }}
                     </p>
                 </div>
             </div>
@@ -63,17 +63,21 @@
                 <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                     {{ __('Gestão municipal') }}</h3>
                 <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('Gestor centraliza visitas, território, relatórios e indicadores internos, com acessos restritos por perfil.') }}
+                    {{ __('Gestor centraliza visitas de campo, cadastro municipal de imóveis, cadastro complementar (ocupantes e perfil socioeconômico), relatórios de vigilância e indicadores agregados dos imóveis, com acessos restritos por perfil.') }}
                 </p>
             </article>
             <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
                 <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                     {{ __('Campo e legislação') }}</h3>
                 <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('ACE e ACS registram visitas em campo, alinhados à Lei 11.350/2006 e às diretrizes nacionais do MS.') }}
+                    {{ __('ACE e ACS registram visitas em campo quando o município utiliza esse fluxo (Lei 11.350/2006; diretrizes do MS/PNCD). O cadastro de locais e dados do imóvel pode apoiar outras necessidades municipais, com ou sem visita vetorial.') }}
                 </p>
             </article>
         </section>
+
+        <p class="max-w-3xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+            {{ __('Os módulos de visitas de vigilância em saúde e de cadastro municipal de imóveis (dados socioeconômicos complementares) são independentes: cada município define o que utiliza, conforme legislação e planejamento local.') }}
+        </p>
 
         {{-- Base legal compacta, largura total --}}
         <section class="border-t border-slate-200/50 pt-9 dark:border-slate-800/70" aria-labelledby="welcome-laws-heading">

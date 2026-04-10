@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -21,8 +21,6 @@ class UserFactory extends Factory
 
     /**
      * Senha padrão nos testes (hash de 'password').
-     *
-     * @var string|null
      */
     protected static ?string $password;
 
@@ -35,24 +33,22 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'use_nome'              => $this->faker->name(),
-            'use_cpf'               => $this->faker->unique()->numerify('###########'),
-            'use_email'             => $this->faker->unique()->safeEmail(),
-            'use_senha'             => static::$password ??= Hash::make('password'),
-            'email_verified_at'     => now(),
-            'use_perfil'            => $this->faker->randomElement(['gestor', 'agente_endemias', 'agente_saude']),
-            'use_aprovado'          => true,
-            'use_data_criacao'      => now(),
+            'use_nome' => $this->faker->name(),
+            'use_cpf' => $this->faker->unique()->numerify('###########'),
+            'use_email' => $this->faker->unique()->safeEmail(),
+            'use_senha' => static::$password ??= Hash::make('password'),
+            'email_verified_at' => now(),
+            'use_perfil' => $this->faker->randomElement(['gestor', 'agente_endemias', 'agente_saude']),
+            'use_aprovado' => true,
+            'use_data_criacao' => now(),
             'use_data_anonimizacao' => null,
-            'remember_token'        => Str::random(10),
-            'fk_gestor_id'          => null,
+            'remember_token' => Str::random(10),
+            'fk_gestor_id' => null,
         ];
     }
 
     /**
      * Estado "não verificado" (e-mail ainda não confirmado).
-     *
-     * @return static
      */
     public function unverified(): static
     {

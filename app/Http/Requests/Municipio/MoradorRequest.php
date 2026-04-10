@@ -21,6 +21,10 @@ class MoradorRequest extends FormRequest
             'mor_renda_faixa' => $this->mor_renda_faixa === '' ? null : $this->mor_renda_faixa,
             'mor_cor_raca' => $this->mor_cor_raca === '' ? null : $this->mor_cor_raca,
             'mor_situacao_trabalho' => $this->mor_situacao_trabalho === '' ? null : $this->mor_situacao_trabalho,
+            'mor_sexo' => $this->mor_sexo === '' ? null : $this->mor_sexo,
+            'mor_estado_civil' => $this->mor_estado_civil === '' ? null : $this->mor_estado_civil,
+            'mor_parentesco' => $this->mor_parentesco === '' ? null : $this->mor_parentesco,
+            'mor_renda_formal_informal' => $this->mor_renda_formal_informal === '' ? null : $this->mor_renda_formal_informal,
         ]);
     }
 
@@ -30,6 +34,10 @@ class MoradorRequest extends FormRequest
         $renda = array_keys(config('visitaai_municipio.renda_faixa_opcoes', []));
         $corRaca = array_keys(config('visitaai_municipio.cor_raca_opcoes', []));
         $trabalho = array_keys(config('visitaai_municipio.situacao_trabalho_opcoes', []));
+        $sexo = array_keys(config('visitaai_socioeconomico.sexo_opcoes', []));
+        $ec = array_keys(config('visitaai_socioeconomico.estado_civil_opcoes', []));
+        $par = array_keys(config('visitaai_socioeconomico.parentesco_opcoes', []));
+        $rfi = array_keys(config('visitaai_socioeconomico.renda_formal_informal_opcoes', []));
 
         return [
             'mor_nome' => ['nullable', 'string', 'max:255'],
@@ -38,6 +46,19 @@ class MoradorRequest extends FormRequest
             'mor_renda_faixa' => ['nullable', 'string', Rule::in($renda)],
             'mor_cor_raca' => ['nullable', 'string', Rule::in($corRaca)],
             'mor_situacao_trabalho' => ['nullable', 'string', Rule::in($trabalho)],
+            'mor_sexo' => ['nullable', 'string', Rule::in($sexo)],
+            'mor_estado_civil' => ['nullable', 'string', Rule::in($ec)],
+            'mor_naturalidade' => ['nullable', 'string', 'max:150'],
+            'mor_profissao' => ['nullable', 'string', 'max:150'],
+            'mor_parentesco' => ['nullable', 'string', Rule::in($par)],
+            'mor_referencia_familiar' => ['nullable', 'boolean'],
+            'mor_telefone' => ['nullable', 'string', 'max:40'],
+            'mor_rg_numero' => ['nullable', 'string', 'max:45'],
+            'mor_rg_orgao' => ['nullable', 'string', 'max:60'],
+            'mor_cpf' => ['nullable', 'string', 'max:20'],
+            'mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
+            'mor_ajuda_compra_imovel' => ['nullable', 'string', 'max:255'],
+            'mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfi)],
             'mor_observacao' => ['nullable', 'string', 'max:2000'],
         ];
     }

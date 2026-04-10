@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Doenca;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 /**
  * Seed da instância base (visitaai.cloud, ibirapuita.visitaai.cloud, etc.).
@@ -20,24 +20,24 @@ class AdminBaseSeeder extends Seeder
             [
                 'doe_sintomas' => [
                     'Febre alta', 'Dor de cabeça intensa', 'Dor atrás dos olhos',
-                    'Dor muscular e nas articulações', 'Náusea', 'Vômito', 'Manchas na pele'
+                    'Dor muscular e nas articulações', 'Náusea', 'Vômito', 'Manchas na pele',
                 ],
                 'doe_transmissao' => ['Picada do mosquito Aedes aegypti'],
                 'doe_medidas_controle' => [
                     'Eliminação de criadouros', 'Uso de repelentes', 'Telagem de recipientes',
-                    'Educação em saúde', 'Ações de controle vetorial'
+                    'Educação em saúde', 'Ações de controle vetorial',
                 ],
             ]
         );
 
         User::create([
-            'use_nome'         => 'Bernardo Vivian Vieira',
-            'use_cpf'          => '054.023.910-09',
-            'use_email'        => 'bernardo@bitwise.dev.br',
-            'use_senha'        => bcrypt('Melancia@13?'),
-            'email_verified_at'=> now(),
-            'use_perfil'       => 'gestor',
-            'use_aprovado'     => true,
+            'use_nome' => 'Bernardo Vivian Vieira',
+            'use_cpf' => '054.023.910-09',
+            'use_email' => 'bernardo@bitwise.dev.br',
+            'use_senha' => bcrypt('Melancia@13?'),
+            'email_verified_at' => now(),
+            'use_perfil' => 'gestor',
+            'use_aprovado' => true,
             'use_data_criacao' => now(),
         ]);
     }

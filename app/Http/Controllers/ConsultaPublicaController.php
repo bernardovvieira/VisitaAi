@@ -55,7 +55,6 @@ class ConsultaPublicaController extends Controller
             }
 
             $visitas = $local->visitas()
-                ->with('doencas')
                 ->orderByDesc('vis_data')
                 ->get();
 

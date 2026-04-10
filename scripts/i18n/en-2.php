@@ -83,7 +83,7 @@ return [
     'Requer atenção' => 'Needs attention',
     'Residencial' => 'Residential',
     'Resp.' => 'Resp.',
-    'Resultado da consulta pelo código do imóvel.' => 'Property code lookup result.',
+    'Consulta pública pelo código do imóvel. Transparência sobre visitas de campo, sem cadastro complementar na página pública.' => 'Public lookup by property code. Transparency on field visits; complementary household data is not on this public page.',
     'Resumo' => 'Summary',
     'Resumo em linguagem simples' => 'Plain-language summary',
     'Revisitado em :d' => 'Revisited on :d',

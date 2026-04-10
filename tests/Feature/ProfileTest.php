@@ -17,7 +17,7 @@ class ProfileTest extends TestCase
     #[Test]
     public function edit_page_is_displayed(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = User::factory()->create();
 
         $this
@@ -32,7 +32,7 @@ class ProfileTest extends TestCase
     #[Test]
     public function profile_information_can_be_updated_with_valid_data(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = User::factory()->create();
 
         $payload = [
@@ -61,7 +61,7 @@ class ProfileTest extends TestCase
     #[Test]
     public function profile_update_requires_name_and_email(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = User::factory()->create();
 
         $this
@@ -76,7 +76,7 @@ class ProfileTest extends TestCase
     #[Test]
     public function profile_update_requires_valid_email(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = User::factory()->create();
         $payload = [
             'name' => 'Test User',
@@ -97,7 +97,7 @@ class ProfileTest extends TestCase
     public function profile_update_requires_unique_email(): void
     {
         $existing = User::factory()->create(['use_email' => '179835@upf.br']);
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = User::factory()->create();
 
         $payload = [

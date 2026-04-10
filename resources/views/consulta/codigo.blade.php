@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta do imóvel'))
-@section('og_description', isset($local) ? __('Histórico público de visitas de vigilância em :cidade/:uf; datas e status, sem dados sensíveis.', ['cidade' => $local->loc_cidade, 'uf' => $local->loc_estado]) : __('Resultado da consulta pelo código do imóvel.'))
+@section('og_description', isset($local) ? __('Consulta pública em :cidade/:uf: visitas de campo (vigilância em saúde quando aplicável), datas e status, sem dados clínicos e sem cadastro complementar do imóvel na área pública.', ['cidade' => $local->loc_cidade, 'uf' => $local->loc_estado]) : __('Consulta pública pelo código do imóvel. Transparência sobre visitas de campo, sem cadastro complementar na página pública.'))
 
 @section('content')
 @php
@@ -24,7 +24,7 @@
                     decoding="async" />
                 <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
-                        {{ __('Vigilância entomológica e controle de vetores') }}
+                        {{ __('Imóveis, visitas e cadastro municipal') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
@@ -34,7 +34,7 @@
                         <x-public-municipality-pill :local="$localPrimario ?? null" class="shrink-0" />
                     </div>
                     <p class="welcome-public__lead">
-                        {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos e sem identificar o profissional.') }}
+                        {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos, sem identificar o profissional e sem exibir cadastro complementar do imóvel (ocupantes ou perfil socioeconômico) nesta consulta pública.') }}
                     </p>
                 </div>
             </div>

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Helpers\MsTerminologia;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -15,10 +16,13 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory, MustVerifyEmailTrait, Notifiable, TwoFactorAuthenticatable;
 
     // Tabela e PK com prefixo
-    protected $table        = 'users';
-    protected $primaryKey   = 'use_id';
-    public    $incrementing = true;
-    public    $timestamps   = false;
+    protected $table = 'users';
+
+    protected $primaryKey = 'use_id';
+
+    public $incrementing = true;
+
+    public $timestamps = false;
 
     /**
      * Atributos em massa.
@@ -51,9 +55,9 @@ class User extends Authenticatable implements MustVerifyEmail
      * Casts de tipo.
      */
     protected $casts = [
-        'email_verified_at'     => 'datetime',
-        'use_aprovado'          => 'boolean',
-        'use_data_criacao'      => 'datetime',
+        'email_verified_at' => 'datetime',
+        'use_aprovado' => 'boolean',
+        'use_data_criacao' => 'datetime',
         'use_data_anonimizacao' => 'date',
     ];
 
@@ -163,7 +167,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public static function perfilLabel(?string $perfil): string
     {
-        return \App\Helpers\MsTerminologia::perfilLabel($perfil);
+        return MsTerminologia::perfilLabel($perfil);
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LogHelper
 {

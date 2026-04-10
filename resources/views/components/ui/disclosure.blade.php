@@ -1,5 +1,5 @@
 {{--
-  Bloco expansível padronizado (<details>) — variantes alinhadas ao design system.
+  Bloco expansível padronizado (<details>): variantes alinhadas ao design system.
 
   Uso:
   <x-ui.disclosure variant="lead">

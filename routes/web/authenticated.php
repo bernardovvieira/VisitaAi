@@ -3,7 +3,7 @@
 /**
  * Área autenticada: redirecionamento por perfil e inclusão por módulo.
  *
- * - pncd: operação de campo (ACE/ACS) — vigilância / PNCD.
+ * - pncd: operação de campo (ACE/ACS), vigilância / PNCD.
  * - gestao: painel do gestor municipal.
  * - conta: perfil e preferências do utilizador.
  */

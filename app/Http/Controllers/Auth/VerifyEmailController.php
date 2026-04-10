@@ -17,7 +17,7 @@ class VerifyEmailController extends Controller
         // Se já está verificado, apenas redireciona
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(
-                route('dashboard', [], false) . '?verified=1'
+                route('dashboard', [], false).'?verified=1'
             );
         }
 
@@ -27,7 +27,7 @@ class VerifyEmailController extends Controller
         }
 
         return redirect()->intended(
-            route('dashboard', [], false) . '?verified=1'
+            route('dashboard', [], false).'?verified=1'
         );
     }
 }

@@ -32,6 +32,7 @@ class LocalPolicy
         if (Local::count() === 0) {
             return $user->isGestor();
         }
+
         return $user->isAgenteEndemias();
     }
 
@@ -43,6 +44,7 @@ class LocalPolicy
         if ($local->isPrimary()) {
             return false;
         }
+
         return $user->isAgenteEndemias();
     }
 
@@ -54,6 +56,7 @@ class LocalPolicy
         if ($local->isPrimary()) {
             return false;
         }
+
         return $user->isAgenteEndemias();
     }
 

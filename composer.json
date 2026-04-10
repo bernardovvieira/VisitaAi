@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "bitwise/visitai",
     "type": "project",
-    "description": "Visita Aí — vigilância entomológica e controle vetorial municipal (Laravel).",
+    "description": "Visita Aí: vigilância entomológica e controle vetorial municipal (Laravel).",
     "keywords": ["laravel", "visitai", "pncd"],
     "license": "proprietary",
     "require": {

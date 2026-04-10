@@ -6,9 +6,11 @@ use App\Helpers\LogHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LocalRequest;
 use App\Models\Local;
+use App\Models\LocalSocioeconomico;
 use App\Models\Morador;
 use App\Models\User;
 use App\Services\Municipio\ResumoOcupantesMunicipioService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
@@ -25,6 +27,8 @@ class LocalController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Local::class);
+
         /** @var User $user */
         $user = Auth::user();
 
@@ -101,6 +105,8 @@ class LocalController extends Controller
 
     public function show(Local $local)
     {
+        $this->authorize('view', $local);
+
         /** @var User $user */
         $user = Auth::user();
 
@@ -134,12 +140,13 @@ class LocalController extends Controller
         if ($user->isGestor()) {
             $local->load([
                 'moradores',
+                'socioeconomico',
                 'visitas' => fn ($q) => $q->select([
                     'vis_id', 'vis_data', 'vis_ocupantes_observacoes', 'fk_local_id',
                 ])->orderByDesc('vis_data')->orderByDesc('vis_id'),
             ]);
         } else {
-            $local->load('moradores');
+            $local->load(['moradores', 'socioeconomico']);
         }
         $moradorResumo = app(ResumoOcupantesMunicipioService::class)->resumoParaLocal($local);
 
@@ -148,6 +155,8 @@ class LocalController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Local::class);
+
         $primario = Local::orderBy('loc_id')->first();
         $isPrimario = $primario === null;
         $cepPermitido = null;
@@ -168,6 +177,8 @@ class LocalController extends Controller
         $data = $request->validated();
         $ocupantes = $data['ocupantes'] ?? [];
         unset($data['ocupantes']);
+        $socio = array_key_exists('socio', $data) ? ($data['socio'] ?? []) : null;
+        unset($data['socio']);
 
         do {
             $codigo = mt_rand(10000000, 99999999);
@@ -178,6 +189,9 @@ class LocalController extends Controller
 
         $local = Local::create($data);
         $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : []);
+        if (is_array($socio)) {
+            $this->persistSocioeconomicoNoLocal($local, $socio);
+        }
 
         LogHelper::registrar(
             'Cadastro de local',
@@ -199,6 +213,8 @@ class LocalController extends Controller
 
     public function edit(Local $local)
     {
+        $this->authorize('update', $local);
+
         if ($local->isPrimary()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
@@ -213,7 +229,7 @@ class LocalController extends Controller
             $cepsCadastrados = $this->buildCepsCadastrados($primario->loc_cidade, $primario->loc_estado);
         }
 
-        $local->load('moradores');
+        $local->load(['moradores', 'socioeconomico']);
 
         return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado', 'cepsCadastrados'));
     }
@@ -253,6 +269,8 @@ class LocalController extends Controller
 
     public function update(LocalRequest $request, Local $local)
     {
+        $this->authorize('update', $local);
+
         if ($local->isPrimary()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
@@ -261,9 +279,14 @@ class LocalController extends Controller
         $data = $request->validated();
         $ocupantes = $data['ocupantes'] ?? [];
         unset($data['ocupantes']);
+        $socio = array_key_exists('socio', $data) ? ($data['socio'] ?? []) : null;
+        unset($data['socio']);
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
         $local->update($data);
         $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : []);
+        if (is_array($socio)) {
+            $this->persistSocioeconomicoNoLocal($local, $socio);
+        }
 
         LogHelper::registrar(
             'Atualização de local',
@@ -279,6 +302,8 @@ class LocalController extends Controller
 
     public function destroy(Local $local)
     {
+        $this->authorize('delete', $local);
+
         if ($local->isPrimary()) {
             return redirect()
                 ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
@@ -369,6 +394,36 @@ class LocalController extends Controller
         ]);
     }
 
+    public function fichaSocioeconomicaPdf(Local $local)
+    {
+        $this->authorize('view', $local);
+
+        $local->load(['moradores', 'socioeconomico']);
+
+        $pdf = Pdf::loadView('pdf.ficha_socioeconomica', [
+            'local' => $local,
+            'socio' => $local->socioeconomico,
+            'titulos' => config('visitaai_socioeconomico.secao_titulos', []),
+        ])->setPaper('a4', 'portrait');
+
+        $safeCode = preg_replace('/\D/', '', (string) $local->loc_codigo_unico) ?: 'imovel';
+
+        return $pdf->download('ficha-socioeconomica-'.$safeCode.'.pdf');
+    }
+
+    /**
+     * @param  array<string, mixed>  $socio
+     */
+    private function persistSocioeconomicoNoLocal(Local $local, array $socio): void
+    {
+        $attrs = LocalSocioeconomico::attributesFromForm($socio);
+        $attrs['fk_local_id'] = $local->loc_id;
+        LocalSocioeconomico::updateOrCreate(
+            ['fk_local_id' => $local->loc_id],
+            $attrs
+        );
+    }
+
     /**
      * @param  array<int, array<string, mixed>>  $rows
      */
@@ -394,6 +449,55 @@ class LocalController extends Controller
             $trab = ($trab === '' || $trab === null) ? null : $trab;
             $obs = isset($row['mor_observacao']) ? trim((string) $row['mor_observacao']) : '';
             $obs = $obs === '' ? null : $obs;
+            $sexo = $row['mor_sexo'] ?? null;
+            $sexo = ($sexo === '' || $sexo === null) ? null : $sexo;
+            $ec = $row['mor_estado_civil'] ?? null;
+            $ec = ($ec === '' || $ec === null) ? null : $ec;
+            $nat = isset($row['mor_naturalidade']) ? trim((string) $row['mor_naturalidade']) : '';
+            $nat = $nat === '' ? null : $nat;
+            $prof = isset($row['mor_profissao']) ? trim((string) $row['mor_profissao']) : '';
+            $prof = $prof === '' ? null : $prof;
+            $par = $row['mor_parentesco'] ?? null;
+            $par = ($par === '' || $par === null) ? null : $par;
+            $refRaw = $row['mor_referencia_familiar'] ?? false;
+            $ref = in_array($refRaw, [true, 1, '1', 'true', 'on', 'yes'], true);
+            $tel = isset($row['mor_telefone']) ? trim((string) $row['mor_telefone']) : '';
+            $tel = $tel === '' ? null : $tel;
+            $rgN = isset($row['mor_rg_numero']) ? trim((string) $row['mor_rg_numero']) : '';
+            $rgN = $rgN === '' ? null : $rgN;
+            $rgO = isset($row['mor_rg_orgao']) ? trim((string) $row['mor_rg_orgao']) : '';
+            $rgO = $rgO === '' ? null : $rgO;
+            $cpf = isset($row['mor_cpf']) ? trim((string) $row['mor_cpf']) : '';
+            $cpf = $cpf === '' ? null : $cpf;
+            $tu = isset($row['mor_tempo_uniao_conjuge']) ? trim((string) $row['mor_tempo_uniao_conjuge']) : '';
+            $tu = $tu === '' ? null : $tu;
+            $aj = isset($row['mor_ajuda_compra_imovel']) ? trim((string) $row['mor_ajuda_compra_imovel']) : '';
+            $aj = $aj === '' ? null : $aj;
+            $rfi = $row['mor_renda_formal_informal'] ?? null;
+            $rfi = ($rfi === '' || $rfi === null) ? null : $rfi;
+
+            $payload = [
+                'mor_nome' => $nome !== '' ? $nome : null,
+                'mor_data_nascimento' => $dn,
+                'mor_escolaridade' => $esc,
+                'mor_renda_faixa' => $renda,
+                'mor_cor_raca' => $cor,
+                'mor_situacao_trabalho' => $trab,
+                'mor_sexo' => $sexo,
+                'mor_estado_civil' => $ec,
+                'mor_naturalidade' => $nat,
+                'mor_profissao' => $prof,
+                'mor_parentesco' => $par,
+                'mor_referencia_familiar' => $ref,
+                'mor_telefone' => $tel,
+                'mor_rg_numero' => $rgN,
+                'mor_rg_orgao' => $rgO,
+                'mor_cpf' => $cpf,
+                'mor_tempo_uniao_conjuge' => $tu,
+                'mor_ajuda_compra_imovel' => $aj,
+                'mor_renda_formal_informal' => $rfi,
+                'mor_observacao' => $obs,
+            ];
 
             if ($morId) {
                 $m = Morador::query()
@@ -403,34 +507,19 @@ class LocalController extends Controller
                 if (! $m) {
                     continue;
                 }
-                $m->update([
-                    'mor_nome' => $nome !== '' ? $nome : null,
-                    'mor_data_nascimento' => $dn,
-                    'mor_escolaridade' => $esc,
-                    'mor_renda_faixa' => $renda,
-                    'mor_cor_raca' => $cor,
-                    'mor_situacao_trabalho' => $trab,
-                    'mor_observacao' => $obs,
-                ]);
+                $m->update($payload);
 
                 continue;
             }
 
-            $vacuous = $nome === '' && $dn === null && $esc === null && $renda === null && $cor === null && $trab === null && $obs === null;
+            $vacuous = $nome === '' && $dn === null && $esc === null && $renda === null && $cor === null && $trab === null && $obs === null
+                && $sexo === null && $ec === null && $nat === null && $prof === null && $par === null && ! $ref && $tel === null
+                && $rgN === null && $rgO === null && $cpf === null && $tu === null && $aj === null && $rfi === null;
             if ($vacuous) {
                 continue;
             }
 
-            Morador::create([
-                'fk_local_id' => $local->loc_id,
-                'mor_nome' => $nome !== '' ? $nome : null,
-                'mor_data_nascimento' => $dn,
-                'mor_escolaridade' => $esc,
-                'mor_renda_faixa' => $renda,
-                'mor_cor_raca' => $cor,
-                'mor_situacao_trabalho' => $trab,
-                'mor_observacao' => $obs,
-            ]);
+            Morador::create(array_merge(['fk_local_id' => $local->loc_id], $payload));
         }
     }
 

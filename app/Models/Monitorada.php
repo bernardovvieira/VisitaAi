@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Monitorada extends Model
 {
     use HasFactory;
 
     protected $table = 'monitoradas';
+
     protected $primaryKey = 'mon_id';
+
     public $timestamps = true;
 
     protected $fillable = [

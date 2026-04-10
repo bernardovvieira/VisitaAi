@@ -31,6 +31,19 @@ class Morador extends Model
         'mor_renda_faixa',
         'mor_cor_raca',
         'mor_situacao_trabalho',
+        'mor_sexo',
+        'mor_estado_civil',
+        'mor_naturalidade',
+        'mor_profissao',
+        'mor_parentesco',
+        'mor_referencia_familiar',
+        'mor_telefone',
+        'mor_rg_numero',
+        'mor_rg_orgao',
+        'mor_cpf',
+        'mor_tempo_uniao_conjuge',
+        'mor_ajuda_compra_imovel',
+        'mor_renda_formal_informal',
         'mor_observacao',
     ];
 
@@ -38,6 +51,7 @@ class Morador extends Model
     {
         return [
             'mor_data_nascimento' => 'date',
+            'mor_referencia_familiar' => 'boolean',
         ];
     }
 

@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta pública'))
-@section('og_description', __('Consulta gratuita, sem cadastro. Use o código do comprovante ou informado pelo ACE ou ACS.'))
+@section('og_description', __('Consulta pública pelo código do imóvel: gratuita, sem cadastro e sem dados clínicos. Histórico de visitas de campo (vigilância em saúde quando o município utiliza). Cadastro complementar do imóvel não aparece aqui: só o vinculado à transparência das visitas.'))
 
 @section('content')
 <div class="welcome-public welcome-public--extend w-full min-w-0">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
-                        {{ __('Vigilância entomológica e controle de vetores') }}
+                        {{ __('Imóveis, visitas e cadastro municipal') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
@@ -36,6 +36,9 @@
                     </div>
                     <p class="welcome-public__lead">
                         {{ __('Grátis e sem cadastro: informe o código do comprovante ou o que o ACE ou ACS passou na visita.') }}
+                    </p>
+                    <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                        {{ __('Na consulta pública aparecem apenas endereço vinculado ao código, datas e status das visitas de campo e informações já divulgadas sobre doenças. Não são exibidos dados clínicos, nome de ocupantes nem cadastro socioeconômico do imóvel.') }}
                     </p>
                 </div>
             </div>

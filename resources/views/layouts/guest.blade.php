@@ -31,6 +31,10 @@
                     'title' => config('app.name').' · '.__('Verificar E-mail'),
                     'desc' => __('Confirme seu e-mail para ativar sua conta no Visita Aí.'),
                 ],
+                in_array($routeName, ['two-factor.login', 'two-factor.login.store'], true) => [
+                    'title' => config('app.name').' · '.__('Código de autenticação'),
+                    'desc' => __('Confirme o login com o código de 6 dígitos do aplicativo autenticador.'),
+                ],
                 $routeName === 'pendente' => [
                     'title' => config('app.name').' · '.__('Conta Pendente'),
                     'desc' => __('Sua conta está aguardando aprovação do gestor municipal.'),
@@ -102,7 +106,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased dark:text-gray-100">
+    <body class="font-sans text-slate-900 antialiased dark:text-slate-100">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         <div class="flex min-h-screen flex-col items-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-4 pt-6 sm:justify-center sm:px-6 sm:pt-0 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
             <div class="flex flex-col items-center gap-3">

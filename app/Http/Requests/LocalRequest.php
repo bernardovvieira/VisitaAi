@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\BuildsSocioeconomicoRules;
 use App\Models\Local;
 use App\Models\Morador;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,9 +11,18 @@ use Illuminate\Validation\Rule;
 
 class LocalRequest extends FormRequest
 {
+    use BuildsSocioeconomicoRules;
+
     public function authorize()
     {
-        return $this->user()->can('create', Local::class) || $this->user()->can('update', Local::class);
+        $user = $this->user();
+        $local = $this->route('local');
+
+        if ($local instanceof Local) {
+            return $user->can('update', $local);
+        }
+
+        return $user->can('create', Local::class);
     }
 
     public function rules()
@@ -22,8 +32,12 @@ class LocalRequest extends FormRequest
         $rendaKeys = array_keys(config('visitaai_municipio.renda_faixa_opcoes', []));
         $corKeys = array_keys(config('visitaai_municipio.cor_raca_opcoes', []));
         $trabKeys = array_keys(config('visitaai_municipio.situacao_trabalho_opcoes', []));
+        $sexoKeys = array_keys(config('visitaai_socioeconomico.sexo_opcoes', []));
+        $ecKeys = array_keys(config('visitaai_socioeconomico.estado_civil_opcoes', []));
+        $parKeys = array_keys(config('visitaai_socioeconomico.parentesco_opcoes', []));
+        $rfiKeys = array_keys(config('visitaai_socioeconomico.renda_formal_informal_opcoes', []));
 
-        return [
+        return array_merge([
             'loc_cep' => [
                 'required',
                 'string',
@@ -93,7 +107,20 @@ class LocalRequest extends FormRequest
             'ocupantes.*.mor_cor_raca' => ['nullable', 'string', Rule::in($corKeys)],
             'ocupantes.*.mor_situacao_trabalho' => ['nullable', 'string', Rule::in($trabKeys)],
             'ocupantes.*.mor_observacao' => ['nullable', 'string', 'max:2000'],
-        ];
+            'ocupantes.*.mor_sexo' => ['nullable', 'string', Rule::in($sexoKeys)],
+            'ocupantes.*.mor_estado_civil' => ['nullable', 'string', Rule::in($ecKeys)],
+            'ocupantes.*.mor_naturalidade' => ['nullable', 'string', 'max:150'],
+            'ocupantes.*.mor_profissao' => ['nullable', 'string', 'max:150'],
+            'ocupantes.*.mor_parentesco' => ['nullable', 'string', Rule::in($parKeys)],
+            'ocupantes.*.mor_referencia_familiar' => ['nullable', 'boolean'],
+            'ocupantes.*.mor_telefone' => ['nullable', 'string', 'max:40'],
+            'ocupantes.*.mor_rg_numero' => ['nullable', 'string', 'max:45'],
+            'ocupantes.*.mor_rg_orgao' => ['nullable', 'string', 'max:60'],
+            'ocupantes.*.mor_cpf' => ['nullable', 'string', 'max:20'],
+            'ocupantes.*.mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
+            'ocupantes.*.mor_ajuda_compra_imovel' => ['nullable', 'string', 'max:255'],
+            'ocupantes.*.mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfiKeys)],
+        ], $this->socioeconomicoFormRules());
     }
 
     public function withValidator($validator): void
@@ -122,6 +149,20 @@ class LocalRequest extends FormRequest
                         __('Ocupante inválido para este imóvel.')
                     );
                 }
+            }
+
+            $refs = 0;
+            foreach ($ocupantes as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $ref = $row['mor_referencia_familiar'] ?? false;
+                if ($ref === true || $ref === 1 || $ref === '1' || $ref === 'true') {
+                    $refs++;
+                }
+            }
+            if ($refs > 1) {
+                $validator->errors()->add('ocupantes', __('Marque no máximo um morador como referência familiar (titular).'));
             }
         });
     }

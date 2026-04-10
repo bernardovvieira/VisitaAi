@@ -1,10 +1,10 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    <div class="mb-4 text-sm text-slate-600 dark:text-slate-400">
         {{ __('Esqueceu sua senha? Sem problemas. Informe seu e-mail e enviaremos um link para resetar sua senha.') }}
     </div>
 
     @if (session('status'))
-        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">
             {{ __('Não recebeu o e-mail? Verifique a pasta de spam ou solicite um novo link em alguns minutos.') }}
         </p>
     @endif

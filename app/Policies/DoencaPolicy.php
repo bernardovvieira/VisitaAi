@@ -52,7 +52,7 @@ class DoencaPolicy
     }
 
     /**
-     * Restaurar modelos apagados — idem delete.
+     * Restaurar modelos apagados: idem delete.
      */
     public function restore(User $user, Doenca $doenca): bool
     {
@@ -60,7 +60,7 @@ class DoencaPolicy
     }
 
     /**
-     * Exclusão permanente — idem delete.
+     * Exclusão permanente: idem delete.
      */
     public function forceDelete(User $user, Doenca $doenca): bool
     {

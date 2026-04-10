@@ -50,4 +50,21 @@ class RegistrationTest extends TestCase
         $this->assertStringNotContainsStringIgnoringCase('e-mail', $msg);
         $this->assertStringNotContainsStringIgnoringCase('CPF', $msg);
     }
+
+    public function test_registration_is_not_available_when_feature_disabled(): void
+    {
+        config(['features.open_registration' => false]);
+
+        $this->get('/register')->assertNotFound();
+
+        $this->post('/register', [
+            'nome' => 'Test User',
+            'cpf' => '12345678901',
+            'email' => 'closed@example.org',
+            'password' => 'Senha123!',
+            'password_confirmation' => 'Senha123!',
+        ])->assertNotFound();
+
+        $this->assertDatabaseMissing('users', ['use_email' => 'closed@example.org']);
+    }
 }

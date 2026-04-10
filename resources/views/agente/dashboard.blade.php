@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Painel do :perfil', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]))
-@section('og_description', __('Painel do :perfil. Registre visitas, gerencie locais e consulte doenças monitoradas. Conforme Lei 11.350/2006 e Diretriz MS.', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]))
+@section('og_description', __('Painel do :perfil. Visitas de campo (inclui PNCD quando aplicável), locais e cadastro complementar do imóvel. Use o que o município definiu. Lei 11.350/2006 e diretrizes MS.', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]))
 
 @section('content')
 @php
@@ -20,7 +20,7 @@
         <div class="v-dash-header-text">
             <p class="v-dash-eyebrow">{{ __('Operações de campo') }}</p>
             <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
-            <p class="v-dash-sub">{{ __('Registre visitas e mantenha locais atualizados; use os atalhos para o fluxo mais comum.') }}</p>
+            <p class="v-dash-sub">{{ __('Registre visitas, mantenha locais e complete dados complementares do imóvel quando fizer parte do fluxo local; use os atalhos para o que for mais comum.') }}</p>
         </div>
     </header>
 

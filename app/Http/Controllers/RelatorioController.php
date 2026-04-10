@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\LogHelper;
-use App\Models\Doenca;
 use App\Models\Local;
 use App\Models\Visita;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
@@ -32,7 +32,12 @@ class RelatorioController extends Controller
 
         $tipo = $request->input('tipo_relatorio', 'completo');
 
-        $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
+        $query = Visita::with([
+            'local' => fn ($q) => $q->withCount('moradores')->with('socioeconomico'),
+            'doencas',
+            'usuario',
+            'tratamentos',
+        ]);
 
         $localIds = array_filter(array_map('intval', (array) $request->input('local_id', [])));
         if ($tipo === 'individual' && ! empty($localIds)) {
@@ -88,34 +93,17 @@ class RelatorioController extends Controller
         })->values()->toArray();
 
         $totalVisitas = $visitas->count();
-        $locaisComFoco = $visitas->filter(function ($visita) {
-            return
-                ($visita->insp_a1 > 0 || $visita->insp_a2 > 0 || $visita->insp_b > 0 ||
-                 $visita->insp_c > 0 || $visita->insp_d1 > 0 || $visita->insp_d2 > 0 ||
-                 $visita->insp_e > 0) &&
-                ($visita->vis_depositos_eliminados < ($visita->insp_a1 + $visita->insp_a2 +
-                    $visita->insp_b + $visita->insp_c + $visita->insp_d1 + $visita->insp_d2 +
-                    $visita->insp_e));
-        })->count();
 
         $totalComPendencia = $visitas->where('vis_pendencias', true)->count();
         $percentualPendencias = $totalVisitas > 0 ? round(($totalComPendencia / $totalVisitas) * 100, 1) : 0;
 
         $totalComColeta = $visitas->where('vis_coleta_amostra', true)->count();
-        $mediaTubitos = $visitas->avg('vis_qtd_tubitos') ?? 0;
-
-        $doencaMaisRecorrente = $visitas->flatMap->doencas
-            ->groupBy('doe_nome')->sortDesc()->map->count()->keys()->first();
 
         $bairroMaisFrequente = $visitas->groupBy(fn ($v) => $v->local?->loc_bairro ?? '')
             ->sortDesc()->map->count()->keys()->first();
 
-        $totalLocaisCadastrados = Local::count();
         $visitasComTratamento = $visitas->filter(fn ($v) => $v->tratamentos->isNotEmpty())->count();
         $totalDepEliminados = $visitas->sum('vis_depositos_eliminados');
-
-        $totalTratamentos = $visitas->flatMap->tratamentos->count();
-        $mediaTratamentosPorVisita = $totalVisitas > 0 ? $totalTratamentos / $totalVisitas : 0;
 
         $bairros = Local::select('loc_bairro')->distinct()->whereNotNull('loc_bairro')->orderBy('loc_bairro')->pluck('loc_bairro')->map(fn ($b) => trim((string) $b))->filter(fn ($b) => $b !== '')->values()->toArray();
         $locaisParaSelect = Local::has('visitas')->withCount('visitas')->orderBy('loc_bairro')->orderBy('loc_endereco')->orderBy('loc_numero')->get();
@@ -130,6 +118,9 @@ class RelatorioController extends Controller
             return ['id' => $loc->loc_id, 'label' => $label];
         })->values()->toArray();
 
+        $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
+        $statsComplemento = $this->statsComplemento($imoveisComplementoResumo);
+
         return view('gestor.relatorios.index', compact(
             'visitas',
             'visitasPaginated',
@@ -139,17 +130,14 @@ class RelatorioController extends Controller
             'visitasParaGraficos',
             'sem_visitas',
             'totalVisitas',
-            'locaisComFoco',
-            'doencaMaisRecorrente',
             'bairroMaisFrequente',
             'totalComPendencia',
             'percentualPendencias',
             'totalComColeta',
-            'mediaTubitos',
-            'totalLocaisCadastrados',
             'visitasComTratamento',
             'totalDepEliminados',
-            'mediaTratamentosPorVisita'
+            'imoveisComplementoResumo',
+            'statsComplemento',
         ));
     }
 
@@ -177,25 +165,45 @@ class RelatorioController extends Controller
         $bairroPdf = $request->input('bairro');
         $bairrosPdf = is_array($bairroPdf) ? array_filter($bairroPdf) : ($bairroPdf !== null && $bairroPdf !== '' ? [$bairroPdf] : []);
 
-        $query = Visita::with(['local', 'doencas', 'usuario', 'tratamentos']);
+        $query = Visita::with([
+            'local' => fn ($q) => $q->withCount('moradores')->with('socioeconomico'),
+            'doencas',
+            'usuario',
+            'tratamentos',
+        ]);
 
         $localIdsPdf = array_filter(array_map('intval', (array) $request->input('local_id', [])));
         if ($tipo === 'individual' && empty($localIdsPdf)) {
             return redirect()->route('gestor.relatorios.index')->with('error', __('Selecione ao menos um local para o relatório individual.'));
         }
         if ($tipo === 'individual' && ! empty($localIdsPdf)) {
-            $query->whereIn('fk_local_id', $localIdsPdf)->orderBy('vis_data', 'desc');
-            $visitas = $query->get();
+            $query->whereIn('fk_local_id', $localIdsPdf);
+            if (! empty($bairrosPdf)) {
+                $query->whereHas('local', function ($q) use ($bairrosPdf) {
+                    $q->whereIn('loc_bairro', $bairrosPdf);
+                });
+            }
+            $visitas = $query->orderBy('vis_data', 'desc')->get();
             $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
             $data_fim = $visitas->max('vis_data') ?? now()->toDateString();
         } else {
+            $data_inicio = null;
+            $data_fim = null;
+
             if ($tipo === 'diario' && $request->filled('data_unica')) {
                 $data_inicio = $data_fim = $request->data_unica;
                 $query->whereDate('vis_data', $data_inicio);
-            } else {
-                $data_inicio = $request->data_inicio ?? Visita::min('vis_data');
-                $data_fim = $request->data_fim ?? now()->toDateString();
+            } elseif ($tipo === 'semanal') {
+                $data_inicio = $request->data_inicio;
+                $data_fim = $request->data_fim;
                 $query->whereBetween('vis_data', [$data_inicio, $data_fim]);
+            } else {
+                if ($request->filled('data_inicio')) {
+                    $query->whereDate('vis_data', '>=', $request->data_inicio);
+                }
+                if ($request->filled('data_fim')) {
+                    $query->whereDate('vis_data', '<=', $request->data_fim);
+                }
             }
 
             if (! empty($bairrosPdf)) {
@@ -205,6 +213,13 @@ class RelatorioController extends Controller
             }
 
             $visitas = $query->orderBy('vis_data', 'desc')->get();
+
+            if ($data_inicio === null) {
+                $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
+            }
+            if ($data_fim === null) {
+                $data_fim = $visitas->max('vis_data') ?? now()->toDateString();
+            }
         }
 
         if ($visitas->isEmpty()) {
@@ -215,7 +230,7 @@ class RelatorioController extends Controller
             'graficoBairrosBase64', 'graficoDoencasBase64', 'mapaCalorBase64',
             'graficoZonasBase64', 'graficoDiasBase64', 'graficoInspBase64', 'graficoTratamentosBase64',
         ];
-        $maxBase64Len = 2800000; // ~2MB em base64
+        $maxBase64Len = 2800000; // ~2MB só do payload base64
         $sanitizedBase64 = [];
         foreach ($base64Keys as $key) {
             $val = $request->input($key);
@@ -225,12 +240,22 @@ class RelatorioController extends Controller
                 continue;
             }
             $val = (string) $val;
-            if (strlen($val) > $maxBase64Len || ! preg_match('/^[A-Za-z0-9+\/=]+$/', $val)) {
+            $payload = $val;
+            if (str_starts_with($val, 'data:image/')) {
+                $comma = strpos($val, ',');
+                if ($comma === false) {
+                    $sanitizedBase64[$key] = null;
+
+                    continue;
+                }
+                $payload = substr($val, $comma + 1);
+            }
+            if (strlen($payload) > $maxBase64Len || ! preg_match('/^[A-Za-z0-9+\/=]+$/', $payload)) {
                 $sanitizedBase64[$key] = null;
 
                 continue;
             }
-            $sanitizedBase64[$key] = $val;
+            $sanitizedBase64[$key] = str_starts_with($val, 'data:image/') ? $val : 'data:image/png;base64,'.$payload;
         }
 
         $graficoBairrosBase64 = $sanitizedBase64['graficoBairrosBase64'];
@@ -241,21 +266,12 @@ class RelatorioController extends Controller
         $graficoInspBase64 = $sanitizedBase64['graficoInspBase64'];
         $graficoTratamentosBase64 = $sanitizedBase64['graficoTratamentosBase64'];
 
-        $doencaMaisFrequente = $visitas->flatMap->doencas
-            ->countBy('doe_nome')
-            ->sortDesc()
-            ->map(fn ($qtd, $nome) => ['nome' => $nome, 'quantidade' => $qtd])
-            ->values()
-            ->first();
-
-        $totalLocaisVisitados = $visitas->map(fn ($v) => $v->local?->loc_codigo_unico)->filter()->unique()->count();
-        $doencasDetectadas = Doenca::all();
         $gestorNome = Auth::user()->use_nome ?? __('Gestor');
 
         $titulo = match ($tipo) {
             'individual' => __('Relatório Individual'),
             'diario' => __('Relatório Diário'),
-            'semanal' => __('Relatório Semanal'),
+            'semanal' => __('Relatório por período'),
             default => __('Relatório Completo'),
         };
 
@@ -275,7 +291,7 @@ class RelatorioController extends Controller
         }
 
         $descricao = $titulo.' - '.$periodo;
-        if (! empty($bairrosPdf) && $tipo !== 'individual') {
+        if (! empty($bairrosPdf)) {
             $descricao .= ' - '.__('Bairros:').' '.implode(', ', $bairrosPdf);
         }
 
@@ -286,6 +302,8 @@ class RelatorioController extends Controller
             $descricao
         );
 
+        $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
+
         return Pdf::loadView('gestor.relatorios.pdf', compact(
             'visitas',
             'graficoBairrosBase64',
@@ -295,15 +313,48 @@ class RelatorioController extends Controller
             'graficoDiasBase64',
             'graficoInspBase64',
             'graficoTratamentosBase64',
-            'doencaMaisFrequente',
-            'totalLocaisVisitados',
-            'doencasDetectadas',
             'gestorNome',
             'data_inicio',
             'data_fim',
             'bairrosPdf',
             'titulo',
-            'tipo'
+            'tipo',
+            'imoveisComplementoResumo',
         ))->setPaper('a4', 'landscape')->stream('relatorio-visitas.pdf');
+    }
+
+    /**
+     * @param  Collection<int, Visita>  $visitas
+     * @return Collection<int, Local>
+     */
+    private function complementoImoveisResumo($visitas)
+    {
+        $ids = $visitas->pluck('fk_local_id')->unique()->filter()->values();
+        if ($ids->isEmpty()) {
+            return collect();
+        }
+
+        return Local::query()
+            ->whereIn('loc_id', $ids)
+            ->withCount('moradores')
+            ->with('socioeconomico')
+            ->orderBy('loc_bairro')
+            ->orderBy('loc_endereco')
+            ->orderBy('loc_numero')
+            ->get();
+    }
+
+    /**
+     * @param  Collection<int, Local>  $imoveis
+     * @return array{imoveis_periodo: int, imoveis_com_ocupantes: int, total_ocupantes: int, imoveis_com_socioeconomico: int}
+     */
+    private function statsComplemento($imoveis): array
+    {
+        $imoveis_periodo = $imoveis->count();
+        $imoveis_com_ocupantes = $imoveis->where('moradores_count', '>', 0)->count();
+        $total_ocupantes = (int) $imoveis->sum('moradores_count');
+        $imoveis_com_socioeconomico = $imoveis->filter(fn (Local $l) => $l->socioeconomico !== null)->count();
+
+        return compact('imoveis_periodo', 'imoveis_com_ocupantes', 'total_ocupantes', 'imoveis_com_socioeconomico');
     }
 }

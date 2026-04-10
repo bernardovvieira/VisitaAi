@@ -14,7 +14,7 @@
             </svg>
             {{ __('Área segura do aplicativo') }}
         </h3>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="text-slate-600 dark:text-slate-400">
             {{ __('Por favor, digite sua senha para continuar.') }}
         </p>
 

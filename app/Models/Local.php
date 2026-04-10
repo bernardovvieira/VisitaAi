@@ -47,9 +47,14 @@ class Local extends Model
         return $this->hasMany(Morador::class, 'fk_local_id');
     }
 
+    public function socioeconomico()
+    {
+        return $this->hasOne(LocalSocioeconomico::class, 'fk_local_id', 'loc_id');
+    }
+
     /**
      * Indica se este é o local primário (primeiro cadastrado).
-     * Não pode ser editado nem excluído pela UI — apenas por suporte técnico.
+     * Não pode ser editado nem excluído pela UI, apenas por suporte técnico.
      */
     public function isPrimary(): bool
     {

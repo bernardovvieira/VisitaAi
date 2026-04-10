@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Doenca;
 use App\Services\Vigilancia\SugestaoDoencasService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * API interna para sugestões de doenças com base nos dados do sistema.
@@ -44,7 +45,7 @@ class SugestaoDoencasController extends Controller
                 'doencas' => $doencas->values()->toArray(),
             ]);
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('SugestaoDoencas: '.$e->getMessage());
+            Log::warning('SugestaoDoencas: '.$e->getMessage());
 
             return response()->json([
                 'sugestoes' => [],

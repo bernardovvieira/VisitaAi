@@ -187,7 +187,17 @@
                 </div>
             </fieldset>
 
+            <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
+                <h3 class="v-section-title">{{ __('Ficha socioeconômica: entrevista e economia') }}</h3>
+                @include('municipio.locais._form_socioeconomico_head', ['local' => $local])
+            </div>
+
             @include('municipio.locais._form_ocupantes', ['local' => $local])
+
+            <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
+                <h3 class="v-section-title">{{ __('Ficha socioeconômica: imóvel, infraestrutura e posse') }}</h3>
+                @include('municipio.locais._form_socioeconomico_tail', ['local' => $local])
+            </div>
 
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">Informações Adicionais</legend>

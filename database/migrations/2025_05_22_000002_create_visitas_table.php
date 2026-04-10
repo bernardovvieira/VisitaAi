@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('fk_local_id');
             $table->date('vis_data');
             $table->string('vis_ciclo', 10)->nullable();
-            $table->enum('vis_atividade', ['1','2','3','4','5','6','7','8'])->nullable();
+            $table->enum('vis_atividade', ['1', '2', '3', '4', '5', '6', '7', '8'])->nullable();
             $table->enum('vis_visita_tipo', ['N', 'R'])->nullable();
             $table->boolean('vis_pendencias')->default(false);
             $table->integer('insp_a1')->nullable();

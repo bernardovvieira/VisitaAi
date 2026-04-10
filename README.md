@@ -2,17 +2,17 @@
 
 Sistema desenvolvido para a gestão de visitas de vigilância entomológica e controle vetorial, utilizando o framework Laravel.
 
-**Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde) — Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
+**Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde), Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
 
 ### Funcionalidades em resumo
 
-- **Locais e visitas** de vigilância entomológica / PNCD (atividades 1–8, LIRAa para ACS onde aplicável).
+- **Locais e visitas** de vigilância entomológica / PNCD (atividades 1 a 8, LIRAa para ACS onde aplicável).
 - **Doenças monitoradas**, pendências, relatórios, consulta pública por código do imóvel, QR Code.
 - **Ocupantes do imóvel (Visita Aí):** registro opcional vinculado a **locais**, com dados operacionais municipais agregados no painel. **Não** substitui e-SUS APS, PEC, Ficha de Visita Domiciliar e Territorial nem e-SUS Território. Textos legais e opções: `config/visitaai_municipio.php`.
 
 ### Rotas HTTP
 
-- `routes/web.php` — ponto de entrada; inclui `routes/web/public.php` (público / consulta / ping) e `routes/web/authenticated.php` (área logada).
+- `routes/web.php`: ponto de entrada; inclui `routes/web/public.php` (público / consulta / ping) e `routes/web/authenticated.php` (área logada).
 - Dentro da área autenticada, rotas agrupadas por módulo: `routes/web/pncd.php` (operação PNCD / ACE e ACS), `routes/web/gestao.php` (painel do gestor, inclui indicadores agregados de ocupantes em `gestor/indicadores/ocupantes`), `routes/web/conta.php` (perfil e preferências).
 - Autenticação Fortify/Breeze: `routes/auth.php`.
 
@@ -22,7 +22,7 @@ Sistema desenvolvido para a gestão de visitas de vigilância entomológica e co
 ## ⚠️ Requisitos
 
 - **Produção (Coolify):** imagem definida no **`Dockerfile`** (PHP 8.4 + assets); não precisas de PHP na VPS manualmente.
-- **Desenvolvimento local típico:** **Docker** + **Docker Compose** (só MySQL no `docker-compose.yml`) e, na máquina, **PHP 8.4**, **Composer** e **Node** para `artisan` e Vite — ver secção *Instalação local*.
+- **Desenvolvimento local típico:** **Docker** + **Docker Compose** (só MySQL no `docker-compose.yml`) e, na máquina, **PHP 8.4**, **Composer** e **Node** para `artisan` e Vite; ver secção *Instalação local*.
 
 ---
 
@@ -41,7 +41,7 @@ cp .env.example .env
 No `.env`, para o MySQL do Compose use por exemplo:
 
 - `DB_HOST=127.0.0.1` se o PHP corre **no host** (porta mapeada `3306:3306`), ou `DB_HOST=db` se o PHP estiver noutro container na mesma rede.
-- `DB_PORT=3306`, `DB_DATABASE=visita_ai`, `DB_USERNAME=visita`, `DB_PASSWORD=` — alinha com `MYSQL_*` do `docker-compose.yml`.
+- `DB_PORT=3306`, `DB_DATABASE=visita_ai`, `DB_USERNAME=visita`, `DB_PASSWORD=`: alinha com `MYSQL_*` do `docker-compose.yml`.
 
 ```bash
 composer install
@@ -62,7 +62,7 @@ O serviço `db` pode montar `docker/mysql/init/`: scripts `.sql` correm **só na
 php artisan key:generate
 php artisan migrate
 php artisan db:seed   # opcional
-npm run dev           # noutro terminal — assets Vite; ou `composer run dev` (serve + vite + fila + logs)
+npm run dev           # noutro terminal: assets Vite; ou `composer run dev` (serve + vite + fila + logs)
 ```
 
 Abre a URL do `php artisan serve` (ex. `http://127.0.0.1:8000`) ou a que configurares.
@@ -94,7 +94,7 @@ Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL pr
 
 **Novo cliente:** criar/duplicar a app, apontar o Git, configurar domínio + secrets, `migrate` (o `entrypoint.sh` já corre `migrate` ao arrancar). Opcional no painel: `php artisan migrate --force --no-interaction`.
 
-**Sandbox vs produção:** duas instâncias (ex. `sbx.*` e produção), bases **separadas** — nunca a mesma base.
+**Sandbox vs produção:** duas instâncias (ex. `sbx.*` e produção), bases **separadas**; nunca a mesma base.
 
 **Post-deploy:** não uses `migrate:fresh` com dados reais. Opcional: `php artisan config:clear && php artisan route:clear`.
 
@@ -102,7 +102,7 @@ Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL pr
 
 #### Post-deploy: migrations e seeds
 
-**Importante:** não use `migrate:fresh` no post-deploy de produção — toda subida de build apagaria o banco. Use apenas migrações incrementais.
+**Importante:** não use `migrate:fresh` no post-deploy de produção: toda subida de build apagaria o banco. Use apenas migrações incrementais.
 
 | Cenário | Post-deploy típico |
 |---------|---------------------|

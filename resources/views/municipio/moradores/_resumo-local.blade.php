@@ -13,12 +13,12 @@
         </a>
     </div>
     @if(($moradorResumo['total'] ?? 0) > 0)
-        <dl class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 pt-2 border-t border-gray-200 dark:border-gray-600">
-            <div><dt class="text-gray-500 dark:text-gray-400">0 a 11 anos</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['0-11'] }}</dd></div>
-            <div><dt class="text-gray-500 dark:text-gray-400">12 a 17</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['12-17'] }}</dd></div>
-            <div><dt class="text-gray-500 dark:text-gray-400">18 a 59</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['18-59'] }}</dd></div>
-            <div><dt class="text-gray-500 dark:text-gray-400">60+</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['60+'] }}</dd></div>
-            <div><dt class="text-gray-500 dark:text-gray-400">Sem data</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['sem_info'] }}</dd></div>
+        <dl class="grid grid-cols-2 sm:grid-cols-5 gap-2 border-t border-gray-200 pt-2 text-xs text-gray-700 dark:border-gray-600 dark:text-gray-300 sm:text-sm">
+            <div><dt class="text-gray-500 dark:text-gray-400">{{ __('0 a 11 anos') }}</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['0-11'] }}</dd></div>
+            <div><dt class="text-gray-500 dark:text-gray-400">{{ __('12 a 17 anos') }}</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['12-17'] }}</dd></div>
+            <div><dt class="text-gray-500 dark:text-gray-400">{{ __('18 a 59 anos') }}</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['18-59'] }}</dd></div>
+            <div><dt class="text-gray-500 dark:text-gray-400">{{ __('60 anos ou mais') }}</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['60+'] }}</dd></div>
+            <div><dt class="text-gray-500 dark:text-gray-400">{{ __('Sem data de nascimento') }}</dt><dd class="font-semibold">{{ $moradorResumo['faixas']['sem_info'] }}</dd></div>
         </dl>
     @endif
 </x-section-card>

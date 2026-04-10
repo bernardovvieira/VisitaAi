@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Helpers\LogHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,6 +45,7 @@ class AuthenticatedSessionController extends Controller
                 'login.remember' => $request->boolean('remember'),
                 'url.intended' => $dashboard,
             ]);
+
             return redirect()->route('two-factor.login');
         }
 

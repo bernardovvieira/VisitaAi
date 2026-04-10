@@ -43,12 +43,12 @@
                     tabindex="-1"
                 >
                     {{-- Ícone: olho aberto (senha oculta) --}}
-                    <svg id="icon-password-show" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg id="icon-password-show" class="h-5 w-5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                     </svg>
                     {{-- Ícone: olho riscado (senha visível) --}}
-                    <svg id="icon-password-hide" class="h-5 w-5 text-gray-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg id="icon-password-hide" class="h-5 w-5 text-slate-500 dark:text-slate-400 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.27-2.944-9.543-7a10.05 10.05 0 012.166-3.823m1.43-1.43A9.966 9.966 0 0112 5c4.478 0 8.27 2.944 9.543 7a9.97 9.97 0 01-4.032 5.687M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>
                     </svg>
@@ -61,19 +61,21 @@
         {{-- Botões --}}
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
             <a href="{{ route('password.request') }}"
-            class="text-sm underline  text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+            class="text-sm text-slate-600 underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100">
                 {{ __('Esqueceu a senha?') }}
             </a>
             <x-primary-button id="login-submit-btn" class="ml-3">{{ __('Entrar') }}</x-primary-button>
         </div>
     </form>
 
-    <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+    @if(config('features.open_registration'))
+    <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
         {{ __('Não tem conta?') }}
         <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
             {{ __('Registre-se') }}
         </a>
     </p>
+    @endif
 
     {{-- Toggle mostrar/ocultar senha (JS puro para evitar conflito com Alpine) --}}
     <script>

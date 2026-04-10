@@ -7,12 +7,12 @@ declare(strict_types=1);
  * e dos mapas em scripts/i18n/en-*.php.
  */
 $translations = array_merge(
-    require __DIR__ . '/i18n/en-1.php',
-    require __DIR__ . '/i18n/en-2.php',
-    require __DIR__ . '/i18n/en-3.php',
+    require __DIR__.'/i18n/en-1.php',
+    require __DIR__.'/i18n/en-2.php',
+    require __DIR__.'/i18n/en-3.php',
 );
 
-$base = dirname(__DIR__) . '/resources/views';
+$base = dirname(__DIR__).'/resources/views';
 $rii = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS)
 );
@@ -84,26 +84,26 @@ foreach (array_keys($keys) as $pt) {
     }
 }
 
-$langDir = dirname(__DIR__) . '/lang';
+$langDir = dirname(__DIR__).'/lang';
 if (! is_dir($langDir)) {
     mkdir($langDir, 0755, true);
 }
 
 file_put_contents(
-    $langDir . '/pt_BR.json',
-    json_encode($ptBr, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n"
+    $langDir.'/pt_BR.json',
+    json_encode($ptBr, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n"
 );
 file_put_contents(
-    $langDir . '/en.json',
-    json_encode($en, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n"
+    $langDir.'/en.json',
+    json_encode($en, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n"
 );
 
 if ($missing !== []) {
-    fwrite(STDERR, 'Missing EN translations (' . count($missing) . "):\n");
+    fwrite(STDERR, 'Missing EN translations ('.count($missing)."):\n");
     foreach ($missing as $m) {
-        fwrite(STDERR, json_encode($m, JSON_UNESCAPED_UNICODE) . "\n");
+        fwrite(STDERR, json_encode($m, JSON_UNESCAPED_UNICODE)."\n");
     }
     exit(1);
 }
 
-echo 'Wrote lang/pt_BR.json and lang/en.json (' . count($keys) . ' keys, ' . count($translations) . " map entries).\n";
+echo 'Wrote lang/pt_BR.json and lang/en.json ('.count($keys).' keys, '.count($translations)." map entries).\n";

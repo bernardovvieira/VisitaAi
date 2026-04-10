@@ -28,9 +28,16 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
     Route::resource('doencas', DoencaController::class);
     Route::resource('locais', LocalController::class)
         ->parameters(['locais' => 'local'])
-        ->except(['show']);
+        ->only(['index', 'create', 'store'])
+        ->middleware('can:viewAny,App\Models\Local');
 
-    Route::get('locais/{local}', [LocalController::class, 'show'])->name('locais.show');
+    Route::get('locais/{local}/ficha-socioeconomica.pdf', [LocalController::class, 'fichaSocioeconomicaPdf'])
+        ->name('locais.ficha-socioeconomica-pdf')
+        ->middleware(['can:view,local', 'throttle:30,1']);
+
+    Route::get('locais/{local}', [LocalController::class, 'show'])
+        ->name('locais.show')
+        ->middleware('can:view,local');
 
     Route::resource('locais.moradores', MoradorController::class)
         ->parameters(['locais' => 'local', 'moradores' => 'morador']);

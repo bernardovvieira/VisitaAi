@@ -1,8 +1,8 @@
 <x-guest-layout>
-    <h1 class="mb-1 text-xl font-semibold text-gray-900 dark:text-gray-100 sm:text-2xl">
+    <h1 class="mb-1 text-xl font-semibold text-slate-900 dark:text-slate-100 sm:text-2xl">
         {{ __('Redefinir Senha') }}
     </h1>
-    <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">
+    <p class="mb-6 text-sm text-slate-600 dark:text-slate-400">
         {{ __('Defina uma nova senha forte para sua conta.') }}
     </p>
 
@@ -43,7 +43,7 @@
             <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600" role="presentation" aria-hidden="true">
                 <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
             </div>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).') }}</p>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).') }}</p>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
@@ -68,7 +68,7 @@
         </div>
     </form>
 
-    <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+    <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
         {{ __('Já lembra da senha?') }}
         <a href="{{ route('login') }}" class="font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400">
             {{ __('Entrar') }}

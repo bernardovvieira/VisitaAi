@@ -5,11 +5,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
         </div>
-        <h1 class="mb-2 text-xl font-bold text-gray-900 dark:text-gray-100">{{ __('Cadastro enviado!') }}</h1>
-        <p class="mb-2 text-gray-600 dark:text-gray-400">
+        <h1 class="mb-2 text-xl font-bold text-slate-900 dark:text-slate-100">{{ __('Cadastro enviado!') }}</h1>
+        <p class="mb-2 text-slate-600 dark:text-slate-400">
             {{ __('Sua conta está aguardando aprovação de um gestor.') }}
         </p>
-        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+        <p class="mb-6 text-sm text-slate-500 dark:text-slate-400">
             {{ __('Você receberá um e-mail quando ela for liberada. Enquanto isso, você pode sair e voltar depois.') }}
         </p>
         <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">

@@ -2,7 +2,7 @@
     $copyrightYearStart = 2025;
     $copyrightYearNow = (int) now()->format('Y');
     $copyrightYears = $copyrightYearNow > $copyrightYearStart
-        ? $copyrightYearStart.'–'.$copyrightYearNow
+        ? $copyrightYearStart.' a '.$copyrightYearNow
         : (string) $copyrightYearNow;
     $footerClass = trim($footerClass ?? '');
     $footerId = $footerId ?? null;

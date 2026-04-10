@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Relatórios'))
-@section('og_description', __('Relatórios e indicadores epidemiológicos. Gere PDF e visualize indicadores do período selecionado.'))
+@section('og_description', __('Relatórios de visitas de campo, indicadores do período e resumo do cadastro complementar do imóvel (ocupantes e perfil socioeconômico). Gere PDF conforme os filtros.'))
 
 @section('content')
 <!-- Overlay de carregamento -->
@@ -321,7 +321,75 @@
                 {{ $bairroMaisFrequente ?: __('N/D') }}
             </x-ui.stat-tile>
         </div>
+        <div class="mt-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Cadastro complementar do imóvel') }}</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Imóveis vinculados às visitas do período filtrado.') }}</p>
+        </div>
+        <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+            <x-ui.stat-tile :heading="__('Imóveis distintos no período')">
+                <x-slot name="icon">
+                    <x-heroicon-o-home class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
+                </x-slot>
+                {{ $statsComplemento['imoveis_periodo'] ?? 0 }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Imóveis com ocupantes cadastrados')">
+                <x-slot name="icon">
+                    <x-heroicon-o-user-group class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
+                </x-slot>
+                {{ $statsComplemento['imoveis_com_ocupantes'] ?? 0 }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Total de ocupantes (cadastro)')">
+                <x-slot name="icon">
+                    <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
+                </x-slot>
+                {{ $statsComplemento['total_ocupantes'] ?? 0 }}
+            </x-ui.stat-tile>
+            <x-ui.stat-tile :heading="__('Imóveis com ficha socioeconômica')">
+                <x-slot name="icon">
+                    <x-heroicon-o-clipboard-document-check class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
+                </x-slot>
+                {{ $statsComplemento['imoveis_com_socioeconomico'] ?? 0 }}
+            </x-ui.stat-tile>
+        </div>
     </section>
+
+    @if(isset($imoveisComplementoResumo) && $imoveisComplementoResumo->isNotEmpty())
+    <x-section-card>
+        <h2 class="v-section-title mb-1 text-base">{{ __('Imóveis no período: cadastro complementar') }}</h2>
+        <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Resumo por imóvel: quantidade de ocupantes e indicação de ficha socioeconômica. O PDF inclui a mesma tabela.') }}</p>
+        <div class="v-table-wrap overflow-x-auto">
+            <table class="v-data-table min-w-[42rem]">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ __('Cód.') }}</th>
+                        <th scope="col" class="min-w-[10rem]">{{ __('Endereço') }}</th>
+                        <th scope="col">{{ __('Bairro') }}</th>
+                        <th scope="col" class="text-center">{{ __('Ocupantes') }}</th>
+                        <th scope="col" class="text-center">{{ __('Socioecon.') }}</th>
+                        <th scope="col" class="text-center">{{ __('Moradores (declarado)') }}</th>
+                        <th scope="col" class="min-w-[8rem]">{{ __('Faixa renda familiar') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($imoveisComplementoResumo as $loc)
+                        @php
+                            $lse = $loc->socioeconomico;
+                        @endphp
+                        <tr>
+                            <td class="whitespace-nowrap font-mono text-xs">{{ $loc->loc_codigo_unico ?? '-' }}</td>
+                            <td>{{ trim(($loc->loc_endereco ?? '').($loc->loc_numero ? ', '.$loc->loc_numero : '')) ?: '-' }}</td>
+                            <td>{{ $loc->loc_bairro ?? '-' }}</td>
+                            <td class="text-center tabular-nums">{{ (int) ($loc->moradores_count ?? 0) }}</td>
+                            <td class="text-center">{{ $lse ? __('Sim') : __('Não') }}</td>
+                            <td class="text-center tabular-nums">{{ $lse && $lse->lse_n_moradores_declarado !== null ? $lse->lse_n_moradores_declarado : '-' }}</td>
+                            <td class="text-sm text-slate-600 dark:text-slate-400">{{ $lse && $lse->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit($lse->lse_renda_familiar_faixa, 48) : '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </x-section-card>
+    @endif
 
     {{-- Gráficos: apenas os 4 mais relevantes para o relatório --}}
     <x-section-card>
@@ -361,7 +429,7 @@
     {{-- Mapa de calor --}}
     <x-section-card>
         <h2 class="v-section-title mb-1">{{ __('Mapa de calor') }}</h2>
-        <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Concentração de visitas no território.') }}</p>
+        <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Distribuição das visitas no mapa do município.') }}</p>
         <div class="relative h-64 w-full overflow-hidden rounded-lg border" style="border-color: rgb(var(--v-border) / 1);">
             <div id="mapa-calor" class="w-full h-full rounded-lg"></div>
             <p id="mapa-calor-vazio" class="hidden absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/80 rounded-lg m-0">{{ __('Nenhuma visita com localização no período.') }}</p>
@@ -422,6 +490,12 @@
                                 <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                                     {{ __('Bairro/Localidade: :bairro · Cód.: :codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
                                 </div>
+                                @if(($visita->local->moradores_count ?? 0) > 0)
+                                    <div class="mt-1 text-xs font-medium text-slate-600 dark:text-slate-300">{{ __(':n ocupante(s) no cadastro do imóvel', ['n' => $visita->local->moradores_count]) }}</div>
+                                @endif
+                                @if($visita->local->socioeconomico)
+                                    <div class="mt-0.5 text-xs text-emerald-700 dark:text-emerald-300">{{ __('Ficha socioeconômica do imóvel preenchida') }}</div>
+                                @endif
                             @else
                                 <p class="text-xs font-medium text-amber-700 dark:text-amber-300">{{ __('Local não disponível para esta visita.') }}</p>
                             @endif
@@ -545,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (elDoencasVazio) elDoencasVazio.classList.remove('hidden');
     }
 
-    // Mapa de calor — só pontos com lat/lng numéricos válidos (NaN não pode passar: quebrava o setView)
+    // Mapa de calor: só pontos com lat/lng numéricos válidos (NaN não pode passar: quebrava o setView)
     const parsePontoCalor = (v) => {
         const loc = v?.local;
         if (!loc) return null;

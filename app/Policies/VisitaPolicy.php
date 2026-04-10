@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Visita;
 
 /**
- * Conformidade MS/PNCD: apenas ACE e ACS registram visitas (ACS somente LIRAa — Diretriz ACE/ACS).
+ * Conformidade MS/PNCD: apenas ACE e ACS registram visitas (ACS somente LIRAa, Diretriz ACE/ACS).
  * Gestor apenas visualiza e gera relatórios.
  */
 class VisitaPolicy
@@ -27,6 +27,7 @@ class VisitaPolicy
         if ($user->isAgenteSaude()) {
             return $visita->fk_usuario_id === $user->use_id;
         }
+
         return $user->isGestor() || $user->isAgenteEndemias();
     }
 
@@ -46,6 +47,7 @@ class VisitaPolicy
         if ($user->isAgenteSaude()) {
             return $visita->fk_usuario_id === $user->use_id;
         }
+
         return $user->isAgenteEndemias();
     }
 
@@ -57,6 +59,7 @@ class VisitaPolicy
         if ($user->isAgenteSaude()) {
             return $visita->fk_usuario_id === $user->use_id;
         }
+
         return $user->isAgenteEndemias();
     }
 
@@ -65,6 +68,7 @@ class VisitaPolicy
         if ($user->isAgenteSaude()) {
             return $visita->fk_usuario_id === $user->use_id;
         }
+
         return $user->isAgenteEndemias();
     }
 
@@ -73,6 +77,7 @@ class VisitaPolicy
         if ($user->isAgenteSaude()) {
             return $visita->fk_usuario_id === $user->use_id;
         }
+
         return $user->isAgenteEndemias();
     }
 }

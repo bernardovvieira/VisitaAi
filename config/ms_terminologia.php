@@ -19,8 +19,13 @@ return [
     |--------------------------------------------------------------------------
     */
     'sistema' => [
-        'nome_subtitulo' => 'Sistema de Apoio à Vigilância Entomológica e Controle Vetorial Municipal',
-        'nota_ms'        => 'Alinhado às diretrizes do Ministério da Saúde para Vigilância em Saúde e controle de arboviroses (vigilância entomológica e controle vetorial).',
+        /*
+         * Escopo do produto: visitas de campo (inclui PNCD / vetores quando o município usa) +
+         * cadastro municipal de imóveis e dados complementares (ocupantes, perfil socioeconômico), que não
+         * dependem do uso entomológico.
+         */
+        'nome_subtitulo' => 'Imóveis, visitas de campo e cadastro complementar do imóvel, com apoio à vigilância entomológica e controle vetorial (PNCD/MS) quando aplicável',
+        'nota_ms' => 'O módulo de visitas pode seguir as diretrizes do Ministério da Saúde (vigilância em saúde, arboviroses, PNCD). O cadastro de imóveis e dados complementares (ocupantes, informações socioeconômicas) é autônomo: apoia gestão e políticas municipais e pode ser usado com ou sem registro de visita vetorial.',
     ],
 
     /*
@@ -30,21 +35,21 @@ return [
     */
     'perfis' => [
         'gestor' => [
-            'label_curto'   => 'Gestor Municipal',
+            'label_curto' => 'Gestor Municipal',
             'label_oficial' => 'Gestor municipal (coordenação da vigilância em saúde)',
-            'nota_ms'       => 'Responsável pela coordenação/supervisão das ações de vigilância no âmbito municipal (Diretriz MS, gestão da Vigilância em Saúde).',
+            'nota_ms' => 'Responsável pela coordenação/supervisão das ações de vigilância no âmbito municipal (Diretriz MS, gestão da Vigilância em Saúde).',
         ],
         'agente_endemias' => [
-            'label_curto'   => 'Agente de Combate às Endemias',
-            'label_abrev'   => 'ACE',
-            'sigla'         => 'ACE',
-            'nota_ms'       => 'Lei nº 11.350/2006. Profissional do SUS com atribuições de vigilância, prevenção e controle de doenças e promoção da saúde (vigilância epidemiológica e ambiental).',
+            'label_curto' => 'Agente de Combate às Endemias',
+            'label_abrev' => 'ACE',
+            'sigla' => 'ACE',
+            'nota_ms' => 'Lei nº 11.350/2006. Profissional do SUS com atribuições de vigilância, prevenção e controle de doenças e promoção da saúde (vigilância epidemiológica e ambiental).',
         ],
         'agente_saude' => [
-            'label_curto'   => 'Agente Comunitário de Saúde',
-            'label_abrev'   => 'ACS',
-            'sigla'         => 'ACS',
-            'nota_ms'       => 'Lei nº 11.350/2006. Atua na atenção básica e na Estratégia Saúde da Família; pode participar de ações integradas no território, inclusive LIRAa (Diretriz Nacional para Atuação Integrada dos ACE e ACS).',
+            'label_curto' => 'Agente Comunitário de Saúde',
+            'label_abrev' => 'ACS',
+            'sigla' => 'ACS',
+            'nota_ms' => 'Lei nº 11.350/2006. Atua na atenção básica e na Estratégia Saúde da Família; pode participar de ações integradas no território, inclusive LIRAa (Diretriz Nacional para Atuação Integrada dos ACE e ACS).',
         ],
     ],
 
@@ -56,51 +61,51 @@ return [
     */
     'atividades_pncd' => [
         '1' => [
-            'codigo'  => '1-LI',
-            'label'   => 'LI',
-            'nome'    => 'LI (Levantamento de Índice)',
+            'codigo' => '1-LI',
+            'label' => 'LI',
+            'nome' => 'LI (Levantamento de Índice)',
             'nota_ms' => 'Atividade de rotina do PNCD. Vigilância entomológica.',
         ],
         '2' => [
-            'codigo'  => '2-LI+T',
-            'label'   => 'LI+T',
-            'nome'    => 'LI+T (Levantamento de Índice + Tratamento)',
+            'codigo' => '2-LI+T',
+            'label' => 'LI+T',
+            'nome' => 'LI+T (Levantamento de Índice + Tratamento)',
             'nota_ms' => 'PNCD. Levantamento com tratamento focal/perifocal.',
         ],
         '3' => [
-            'codigo'  => '3-PPE+T',
-            'label'   => 'PPE+T',
-            'nome'    => 'PPE+T (Ponto Estratégico + Tratamento)',
+            'codigo' => '3-PPE+T',
+            'label' => 'PPE+T',
+            'nome' => 'PPE+T (Ponto Estratégico + Tratamento)',
             'nota_ms' => 'PNCD. Ponto estratégico com tratamento.',
         ],
         '4' => [
-            'codigo'  => '4-T',
-            'label'   => 'T',
-            'nome'    => 'T (Tratamento)',
+            'codigo' => '4-T',
+            'label' => 'T',
+            'nome' => 'T (Tratamento)',
             'nota_ms' => 'PNCD. Tratamento focal ou perifocal.',
         ],
         '5' => [
-            'codigo'  => '5-DF',
-            'label'   => 'DF',
-            'nome'    => 'DF (Delimitação de Foco)',
+            'codigo' => '5-DF',
+            'label' => 'DF',
+            'nome' => 'DF (Delimitação de Foco)',
             'nota_ms' => 'PNCD. Delimitação de foco do vetor.',
         ],
         '6' => [
-            'codigo'  => '6-PVE',
-            'label'   => 'PVE',
-            'nome'    => 'PVE (Pesquisa Vetorial Especial)',
+            'codigo' => '6-PVE',
+            'label' => 'PVE',
+            'nome' => 'PVE (Pesquisa Vetorial Especial)',
             'nota_ms' => 'PNCD. Pesquisa vetorial especial.',
         ],
         '7' => [
-            'codigo'  => '7-LIRAa',
-            'label'   => 'LIRAa',
-            'nome'    => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)',
+            'codigo' => '7-LIRAa',
+            'label' => 'LIRAa',
+            'nome' => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)',
             'nota_ms' => 'Método simplificado de vigilância entomológica (MS). Pode ser realizado por ACE e ACS de forma integrada (Diretriz Nacional ACE/ACS).',
         ],
         '8' => [
-            'codigo'  => '8-PE',
-            'label'   => 'PE',
-            'nome'    => 'PE (Ponto Estratégico)',
+            'codigo' => '8-PE',
+            'label' => 'PE',
+            'nome' => 'PE (Ponto Estratégico)',
             'nota_ms' => 'PNCD. Inspeção em ponto estratégico.',
         ],
     ],

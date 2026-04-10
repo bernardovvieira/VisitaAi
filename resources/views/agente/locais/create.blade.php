@@ -211,7 +211,17 @@
                 </div>
             </fieldset>
 
+            <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
+                <h3 class="v-section-title">{{ __('Ficha socioeconômica: entrevista e economia') }}</h3>
+                @include('municipio.locais._form_socioeconomico_head', ['local' => null])
+            </div>
+
             @include('municipio.locais._form_ocupantes')
+
+            <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
+                <h3 class="v-section-title">{{ __('Ficha socioeconômica: imóvel, infraestrutura e posse') }}</h3>
+                @include('municipio.locais._form_socioeconomico_tail', ['local' => null])
+            </div>
 
             <div class="flex justify-end">
                 <button type="submit" id="btn-cadastrar-local"

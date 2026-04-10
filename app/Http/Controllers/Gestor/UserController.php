@@ -25,7 +25,7 @@ class UserController extends Controller
             $search = trim(request('search'));
             $busca = strtolower($search);
 
-            // Busca por perfil: gestor, ACE (agente_endemias), ACS (agente_saude) — conformidade MS (Lei 11.350/2006).
+            // Busca por perfil: gestor, ACE (agente_endemias), ACS (agente_saude), conformidade MS (Lei 11.350/2006).
             $perfis = null;
             $gestorPalavra = 'gestor';
             $endemiasPalavra = 'endemias';

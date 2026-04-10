@@ -19,6 +19,7 @@ class ConsultaPublicaTest extends TestCase
 
         $response->assertOk();
         $response->assertSee(__('Código do imóvel'), false);
+        $response->assertSee(__('Na consulta pública aparecem apenas endereço vinculado ao código, datas e status das visitas de campo e informações já divulgadas sobre doenças. Não são exibidos dados clínicos, nome de ocupantes nem cadastro socioeconômico do imóvel.'), false);
     }
 
     public function test_consulta_codigo_desconhecido_redireciona_sem_500(): void
@@ -46,6 +47,7 @@ class ConsultaPublicaTest extends TestCase
         $response->assertOk();
         $response->assertSee('11223344', false);
         $response->assertSee(__('Histórico de visitas'), false);
+        $response->assertSee(__('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos, sem identificar o profissional e sem exibir cadastro complementar do imóvel (ocupantes ou perfil socioeconômico) nesta consulta pública.'), false);
     }
 
     public function test_index_publica_com_doenca_em_texto_simples_nao_gera_500(): void

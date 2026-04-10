@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Painel do gestor'))
-@section('og_description', __('Painel do gestor municipal. Acompanhe estatísticas e gerencie doenças, locais, visitas, usuários e relatórios.'))
+@section('og_description', __('Painel do gestor municipal: visitas, imóveis cadastrados, ocupantes, indicadores e relatórios; módulos que se integram conforme a necessidade local.'))
 
 @section('content')
 @php
@@ -157,17 +157,24 @@
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
-                    <a href="{{ route('gestor.visitas.index') }}" class="v-dash-shortcut">
-                        <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
-                        <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Visitas realizadas') }}</span>
-                        </span>
-                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-                    </a>
                     <a href="{{ route('gestor.locais.index') }}" class="v-dash-shortcut">
                         <x-heroicon-o-map-pin class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
                             <span class="v-dash-shortcut__label">{{ __('Locais') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-chart-bar class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Indicadores dos imóveis') }}</span>
+                        </span>
+                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
+                    </a>
+                    <a href="{{ route('gestor.visitas.index') }}" class="v-dash-shortcut">
+                        <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                        <span class="v-dash-shortcut__body">
+                            <span class="v-dash-shortcut__label">{{ __('Visitas de campo') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
@@ -178,17 +185,10 @@
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
-                    <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dash-shortcut">
-                        <x-heroicon-o-chart-bar class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
-                        <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Indicadores') }}</span>
-                        </span>
-                        <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-                    </a>
                     <a href="{{ route('gestor.relatorios.index') }}" class="v-dash-shortcut">
                         <x-heroicon-o-document-text class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Relatórios') }}</span>
+                            <span class="v-dash-shortcut__label">{{ __('Relatórios de vigilância') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
