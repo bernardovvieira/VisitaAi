@@ -15,6 +15,17 @@
 
     <x-section-card class="w-full space-y-4">
         <x-page-header :eyebrow="__('Ocupantes')" :title="__('Novo ocupante')" />
+        <div class="rounded-xl border border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-4 shadow-sm dark:border-amber-700/70 dark:from-amber-950/40 dark:to-orange-950/30">
+            <div class="flex items-start gap-3">
+                <x-heroicon-o-shield-check class="mt-0.5 h-5 w-5 shrink-0 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+                <div class="space-y-1">
+                    <p class="text-sm font-semibold text-amber-900 dark:text-amber-100">{{ __('Termo de ciência LGPD e tratamento de dados') }}</p>
+                    <p class="text-xs leading-relaxed text-amber-900/90 dark:text-amber-100/90">
+                        {{ __('Ao preencher este cadastro, o agente e o ocupante declaram ciência e concordância com o tratamento dos dados pessoais para fins informativos e de gestão municipal, incluindo compartilhamento controlado com terceiros em ações municipais, conforme a LGPD.') }}
+                    </p>
+                </div>
+            </div>
+        </div>
         <form method="post" action="{{ route($profile . '.locais.moradores.store', $local) }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @include('municipio.moradores._form')
