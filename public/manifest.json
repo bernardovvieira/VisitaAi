@@ -1,7 +1,7 @@
 {
     "name": "Visita Aí",
     "short_name": "Visita Aí",
-    "description": "Visita Aí — indicadores municipais, operação em campo e consulta pública. Vigilância entomológica e PNCD como funções especializadas quando o município adota.",
+    "description": "Visita Aí: indicadores municipais, operação em campo e consulta pública. Vigilância entomológica e PNCD como funções especializadas quando o município adota.",
     "start_url": "/dashboard",
     "display": "standalone",
     "background_color": "#ffffff",

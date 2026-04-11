@@ -5,7 +5,7 @@
 @section('og_description', __('Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação (vigilância entomológica e controle vetorial).'))
 
 @section('content')
-<div class="v-page">
+<div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')">
         <x-slot name="lead">
@@ -22,19 +22,30 @@
         </x-ui.callout>
     @endif
 
-    <x-section-card class="v-card--muted">
-        <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-        <div class="mt-1 flex items-center gap-2">
-            <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                   data-live-url="{{ route('gestor.locais.index') }}" data-live-param="search"
-                   data-live-loading-id="search-loading-gestor-locais"
-                   placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
-                   class="v-input" />
-            <span id="search-loading-gestor-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
-        </div>
-    </x-section-card>
-
     <x-section-card class="v-card--flush overflow-hidden">
+        <div class="v-list-toolbar">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div class="min-w-0 flex-1 space-y-2">
+                    <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                               data-live-url="{{ route('gestor.locais.index') }}" data-live-param="search"
+                               data-live-loading-id="search-loading-gestor-locais"
+                               placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
+                               class="v-input" />
+                        <span id="search-loading-gestor-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+                    </div>
+                </div>
+                <div class="w-full shrink-0 lg:w-72 xl:w-80">
+                    <x-ui.disclosure variant="footer-lgpd">
+                        <x-slot name="summary">
+                            <span>{{ __('O que significa "Primário"?') }}</span>
+                        </x-slot>
+                        <p class="text-[10px] leading-relaxed">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
+                    </x-ui.disclosure>
+                </div>
+            </div>
+        </div>
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
@@ -117,11 +128,6 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
-    </x-section-card>
-
-    <x-section-card class="v-card--muted v-hint-card">
-        <h3 class="v-section-title">{{ __('O que significa "Primário"?') }}</h3>
-        <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
     </x-section-card>
 </div>
 @endsection

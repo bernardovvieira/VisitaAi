@@ -53,6 +53,8 @@ class IndicadoresOcupantesTest extends TestCase
 
         $this->assertStringContainsString('AVISO_LEGISLACAO_FEDERAL_EXPORTACAO', $raw);
         $this->assertStringContainsString('CRUZAMENTO_ESCOLARIDADE_RENDA_COMPLETO', $raw);
+        $this->assertStringContainsString('SEXO', $raw);
+        $this->assertStringContainsString('ocupantes_referencia_familiar', $raw);
         $this->assertStringContainsString('medio_completo', $raw);
         $this->assertStringContainsString(',2', $raw);
     }
@@ -110,6 +112,8 @@ class IndicadoresOcupantesTest extends TestCase
 
         $app = $this->app->make(IndicadoresOcupantesMunicipioService::class);
         $painel = $app->painelCompleto();
+        $this->assertArrayHasKey('sexo', $painel);
+        $this->assertArrayHasKey('ocupantes_referencia_familiar', $painel['resumo']);
         $this->assertSame(100, $painel['completude']['pct_escolaridade_informada']);
         $this->assertSame(100, $painel['completude']['pct_renda_informada']);
         $cruz = $painel['cruzamento_escolaridade_renda']['celulas']['medio_completo']['ate_1_sm'];

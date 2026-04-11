@@ -4,7 +4,7 @@
 @section('og_description', __('Locais de visitação. Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')
-<div class="v-page">
+<div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')" />
 
@@ -29,47 +29,56 @@
         </x-ui.callout>
     @endif
 
-    <!-- Card introdutório -->
-    <x-section-card>
-        <h2 class="v-section-title">{{ __('Locais de visitação') }}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-            {{ __('Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.') }}
-        </p>
-        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            {!! __('<strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.') !!}
-        </p>
-        <a href="{{ route('agente.locais.create') }}"
-           class="v-btn-compact v-btn-compact--blue mt-4">
-            <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ __('Cadastrar local') }}
-        </a>
-    </x-section-card>
-
-    <!-- Busca (filtra ao digitar) -->
-    <x-section-card>
-        <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div class="flex-1">
-                <label for="search" class="v-toolbar-label mb-1">{{ __('Busca inteligente') }}</label>
-                <div class="flex items-center gap-2">
-                    <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                           data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
-                           data-live-loading-id="search-loading-locais"
-                           placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
-                           class="v-input">
-                    <span id="search-loading-locais" class="hidden text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap" aria-live="polite">{{ __('Buscando…') }}</span>
-                </div>
+    <x-section-card class="v-card--muted">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0 max-w-3xl space-y-2">
+                <h2 class="v-section-title">{{ __('Locais de visitação') }}</h2>
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    {{ __('Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.') }}
+                </p>
+                <x-ui.disclosure variant="lead-mt" class="mt-1">
+                    <x-slot name="summary">
+                        <span class="border-b border-dotted border-slate-500/45 pb-px dark:border-slate-400/45">{{ __('Uso offline e dica de campo') }}</span>
+                    </x-slot>
+                    <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                        {!! __('<strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.') !!}
+                    </p>
+                </x-ui.disclosure>
+                <x-ui.disclosure variant="footer-lgpd" class="mt-2 max-w-2xl">
+                    <x-slot name="summary">
+                        <span>{{ __('O que significa "Primário"?') }}</span>
+                    </x-slot>
+                    <p class="text-[10px] leading-relaxed">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
+                </x-ui.disclosure>
+            </div>
+            <a href="{{ route('agente.locais.create') }}"
+               class="v-btn-compact v-btn-compact--blue shrink-0 self-start sm:self-auto">
+                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Cadastrar local') }}
+            </a>
+        </div>
+        <div class="mt-4 border-t border-slate-200/80 pt-4 dark:border-slate-700/70">
+            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+            <div class="mt-1 flex items-center gap-2">
+                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                       data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
+                       data-live-loading-id="search-loading-locais"
+                       placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
+                       class="v-input">
+                <span id="search-loading-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
         </div>
     </x-section-card>
 
-    <!-- Tabela de Locais -->
-    <x-section-card>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
-            @if(request('search'))
-                <span class="text-gray-500">{{ __('Resultados para:') }} <strong>{{ request('search') }}</strong></span>
-            @endif
-        </p>
+    <x-section-card class="v-card--flush overflow-hidden">
+        <div class="v-table-meta">
+            <span class="text-sm text-slate-600 dark:text-slate-400">
+                {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
+                @if(request('search'))
+                    <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
+                @endif
+            </span>
+        </div>
 
         <div class="v-table-wrap">
             <table class="v-data-table">
@@ -178,11 +187,6 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
-    </x-section-card>
-
-    <x-section-card>
-        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">{{ __('O que significa "Primário"?') }}</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
     </x-section-card>
 </div>
 <script>

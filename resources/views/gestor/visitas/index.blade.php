@@ -4,7 +4,7 @@
 @section('og_description', __('Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).'))
 
 @section('content')
-<div class="v-page">
+<div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas')]]" />
 
     <x-page-header :eyebrow="__('Vigilância em campo')" :title="__('Visitas')">
@@ -34,9 +34,10 @@
         </x-ui.callout>
     @endif
 
-        <x-section-card class="v-card--muted">
+        <x-section-card class="v-card--flush overflow-hidden">
+        <div class="v-list-toolbar">
             <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-            <div class="flex items-center gap-2">
+            <div class="mt-1 flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                        data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
                        data-live-loading-id="search-loading-gestor-visitas"
@@ -44,9 +45,7 @@
                        class="v-input" />
                 <span id="search-loading-gestor-visitas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-        </x-section-card>
-
-        <x-section-card class="v-card--flush overflow-hidden">
+        </div>
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}

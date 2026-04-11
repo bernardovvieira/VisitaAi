@@ -19,12 +19,21 @@ class IndicadoresOcupantesMunicipioService
 
     /**
      * @return array{
-     *     resumo: array{total_ocupantes: int, total_imoveis_com_ocupante: int, faixas_etarias: array<string, int>},
+     *     resumo: array{
+     *         total_ocupantes: int,
+     *         total_imoveis_com_ocupante: int,
+     *         ocupantes_referencia_familiar: int,
+     *         faixas_etarias: array<string, int>
+     *     },
      *     por_bairro: array<int, array{bairro: string, total: int|null, faixas: array<string, int>|null, suprimido: bool}>,
      *     escolaridade: array<string, int>,
      *     renda: array<string, int>,
      *     cor_raca: array<string, int>,
      *     situacao_trabalho: array<string, int>,
+     *     sexo: array<string, int>,
+     *     estado_civil: array<string, int>,
+     *     parentesco: array<string, int>,
+     *     renda_formal_informal: array<string, int>,
      *     completude: array{
      *         total: int,
      *         com_data_nascimento: int,
@@ -32,11 +41,19 @@ class IndicadoresOcupantesMunicipioService
      *         com_renda_informada: int,
      *         com_cor_raca_informada: int,
      *         com_situacao_trabalho_informada: int,
+     *         com_sexo_informado: int,
+     *         com_estado_civil_informado: int,
+     *         com_parentesco_informado: int,
+     *         com_renda_formal_informal_informada: int,
      *         pct_data_nascimento: int,
      *         pct_escolaridade_informada: int,
      *         pct_renda_informada: int,
      *         pct_cor_raca_informada: int,
-     *         pct_situacao_trabalho_informada: int
+     *         pct_situacao_trabalho_informada: int,
+     *         pct_sexo_informado: int,
+     *         pct_estado_civil_informado: int,
+     *         pct_parentesco_informado: int,
+     *         pct_renda_formal_informal_informada: int
      *     },
      *     cruzamento_escolaridade_renda: array{
      *         linhas: array<string, string>,
@@ -77,10 +94,13 @@ class IndicadoresOcupantesMunicipioService
 
         $totalOcupantes = $moradores->count();
 
+        $refFam = (int) $moradores->filter(fn (Morador $m) => (bool) $m->mor_referencia_familiar)->count();
+
         return [
             'resumo' => [
                 'total_ocupantes' => $totalOcupantes,
                 'total_imoveis_com_ocupante' => Local::query()->whereHas('moradores')->count(),
+                'ocupantes_referencia_familiar' => $refFam,
                 'faixas_etarias' => $this->resumoOcupantes->contagemFaixasEtarias($moradores),
             ],
             'por_bairro' => $porBairro,
@@ -88,6 +108,10 @@ class IndicadoresOcupantesMunicipioService
             'renda' => $this->contagemPorChave($moradores, 'mor_renda_faixa'),
             'cor_raca' => $this->contagemPorChave($moradores, 'mor_cor_raca'),
             'situacao_trabalho' => $this->contagemPorChave($moradores, 'mor_situacao_trabalho'),
+            'sexo' => $this->contagemPorChave($moradores, 'mor_sexo'),
+            'estado_civil' => $this->contagemPorChave($moradores, 'mor_estado_civil'),
+            'parentesco' => $this->contagemPorChave($moradores, 'mor_parentesco'),
+            'renda_formal_informal' => $this->contagemPorChave($moradores, 'mor_renda_formal_informal'),
             'completude' => $this->completudePainel($moradores, $totalOcupantes),
             'cruzamento_escolaridade_renda' => $this->cruzamentoEscolaridadeRenda($moradores, $totalOcupantes, $minCelula, true),
             'minimo_aplicado' => $minimo,
@@ -101,16 +125,23 @@ class IndicadoresOcupantesMunicipioService
     {
         $moradores = $this->baseQueryMoradores()->get();
         $total = $moradores->count();
+        $refFamCsv = (int) $moradores->filter(fn (Morador $m) => (bool) $m->mor_referencia_familiar)->count();
+
         $painel = [
             'resumo' => [
                 'total_ocupantes' => $total,
                 'total_imoveis_com_ocupante' => Local::query()->whereHas('moradores')->count(),
+                'ocupantes_referencia_familiar' => $refFamCsv,
                 'faixas_etarias' => $this->resumoOcupantes->contagemFaixasEtarias($moradores),
             ],
             'escolaridade' => $this->contagemPorChave($moradores, 'mor_escolaridade'),
             'renda' => $this->contagemPorChave($moradores, 'mor_renda_faixa'),
             'cor_raca' => $this->contagemPorChave($moradores, 'mor_cor_raca'),
             'situacao_trabalho' => $this->contagemPorChave($moradores, 'mor_situacao_trabalho'),
+            'sexo' => $this->contagemPorChave($moradores, 'mor_sexo'),
+            'estado_civil' => $this->contagemPorChave($moradores, 'mor_estado_civil'),
+            'parentesco' => $this->contagemPorChave($moradores, 'mor_parentesco'),
+            'renda_formal_informal' => $this->contagemPorChave($moradores, 'mor_renda_formal_informal'),
             'completude' => $this->completudePainel($moradores, $total),
         ];
         $cruz = $this->cruzamentoEscolaridadeRenda($moradores, $total, 1, false);
@@ -130,6 +161,10 @@ class IndicadoresOcupantesMunicipioService
         $rendaLabels = config('visitaai_municipio.renda_faixa_opcoes', []);
         $corLabels = config('visitaai_municipio.cor_raca_opcoes', []);
         $trabLabels = config('visitaai_municipio.situacao_trabalho_opcoes', []);
+        $sexoLabels = config('visitaai_socioeconomico.sexo_opcoes', []);
+        $ecLabels = config('visitaai_socioeconomico.estado_civil_opcoes', []);
+        $parLabels = config('visitaai_socioeconomico.parentesco_opcoes', []);
+        $rfiLabels = config('visitaai_socioeconomico.renda_formal_informal_opcoes', []);
         $faixaLabels = config('visitaai_municipio.indicadores.colunas_faixas', []);
 
         fputcsv($fp, ['Visita Aí: indicadores ocupantes']);
@@ -139,6 +174,7 @@ class IndicadoresOcupantesMunicipioService
         fputcsv($fp, ['RESUMO']);
         fputcsv($fp, ['total_ocupantes', $painel['resumo']['total_ocupantes']]);
         fputcsv($fp, ['imoveis_com_ocupante', $painel['resumo']['total_imoveis_com_ocupante']]);
+        fputcsv($fp, ['ocupantes_referencia_familiar', $painel['resumo']['ocupantes_referencia_familiar']]);
         fputcsv($fp, []);
 
         fputcsv($fp, ['FAIXA_ETARIA']);
@@ -156,12 +192,20 @@ class IndicadoresOcupantesMunicipioService
         fputcsv($fp, ['renda_informada', $Q['com_renda_informada'], $Q['pct_renda_informada']]);
         fputcsv($fp, ['cor_raca_informada', $Q['com_cor_raca_informada'], $Q['pct_cor_raca_informada']]);
         fputcsv($fp, ['situacao_trabalho_informada', $Q['com_situacao_trabalho_informada'], $Q['pct_situacao_trabalho_informada']]);
+        fputcsv($fp, ['sexo_informado', $Q['com_sexo_informado'], $Q['pct_sexo_informado']]);
+        fputcsv($fp, ['estado_civil_informado', $Q['com_estado_civil_informado'], $Q['pct_estado_civil_informado']]);
+        fputcsv($fp, ['parentesco_informado', $Q['com_parentesco_informado'], $Q['pct_parentesco_informado']]);
+        fputcsv($fp, ['renda_formal_informal_informada', $Q['com_renda_formal_informal_informada'], $Q['pct_renda_formal_informal_informada']]);
         fputcsv($fp, []);
 
         $this->fputcsvDistribuicao($fp, 'ESCOLARIDADE', $painel['escolaridade'], $escLabels);
         $this->fputcsvDistribuicao($fp, 'RENDA_FAIXA', $painel['renda'], $rendaLabels);
         $this->fputcsvDistribuicao($fp, 'COR_RACA', $painel['cor_raca'], $corLabels);
         $this->fputcsvDistribuicao($fp, 'SITUACAO_TRABALHO', $painel['situacao_trabalho'], $trabLabels);
+        $this->fputcsvDistribuicao($fp, 'SEXO', $painel['sexo'], $sexoLabels);
+        $this->fputcsvDistribuicao($fp, 'ESTADO_CIVIL', $painel['estado_civil'], $ecLabels);
+        $this->fputcsvDistribuicao($fp, 'PARENTESCO_TITULAR', $painel['parentesco'], $parLabels);
+        $this->fputcsvDistribuicao($fp, 'RENDA_FORMAL_INFORMAL', $painel['renda_formal_informal'], $rfiLabels);
 
         fputcsv($fp, ['CRUZAMENTO_ESCOLARIDADE_RENDA_COMPLETO']);
         fputcsv($fp, ['sem_supressao_celula', '1']);
@@ -202,7 +246,8 @@ class IndicadoresOcupantesMunicipioService
         return Morador::query()
             ->select([
                 'mor_id', 'fk_local_id', 'mor_data_nascimento', 'mor_escolaridade', 'mor_renda_faixa',
-                'mor_cor_raca', 'mor_situacao_trabalho',
+                'mor_cor_raca', 'mor_situacao_trabalho', 'mor_sexo', 'mor_estado_civil', 'mor_parentesco',
+                'mor_renda_formal_informal', 'mor_referencia_familiar',
             ])
             ->with(['local' => fn ($q) => $q->select('loc_id', 'loc_bairro')]);
     }
@@ -216,11 +261,19 @@ class IndicadoresOcupantesMunicipioService
      *     com_renda_informada: int,
      *     com_cor_raca_informada: int,
      *     com_situacao_trabalho_informada: int,
+     *     com_sexo_informado: int,
+     *     com_estado_civil_informado: int,
+     *     com_parentesco_informado: int,
+     *     com_renda_formal_informal_informada: int,
      *     pct_data_nascimento: int,
      *     pct_escolaridade_informada: int,
      *     pct_renda_informada: int,
      *     pct_cor_raca_informada: int,
-     *     pct_situacao_trabalho_informada: int
+     *     pct_situacao_trabalho_informada: int,
+     *     pct_sexo_informado: int,
+     *     pct_estado_civil_informado: int,
+     *     pct_parentesco_informado: int,
+     *     pct_renda_formal_informal_informada: int
      * }
      */
     private function completudePainel(Collection $moradores, int $total): array
@@ -234,11 +287,19 @@ class IndicadoresOcupantesMunicipioService
                 'com_renda_informada' => 0,
                 'com_cor_raca_informada' => 0,
                 'com_situacao_trabalho_informada' => 0,
+                'com_sexo_informado' => 0,
+                'com_estado_civil_informado' => 0,
+                'com_parentesco_informado' => 0,
+                'com_renda_formal_informal_informada' => 0,
                 'pct_data_nascimento' => 0,
                 'pct_escolaridade_informada' => 0,
                 'pct_renda_informada' => 0,
                 'pct_cor_raca_informada' => 0,
                 'pct_situacao_trabalho_informada' => 0,
+                'pct_sexo_informado' => 0,
+                'pct_estado_civil_informado' => 0,
+                'pct_parentesco_informado' => 0,
+                'pct_renda_formal_informal_informada' => 0,
             ];
         }
 
@@ -247,6 +308,10 @@ class IndicadoresOcupantesMunicipioService
         $comRenda = 0;
         $comCor = 0;
         $comTrab = 0;
+        $comSexo = 0;
+        $comEc = 0;
+        $comPar = 0;
+        $comRfi = 0;
         foreach ($moradores as $m) {
             if ($m->mor_data_nascimento !== null) {
                 $comDn++;
@@ -267,6 +332,22 @@ class IndicadoresOcupantesMunicipioService
             if ($tr !== '' && $tr !== 'nao_informado') {
                 $comTrab++;
             }
+            $sx = (string) ($m->mor_sexo ?? '');
+            if ($sx !== '' && $sx !== 'nao_informado') {
+                $comSexo++;
+            }
+            $ec = (string) ($m->mor_estado_civil ?? '');
+            if ($ec !== '' && $ec !== 'nao_informado') {
+                $comEc++;
+            }
+            $par = (string) ($m->mor_parentesco ?? '');
+            if ($par !== '' && $par !== 'nao_informado') {
+                $comPar++;
+            }
+            $rfi = (string) ($m->mor_renda_formal_informal ?? '');
+            if ($rfi !== '' && $rfi !== 'nao_informado') {
+                $comRfi++;
+            }
         }
 
         return [
@@ -276,11 +357,19 @@ class IndicadoresOcupantesMunicipioService
             'com_renda_informada' => $comRenda,
             'com_cor_raca_informada' => $comCor,
             'com_situacao_trabalho_informada' => $comTrab,
+            'com_sexo_informado' => $comSexo,
+            'com_estado_civil_informado' => $comEc,
+            'com_parentesco_informado' => $comPar,
+            'com_renda_formal_informal_informada' => $comRfi,
             'pct_data_nascimento' => (int) round(100 * $comDn / $t),
             'pct_escolaridade_informada' => (int) round(100 * $comEsc / $t),
             'pct_renda_informada' => (int) round(100 * $comRenda / $t),
             'pct_cor_raca_informada' => (int) round(100 * $comCor / $t),
             'pct_situacao_trabalho_informada' => (int) round(100 * $comTrab / $t),
+            'pct_sexo_informado' => (int) round(100 * $comSexo / $t),
+            'pct_estado_civil_informado' => (int) round(100 * $comEc / $t),
+            'pct_parentesco_informado' => (int) round(100 * $comPar / $t),
+            'pct_renda_formal_informal_informada' => (int) round(100 * $comRfi / $t),
         ];
     }
 

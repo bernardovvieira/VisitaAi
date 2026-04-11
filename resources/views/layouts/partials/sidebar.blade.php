@@ -24,8 +24,10 @@
            class="sidebar-header-brand flex max-w-full flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-2">
             <img src="{{ asset('images/visitaai_rembg.png') }}"
                  alt="{{ __('Visita Aí') }}"
-                 class="h-8 w-auto shrink-0 lg:h-8" />
-            <span class="sidebar-brand-text whitespace-nowrap text-[13px] font-semibold leading-tight tracking-tight text-white">{{ __('Visita Aí') }}</span>
+                 width="28"
+                 height="28"
+                 class="h-7 w-auto shrink-0 object-contain lg:h-7" />
+            <span class="sidebar-brand-text whitespace-nowrap text-sm font-semibold leading-snug tracking-tight text-white">{{ __('Visita Aí') }}</span>
         </a>
         <button type="button"
                 class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
@@ -59,11 +61,11 @@
                                 :active="request()->routeIs('gestor.indicadores.ocupantes*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Indicadores dos imóveis') }}</span>
+                    <span class="truncate">{{ __('Indicadores') }}</span>
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Vigilância e relatórios')" />
+            <x-sidebar-nav-section :label="__('Vigilância')" />
             <x-sidebar-link :href="route('gestor.visitas.index')"
                             :active="request()->routeIs('gestor.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
@@ -83,19 +85,11 @@
                                 :active="request()->routeIs('gestor.relatorios.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-document-text class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Relatórios de vigilância') }}</span>
+                    <span class="truncate">{{ __('Relatórios') }}</span>
                 </x-sidebar-link>
             </div>
 
             <x-sidebar-nav-section :label="__('Equipe e sistema')" />
-            <div x-show="online" x-cloak>
-                <x-sidebar-link :href="route('gestor.pendentes')"
-                                :active="request()->routeIs('gestor.pendentes')"
-                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
-                    <x-heroicon-o-exclamation-triangle class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Pendentes') }}</span>
-                </x-sidebar-link>
-            </div>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.users.index')"
                                 :active="request()->routeIs('gestor.users.*')"

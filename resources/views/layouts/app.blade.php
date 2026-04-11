@@ -160,7 +160,7 @@
         @else
             @auth
                 <div id="authenticated-shell"
-                     class="flex min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50/35 dark:from-[rgb(3,7,18)] dark:via-slate-950 dark:to-slate-900"
+                     class="flex min-h-screen bg-slate-50 dark:bg-[rgb(3,7,18)]"
                      x-data="{
                         sidebarOpen: false,
                         sidebarDesktop: (function () {

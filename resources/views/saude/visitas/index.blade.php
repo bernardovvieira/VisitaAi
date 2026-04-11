@@ -4,7 +4,7 @@
 @section('og_description', __('Minhas visitas realizadas. Visualize, busque, edite ou remova suas visitas registradas.'))
 
 @section('content')
-<div class="v-page"
+<div class="v-page v-page--wide v-page--dense"
      x-data="{ online: true }"
      x-init="
        $nextTick(function() { online = typeof window.visitaConnectionOnline === 'boolean' ? window.visitaConnectionOnline : true; });
@@ -33,24 +33,35 @@
         <span id="visita-offline-pending-alert-msg"></span>
     </div>
 
-        <x-section-card class="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <div class="min-w-0 flex-1">
-                <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Ações rápidas') }}</h2>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Nova visita LIRAa ou envio dos rascunhos guardados.') }}</p>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ route('saude.visitas.create') }}"
-                   class="v-btn-compact v-btn-compact--blue">
-                    <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    {{ __('Nova visita LIRAa') }}
-                </a>
-                <span x-show="online" x-cloak>
-                    <a href="{{ route('saude.visitas.sync') }}"
-                       class="v-btn-compact v-btn-compact--amber">
-                        <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
-                        {{ __('Enviar visitas do dispositivo') }}
-                    </a>
-                </span>
+        <x-section-card class="v-card--muted">
+            <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(12rem,24rem)] lg:items-end">
+                <div class="min-w-0 space-y-3">
+                    <div>
+                        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Ações rápidas') }}</h2>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Nova visita LIRAa ou envio dos rascunhos guardados.') }}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="{{ route('saude.visitas.create') }}"
+                           class="v-btn-compact v-btn-compact--blue">
+                            <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                            {{ __('Nova visita LIRAa') }}
+                        </a>
+                        <span x-show="online" x-cloak>
+                            <a href="{{ route('saude.visitas.sync') }}"
+                               class="v-btn-compact v-btn-compact--amber">
+                                <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
+                                {{ __('Enviar visitas do dispositivo') }}
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+                    <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
+                           data-live-url="{{ route('saude.visitas.index') }}" data-live-param="busca"
+                           placeholder="{{ __('Local, atividade, pendentes ou data…') }}"
+                           class="v-input mt-1" />
+                </div>
             </div>
         </x-section-card>
 
@@ -73,14 +84,6 @@
                 </x-ui.callout>
             @endif
         @endif
-
-        <x-section-card class="v-card--muted">
-            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-            <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
-                   data-live-url="{{ route('saude.visitas.index') }}" data-live-param="busca"
-                   placeholder="{{ __('Local, atividade, pendentes ou data…') }}"
-                   class="v-input" />
-        </x-section-card>
 
         <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">

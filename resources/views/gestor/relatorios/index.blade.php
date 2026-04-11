@@ -76,8 +76,8 @@
         @@filtro-alterado.window="filtrosAlterados = true"
         class="space-y-4">
 
-        <div class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-start sm:justify-end">
-            <div class="flex max-w-xl flex-col items-end gap-2 text-right sm:max-w-md">
+        <div class="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-end">
+            <div class="flex w-full max-w-xl flex-col items-end gap-2 text-right sm:w-auto sm:max-w-md">
                 <p x-show="filtrosAlterados" x-cloak class="text-sm font-medium text-amber-600 dark:text-amber-400">
                     {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
                 </p>
@@ -92,7 +92,7 @@
                         return;
                     } gerarBase64Graficos();"
                     class="v-btn-export v-btn-export--pdf">
-                    <x-heroicon-o-document-arrow-down class="h-5 w-5" aria-hidden="true" />
+                    <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ __('Gerar relatório em PDF') }}
                 </button>
             </div>
@@ -283,7 +283,7 @@
             <h2 class="v-section-title text-base">{{ __('Indicadores do período') }}</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Valores conforme filtros aplicados.') }}</p>
         </div>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        <div class="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             <x-ui.stat-tile :heading="__('Total de visitas')">
                 <x-slot name="icon">
                     <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
@@ -325,7 +325,7 @@
             <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Cadastro complementar do imóvel') }}</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Imóveis vinculados às visitas do período filtrado.') }}</p>
         </div>
-        <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <div class="mt-3 grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             <x-ui.stat-tile :heading="__('Imóveis distintos no período')">
                 <x-slot name="icon">
                     <x-heroicon-o-home class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />

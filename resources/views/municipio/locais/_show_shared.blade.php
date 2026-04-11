@@ -20,7 +20,7 @@
 @endphp
 
 @if(! empty($fichaPdfUrl))
-    <p class="mb-4">
+    <p class="mb-4 flex justify-end">
         <a href="{{ $fichaPdfUrl }}"
            class="v-btn-export v-btn-export--pdf inline-flex no-underline">
             <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -111,40 +111,53 @@
             {{ __('A posição exibida é baseada nas coordenadas fornecidas.') }}
         </p>
     </div>
-</x-section-card>
 
-<x-section-card class="mt-6 space-y-4">
-    <h2 class="border-b border-gray-200 pb-2 text-lg font-semibold text-gray-800 dark:border-gray-700 dark:text-gray-200">
-        {{ __('Adesivo para consulta pública') }}
-    </h2>
-    <div class="flex justify-center bg-gray-100 p-8 dark:bg-gray-800/80">
-        <div id="adesivo" class="w-[300px] bg-white p-6 text-center text-gray-800 shadow-sm dark:bg-gray-900 dark:text-gray-100">
-            <p class="mb-3 text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                {{ __('Visita Aí | Consulta pública') }}
-            </p>
-            <p class="mb-4 text-sm leading-snug">
-                {{ $local->loc_endereco }}, {{ $numeroExibicao }}<br>
-                <span class="text-gray-600 dark:text-gray-400">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
-            </p>
-            <div class="flex justify-center">
-                <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="{{ __('QR Code para consulta pública') }}" class="block h-32 w-32">
+    <div class="mt-6 border-t border-slate-200/90 pt-5 dark:border-slate-700/80">
+        <h3 class="v-section-title mb-3">{{ __('Consulta pública · adesivo') }}</h3>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex min-w-0 items-start gap-3">
+                <img
+                    src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}"
+                    alt=""
+                    width="56"
+                    height="56"
+                    class="h-14 w-14 shrink-0 rounded-md border border-slate-200 bg-white object-contain dark:border-slate-600 dark:bg-slate-900"
+                    decoding="async"
+                />
+                <div class="min-w-0 text-xs leading-snug text-slate-600 dark:text-slate-400">
+                    <p class="font-medium text-slate-800 dark:text-slate-200">{{ __('QR para o morador consultar visitas pelo código.') }}</p>
+                    <p class="mt-1 break-all font-mono text-[10px] text-slate-500 dark:text-slate-500">{{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}</p>
+                </div>
             </div>
-            <p class="mt-4 break-all px-1 text-center font-mono text-[10px] leading-tight text-gray-500 dark:text-gray-400">{{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}</p>
-            <p class="mt-5 text-[9px] text-gray-400 dark:text-gray-500">{{ __('Bitwise Technologies') }}</p>
+            <div class="flex shrink-0 flex-col items-stretch gap-2 sm:items-end">
+                <button type="button" onclick="baixarAdesivo()"
+                        class="v-btn-slate inline-flex items-center justify-center gap-2">
+                    <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {{ __('Salvar adesivo') }}
+                </button>
+                <p class="max-w-xs text-[11px] text-slate-500 dark:text-slate-400 sm:text-right">
+                    {{ __('Gera imagem para imprimir e colar no imóvel.') }}
+                </p>
+            </div>
         </div>
     </div>
-
-    <div class="pt-4 text-center">
-        <button type="button" onclick="baixarAdesivo()"
-                class="v-btn-slate mt-4 inline-flex gap-2">
-            <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ __('Salvar adesivo') }}
-        </button>
-        <p class="mt-3 pt-2 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('O adesivo pode ser impresso e colado no local para facilitar o acesso à consulta pública.') }}
-        </p>
-    </div>
 </x-section-card>
+
+{{-- Layout completo só para exportação PNG (fora da tela) --}}
+<div id="adesivo" class="fixed left-[-9999px] top-0 w-[300px] bg-white p-6 text-center text-gray-800 shadow-sm dark:bg-gray-900 dark:text-gray-100" aria-hidden="true">
+    <p class="mb-3 text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+        {{ __('Visita Aí | Consulta pública') }}
+    </p>
+    <p class="mb-4 text-sm leading-snug">
+        {{ $local->loc_endereco }}, {{ $numeroExibicao }}<br>
+        <span class="text-gray-600 dark:text-gray-400">{{ $local->loc_bairro }} · {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
+    </p>
+    <div class="flex justify-center">
+        <img src="data:{{ $qrCodeMime ?? 'image/png' }};base64,{{ $qrCodeBase64 }}" alt="" class="block h-32 w-32" width="128" height="128">
+    </div>
+    <p class="mt-4 break-all px-1 text-center font-mono text-[10px] leading-tight text-gray-500 dark:text-gray-400">{{ route('consulta.codigo', ['codigo' => $local->loc_codigo_unico]) }}</p>
+    <p class="mt-5 text-[9px] text-gray-400 dark:text-gray-500">{{ __('Bitwise Technologies') }}</p>
+</div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }</style>

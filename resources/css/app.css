@@ -3,15 +3,22 @@
 @tailwind utilities;
 
 /*
- * Design system: console minimalista e refinado:
- * canvas quase plano, cartões com hairline + sombra mínima, tipografia sem excesso de peso,
- * hierarquia eyebrow → título → corpo, tabelas uniformes com hover discreto, azul só onde guia ação.
+ * Visita Aí: design system (app autenticada + público alinhado).
+ * Superfície plana, borda fina, sombra mínima; sem “vidro” pesado.
+ * Hierarquia: eyebrow → título → corpo; controles em rounded-md alinhados a v-input/v-select.
+ * Acento azul só em ação primária e foco; tabelas e listas com hover discreto.
  */
 @layer base {
     @media (prefers-reduced-motion: reduce) {
         html {
             scroll-behavior: auto;
         }
+    }
+
+    html {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     :root {
@@ -203,14 +210,7 @@
         scrollbar-gutter: stable;
         scrollbar-width: thin;
         scrollbar-color: rgb(var(--v-border-strong) / 0.65) transparent;
-        /* Fundo quase sólido: leve nuance no canto (minimalista, sem “vidro” no canvas) */
-        background: linear-gradient(
-            165deg,
-            rgb(var(--v-canvas) / 1) 0%,
-            rgb(251 252 253) 52%,
-            rgb(248 250 252) 100%
-        );
-        background-attachment: fixed;
+        background-color: rgb(var(--v-canvas) / 1);
     }
 
     .v-app-main::-webkit-scrollbar {
@@ -230,8 +230,7 @@
     }
 
     .dark .v-app-main {
-        background: linear-gradient(165deg, rgb(3 7 18) 0%, rgb(15 23 42 / 0.98) 100%);
-        background-attachment: fixed;
+        background-color: rgb(var(--v-canvas) / 1);
     }
 
     .v-app-main-inner {
@@ -264,8 +263,9 @@
         @apply w-full min-w-0 flex-1 space-y-3 pt-0.5;
     }
 
+    /* Altura próxima ao bloco do título (1–2 linhas) para não desparelhar do texto ao lado */
     .welcome-public__logo {
-        @apply mx-auto h-[4.5rem] w-[4.5rem] shrink-0 object-contain sm:mx-0 sm:h-24 sm:w-24 lg:h-28 lg:w-28 xl:h-32 xl:w-32;
+        @apply mx-auto h-16 w-16 shrink-0 object-contain sm:mx-0 sm:h-[4.25rem] sm:w-[4.25rem] lg:h-[4.5rem] lg:w-[4.5rem] xl:h-20 xl:w-20;
     }
 
     .welcome-public__kicker {
@@ -291,6 +291,94 @@
     /* Mesmo visual dos links públicos, para <button> (ex.: baixar QR) */
     .welcome-public__link-btn {
         @apply inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-left text-xs font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 dark:text-slate-400 dark:hover:text-slate-200;
+    }
+
+    /* Pilha e tipografia comuns: página inicial + consulta pública (mesmo ritmo) */
+    .public-page__stack {
+        @apply w-full space-y-8 lg:space-y-10;
+    }
+
+    .public-page__hero-aside {
+        @apply flex w-full shrink-0 flex-col items-center gap-4 sm:w-auto sm:items-start;
+    }
+
+    .public-hero-actions {
+        @apply mt-6 flex w-full flex-wrap items-center gap-x-4 gap-y-2 sm:mt-7;
+    }
+
+    .public-section-title {
+        @apply text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50;
+    }
+
+    .public-section-lead {
+        @apply mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-400;
+    }
+
+    .public-prose {
+        @apply max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-400;
+    }
+
+    .public-form-label {
+        @apply block text-sm font-medium text-slate-700 dark:text-slate-300;
+    }
+
+    .public-help-text {
+        @apply text-sm leading-relaxed text-slate-500 dark:text-slate-400;
+    }
+
+    .public-chip-link {
+        @apply inline-flex rounded-md border border-slate-200/80 bg-white/80 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-600/70 dark:bg-slate-900/40 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:text-slate-100;
+    }
+
+    .public-actions-footer {
+        @apply flex flex-col items-stretch gap-3 pt-6 sm:items-center;
+    }
+
+    .public-empty {
+        @apply border-t border-slate-200/80 px-6 py-10 text-center dark:border-slate-700/80;
+    }
+
+    .public-empty--amber {
+        @apply border-amber-200/80 bg-amber-50/60 dark:border-amber-900/40 dark:bg-amber-950/25;
+    }
+
+    .public-badge {
+        @apply inline-block rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200;
+    }
+
+    .public-badge--amber {
+        @apply bg-amber-100 font-semibold text-amber-900 dark:bg-amber-950/50 dark:text-amber-200;
+    }
+
+    .public-badge--muted {
+        @apply bg-slate-100 font-medium text-slate-700 dark:bg-slate-600 dark:text-slate-200;
+    }
+
+    .public-kv {
+        @apply grid gap-x-4 gap-y-3 text-sm text-slate-800 dark:text-slate-200;
+        grid-template-columns: minmax(0, 7.25rem) minmax(0, 1fr);
+    }
+
+    @media (min-width: 640px) {
+        .public-kv {
+            grid-template-columns: 9rem minmax(0, 1fr);
+        }
+    }
+
+    .public-kv dt {
+        @apply font-medium text-slate-500 dark:text-slate-400;
+    }
+
+    .public-kv dd {
+        @apply min-w-0 leading-relaxed text-slate-800 dark:text-slate-100;
+    }
+
+    .public-card-eyebrow {
+        @apply min-h-[2.5rem] text-[11px] font-medium uppercase leading-snug tracking-[0.14em] text-slate-400 line-clamp-2 dark:text-slate-500;
+    }
+
+    .public-card-text {
+        @apply mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400;
     }
 
     /* Guest auth (layouts/guest): canvas e campos alinhados ao azul do sistema (--v-accent) */
@@ -347,7 +435,7 @@
      * Pesquisa = só faixa lateral + campos alinhados ao guest; blocos = painel leve com cabeçalho tintado.
      */
     .consulta-public-search {
-        @apply rounded-lg border border-slate-200/80 bg-white dark:border-slate-700/55 dark:bg-slate-900/45;
+        @apply rounded-lg border border-slate-200/80 bg-white p-6 dark:border-slate-700/55 dark:bg-slate-900/45;
         border-left: 3px solid rgb(var(--v-accent) / 1);
         box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
     }
@@ -398,7 +486,7 @@
     }
 
     .consulta-public-panel__head {
-        @apply border-b border-slate-200/70 dark:border-slate-700/60;
+        @apply border-b border-slate-200/70 px-6 py-5 dark:border-slate-700/60;
         background-color: rgb(var(--v-accent) / 0.07);
     }
 
@@ -407,7 +495,7 @@
     }
 
     .consulta-public-detail {
-        @apply rounded-lg border border-slate-200/80 bg-white dark:border-slate-700/55 dark:bg-slate-900/45;
+        @apply rounded-lg border border-slate-200/80 bg-white p-6 dark:border-slate-700/55 dark:bg-slate-900/45;
         border-left: 3px solid rgb(var(--v-accent) / 0.88);
         box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
     }
@@ -433,12 +521,49 @@
         box-shadow: 0 1px 0 0 rgb(0 0 0 / 0.35);
     }
 
+    /* Página: ritmo vertical consistente (use v-stack dentro de secções) */
     .v-page {
-        @apply mx-auto max-w-7xl space-y-6;
+        @apply mx-auto max-w-7xl space-y-5;
+    }
+
+    .v-page.v-page--dense {
+        @apply space-y-4;
+    }
+
+    .v-page.v-page--loose {
+        @apply space-y-8;
+    }
+
+    /* Listagens operacionais: mais largura útil em desktop e menos espaço vertical entre blocos */
+    .v-page--wide {
+        @apply max-w-[min(100%,100rem)] 2xl:max-w-[min(100%,112rem)];
+    }
+
+    /* Pilha vertical padrão (formulários, secções internas) */
+    .v-stack {
+        @apply flex flex-col gap-4;
+    }
+
+    .v-stack--dense {
+        @apply gap-3;
+    }
+
+    .v-stack--tight {
+        @apply gap-2;
+    }
+
+    /* Linha de ações (exportar, secundário): alinhamento à direita */
+    .v-actions-end {
+        @apply flex flex-wrap items-center justify-end gap-2;
+    }
+
+    /* Barra de filtros colada à tabela (meta + busca no mesmo cartão) */
+    .v-list-toolbar {
+        @apply border-b border-slate-200/80 bg-slate-50/70 p-4 sm:p-5 dark:border-slate-700/70 dark:bg-slate-900/35;
     }
 
     .v-page-header {
-        @apply mb-0 border-b border-slate-200/80 pb-5 dark:border-slate-700/70;
+        @apply mb-0 border-b border-slate-200/70 pb-4 dark:border-slate-700/60;
     }
 
     .v-page-eyebrow {
@@ -472,15 +597,13 @@
         border-radius: var(--v-radius-2xl);
         border: 1px solid rgb(var(--v-border) / 0.75);
         background-color: rgb(var(--v-surface) / 1);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-        backdrop-filter: blur(10px) saturate(120%);
-        -webkit-backdrop-filter: blur(10px) saturate(120%);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.035);
     }
 
     .dark .v-card {
         background-color: rgb(var(--v-surface) / 0.92);
         border-color: rgb(var(--v-border) / 0.55);
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
     }
 
     .v-card--muted {
@@ -509,13 +632,11 @@
         @apply overflow-hidden border bg-white dark:border-slate-700 dark:bg-slate-900/80;
         border-radius: var(--v-radius-2xl);
         border-color: rgb(var(--v-border) / 0.75);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-        backdrop-filter: blur(10px) saturate(120%);
-        -webkit-backdrop-filter: blur(10px) saturate(120%);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.035);
     }
 
     .dark .v-panel {
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
     }
 
     /* Navegação lateral: silhueta contínua, sombra contida */
@@ -734,7 +855,7 @@
     }
 
     .v-empty-state__icon {
-        @apply mb-2 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500;
+        @apply mb-2 flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500;
     }
 
     .v-empty-state__title {
@@ -782,13 +903,11 @@
 
     .v-dash-card {
         @apply flex flex-col rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-600/70 dark:bg-slate-900/70;
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-        backdrop-filter: blur(8px) saturate(120%);
-        -webkit-backdrop-filter: blur(8px) saturate(120%);
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.035);
     }
 
     .dark .v-dash-card {
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
     }
 
     .v-dash-card__head {
@@ -805,7 +924,7 @@
     }
 
     .v-kpi-grid-agi {
-        @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3;
+        @apply grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-3;
     }
 
     .v-kpi-grid-agi--dense {
@@ -813,7 +932,7 @@
     }
 
     .v-kpi-card-agi {
-        @apply flex flex-col gap-1 rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-600/70 dark:bg-slate-900/70;
+        @apply flex h-full min-h-0 flex-col gap-1 rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-600/70 dark:bg-slate-900/70;
         box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
         backdrop-filter: blur(8px) saturate(120%);
         -webkit-backdrop-filter: blur(8px) saturate(120%);
@@ -824,7 +943,7 @@
     }
 
     .v-kpi-card-agi__label {
-        @apply text-[11px] font-medium uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400;
+        @apply line-clamp-2 min-h-[2.5rem] text-[11px] font-medium uppercase leading-snug tracking-[0.08em] text-slate-500 dark:text-slate-400;
     }
 
     .v-kpi-card-agi__value {
@@ -935,7 +1054,7 @@
     }
 
     .v-dash-alert {
-        @apply flex flex-wrap items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium;
+        @apply flex flex-wrap items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium;
     }
 
     .v-dash-alert--warn {
@@ -956,30 +1075,26 @@
 
     /* Trilho de navegação estrutural: respiro antes do título */
     .v-breadcrumbs {
-        @apply mb-4 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
+        @apply mb-3 border-0 bg-transparent p-0 shadow-none dark:shadow-none;
     }
 
     /* ─── Componentes Blade: botões ───────────────────────────────────────── */
     .v-btn-primary {
-        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-blue-600 px-3.5 py-2 text-[13px] font-medium text-white transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
-        box-shadow: 0 1px 2px rgb(37 99 235 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.12);
+        @apply inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/45 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 1px 2px rgb(37 99 235 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.1);
     }
 
     .v-btn-primary:hover:not(:disabled) {
-        box-shadow: 0 2px 8px rgb(37 99 235 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.15);
+        box-shadow: 0 2px 6px rgb(37 99 235 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.12);
     }
 
     .v-btn-success {
-        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-emerald-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-emerald-700 active:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
-        box-shadow:
-            0 2px 10px rgb(5 150 105 / 0.35),
-            inset 0 1px 0 rgb(255 255 255 / 0.14);
+        @apply inline-flex items-center justify-center rounded-md border border-transparent bg-emerald-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-emerald-700 active:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 1px 2px rgb(5 150 105 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.1);
     }
 
     .v-btn-success:hover:not(:disabled) {
-        box-shadow:
-            0 4px 16px rgb(5 150 105 / 0.42),
-            inset 0 1px 0 rgb(255 255 255 / 0.18);
+        box-shadow: 0 2px 8px rgb(5 150 105 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.12);
     }
 
     /* Listagens / formulários: CTAs menores que v-btn-primary */
@@ -1026,50 +1141,48 @@
     }
 
     .v-btn-secondary {
-        @apply inline-flex items-center justify-center rounded-xl border border-slate-200/90 bg-white px-3.5 py-2 text-[13px] font-medium text-slate-800 transition hover:border-slate-300 hover:bg-slate-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
+        @apply inline-flex items-center justify-center rounded-md border border-slate-200/90 bg-white px-3.5 py-2 text-[13px] font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900;
         box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-        backdrop-filter: blur(6px) saturate(120%);
-        -webkit-backdrop-filter: blur(6px) saturate(120%);
     }
 
     .v-btn-danger {
-        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-red-500 active:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/45 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
-        box-shadow: 0 2px 8px rgb(220 38 38 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.12);
+        @apply inline-flex items-center justify-center rounded-md border border-transparent bg-red-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:bg-red-500 active:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/45 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-900;
+        box-shadow: 0 1px 2px rgb(220 38 38 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.08);
     }
 
-    /* Par de CTAs de exportação: CSV (planilha) + PDF: mesmo peso visual */
+    /* Exportação CSV/PDF: tamanho sm (compacto), mesmo peso visual entre variantes */
     .v-btn-export {
-        @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-semibold tracking-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900;
+        @apply inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-semibold leading-tight tracking-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900;
     }
 
     .v-btn-export svg {
-        @apply shrink-0 opacity-95;
+        @apply h-4 w-4 shrink-0 opacity-95;
     }
 
     .v-btn-export--sheet {
         @apply border-emerald-800/20 bg-emerald-600 text-white hover:bg-emerald-500 active:bg-emerald-700 focus-visible:ring-emerald-500/50 dark:border-emerald-400/20 dark:bg-emerald-600 dark:hover:bg-emerald-500;
         box-shadow:
-            0 2px 10px rgb(5 150 105 / 0.32),
-            inset 0 1px 0 rgb(255 255 255 / 0.14);
+            0 1px 6px rgb(5 150 105 / 0.22),
+            inset 0 1px 0 rgb(255 255 255 / 0.12);
     }
 
     .v-btn-export--sheet:hover {
         box-shadow:
-            0 4px 16px rgb(5 150 105 / 0.4),
-            inset 0 1px 0 rgb(255 255 255 / 0.16);
+            0 2px 10px rgb(5 150 105 / 0.28),
+            inset 0 1px 0 rgb(255 255 255 / 0.14);
     }
 
     .v-btn-export--pdf {
         @apply border-red-900/25 bg-red-600 text-white hover:bg-red-500 active:bg-red-700 focus-visible:ring-red-500/45 dark:border-red-400/25 dark:bg-red-600 dark:hover:bg-red-500;
         box-shadow:
-            0 2px 10px rgb(220 38 38 / 0.32),
-            inset 0 1px 0 rgb(255 255 255 / 0.12);
+            0 1px 6px rgb(220 38 38 / 0.22),
+            inset 0 1px 0 rgb(255 255 255 / 0.1);
     }
 
     .v-btn-export--pdf:hover {
         box-shadow:
-            0 4px 16px rgb(220 38 38 / 0.38),
-            inset 0 1px 0 rgb(255 255 255 / 0.14);
+            0 2px 10px rgb(220 38 38 / 0.3),
+            inset 0 1px 0 rgb(255 255 255 / 0.12);
     }
 
     .v-btn-export:disabled,
@@ -1079,12 +1192,12 @@
 
     /* Ação primária em modo offline / rascunho (âmbar, mesmo peso visual do azul) */
     .v-btn-amber-solid {
-        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-amber-500 px-3.5 py-2 text-[13px] font-semibold text-amber-950 shadow-sm transition hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/35 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-50 dark:focus-visible:ring-offset-slate-900;
+        @apply inline-flex items-center justify-center rounded-md border border-transparent bg-amber-500 px-3.5 py-2 text-[13px] font-semibold text-amber-950 shadow-sm transition hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/35 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-50 dark:focus-visible:ring-offset-slate-900;
     }
 
     /* CTA neutra escura (download secundário, 2FA) */
     .v-btn-slate {
-        @apply inline-flex items-center justify-center rounded-xl border border-transparent bg-slate-600 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-600 dark:hover:bg-slate-500 dark:focus-visible:ring-offset-slate-900;
+        @apply inline-flex items-center justify-center rounded-md border border-transparent bg-slate-600 px-3.5 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/40 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-600 dark:hover:bg-slate-500 dark:focus-visible:ring-offset-slate-900;
     }
 
     /* Modal (Livewire / Alpine) */
@@ -1160,13 +1273,13 @@
     }
 
     .v-pagination-btn--current {
-        @apply border-blue-600 bg-blue-600 text-white shadow-md hover:border-blue-600 hover:bg-blue-600 dark:border-blue-500 dark:bg-blue-600 dark:hover:bg-blue-600;
-        box-shadow: 0 2px 8px rgb(37 99 235 / 0.35);
+        @apply border-blue-600 bg-blue-600 text-white shadow-sm hover:border-blue-600 hover:bg-blue-600 dark:border-blue-500 dark:bg-blue-600 dark:hover:bg-blue-600;
+        box-shadow: 0 1px 3px rgb(37 99 235 / 0.25);
     }
 
     /* Alertas inline (x-alert) */
     .v-alert {
-        @apply mb-4 rounded-xl border px-3.5 py-2.5 text-sm font-medium leading-snug shadow-none backdrop-blur-sm;
+        @apply mb-3 rounded-md border px-3 py-2.5 text-sm font-medium leading-snug shadow-none;
     }
 
     .v-alert--success {
