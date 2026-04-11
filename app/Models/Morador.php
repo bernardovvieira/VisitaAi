@@ -40,6 +40,7 @@ class Morador extends Model
         'mor_telefone',
         'mor_rg_numero',
         'mor_rg_orgao',
+        'mor_rg_expedicao',
         'mor_cpf',
         'mor_documento_pessoal_path',
         'mor_documento_pessoal_nome',
@@ -55,6 +56,7 @@ class Morador extends Model
     {
         return [
             'mor_data_nascimento' => 'date',
+            'mor_rg_expedicao' => 'date',
             'mor_referencia_familiar' => 'boolean',
         ];
     }

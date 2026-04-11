@@ -25,7 +25,7 @@
         <div class="space-y-5 xl:col-span-2">
             <dl class="grid grid-cols-1 gap-x-4 gap-y-3 text-sm text-gray-700 dark:text-gray-300 sm:grid-cols-3">
                 <div class="sm:col-span-3">
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código único do imóvel') }}</dt>
+                    <dt class="text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ __('Código único do imóvel') }}</dt>
                     <dd class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
                         <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_codigo_unico }}</span>
                         @if($local->isPrimary())
@@ -85,12 +85,12 @@
         <aside class="space-y-3 xl:col-span-1">
             <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h3>
             <div id="map" class="h-52 rounded-lg border border-gray-300 shadow-sm dark:border-gray-600 dark:shadow-none"></div>
-            <dl class="grid grid-cols-1 gap-2 rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-xs dark:border-slate-700/70 dark:bg-slate-900/45">
-                <div>
+            <dl class="grid grid-cols-2 gap-3 rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-xs dark:border-slate-700/70 dark:bg-slate-900/45">
+                <div class="min-w-0">
                     <dt class="font-medium text-slate-500 dark:text-slate-400">{{ __('Latitude') }}</dt>
                     <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $local->loc_latitude }}</dd>
                 </div>
-                <div>
+                <div class="min-w-0">
                     <dt class="font-medium text-slate-500 dark:text-slate-400">{{ __('Longitude') }}</dt>
                     <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $local->loc_longitude }}</dd>
                 </div>

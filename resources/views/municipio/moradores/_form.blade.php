@@ -7,6 +7,7 @@
     $ec = config('visitaai_socioeconomico.estado_civil_opcoes', []);
     $par = config('visitaai_socioeconomico.parentesco_opcoes', []);
     $rfi = config('visitaai_socioeconomico.renda_formal_informal_opcoes', []);
+    $relacaoFamiliar = old('mor_referencia_familiar', $morador->mor_referencia_familiar) ? 'titular' : (filled(old('mor_parentesco', $morador->mor_parentesco)) ? 'par:' . old('mor_parentesco', $morador->mor_parentesco) : '');
 @endphp
 
 <div class="space-y-5">
@@ -58,27 +59,25 @@
                 <x-text-input id="mor_naturalidade" name="mor_naturalidade" type="text" class="mt-1 block w-full" :value="old('mor_naturalidade', $morador->mor_naturalidade)" />
                 <x-input-error :messages="$errors->get('mor_naturalidade')" class="mt-2" />
             </div>
-            <div>
-                <x-input-label for="mor_telefone" :value="__('Telefone')" />
-                <x-text-input id="mor_telefone" name="mor_telefone" type="text" class="mt-1 block w-full" :value="old('mor_telefone', $morador->mor_telefone)" />
-                <x-input-error :messages="$errors->get('mor_telefone')" class="mt-2" />
-            </div>
-            <div class="lg:col-span-2">
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="hidden" name="mor_referencia_familiar" value="0">
-                    <input type="checkbox" id="mor_referencia_familiar" name="mor_referencia_familiar" value="1" class="rounded border-slate-300" @checked(old('mor_referencia_familiar', $morador->mor_referencia_familiar))>
-                    <x-input-label for="mor_referencia_familiar" :value="__('Referência familiar (titular)')" class="!mb-0" />
+            <div class="lg:col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <x-input-label for="mor_telefone" :value="__('Telefone')" />
+                    <x-text-input id="mor_telefone" name="mor_telefone" type="text" class="mt-1 block w-full" :value="old('mor_telefone', $morador->mor_telefone)" />
+                    <x-input-error :messages="$errors->get('mor_telefone')" class="mt-2" />
                 </div>
-            </div>
-            <div class="lg:col-span-2">
-                <x-input-label for="mor_parentesco" :value="__('Parentesco com o titular')" />
-                <select id="mor_parentesco" name="mor_parentesco" class="v-select mt-1 w-full">
-                    <option value="">{{ __('Selecionar') }}</option>
-                    @foreach($par as $k => $label)
-                        <option value="{{ $k }}" @selected(old('mor_parentesco', $morador->mor_parentesco) === $k)>{{ $label }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :messages="$errors->get('mor_parentesco')" class="mt-2" />
+                <div x-data="{ relacaoFamiliar: @js($relacaoFamiliar) }">
+                    <x-input-label for="mor_relacao_familiar" :value="__('Relação familiar')" />
+                    <select id="mor_relacao_familiar" x-model="relacaoFamiliar" class="v-select mt-1 w-full">
+                        <option value="">{{ __('Selecionar') }}</option>
+                        <option value="titular">{{ __('Titular da ficha') }}</option>
+                        @foreach($par as $k => $label)
+                            <option value="par:{{ $k }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="mor_referencia_familiar" x-bind:value="relacaoFamiliar === 'titular' ? 1 : 0">
+                    <input type="hidden" name="mor_parentesco" x-bind:value="relacaoFamiliar && relacaoFamiliar.startsWith('par:') ? relacaoFamiliar.slice(4) : ''">
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Use este campo para indicar se a pessoa é titular da ficha ou qual é o parentesco.') }}</p>
+                </div>
             </div>
             <div class="lg:col-span-2">
                 <x-input-label for="mor_observacao" :value="__('Observações')" />
@@ -156,6 +155,10 @@
                 <x-input-label for="mor_rg_orgao" :value="__('RG (órgão)')" />
                 <x-text-input id="mor_rg_orgao" name="mor_rg_orgao" type="text" class="mt-1 block w-full" :value="old('mor_rg_orgao', $morador->mor_rg_orgao)" />
             </div>
+            <div>
+                <x-input-label for="mor_rg_expedicao" :value="__('RG (expedição)')" />
+                <x-text-input id="mor_rg_expedicao" name="mor_rg_expedicao" type="date" class="mt-1 block w-full" :value="old('mor_rg_expedicao', optional($morador->mor_rg_expedicao)->format('Y-m-d'))" />
+            </div>
             <div class="lg:col-span-3">
                 <x-input-label for="mor_cpf" :value="__('CPF')" />
                 <x-text-input id="mor_cpf" name="mor_cpf" type="text" class="mt-1 block w-full" :value="old('mor_cpf', $morador->mor_cpf)" />
@@ -166,7 +169,7 @@
                     openPicker() { this.$refs.documentoPessoal.click(); },
                     updateName(event) { this.fileName = event.target.files && event.target.files.length ? event.target.files[0].name : ''; }
                  }">
-                <x-input-label for="mor_documento_pessoal" :value="__('Documento pessoal (arquivo ou foto)')" />
+                <x-input-label for="mor_documento_pessoal" :value="__('Documento pessoal')" />
                 <input
                     x-ref="documentoPessoal"
                     id="mor_documento_pessoal"

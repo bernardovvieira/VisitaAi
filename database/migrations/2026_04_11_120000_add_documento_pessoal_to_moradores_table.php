@@ -21,6 +21,9 @@ return new class extends Migration
             if (! Schema::hasColumn('moradores', 'mor_documento_pessoal_tamanho')) {
                 $table->unsignedBigInteger('mor_documento_pessoal_tamanho')->nullable()->after('mor_documento_pessoal_mime');
             }
+                if (! Schema::hasColumn('moradores', 'mor_rg_expedicao')) {
+                    $table->date('mor_rg_expedicao')->nullable()->after('mor_rg_orgao');
+                }
         });
     }
 
@@ -32,6 +35,7 @@ return new class extends Migration
                 'mor_documento_pessoal_mime',
                 'mor_documento_pessoal_nome',
                 'mor_documento_pessoal_path',
+                    'mor_rg_expedicao',
             ] as $col) {
                 if (Schema::hasColumn('moradores', $col)) {
                     $table->dropColumn($col);

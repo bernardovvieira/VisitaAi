@@ -144,10 +144,11 @@
             <ul class="mt-3 space-y-3 text-xs text-slate-800 dark:text-slate-200 sm:text-sm">
                 @foreach($visitasComObs as $vis)
                     <li>
-                        <x-ui.disclosure variant="muted-card-simple" class="!rounded-lg !border !border-slate-200/80 !bg-white/70 dark:!border-slate-700/80 dark:!bg-slate-900/40">
+                        <x-ui.disclosure variant="muted-card-simple" class="group !rounded-lg !border !border-slate-200/80 !bg-white/70 dark:!border-slate-700/80 dark:!bg-slate-900/40">
                             <x-slot name="summary">
-                                <span class="text-sm font-medium text-slate-900 dark:text-slate-100">
+                                <span class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-slate-100">
                                     {{ __('Visita') }} #{{ $vis->vis_id }}, {{ $vis->vis_data ? \Carbon\Carbon::parse($vis->vis_data)->format('d/m/Y') : __('N/D') }}
+                                    <x-heroicon-o-chevron-down class="h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
                                 </span>
                             </x-slot>
                             <ul class="space-y-1.5 border-t border-slate-100 pt-2 dark:border-slate-700/80">

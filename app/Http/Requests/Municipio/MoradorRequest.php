@@ -24,6 +24,7 @@ class MoradorRequest extends FormRequest
             'mor_sexo' => $this->mor_sexo === '' ? null : $this->mor_sexo,
             'mor_estado_civil' => $this->mor_estado_civil === '' ? null : $this->mor_estado_civil,
             'mor_parentesco' => $this->mor_parentesco === '' ? null : $this->mor_parentesco,
+            'mor_rg_expedicao' => $this->mor_rg_expedicao === '' ? null : $this->mor_rg_expedicao,
             'mor_renda_formal_informal' => $this->mor_renda_formal_informal === '' ? null : $this->mor_renda_formal_informal,
         ]);
     }
@@ -55,6 +56,7 @@ class MoradorRequest extends FormRequest
             'mor_telefone' => ['nullable', 'string', 'max:40'],
             'mor_rg_numero' => ['nullable', 'string', 'max:45'],
             'mor_rg_orgao' => ['nullable', 'string', 'max:60'],
+            'mor_rg_expedicao' => ['nullable', 'date'],
             'mor_cpf' => ['nullable', 'string', 'max:20'],
             'mor_documento_pessoal' => ['nullable', 'file', 'max:10240', 'mimetypes:application/pdf,image/jpeg,image/png,image/webp,image/heic,image/heif'],
             'remover_documento_pessoal' => ['nullable', 'boolean'],
