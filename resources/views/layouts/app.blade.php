@@ -13,7 +13,7 @@
             $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));
             $ogTitle = $ogTitle ?: config('app.name');
             $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
-            $ogDescription = $ogDescription ?: __('Sistema de apoio à vigilância entomológica e controle vetorial municipal. Acompanhe, consulte e controle visitas de forma ágil e segura.');
+            $ogDescription = $ogDescription ?: __('Plataforma municipal: indicadores e painéis com abrangência ampla, alimentados por cadastro de imóveis e visitas de campo. Vigilância entomológica, LIRAa e PNCD são funções especializadas quando o município adota. Consulta pública por código, sem dados clínicos.');
             $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
             $ogImage = $ogImage ?: rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
             $ogUrl = url()->current();

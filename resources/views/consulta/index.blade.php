@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Consulta pública'))
-@section('og_description', __('Consulta pública pelo código do imóvel: gratuita, sem cadastro e sem dados clínicos. Histórico de visitas de campo e vigilância em saúde, conforme a operação municipal. Cadastro complementar do imóvel não aparece aqui: só o vinculado à transparência das visitas.'))
+@section('og_description', __('Consulta pública pelo código do imóvel: transparência alimentada pelos mesmos registros usados nos indicadores municipais. Gratuita, sem cadastro e sem dados clínicos. Visitas de campo e vigilância em saúde conforme a operação local. Cadastro complementar do imóvel não aparece aqui.'))
 
 @section('content')
 <div class="welcome-public welcome-public--extend w-full min-w-0">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
-                        {{ __('Imóveis, visitas e cadastro municipal') }}
+                        {{ __('Indicadores municipais · transparência ao cidadão') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
@@ -46,7 +46,7 @@
 
         <x-flash-alerts />
 
-        <section class="welcome-public__surface consulta-public-card consulta-public-card--codigo p-6 sm:p-7" aria-labelledby="consulta-codigo-titulo">
+        <section class="consulta-public-search p-6 sm:p-7" aria-labelledby="consulta-codigo-titulo">
             <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form" class="space-y-4">
                 <h2 id="consulta-codigo-titulo" class="welcome-public__title text-[1.0625rem] lg:text-lg">
                     {{ __('Código do imóvel') }}</h2>
@@ -82,8 +82,8 @@
             </form>
         </section>
 
-        <section class="welcome-public__surface consulta-public-card consulta-public-card--doencas overflow-hidden p-0" aria-labelledby="consulta-doencas-titulo">
-            <div class="border-b border-slate-200/50 p-6 dark:border-slate-800/70 sm:p-7">
+        <section class="consulta-public-panel" aria-labelledby="consulta-doencas-titulo">
+            <div class="consulta-public-panel__head px-6 py-5 sm:px-7 sm:py-6">
                 <h2 id="consulta-doencas-titulo" class="welcome-public__title text-[1.0625rem] lg:text-lg">
                     {{ __('Doenças monitoradas no município') }}</h2>
                 @if($doencasIndisponivel ?? false)

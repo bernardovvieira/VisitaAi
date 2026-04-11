@@ -4,7 +4,7 @@
 @endsection
 
 @section('og_title', config('app.name') . ' · ' . __('Página Inicial'))
-@section('og_description', __('Consulta pública, gestão municipal, visitas de campo e cadastro complementar do imóvel. Módulos integráveis: transparência para o morador, cadastro municipal de imóveis e equipes ACE/ACS no SUS, sem reduzir o uso a apenas vigilância entomológica.'))
+@section('og_description', __('Plataforma municipal: indicadores e painéis com abrangência ampla, alimentados por cadastro de imóveis e visitas de campo. Vigilância entomológica, LIRAa e PNCD são funções especializadas quando o município adota. Consulta pública por código, sem dados clínicos.'))
 
 @section('content')
 <div class="welcome-public w-full min-w-0">
@@ -21,7 +21,7 @@
                     decoding="async" />
                 <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
-                        {{ __('Imóveis, visitas e cadastro municipal') }}
+                        {{ __('Indicadores municipais · operação em campo · transparência') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
@@ -31,7 +31,7 @@
                         <x-public-municipality-pill :local="$local" class="shrink-0" />
                     </div>
                     <p class="welcome-public__lead">
-                        {{ __('O Visita Aí reúne consulta ao cidadão, cadastro municipal de imóveis e endereços, registro de visitas de campo, vigilância entomológica e PNCD conforme adotados pelo município, e dados complementares do imóvel. Módulos integrados, sem dependência obrigatória entre si.') }}
+                        {{ __('O Visita Aí organiza a gestão municipal em torno de painéis e indicadores de amplo alcance. Cadastro de imóveis, visitas de campo e dados complementares opcionais alimentam esses números. Visitas de vigilância entomológica, LIRAa e fluxos do PNCD são funções especializadas da operação em saúde quando o município as utiliza — não resumem o produto. A consulta pública por código reforça a transparência sem exibir dado clínico.') }}
                     </p>
                 </div>
             </div>
@@ -54,29 +54,29 @@
             <h2 id="welcome-pilares-heading" class="sr-only">{{ __('Em destaque') }}</h2>
             <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
                 <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                    {{ __('Indicadores e painéis') }}</h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    {{ __('O que oferece: leituras por período, território, visitas, imóveis e agregados permitidos por perfil, com relatórios e exportações. Objetivo: apoiar decisão, planejamento e prestação de contas. O escopo dos indicadores é amplo e não se limita a um único tipo de visita.') }}
+                </p>
+            </article>
+            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
+                <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                    {{ __('Operação, cadastro e visitas') }}</h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    {{ __('Como usar: cadastre imóveis e registre visitas conforme o fluxo local. Função especializada: quando o município adota, há rotinas de vigilância em saúde — visitas entomológicas, LIRAa e PNCD — alinhadas à Lei 11.350/2006 e às diretrizes do MS. O mesmo cadastro territorial pode apoiar outras frentes, com ou sem visita vetorial.') }}
+                </p>
+            </article>
+            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
+                <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                     {{ __('Consulta pública') }}</h3>
                 <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                     {{ __('Morador consulta o histórico de visitas pelo código do imóvel, sem cadastro e sem expor dados clínicos.') }}
                 </p>
             </article>
-            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
-                <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
-                    {{ __('Gestão municipal') }}</h3>
-                <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('Gestor centraliza visitas de campo, cadastro municipal de imóveis, cadastro complementar (ocupantes e perfil socioeconômico), relatórios de vigilância e indicadores agregados dos imóveis, com acessos restritos por perfil.') }}
-                </p>
-            </article>
-            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
-                <h3 class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
-                    {{ __('Campo e legislação') }}</h3>
-                <p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('ACE e ACS registram visitas em campo quando o município utiliza esse fluxo, nos termos da Lei 11.350/2006 e das diretrizes do MS e do PNCD. O cadastro de locais e dados do imóvel pode apoiar outras necessidades municipais, com ou sem visita vetorial.') }}
-                </p>
-            </article>
         </section>
 
         <p class="max-w-3xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-            {{ __('Os módulos de visitas de vigilância em saúde e de cadastro municipal de imóveis, com dados socioeconômicos complementares, são independentes: cada município define o que utiliza, conforme legislação e planejamento local.') }}
+            {{ __('Indicadores, operação em campo e transparência ao cidadão integram-se no mesmo ambiente, mas cada município define o que ativa — inclusive se usará ou não as funções especializadas de vigilância em saúde.') }}
         </p>
 
         {{-- Base legal compacta, largura total --}}
@@ -92,7 +92,7 @@
                 <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" class="inline-flex rounded border border-slate-200/80 bg-white/80 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-600/70 dark:bg-slate-900/40 dark:text-slate-300 dark:hover:border-slate-500" target="_blank" rel="noopener noreferrer">LGPD · 13.709/2018</a>
             </div>
             <p class="mt-4 text-[11px] leading-relaxed text-slate-400 dark:text-slate-500">
-                {{ __('Textos no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde. Alinhado às diretrizes para ACE, ACS e vigilância entomológica.') }}
+                {{ __('Textos no Planalto; orientações sanitárias atualizadas no portal do Ministério da Saúde. Onde houver vigilância em saúde no município, aplicam-se também as diretrizes para ACE, ACS e vigilância entomológica.') }}
             </p>
         </section>
 

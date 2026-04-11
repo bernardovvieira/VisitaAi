@@ -41,7 +41,7 @@
                 ],
                 default => [
                     'title' => config('app.name').' · '.__('Acesso'),
-                    'desc' => __('Acesse o sistema Visita Aí. Apoio à vigilância entomológica e controle vetorial municipal.'),
+                    'desc' => __('Acesse o sistema Visita Aí. Painéis e indicadores municipais; operação em campo; transparência por código. Vigilância entomológica e PNCD quando o município adota.'),
                 ],
             };
             $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';

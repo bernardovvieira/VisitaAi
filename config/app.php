@@ -42,16 +42,16 @@ return [
     |
     */
 
-    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade}. Escopo: imóveis, visitas, cadastro municipal e PNCD conforme configuração local
+    // Formato: Visita Aí - {Base|Demo|Local|nome_cidade}. Eixo: indicadores amplos; operação em campo (incl. vigilância/LIRAa/PNCD quando adotados)
     // Sobrescrito pelo middleware SetAppDisplayName em requests web (usa cidade do 1º Local quando aplicável)
     'name' => env('APP_DISPLAY_NAME') ?: match (strtolower(trim((string) (env('APP_INSTANCE_TYPE') ?? '')))) {
-        'base' => 'Visita Aí - Base - Imóveis, visitas e cadastro municipal (saúde pública / PNCD)',
-        'demo' => 'Visita Aí - Demo - Imóveis, visitas e cadastro municipal (saúde pública / PNCD)',
+        'base' => 'Visita Aí - Base - Indicadores municipais · operação e transparência',
+        'demo' => 'Visita Aí - Demo - Indicadores municipais · operação e transparência',
         default => 'Visita Aí - '.(function () {
             $n = trim((string) env('APP_NAME', ''));
 
             return ($n !== '' && stripos($n, 'Visita Aí') !== 0) ? $n : 'Local';
-        })().' - Imóveis, visitas e cadastro municipal (saúde pública / PNCD)',
+        })().' - Indicadores municipais · operação e transparência',
     },
 
     /*

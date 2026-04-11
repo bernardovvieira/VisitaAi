@@ -24,7 +24,7 @@
                     decoding="async" />
                 <div class="welcome-public__hero-content">
                     <p class="welcome-public__kicker">
-                        {{ __('Imóveis, visitas e cadastro municipal') }}
+                        {{ __('Indicadores municipais · transparência ao cidadão') }}
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                         <h1 class="welcome-public__title min-w-0 shrink">
@@ -71,7 +71,7 @@
 
     {{-- Imóvel consultado --}}
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch">
-        <div class="welcome-public__surface flex h-full flex-col p-6 sm:p-7">
+        <div class="consulta-public-detail flex h-full flex-col p-6 sm:p-7">
             <div class="space-y-3 text-sm text-slate-800 dark:text-slate-100">
                 <h2 class="v-section-title mb-1">{{ __('Imóvel consultado') }}</h2>
                 <p>
@@ -104,15 +104,15 @@
                 </p>
             </div>
         </div>
-        <div class="welcome-public__surface flex h-full min-h-0 flex-col p-6 sm:p-7" aria-label="{{ __('Mapa do imóvel') }}">
+        <div class="consulta-public-detail flex h-full min-h-0 flex-col p-6 sm:p-7" aria-label="{{ __('Mapa do imóvel') }}">
             <h2 class="v-section-title mb-3 shrink-0">{{ __('Localização no mapa') }}</h2>
             <div class="w-full flex-1 overflow-hidden relative min-h-[13rem] md:min-h-0" id="mapa-local" role="region" aria-label="{{ __('Mapa interativo') }}"></div>
         </div>
     </div>
 
     {{-- Histórico de visitas (colunas alinhadas à listagem interna, sem profissional) --}}
-    <div class="v-card--flush welcome-public__surface overflow-hidden p-0">
-        <div class="p-5 sm:p-6">
+    <div class="consulta-public-panel v-card--flush overflow-hidden p-0">
+        <div class="consulta-public-panel__head px-5 py-4 sm:px-6 sm:py-5">
             <h2 class="v-section-title">{{ __('Histórico de visitas') }}</h2>
             <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Ordenado da visita mais recente para a mais antiga.') }}</p>
         </div>
@@ -165,7 +165,7 @@
 
     {{-- Resumos para o cidadão (texto neutro, sem dados sensíveis) --}}
     @if (!empty($resumos) && count($resumos) > 0)
-    <div class="welcome-public__surface p-6 sm:p-7">
+    <div class="consulta-public-detail p-6 sm:p-7">
         <h2 class="v-section-title mb-2 font-medium">{{ __('Resumo em linguagem simples') }}</h2>
         <p class="mb-4 text-sm font-normal text-slate-500 dark:text-slate-400">
             {{ __('Texto gerado a partir do registro da visita, sem dados pessoais sensíveis. Para dúvidas ou reclamações, procure a Secretaria Municipal de Saúde.') }}
@@ -173,7 +173,7 @@
         <div class="space-y-4">
             @foreach ($visitas as $visita)
                 @if (isset($resumos[$visita->vis_id]))
-                <div class="rounded-lg border border-slate-200/50 bg-slate-50/50 p-4 dark:border-slate-700/45 dark:bg-slate-800/25">
+                <div class="consulta-public-resumo">
                     <p class="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">
                         {{ __('Visita de :d', ['d' => \Carbon\Carbon::parse($visita->vis_data)->format('d/m/Y')]) }}
                         @if ($visita->vis_pendencias)

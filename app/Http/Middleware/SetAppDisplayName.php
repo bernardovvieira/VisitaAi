@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Define o nome da aplicação para exibição: Visita Aí - {prefixo}. Imóveis, visitas e cadastro municipal (saúde pública / PNCD).
+ * Define o nome da aplicação para exibição: Visita Aí - {prefixo}. Indicadores municipais, operação em campo e transparência.
  * - APP_NAME=Base ou APP_INSTANCE_TYPE=base → Base
  * - APP_NAME=Demo ou APP_INSTANCE_TYPE=demo → Demo
  * - Local com cidade cadastrada → loc_cidade do primeiro Local
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class SetAppDisplayName
 {
-    private const SUFIXO = ' - Imóveis, visitas e cadastro municipal (saúde pública / PNCD)';
+    private const SUFIXO = ' - Indicadores municipais · operação e transparência';
 
     public function handle(Request $request, Closure $next): Response
     {

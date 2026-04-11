@@ -28,7 +28,7 @@
                     {{ config('app.brand') }}
                 </p>
                 <p class="text-[11px] leading-relaxed text-slate-400 dark:text-slate-500">
-                    {{ __('Solução de apoio à vigilância em saúde e controle de vetores.') }}
+                    {{ __('Plataforma municipal: indicadores amplos, operação em campo e transparência ao cidadão. Vigilância entomológica e PNCD como funções especializadas quando adotadas.') }}
                 </p>
             </div>
         </div>
