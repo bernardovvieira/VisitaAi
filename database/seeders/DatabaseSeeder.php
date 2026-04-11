@@ -7,11 +7,11 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed da instância demo (demo.visitaai.cloud).
-     * Para instância base (visitaai.cloud), use: php artisan db:seed --class=AdminBaseSeeder
+     * Seed completo para ambiente de testes/demo sem alterar logins existentes.
+     * Para instância base (produção), use: php artisan db:seed --class=AdminBaseSeeder
      */
     public function run(): void
     {
-        $this->call(DemoSeeder::class);
+        $this->call(FullSystemTestSeeder::class);
     }
 }

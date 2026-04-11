@@ -48,7 +48,7 @@
         </div>
         <div class="v-table-meta">
             <span>
-                {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
+                {{ __('Exibindo :atual de :total :item cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total(), 'item' => $locais->total() === 1 ? __('local') : __('locais')]) }}
                 @if(request('search'))
                     <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
                 @endif

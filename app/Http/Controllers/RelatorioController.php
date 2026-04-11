@@ -112,7 +112,9 @@ class RelatorioController extends Controller
             $codigo = $loc->loc_codigo_unico ?? '-';
             $bairro = $loc->loc_bairro ?? '-';
             $qtd = $loc->visitas_count ?? 0;
-            $visitPart = $qtd > 0 ? ' ('.__(':n visita(s)', ['n' => $qtd]).')' : '';
+            $visitPart = $qtd > 0
+                ? ' - '.($qtd === 1 ? __(':n visita', ['n' => $qtd]) : __(':n visitas', ['n' => $qtd]))
+                : '';
             $label = ($endereco ?: '-').', '.$bairro.', '.__('Cód.').' '.$codigo.$visitPart;
 
             return ['id' => $loc->loc_id, 'label' => $label];
@@ -278,8 +280,8 @@ class RelatorioController extends Controller
         if ($tipo === 'individual') {
             $locaisSel = ! empty($localIdsPdf) ? Local::whereIn('loc_id', $localIdsPdf)->get() : collect();
             $periodo = $locaisSel->isEmpty()
-                ? __('Local(is)')
-                : __('Local(is): :lista', [
+                ? __('Locais')
+                : __('Locais: :lista', [
                     'lista' => $locaisSel->map(fn ($l) => trim(($l->loc_endereco ?? '').($l->loc_numero ? ', '.$l->loc_numero : '').', '.($l->loc_bairro ?? '')))->join(' | '),
                 ]);
         } elseif ($tipo === 'diario') {

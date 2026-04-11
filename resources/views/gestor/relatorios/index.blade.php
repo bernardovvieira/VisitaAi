@@ -173,7 +173,7 @@
                         }, (array) request('local_id', [])))
                     )) }}"
                     @@click.outside="open = false">
-                    <label class="v-toolbar-label mb-1 block">{{ __('Local(is)') }} <span class="text-red-500">*</span></label>
+                    <label class="v-toolbar-label mb-1 block">{{ __('Locais') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
                             <template x-for="item in selected" :key="item.id">
@@ -241,7 +241,7 @@
                     data-options="{{ e(json_encode($bairros ?? [])) }}"
                     data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
                     @@click.outside="open = false">
-                    <label class="v-toolbar-label mb-1 block">{{ __('Bairro(s)') }}</label>
+                    <label class="v-toolbar-label mb-1 block">{{ __('Bairros') }}</label>
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">

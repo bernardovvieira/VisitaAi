@@ -28,9 +28,13 @@ class VisitaController extends Controller
         if ($request->has('enviadas')) {
             $n = (int) $request->input('enviadas');
             $erros = (int) $request->input('erros', 0);
-            $msg = __(':n visita(s) enviada(s) com sucesso.', ['n' => $n]);
+            $msg = $n === 1
+                ? __(':n visita enviada com sucesso.', ['n' => $n])
+                : __(':n visitas enviadas com sucesso.', ['n' => $n]);
             if ($erros > 0) {
-                $msg .= ' '.__(':e não enviada(s) (verifique os dados).', ['e' => $erros]);
+                $msg .= ' '.($erros === 1
+                    ? __(':e visita não enviada. Verifique os dados.', ['e' => $erros])
+                    : __(':e visitas não enviadas. Verifique os dados.', ['e' => $erros]));
             }
             session()->flash('success', $msg);
 

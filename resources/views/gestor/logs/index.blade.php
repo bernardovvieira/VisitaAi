@@ -29,7 +29,7 @@
     <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
-                {{ __('Exibindo :atual de :total registro(s) de auditoria.', ['atual' => $logs->count(), 'total' => $logs->total()]) }}
+                {{ __('Exibindo :atual de :total :item de auditoria.', ['atual' => $logs->count(), 'total' => $logs->total(), 'item' => $logs->total() === 1 ? __('registro') : __('registros')]) }}
                 @if(request('search'))
                     <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
                 @endif

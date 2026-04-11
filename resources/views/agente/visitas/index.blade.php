@@ -90,7 +90,7 @@
         <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
-                {{ __('Exibindo :atual de :total visita(s).', ['atual' => $visitas->count(), 'total' => $visitas->total()]) }}
+                {{ __('Exibindo :atual de :total :item.', ['atual' => $visitas->count(), 'total' => $visitas->total(), 'item' => $visitas->total() === 1 ? __('visita') : __('visitas')]) }}
                 @if(request('busca'))
                     <span class="text-slate-500">{{ __('Filtro:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('busca') }}</strong></span>
                 @endif
@@ -220,7 +220,7 @@
         if (typeof window.VisitaOfflineGetPendingCount !== 'function') return;
         window.VisitaOfflineGetPendingCount(perfil).then(function(count) {
             if (count > 0) {
-                msgEl.textContent = 'Você tem ' + count + ' visita(s) guardada(s) no dispositivo. Sincronize quando se reconectar.';
+                msgEl.textContent = 'Você tem ' + count + (count === 1 ? ' visita guardada' : ' visitas guardadas') + ' no dispositivo. Sincronize quando se reconectar.';
                 alertEl.classList.remove('hidden');
             } else {
                 alertEl.classList.add('hidden');

@@ -31,7 +31,7 @@
   <!-- bring the summary inside the same styled section -->
   <x-section-card>
     <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-      Exibindo {{ $doencas->count() }} de {{ $doencas->total() }} doença(s) monitorada(s).
+      Exibindo {{ $doencas->count() }} de {{ $doencas->total() }} {{ $doencas->total() === 1 ? 'doença monitorada' : 'doenças monitoradas' }}.
       @if(request('search'))
         <span class="text-gray-500">Resultados para: <strong>{{ request('search') }}</strong></span>
       @endif

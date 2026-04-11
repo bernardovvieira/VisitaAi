@@ -44,7 +44,7 @@
     <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span>
-                {{ __('Exibindo :atual de :total doença(s) cadastrada(s).', ['atual' => $doencas->count(), 'total' => $doencas->total()]) }}
+                {{ __('Exibindo :atual de :total :item.', ['atual' => $doencas->count(), 'total' => $doencas->total(), 'item' => $doencas->total() === 1 ? __('doença cadastrada') : __('doenças cadastradas')]) }}
                 @if(request('search'))
                     <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
                 @endif

@@ -41,7 +41,7 @@
         <div class="v-table-meta border-b border-slate-200/80 px-4 py-3 dark:border-slate-700/80 sm:px-5">
             <span class="text-sm text-slate-600 dark:text-slate-400">
                 @if($total > 0)
-                    {{ __('Exibindo :first a :last de :total usuário(s) cadastrado(s).', ['first' => $usuarios->firstItem(), 'last' => $usuarios->lastItem(), 'total' => $total]) }}
+                    {{ __('Exibindo :first a :last de :total :item.', ['first' => $usuarios->firstItem(), 'last' => $usuarios->lastItem(), 'total' => $total, 'item' => $total === 1 ? __('usuário cadastrado') : __('usuários cadastrados')]) }}
                     @if(request('search'))
                         <span class="mt-1 block text-slate-500 sm:mt-0 sm:ml-1 sm:inline">{{ __('Resultados para:') }} <strong class="font-semibold text-slate-800 dark:text-slate-200">{{ request('search') }}</strong></span>
                     @endif

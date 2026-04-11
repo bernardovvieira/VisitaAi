@@ -24,6 +24,48 @@
     $gestoresCount = \App\Models\User::where('use_perfil', 'gestor')->count();
     $doencasCount = \App\Models\Doenca::count();
     $visitasCount = \App\Models\Visita::count();
+
+    $totalImoveis = \App\Models\Local::count();
+    $imoveisComOcupante = \App\Models\Local::whereHas('moradores')->count();
+    $imoveisComFichaSocio = \App\Models\LocalSocioeconomico::count();
+    $habitantesCadastrados = \App\Models\Morador::count();
+    $mediaOcupantesPorImovel = $imoveisComOcupante > 0
+        ? round($habitantesCadastrados / $imoveisComOcupante, 1)
+        : 0;
+    $bairrosCobertos = \App\Models\Local::query()
+        ->whereNotNull('loc_bairro')
+        ->whereRaw("TRIM(loc_bairro) <> ''")
+        ->distinct('loc_bairro')
+        ->count('loc_bairro');
+
+    $rendaMapSm = [
+        'ate_meio_salario' => 0.5,
+        'ate_1_sm' => 1.0,
+        'ate_2_sm' => 1.5,
+        'ate_3_sm' => 2.5,
+        'acima_3_sm' => 3.5,
+        'acima_5_sm' => 5.5,
+    ];
+    $rendaRows = \App\Models\LocalSocioeconomico::query()
+        ->select('lse_renda_familiar_faixa')
+        ->whereNotNull('lse_renda_familiar_faixa')
+        ->where('lse_renda_familiar_faixa', '!=', 'nao_informado')
+        ->get();
+    $rendaSmTotal = 0.0;
+    $rendaSmCount = 0;
+    foreach ($rendaRows as $row) {
+        $faixa = (string) $row->lse_renda_familiar_faixa;
+        if (! array_key_exists($faixa, $rendaMapSm)) {
+            continue;
+        }
+        $rendaSmTotal += $rendaMapSm[$faixa];
+        $rendaSmCount++;
+    }
+    $rendaMediaSm = $rendaSmCount > 0 ? round($rendaSmTotal / $rendaSmCount, 2) : null;
+
+    $populacaoReferencia = \App\Models\LocalSocioeconomico::query()
+        ->whereNotNull('lse_n_moradores_declarado')
+        ->sum('lse_n_moradores_declarado');
 @endphp
 
 <div class="v-dash">
@@ -49,7 +91,7 @@
             @if($visitasComPendencia > 0)
                 <a href="{{ route('gestor.visitas.index', ['busca' => 'pendentes']) }}" class="v-dash-alert v-dash-alert--danger">
                     <x-heroicon-o-clock class="h-5 w-5 shrink-0 opacity-90" aria-hidden="true" />
-                    <span>{{ __(':n visita(s) com pendência aberta', ['n' => $visitasComPendencia]) }}</span>
+                    <span>{{ $visitasComPendencia }} {{ $visitasComPendencia === 1 ? __('visita com pendência aberta') : __('visitas com pendência aberta') }}</span>
                     <x-heroicon-o-arrow-right class="ml-auto h-4 w-4 shrink-0 opacity-70" aria-hidden="true" />
                 </a>
             @endif
@@ -58,8 +100,43 @@
 
     <section class="v-dash-card" aria-labelledby="gestor-kpis-heading">
         <h2 id="gestor-kpis-heading" class="v-dash-card__title">{{ __('Indicadores') }}</h2>
-        <p class="v-dash-card__sub">{{ __('Números consolidados do município.') }}</p>
+        <p class="v-dash-card__sub">{{ __('Números consolidados do município com base nos cadastros do sistema.') }}</p>
         <div class="v-kpi-grid-agi mt-4">
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Imóveis cadastrados') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $totalImoveis }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Base territorial municipal') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Habitantes cadastrados') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $habitantesCadastrados }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Total de ocupantes registrados') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Média de ocupantes/imóvel') }}</span>
+                <span class="v-kpi-card-agi__value">{{ number_format($mediaOcupantesPorImovel, 1, ',', '.') }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Somente imóveis com ocupantes') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Bairros cobertos') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $bairrosCobertos }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Com imóveis cadastrados') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Renda familiar média estimada') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $rendaMediaSm !== null ? number_format($rendaMediaSm, 2, ',', '.') . ' SM' : __('N/D') }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Calculada por faixa de renda informada') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('População declarada nas fichas') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $populacaoReferencia > 0 ? $populacaoReferencia : __('N/D') }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Soma do nº de moradores declarado') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Imóveis com ficha socioeconômica') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $imoveisComFichaSocio }}</span>
+                <span class="v-kpi-card-agi__hint">{{ $totalImoveis > 0 ? number_format(($imoveisComFichaSocio / $totalImoveis) * 100, 0, ',', '.') . '% ' . __('do total') : __('Sem base') }}</span>
+            </div>
             <div class="v-kpi-card-agi">
                 <span class="v-kpi-card-agi__label">{{ __('Profissionais de campo') }}</span>
                 <span class="v-kpi-card-agi__value">{{ $profissionaisAprovados }}</span>
@@ -87,6 +164,9 @@
                 <span class="v-kpi-card-agi__value">{{ $visitasComPendencia }}</span>
             </div>
         </div>
+        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">
+            {{ __('Indicadores demográficos e renda são estimativas internas a partir dos dados cadastrados no Visita Aí.') }}
+        </p>
     </section>
 
     <div class="v-dash-row">

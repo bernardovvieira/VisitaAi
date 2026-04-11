@@ -109,7 +109,7 @@
       </tr>
       @if(!empty($bairrosPdf))
       <tr>
-        <td colspan="2"><span class="label">{{ __('Bairro(s) filtrado(s):') }}</span>{{ is_array($bairrosPdf) ? implode(', ', $bairrosPdf) : $bairrosPdf }}</td>
+        <td colspan="2"><span class="label">{{ __('Bairros filtrados:') }}</span>{{ is_array($bairrosPdf) ? implode(', ', $bairrosPdf) : $bairrosPdf }}</td>
       </tr>
       @endif
       <tr>

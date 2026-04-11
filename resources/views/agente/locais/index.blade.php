@@ -73,7 +73,7 @@
     <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-table-meta">
             <span class="text-sm text-slate-600 dark:text-slate-400">
-                {{ __('Exibindo :atual de :total local(is) cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total()]) }}
+                {{ __('Exibindo :atual de :total :item cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total(), 'item' => $locais->total() === 1 ? __('local') : __('locais')]) }}
                 @if(request('search'))
                     <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
                 @endif
@@ -203,8 +203,7 @@
         if (typeof window.VisitaOfflineGetLocalPendingCount !== 'function') return;
         window.VisitaOfflineGetLocalPendingCount('agente').then(function(count) {
             if (count > 0) {
-                var tpl = @json(__('Você tem :num local(is) guardado(s) no dispositivo. Sincronize quando se reconectar.'));
-                msgEl.textContent = tpl.replace(':num', String(count));
+                msgEl.textContent = 'Você tem ' + count + (count === 1 ? ' local guardado' : ' locais guardados') + ' no dispositivo. Sincronize quando se reconectar.';
                 alertEl.classList.remove('hidden');
             } else { alertEl.classList.add('hidden'); }
         }).catch(function() { alertEl.classList.add('hidden'); });
