@@ -25,7 +25,8 @@
             <div class="space-y-4">
                 <p class="v-page-eyebrow">Plataforma municipal</p>
                 <h1 class="v-page-title text-4xl sm:text-5xl">
-                    Bem-vindo(a) ao <span class="text-blue-600 dark:text-blue-400">Visita Aí</span>
+                    Bem-vindo(a) ao
+                    <span class="block whitespace-nowrap text-blue-600 dark:text-blue-400 sm:inline">Visita Aí</span>
                 </h1>
                 @if ($local)
                     <p class="text-blue-600 dark:text-blue-400 text-lg font-medium">

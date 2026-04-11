@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
+        <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="manifest" href="{{ asset('manifest.json') }}">
         <link rel="icon" type="image/svg+xml" href="{{ asset('images/visitaai.svg') }}">
@@ -99,8 +102,17 @@
         <!-- Tema: antes da pintura (evita flash). Logado → perfil; senão → localStorage; senão → prefers-color-scheme. Ouve mudanças do SO até o usuário fixar tema no botão. -->
         <script>
             (function () {
+                var themeColorMeta = document.getElementById('theme-color-dynamic');
+                function applyThemeColor(on) {
+                    if (!themeColorMeta) return;
+                    themeColorMeta.setAttribute('content', on ? '#030712' : '#f8fafc');
+                }
                 function applyDark(on) {
                     document.documentElement.classList.toggle('dark', !!on);
+                    applyThemeColor(!!on);
+                }
+                function syncThemeColorFromClass() {
+                    applyThemeColor(document.documentElement.classList.contains('dark'));
                 }
                 if (typeof window.VisitaThemePreference !== 'undefined' && window.VisitaThemePreference) {
                     var tp = window.VisitaThemePreference;
@@ -127,6 +139,11 @@
                 if (mq && mq.addEventListener) {
                     mq.addEventListener('change', syncFromOsOrStorage);
                 }
+                syncThemeColorFromClass();
+                new MutationObserver(syncThemeColorFromClass).observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ['class'],
+                });
             })();
         </script>
 

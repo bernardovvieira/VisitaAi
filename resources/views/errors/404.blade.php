@@ -4,12 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
+    <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }} · {{ __('Página não encontrada') }}</title>
     <script>
         (function () {
+            var themeColorMeta = document.getElementById('theme-color-dynamic');
+            function applyThemeColor(on) {
+                if (!themeColorMeta) return;
+                themeColorMeta.setAttribute('content', on ? '#030712' : '#f8fafc');
+            }
             function applyDark(on) {
                 document.documentElement.classList.toggle('dark', !!on);
+                applyThemeColor(!!on);
+            }
+            function syncThemeColorFromClass() {
+                applyThemeColor(document.documentElement.classList.contains('dark'));
             }
             var stored = '';
             try { stored = (localStorage.getItem('theme') || '').trim(); } catch (e) { stored = ''; }
@@ -30,6 +42,11 @@
             if (mq && mq.addEventListener) {
                 mq.addEventListener('change', syncFromOsOrStorage);
             }
+            syncThemeColorFromClass();
+            new MutationObserver(syncThemeColorFromClass).observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class'],
+            });
         })();
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
