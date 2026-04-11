@@ -80,6 +80,16 @@
             <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
         </a>
+        <a href="{{ route('gestor.indicadores.ocupantes.export-cadastro') }}"
+           class="v-btn-export v-btn-export--sheet no-underline">
+            <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+            {{ $cfgInd['botao_export_cadastro_ocupantes_csv'] ?? __('Exportar cadastro de ocupantes (CSV)') }}
+        </a>
+        <a href="{{ route('gestor.indicadores.ocupantes.export-cadastro-pdf') }}"
+           class="v-btn-export v-btn-export--pdf no-underline">
+            <x-heroicon-o-document-text class="h-4 w-4 shrink-0" aria-hidden="true" />
+            {{ $cfgInd['botao_export_cadastro_ocupantes_pdf'] ?? __('Exportar cadastro de ocupantes (PDF)') }}
+        </a>
     </div>
 
     @if(filled($cfgInd['aviso_privacidade'] ?? ''))

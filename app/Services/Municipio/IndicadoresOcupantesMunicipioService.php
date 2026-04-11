@@ -4,6 +4,7 @@ namespace App\Services\Municipio;
 
 use App\Models\Local;
 use App\Models\Morador;
+use App\Support\SocioeconomicoEtiquetas as SE;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -225,6 +226,120 @@ class IndicadoresOcupantesMunicipioService
         rewind($fp);
 
         return stream_get_contents($fp) ?: '';
+    }
+
+    /**
+     * CSV detalhado de ocupantes, no formato de cadastro socioeconômico (uso interno do gestor).
+     * Não inclui RG/CPF por padrão.
+     */
+    public function exportCadastroOcupantesCsvGestor(): string
+    {
+        $moradores = Morador::query()
+            ->select([
+                'mor_id', 'fk_local_id', 'mor_nome', 'mor_referencia_familiar', 'mor_parentesco', 'mor_sexo',
+                'mor_data_nascimento', 'mor_estado_civil', 'mor_escolaridade', 'mor_profissao', 'mor_renda_faixa',
+                'mor_renda_formal_informal', 'mor_situacao_trabalho', 'mor_cor_raca', 'mor_naturalidade',
+                'mor_telefone', 'mor_observacao',
+            ])
+            ->with(['local' => fn ($q) => $q->select([
+                'loc_id', 'loc_codigo_unico', 'loc_endereco', 'loc_numero', 'loc_bairro', 'loc_cidade', 'loc_estado',
+            ])])
+            ->orderBy('fk_local_id')
+            ->orderBy('mor_nome')
+            ->get();
+
+        $fp = fopen('php://temp', 'r+');
+        fwrite($fp, "\xEF\xBB\xBF");
+
+        $csvLgpd = config('visitaai_municipio.lgpd', []);
+        fputcsv($fp, [$csvLgpd['csv_secao_titulo'] ?? 'AVISO_LEGISLACAO_FEDERAL_EXPORTACAO']);
+        foreach ($csvLgpd['csv_aviso_linhas'] ?? [] as $line) {
+            fputcsv($fp, [$line]);
+        }
+        fputcsv($fp, ['Exportação detalhada de ocupantes: uso interno da gestão municipal.']);
+        fputcsv($fp, ['Documentos pessoais (RG/CPF) não são exportados por padrão.']);
+        fputcsv($fp, []);
+
+        fputcsv($fp, ['Visita Aí: cadastro socioeconômico - ocupantes']);
+        fputcsv($fp, ['gerado_em', now()->toIso8601String()]);
+        fputcsv($fp, ['total_ocupantes', $moradores->count()]);
+        fputcsv($fp, []);
+
+        fputcsv($fp, [
+            'codigo_imovel',
+            'endereco',
+            'numero',
+            'bairro',
+            'cidade',
+            'estado',
+            'nome_ocupante',
+            'referencia_familiar',
+            'parentesco',
+            'sexo',
+            'data_nascimento',
+            'idade_anos',
+            'estado_civil',
+            'escolaridade',
+            'profissao',
+            'renda_faixa',
+            'renda_formal_informal',
+            'situacao_trabalho',
+            'cor_raca',
+            'naturalidade',
+            'telefone',
+            'observacao',
+        ]);
+
+        foreach ($moradores as $m) {
+            $local = $m->local;
+            fputcsv($fp, [
+                (string) ($local?->loc_codigo_unico ?? ''),
+                (string) ($local?->loc_endereco ?? ''),
+                (string) ($local?->loc_numero ?? ''),
+                (string) ($local?->loc_bairro ?? ''),
+                (string) ($local?->loc_cidade ?? ''),
+                (string) ($local?->loc_estado ?? ''),
+                (string) ($m->mor_nome ?? ''),
+                $m->mor_referencia_familiar ? 'Sim' : 'Nao',
+                SE::opcao('parentesco_opcoes', $m->mor_parentesco),
+                SE::opcao('sexo_opcoes', $m->mor_sexo),
+                $m->mor_data_nascimento?->format('Y-m-d') ?? '',
+                $m->idadeAnos() ?? '',
+                SE::opcao('estado_civil_opcoes', $m->mor_estado_civil),
+                SE::municipioEscolaridade($m->mor_escolaridade),
+                (string) ($m->mor_profissao ?? ''),
+                SE::municipioRenda($m->mor_renda_faixa),
+                SE::opcao('renda_formal_informal_opcoes', $m->mor_renda_formal_informal),
+                SE::municipioTrabalho($m->mor_situacao_trabalho),
+                SE::municipioCor($m->mor_cor_raca),
+                (string) ($m->mor_naturalidade ?? ''),
+                (string) ($m->mor_telefone ?? ''),
+                (string) ($m->mor_observacao ?? ''),
+            ]);
+        }
+
+        rewind($fp);
+
+        return stream_get_contents($fp) ?: '';
+    }
+
+    /**
+     * Dados detalhados para renderização de PDF de cadastro socioeconômico por imóvel.
+     *
+     * @return Collection<int, Local>
+     */
+    public function dadosCadastroOcupantesGestor(): Collection
+    {
+        return Local::query()
+            ->whereHas('moradores')
+            ->with([
+                'socioeconomico',
+                'moradores' => fn ($q) => $q->orderBy('mor_nome')->orderBy('mor_id'),
+            ])
+            ->orderBy('loc_bairro')
+            ->orderBy('loc_endereco')
+            ->orderBy('loc_numero')
+            ->get();
     }
 
     /**

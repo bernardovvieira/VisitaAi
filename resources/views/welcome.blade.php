@@ -20,15 +20,16 @@
         {{-- Lado esquerdo: texto e ações --}}
         <div class="space-y-8 md:pl-4 max-w-xl" id="anim-texto">
             <div class="space-y-4">
-                <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                    Bem-vindo(a) ao <span class="text-blue-500 dark:text-blue-400">Visita Aí</span>
+                <p class="v-page-eyebrow">Plataforma municipal</p>
+                <h1 class="v-page-title text-4xl sm:text-5xl">
+                    Bem-vindo(a) ao <span class="text-blue-600 dark:text-blue-400">Visita Aí</span>
                 </h1>
                 @if ($local)
                     <p class="text-blue-600 dark:text-blue-400 text-lg font-medium">
                         {{ $local->loc_cidade }}/{{ $local->loc_estado }}
                     </p>
                 @endif
-                <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed max-w-md">
+                <p class="v-page-lead mt-1 max-w-md">
                     Plataforma municipal para operação territorial, indicadores e transparência.<br>
                     Organize visitas de campo, acompanhe resultados e ofereça consulta pública por código.
                 </p>
@@ -52,7 +53,7 @@
                 </a>
             </div>
 
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-6" id="anim-footer">
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-6" id="anim-footer">
                 &copy; 2025–{{ date('Y') }} Visita Aí · Desenvolvido por <a href="https://bitwise.dev.br" target="_blank" rel="noopener" class="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">Bitwise Technologies</a>
             </p>
         </div>

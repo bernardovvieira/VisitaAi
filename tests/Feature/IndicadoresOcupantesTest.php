@@ -60,6 +60,66 @@ class IndicadoresOcupantesTest extends TestCase
     }
 
     #[Test]
+    public function gestor_exporta_csv_de_cadastro_de_ocupantes(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create([
+            'loc_codigo_unico' => '12345678',
+            'loc_bairro' => 'Centro',
+            'loc_cidade' => 'Cidade X',
+            'loc_estado' => 'GO',
+        ]);
+
+        Morador::factory()->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_nome' => 'Maria da Silva',
+            'mor_sexo' => 'feminino',
+            'mor_estado_civil' => 'solteiro',
+            'mor_parentesco' => 'conjuge',
+            'mor_escolaridade' => 'medio_completo',
+            'mor_renda_faixa' => 'ate_1_sm',
+            'mor_situacao_trabalho' => 'empregado',
+            'mor_cor_raca' => 'parda',
+            'mor_referencia_familiar' => true,
+        ]);
+
+        $raw = $this->actingAs($user)
+            ->get(route('gestor.indicadores.ocupantes.export-cadastro'))
+            ->assertOk()
+            ->streamedContent();
+
+        $this->assertStringContainsString('cadastro socioeconômico - ocupantes', mb_strtolower($raw));
+        $this->assertStringContainsString('codigo_imovel', $raw);
+        $this->assertStringContainsString('nome_ocupante', $raw);
+        $this->assertStringContainsString('12345678', $raw);
+        $this->assertStringContainsString('Maria da Silva', $raw);
+        $this->assertStringContainsString('Sim', $raw);
+    }
+
+    #[Test]
+    public function gestor_exporta_pdf_de_cadastro_de_ocupantes(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create([
+            'loc_codigo_unico' => '12345678',
+            'loc_bairro' => 'Centro',
+        ]);
+
+        Morador::factory()->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_nome' => 'Joao do Bairro',
+            'mor_sexo' => 'masculino',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('gestor.indicadores.ocupantes.export-cadastro-pdf'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+        $response->assertHeader('content-disposition');
+    }
+
+    #[Test]
     public function gestor_acessa_painel_indicadores(): void
     {
         $user = $this->gestorAprovado();

@@ -51,7 +51,8 @@ class ConsultaPublicaController extends Controller
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->with('error', __('Código não encontrado. Verifique o número informado (8 dígitos) e tente novamente. Se o problema persistir, entre em contato com o agente que realizou a visita.'));
+                    ->with('error', __('Código não encontrado. Verifique o número informado (8 dígitos) e tente novamente. Se o problema persistir, entre em contato com o agente que realizou a visita.'))
+                    ->with('erro', __('Código não encontrado. Verifique o número informado (8 dígitos) e tente novamente. Se o problema persistir, entre em contato com o agente que realizou a visita.'));
             }
 
             $visitas = $local->visitas()
@@ -121,7 +122,8 @@ class ConsultaPublicaController extends Controller
             return redirect()
                 ->route('consulta.index')
                 ->withInput($request->only('codigo'))
-                ->with('error', __('Não foi possível consultar o imóvel no momento. Verifique sua conexão ou tente novamente em instantes.'));
+                ->with('error', __('Não foi possível consultar o imóvel no momento. Verifique sua conexão ou tente novamente em instantes.'))
+                ->with('erro', __('Não foi possível consultar o imóvel no momento. Verifique sua conexão ou tente novamente em instantes.'));
         }
     }
 }
