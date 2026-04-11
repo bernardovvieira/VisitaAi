@@ -9,34 +9,22 @@
 @section('content')
 <div class="welcome-public welcome-public--extend w-full min-w-0">
     <div class="public-page__stack">
-        <header class="welcome-public__hero" id="welcome-col-principal">
-            <div class="welcome-public__hero-row">
-                <div class="public-page__hero-aside">
-                    <img
-                        src="{{ asset('images/visitaai_rembg.png') }}"
-                        alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
-                        width="80"
-                        height="80"
-                        class="welcome-public__logo"
-                        decoding="async" />
+        <x-public.page-hero :kicker="__('Indicadores municipais · operação em campo · transparência')" id="welcome-col-principal">
+            <x-slot name="heading">
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                    <h1 class="welcome-public__title min-w-0 shrink">
+                        {{ __('Bem-vindo(a) ao') }}
+                        <span class="font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
+                    </h1>
+                    <x-public-municipality-pill :local="$local" class="shrink-0" />
                 </div>
-                <div class="welcome-public__hero-content">
-                    <p class="welcome-public__kicker">
-                        {{ __('Indicadores municipais · operação em campo · transparência') }}
-                    </p>
-                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                        <h1 class="welcome-public__title min-w-0 shrink">
-                            {{ __('Bem-vindo(a) ao') }}
-                            <span class="font-medium text-slate-800 dark:text-slate-100">{{ config('app.brand') }}</span>
-                        </h1>
-                        <x-public-municipality-pill :local="$local" class="shrink-0" />
-                    </div>
-                    <p class="welcome-public__lead">
-                        {{ __('O Visita Aí reúne painéis e indicadores municipais amplos, alimentados por cadastro, visitas e dados opcionais. Vigilância em saúde (LIRAa/PNCD) é especialização quando adotada; transparência ao morador por código, sem dado clínico.') }}
-                    </p>
-                </div>
-            </div>
-        </header>
+            </x-slot>
+            <x-slot name="leadFull">
+                <p class="welcome-public__lead welcome-public__lead--full">
+                    {{ __('O Visita Aí reúne painéis e indicadores municipais amplos, alimentados por cadastro, visitas e dados opcionais. Vigilância em saúde (LIRAa/PNCD) é especialização quando adotada; transparência ao morador por código, sem dado clínico.') }}
+                </p>
+            </x-slot>
+        </x-public.page-hero>
 
         <section aria-label="{{ __('Acesso') }}" class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
             <a href="{{ route('login') }}"
@@ -49,31 +37,27 @@
             </a>
         </section>
 
-        <section aria-labelledby="welcome-pilares-heading" class="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+        <section aria-labelledby="welcome-pilares-heading" class="grid grid-cols-1 items-stretch gap-4 md:grid-cols-3 md:gap-5">
             <h2 id="welcome-pilares-heading" class="sr-only">{{ __('Em destaque') }}</h2>
-            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
+            <article class="welcome-public__surface flex h-full flex-col p-6">
                 <h3 class="public-card-eyebrow">{{ __('Indicadores e painéis') }}</h3>
                 <p class="public-card-text">
-                    {{ __('O que oferece: leituras por período, território, visitas, imóveis e agregados permitidos por perfil, com relatórios e exportações. Objetivo: apoiar decisão, planejamento e prestação de contas. O escopo dos indicadores é amplo e não se limita a um único tipo de visita.') }}
+                    {{ __('Painéis e números por período, território, visitas e imóveis, conforme o que cada perfil pode acessar. Relatórios e exportações apoiam gestão e prestação de contas. O escopo é amplo e vai além de um único tipo de visita.') }}
                 </p>
             </article>
-            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
+            <article class="welcome-public__surface flex h-full flex-col p-6">
                 <h3 class="public-card-eyebrow">{{ __('Operação, cadastro e visitas') }}</h3>
                 <p class="public-card-text">
-                    {{ __('Como usar: cadastre imóveis e registre visitas conforme o fluxo local. Função especializada: quando o município adota, há rotinas de vigilância em saúde (visitas entomológicas, LIRAa e PNCD), alinhadas à Lei 11.350/2006 e às diretrizes do MS. O mesmo cadastro territorial pode apoiar outras frentes, com ou sem visita vetorial.') }}
+                    {{ __('Cadastro de imóveis e registro de visitas seguem o fluxo definido pelo município. Quando adotado, integram-se rotinas de vigilância em saúde (visitas entomológicas, LIRAa e PNCD), em linha com o MS e a Lei 11.350/2006. O mesmo cadastro territorial pode apoiar outras frentes, com ou sem visita vetorial.') }}
                 </p>
             </article>
-            <article class="welcome-public__surface flex min-h-[11rem] flex-col p-6">
+            <article class="welcome-public__surface flex h-full flex-col p-6">
                 <h3 class="public-card-eyebrow">{{ __('Consulta pública') }}</h3>
                 <p class="public-card-text">
-                    {{ __('Morador consulta o histórico de visitas pelo código do imóvel, sem cadastro e sem expor dados clínicos.') }}
+                    {{ __('Com o código do imóvel, o morador consulta visitas de campo, datas e pendências, sem criar conta. Dados clínicos e cadastro complementar do imóvel não aparecem nesta área pública.') }}
                 </p>
             </article>
         </section>
-
-        <p class="public-prose">
-            {{ __('Indicadores, operação em campo e transparência ao cidadão integram-se no mesmo ambiente, mas cada município define o que ativa, inclusive se usará ou não as funções especializadas de vigilância em saúde.') }}
-        </p>
 
         <section class="border-t border-slate-200/50 pt-8 dark:border-slate-800/70" aria-labelledby="welcome-laws-heading">
             <div class="welcome-public__surface space-y-4 p-6">

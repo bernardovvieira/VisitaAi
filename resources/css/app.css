@@ -280,6 +280,59 @@
         @apply max-w-2xl text-pretty text-sm font-normal leading-[1.65] text-slate-500 dark:text-slate-400 lg:max-w-3xl xl:max-w-4xl;
     }
 
+    /* Descrição longa à largura do contentor (abaixo da faixa logo + título), como na página inicial */
+    .welcome-public__lead--full {
+        @apply max-w-none text-pretty lg:max-w-none xl:max-w-none;
+    }
+
+    .public-hero-lead-full {
+        @apply mt-6 w-full min-w-0 border-t border-slate-200/40 pt-6 dark:border-slate-800/50 sm:mt-7 sm:pt-7;
+    }
+
+    .public-hero-lead-full > * + * {
+        @apply mt-3;
+    }
+
+    /* Cabeçalho interno de cartão (igual ao bloco “Leis” na home) */
+    .public-surface-section-head {
+        @apply border-b border-slate-200/50 px-6 py-5 dark:border-slate-700/60;
+    }
+
+    .public-surface-section-head .public-section-lead {
+        @apply max-w-none;
+    }
+
+    /* Inputs em cartões públicos (foco azul sistema, sem barra lateral) */
+    .public-surface-form .v-input {
+        border-color: rgb(191 219 254 / 0.95);
+        background-color: rgb(255 255 255);
+        box-shadow: 0 1px 2px rgb(37 99 235 / 0.04);
+    }
+
+    .public-surface-form .v-input:focus,
+    .public-surface-form .v-input:focus-visible {
+        border-color: rgb(var(--v-accent) / 1);
+        outline: none;
+        --tw-ring-offset-shadow: 0 0 #0000;
+        --tw-ring-shadow: 0 0 #0000;
+        box-shadow: 0 0 0 2px rgb(var(--v-accent) / 0.22);
+    }
+
+    .dark .public-surface-form .v-input {
+        border-color: rgb(59 130 246 / 0.38);
+        background-color: rgb(15 23 42 / 0.88);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+    }
+
+    .dark .public-surface-form .v-input:focus,
+    .dark .public-surface-form .v-input:focus-visible {
+        border-color: rgb(96 165 250 / 0.9);
+        outline: none;
+        --tw-ring-offset-shadow: 0 0 #0000;
+        --tw-ring-shadow: 0 0 #0000;
+        box-shadow: 0 0 0 2px rgb(59 130 246 / 0.32);
+    }
+
     .welcome-public__surface {
         @apply rounded-lg border border-slate-200/60 bg-white/70 shadow-none dark:border-slate-700/45 dark:bg-slate-900/35;
     }
@@ -430,83 +483,8 @@
         box-shadow: 0 0 0 2px rgb(59 130 246 / 0.32);
     }
 
-    /*
-     * Consulta pública: discreto, azul sistema (--v-accent).
-     * Pesquisa = só faixa lateral + campos alinhados ao guest; blocos = painel leve com cabeçalho tintado.
-     */
-    .consulta-public-search {
-        @apply rounded-lg border border-slate-200/80 bg-white p-6 dark:border-slate-700/55 dark:bg-slate-900/45;
-        border-left: 3px solid rgb(var(--v-accent) / 1);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-    }
-
-    .dark .consulta-public-search {
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.22);
-    }
-
-    .consulta-public-search .v-input {
-        border-color: rgb(191 219 254 / 0.95);
-        background-color: rgb(255 255 255);
-        box-shadow: 0 1px 2px rgb(37 99 235 / 0.04);
-    }
-
-    .consulta-public-search .v-input:focus,
-    .consulta-public-search .v-input:focus-visible {
-        border-color: rgb(var(--v-accent) / 1);
-        outline: none;
-        --tw-ring-offset-shadow: 0 0 #0000;
-        --tw-ring-shadow: 0 0 #0000;
-        box-shadow: 0 0 0 2px rgb(var(--v-accent) / 0.22);
-    }
-
-    .dark .consulta-public-search .v-input {
-        border-color: rgb(59 130 246 / 0.38);
-        background-color: rgb(15 23 42 / 0.88);
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
-    }
-
-    .dark .consulta-public-search .v-input:focus,
-    .dark .consulta-public-search .v-input:focus-visible {
-        border-color: rgb(96 165 250 / 0.9);
-        outline: none;
-        --tw-ring-offset-shadow: 0 0 #0000;
-        --tw-ring-shadow: 0 0 #0000;
-        box-shadow: 0 0 0 2px rgb(59 130 246 / 0.32);
-    }
-
-    .consulta-public-panel {
-        @apply overflow-hidden rounded-lg border border-slate-200/80 dark:border-slate-700/55;
-        background-color: rgb(255 255 255 / 0.95);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
-    }
-
-    .dark .consulta-public-panel {
-        background-color: rgb(15 23 42 / 0.5);
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
-    }
-
-    .consulta-public-panel__head {
-        @apply border-b border-slate-200/70 px-6 py-5 dark:border-slate-700/60;
-        background-color: rgb(var(--v-accent) / 0.07);
-    }
-
-    .dark .consulta-public-panel__head {
-        background-color: rgb(var(--v-accent) / 0.12);
-    }
-
-    .consulta-public-detail {
-        @apply rounded-lg border border-slate-200/80 bg-white p-6 dark:border-slate-700/55 dark:bg-slate-900/45;
-        border-left: 3px solid rgb(var(--v-accent) / 0.88);
-        box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
-    }
-
-    .dark .consulta-public-detail {
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.22);
-    }
-
     .consulta-public-resumo {
-        @apply rounded-lg border border-slate-200/65 bg-white/85 p-4 dark:border-slate-600/40 dark:bg-slate-900/35;
-        border-left: 3px solid rgb(var(--v-accent) / 0.38);
+        @apply rounded-lg border border-slate-200/60 bg-white/90 p-4 dark:border-slate-700/45 dark:bg-slate-900/45;
     }
 
     .v-topbar {

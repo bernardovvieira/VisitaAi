@@ -16,19 +16,19 @@
             <img
                 src="{{ asset('images/visitaai_rembg.png') }}"
                 alt=""
-                width="40"
-                height="40"
-                class="h-10 w-10 shrink-0 object-contain opacity-90 dark:opacity-100"
+                width="72"
+                height="72"
+                class="h-12 w-12 shrink-0 object-contain opacity-90 sm:h-14 sm:w-14 dark:opacity-100"
                 aria-hidden="true"
                 decoding="async" />
             <div class="min-w-0 space-y-0.5">
-                <p class="text-sm font-medium tracking-wide text-slate-600 dark:text-slate-400">
+                <p class="text-xs font-medium tracking-wide text-slate-600 dark:text-slate-400">
                     <span class="text-slate-400 dark:text-slate-500" aria-hidden="true">&copy;</span>
                     {{ $copyrightYears }}
                     {{ config('app.brand') }}
                 </p>
                 <p class="text-[11px] leading-relaxed text-slate-400 dark:text-slate-500">
-                    {{ __('Plataforma municipal: indicadores amplos, operação em campo e transparência ao cidadão. Vigilância entomológica e PNCD como funções especializadas quando adotadas.') }}
+                    {{ __('Solução de apoio à vigilância em saúde e controle de vetores.') }}
                 </p>
             </div>
         </div>

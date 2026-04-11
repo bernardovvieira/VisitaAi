@@ -13,34 +13,22 @@
 @endphp
 <div class="welcome-public welcome-public--extend w-full min-w-0">
     <div class="public-page__stack">
-        <header class="welcome-public__hero">
-            <div class="welcome-public__hero-row">
-                <div class="public-page__hero-aside">
-                    <img
-                        src="{{ asset('images/visitaai_rembg.png') }}"
-                        alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
-                        width="80"
-                        height="80"
-                        class="welcome-public__logo"
-                        decoding="async" />
+        <x-public.page-hero :kicker="__('Indicadores municipais · transparência ao cidadão')">
+            <x-slot name="heading">
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                    <h1 class="welcome-public__title min-w-0 shrink">
+                        {{ __('Visitas registradas neste endereço') }}
+                        <span class="font-medium text-slate-800 dark:text-slate-100"> {{ config('app.brand') }}</span>
+                    </h1>
+                    <x-public-municipality-pill :local="$localPrimario ?? null" class="shrink-0" />
                 </div>
-                <div class="welcome-public__hero-content">
-                    <p class="welcome-public__kicker">
-                        {{ __('Indicadores municipais · transparência ao cidadão') }}
-                    </p>
-                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                        <h1 class="welcome-public__title min-w-0 shrink">
-                            {{ __('Visitas registradas neste endereço') }}
-                            <span class="font-medium text-slate-800 dark:text-slate-100"> {{ config('app.brand') }}</span>
-                        </h1>
-                        <x-public-municipality-pill :local="$localPrimario ?? null" class="shrink-0" />
-                    </div>
-                    <p class="welcome-public__lead">
-                        {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos, sem identificar o profissional e sem exibir cadastro complementar do imóvel (ocupantes ou perfil socioeconômico) nesta consulta pública.') }}
-                    </p>
-                </div>
-            </div>
-            <div class="public-hero-actions">
+            </x-slot>
+            <x-slot name="leadFull">
+                <p class="welcome-public__lead welcome-public__lead--full">
+                    {{ __('Abaixo: endereço cadastrado, datas das visitas, tipo de atividade e pendência. Sem dados clínicos, sem identificar o profissional e sem exibir cadastro complementar do imóvel (ocupantes ou perfil socioeconômico) nesta consulta pública.') }}
+                </p>
+            </x-slot>
+            <x-slot name="actions">
                 <a href="{{ url('/') }}" class="welcome-public__link">
                     <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                     {{ __('Voltar à página inicial') }}
@@ -54,8 +42,8 @@
                     <x-heroicon-o-magnifying-glass class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
                     {{ __('Consultar outro código') }}
                 </a>
-            </div>
-        </header>
+            </x-slot>
+        </x-public.page-hero>
 
         {{-- Card QR Code (oculto, usado para download) --}}
         <div id="adesivo" class="fixed left-[-9999px] top-0 w-[300px] bg-white p-6 text-center">
@@ -71,10 +59,10 @@
             <p class="text-[9px] text-gray-400 mt-5">{{ __('Bitwise Technologies') }}</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch">
-            <div class="consulta-public-detail flex h-full flex-col">
-                <h2 class="public-section-title">{{ __('Imóvel consultado') }}</h2>
-                <dl class="public-kv mt-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-stretch md:gap-5">
+            <div class="welcome-public__surface flex h-full flex-col overflow-hidden p-6">
+                <h2 class="public-card-eyebrow">{{ __('Imóvel consultado') }}</h2>
+                <dl class="public-kv mt-3">
                     <dt>{{ __('Zona') }}</dt>
                     <dd>
                         @if ($local->loc_zona === 'U')
@@ -107,24 +95,25 @@
                     <dd><span class="public-badge font-mono tabular-nums tracking-tight">{{ $local->loc_codigo_unico }}</span></dd>
                 </dl>
             </div>
-            <div class="consulta-public-detail flex h-full min-h-0 flex-col" aria-label="{{ __('Mapa do imóvel') }}">
-                <h2 class="public-section-title shrink-0">{{ __('Localização no mapa') }}</h2>
-                <div class="mt-4 w-full flex-1 min-h-[13rem] overflow-hidden md:min-h-0 relative" id="mapa-local" role="region" aria-label="{{ __('Mapa interativo') }}"></div>
+            <div class="welcome-public__surface flex h-full min-h-0 flex-col overflow-hidden p-6" aria-label="{{ __('Mapa do imóvel') }}">
+                <h2 class="public-card-eyebrow shrink-0">{{ __('Localização no mapa') }}</h2>
+                <div class="mt-3 w-full flex-1 min-h-[13rem] overflow-hidden md:min-h-0 relative" id="mapa-local" role="region" aria-label="{{ __('Mapa interativo') }}"></div>
             </div>
         </div>
 
-        <div class="consulta-public-panel v-card--flush overflow-hidden p-0">
-            <div class="consulta-public-panel__head">
-                <h2 class="public-section-title">{{ __('Histórico de visitas') }}</h2>
-                <p class="public-section-lead">{{ __('Ordenado da visita mais recente para a mais antiga.') }}</p>
+        <section class="welcome-public__surface overflow-hidden">
+            <div class="p-6">
+                <h2 class="public-card-eyebrow">{{ __('Histórico de visitas') }}</h2>
+                <p class="public-card-text">{{ __('Ordenado da visita mais recente para a mais antiga.') }}</p>
             </div>
 
             @if ($visitas->isEmpty())
-                <div class="public-empty text-left sm:text-center">
-                    <p class="public-help-text max-w-xl sm:mx-auto">{{ __('Ainda não há visitas registradas para este código no sistema. Quando o ACE ou ACS realizar o primeiro registro, as datas aparecerão aqui.') }}</p>
+                <div class="border-t border-slate-200/50 px-6 py-6 dark:border-slate-700/50">
+                    <p class="max-w-xl text-left text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:mx-auto sm:text-center">{{ __('Ainda não há visitas registradas para este código no sistema. Quando o ACE ou ACS realizar o primeiro registro, as datas aparecerão aqui.') }}</p>
                 </div>
             @else
-                <div class="v-table-meta border-t border-slate-200/80 dark:border-slate-700/80">
+                <div class="border-t border-slate-200/50 dark:border-slate-700/50">
+                <div class="v-table-meta border-t-0 border-slate-200/80 dark:border-slate-700/80">
                     <span>{{ __('Foram encontradas :total visita(s) para este imóvel.', ['total' => $visitas->count()]) }}</span>
                 </div>
                 <div class="v-table-wrap">
@@ -162,13 +151,14 @@
                         </tbody>
                     </table>
                 </div>
+                </div>
             @endif
-        </div>
+        </section>
 
         @if (!empty($resumos) && count($resumos) > 0)
-            <div class="consulta-public-detail">
-                <h2 class="public-section-title">{{ __('Resumo em linguagem simples') }}</h2>
-                <p class="public-section-lead max-w-none">
+            <div class="welcome-public__surface flex flex-col p-6">
+                <h2 class="public-card-eyebrow">{{ __('Resumo em linguagem simples') }}</h2>
+                <p class="public-card-text">
                     {{ __('Texto gerado a partir do registro da visita, sem dados pessoais sensíveis. Para dúvidas ou reclamações, procure a Secretaria Municipal de Saúde.') }}
                 </p>
                 <div class="mt-4 space-y-4">
@@ -195,13 +185,13 @@
             <button type="button" id="btn-compartilhar" aria-label="{{ __('Copiar ou compartilhar o link desta página') }}"
                     data-url="{{ url()->current() }}"
                     data-title="{{ config('app.name') }} · {{ __('Consulta do imóvel') }}"
-                    class="v-btn-secondary inline-flex min-h-[2.75rem] items-center justify-center gap-2 px-5 text-sm font-medium sm:self-center">
+                    class="v-btn-secondary inline-flex min-h-[2.875rem] items-center justify-center gap-2 px-5 text-sm font-medium sm:self-center">
                 <x-heroicon-o-share class="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span id="btn-copiar-texto">{{ __('Copiar ou compartilhar link') }}</span>
             </button>
         </div>
 
-        @include('partials.public-copyright-footer', ['footerClass' => 'mt-2'])
+        @include('partials.public-copyright-footer', ['footerClass' => 'welcome-public__footer'])
     </div>
 </div>
 
