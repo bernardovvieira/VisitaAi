@@ -59,25 +59,22 @@
                 <x-text-input id="mor_naturalidade" name="mor_naturalidade" type="text" class="mt-1 block w-full" :value="old('mor_naturalidade', $morador->mor_naturalidade)" />
                 <x-input-error :messages="$errors->get('mor_naturalidade')" class="mt-2" />
             </div>
-            <div class="lg:col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                    <x-input-label for="mor_telefone" :value="__('Telefone')" />
-                    <x-text-input id="mor_telefone" name="mor_telefone" type="text" class="mt-1 block w-full" :value="old('mor_telefone', $morador->mor_telefone)" />
-                    <x-input-error :messages="$errors->get('mor_telefone')" class="mt-2" />
-                </div>
-                <div x-data="{ relacaoFamiliar: @js($relacaoFamiliar) }">
-                    <x-input-label for="mor_relacao_familiar" :value="__('Relação familiar')" />
-                    <select id="mor_relacao_familiar" x-model="relacaoFamiliar" class="v-select mt-1 w-full">
-                        <option value="">{{ __('Selecionar') }}</option>
-                        <option value="titular">{{ __('Titular da ficha') }}</option>
-                        @foreach($par as $k => $label)
-                            <option value="par:{{ $k }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                    <input type="hidden" name="mor_referencia_familiar" x-bind:value="relacaoFamiliar === 'titular' ? 1 : 0">
-                    <input type="hidden" name="mor_parentesco" x-bind:value="relacaoFamiliar && relacaoFamiliar.startsWith('par:') ? relacaoFamiliar.slice(4) : ''">
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Use este campo para indicar se a pessoa é titular da ficha ou qual é o parentesco.') }}</p>
-                </div>
+            <div>
+                <x-input-label for="mor_telefone" :value="__('Telefone')" />
+                <x-text-input id="mor_telefone" name="mor_telefone" type="text" class="mt-1 block w-full" :value="old('mor_telefone', $morador->mor_telefone)" />
+                <x-input-error :messages="$errors->get('mor_telefone')" class="mt-2" />
+            </div>
+            <div x-data="{ relacaoFamiliar: @js($relacaoFamiliar) }">
+                <x-input-label for="mor_relacao_familiar" :value="__('Relação familiar')" />
+                <select id="mor_relacao_familiar" x-model="relacaoFamiliar" class="v-select mt-1 w-full">
+                    <option value="">{{ __('Selecionar') }}</option>
+                    <option value="titular">{{ __('Titular da ficha') }}</option>
+                    @foreach($par as $k => $label)
+                        <option value="par:{{ $k }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="mor_referencia_familiar" x-bind:value="relacaoFamiliar === 'titular' ? 1 : 0">
+                <input type="hidden" name="mor_parentesco" x-bind:value="relacaoFamiliar && relacaoFamiliar.startsWith('par:') ? relacaoFamiliar.slice(4) : ''">
             </div>
             <div class="lg:col-span-2">
                 <x-input-label for="mor_observacao" :value="__('Observações')" />
