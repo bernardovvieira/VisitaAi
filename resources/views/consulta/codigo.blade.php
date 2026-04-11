@@ -12,7 +12,7 @@
     {{-- Cabeçalho --}}
     <header class="v-page-header pt-8">
         <div class="flex items-center gap-3 mb-4">
-            <img src="{{ asset('images/visitaai_rembg.png') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
+            <img src="{{ asset('images/visitaai.svg') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
             <h1 class="v-page-title">Resultado da Consulta</h1>
         </div>
         <div class="flex flex-wrap items-center gap-2">

@@ -1,6 +1,6 @@
 <div {{ $attributes->merge(['class' => 'flex shrink-0 flex-col items-center leading-none']) }}>
     <a href="{{ url('/') }}" class="flex flex-col items-center gap-1 rounded-2xl ring-1 ring-transparent transition hover:ring-slate-200/90 dark:hover:ring-slate-600/80">
-        <img src="{{ asset('images/visitaai_rembg.png') }}"
+        <img src="{{ asset('images/visitaai.svg') }}"
             alt="{{ __('Visita Aí') }}"
             width="64"
             height="64"

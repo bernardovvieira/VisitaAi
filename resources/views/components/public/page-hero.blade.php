@@ -7,7 +7,7 @@
     <div class="welcome-public__hero-row">
         <div class="public-page__hero-aside">
             <img
-                src="{{ asset('images/visitaai_rembg.png') }}"
+                src="{{ asset('images/visitaai.svg') }}"
                 alt="{{ __('Marca do aplicativo') }}, {{ config('app.brand') }}"
                 width="80"
                 height="80"

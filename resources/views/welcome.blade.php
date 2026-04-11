@@ -24,7 +24,7 @@
         <div class="space-y-8 md:pl-4 max-w-xl" id="anim-texto">
             <div class="space-y-4">
                 <p class="v-page-eyebrow">Plataforma municipal</p>
-                <img src="{{ asset('images/visitaai_rembg.png') }}"
+                 <img src="{{ asset('images/visitaai.svg') }}"
                      alt="{{ config('app.name') }}"
                      class="h-14 w-auto object-contain"
                      width="96"

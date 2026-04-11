@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" type="image/png" href="{{ asset('images/visitaai_rembg.png') }}" sizes="512x512">
-        <link rel="apple-touch-icon" href="{{ asset('images/visitaai_rembg.png') }}" sizes="512x512">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/visitaai.svg') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/visitaai.svg') }}">
 
         @php
             $routeName = request()->route()?->getName();
@@ -44,7 +44,7 @@
                     'desc' => __('Acesse o sistema Visita Aí. Painéis e indicadores municipais; operação em campo; transparência por código. Vigilância entomológica e PNCD quando o município adota.'),
                 ],
             };
-            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai_rembg.png';
+            $ogImage = rtrim(config('app.url'), '/') . '/images/visitaai.svg';
             $ogUrl = url()->current();
             $isHttps = str_starts_with(config('app.url'), 'https');
         @endphp
@@ -62,7 +62,7 @@
         @endif
         <meta property="og:image:width" content="1145">
         <meta property="og:image:height" content="722">
-        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:type" content="image/svg+xml">
         <meta property="og:site_name" content="Visita Aí">
         <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'pt_BR' }}">
         <!-- Twitter Card -->

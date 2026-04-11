@@ -22,7 +22,7 @@
         <a :href="online ? @js($logoHrefOnline) : @js($logoHrefOffline)"
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
            class="sidebar-header-brand flex max-w-full flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-2">
-            <img src="{{ asset('images/visitaai_rembg.png') }}"
+              <img src="{{ asset('images/visitaai.svg') }}"
                  alt="{{ __('Visita Aí') }}"
                  width="28"
                  height="28"

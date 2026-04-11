@@ -14,7 +14,7 @@
     <div class="mx-auto flex max-w-2xl flex-col items-center gap-5 text-center sm:max-w-none sm:flex-row sm:items-center sm:justify-between sm:text-left">
         <div class="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-3.5">
             <img
-                src="{{ asset('images/visitaai_rembg.png') }}"
+                src="{{ asset('images/visitaai.svg') }}"
                 alt=""
                 width="72"
                 height="72"
