@@ -36,14 +36,6 @@
                         <span id="search-loading-gestor-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
                     </div>
                 </div>
-                <div class="w-full shrink-0 lg:w-72 xl:w-80">
-                    <x-ui.disclosure variant="footer-lgpd">
-                        <x-slot name="summary">
-                            <span>{{ __('O que significa "Primário"?') }}</span>
-                        </x-slot>
-                        <p class="text-[10px] leading-relaxed">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
-                    </x-ui.disclosure>
-                </div>
             </div>
         </div>
         <div class="v-table-meta">
@@ -128,6 +120,15 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
+    </x-section-card>
+
+    <x-section-card>
+        <x-ui.disclosure variant="footer-lgpd">
+            <x-slot name="summary">
+                <span>{{ __('O que significa "Primário"?') }}</span>
+            </x-slot>
+            <p class="text-xs leading-relaxed">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
+        </x-ui.disclosure>
     </x-section-card>
 </div>
 @endsection

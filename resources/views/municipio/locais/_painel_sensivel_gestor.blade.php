@@ -10,7 +10,15 @@
     $porMorId = $local->moradores->keyBy('mor_id');
 @endphp
 <x-section-card class="border-slate-200/90 bg-slate-50/70 text-sm dark:border-slate-700/80 dark:bg-slate-900/35">
-    <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $cfg['painel_sensivel_gestor_titulo'] ?? '' }}</h2>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $cfg['painel_sensivel_gestor_titulo'] ?? '' }}</h2>
+        @if(! empty($fichaPdfUrl))
+            <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
+                <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Baixar ficha socioeconômica (imóvel)') }}
+            </a>
+        @endif
+    </div>
     @if(filled(trim((string) ($cfg['painel_sensivel_gestor_texto'] ?? ''))))
         <x-ui.disclosure variant="lead-mt">
             <x-slot name="summary">
@@ -30,14 +38,6 @@
                     <div class="min-w-0 flex-1">
                         <label for="moradores-search-local" class="v-toolbar-label">{{ __('Pesquisar ocupantes') }}</label>
                         <input id="moradores-search-local" type="text" x-model="query" class="v-input" placeholder="{{ __('Nome, escolaridade, renda, trabalho...') }}">
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        @if(! empty($fichaPdfUrl))
-                            <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
-                                <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                                {{ __('Baixar ficha socioeconômica (imóvel)') }}
-                            </a>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -80,9 +80,10 @@
                             <td class="max-w-[14rem] whitespace-pre-wrap px-3 py-2.5 text-xs text-slate-800 dark:text-slate-200">{{ $m->mor_observacao ?: __('N/D') }}</td>
                             <td class="whitespace-nowrap px-3 py-2.5 text-right">
                                 <a href="{{ route($profile . '.locais.moradores.ficha-socioeconomica-pdf', [$local, $m]) }}"
-                                   class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                              title="{{ __('Baixar ficha socioeconômica') }}"
+                                              aria-label="{{ __('Baixar ficha socioeconômica') }}"
+                                              class="inline-flex items-center gap-1 rounded-md border border-red-300 bg-red-50 px-2 py-1 text-[11px] font-semibold text-red-700 transition hover:bg-red-100 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200 dark:hover:bg-red-950/60">
                                     <x-heroicon-o-document-arrow-down class="h-3.5 w-3.5" />
-                                    {{ __('PDF') }}
                                 </a>
                             </td>
                         </tr>

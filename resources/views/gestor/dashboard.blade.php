@@ -11,18 +11,8 @@
     $ocupantesResumo = app(\App\Services\Municipio\ResumoOcupantesMunicipioService::class);
     $totalOcupantesVisitaAi = $ocupantesResumo->totalOcupantesRegistrados();
     $ocupantesPorBairroTop = $ocupantesResumo->totaisPorBairro()->take(6);
-    $inicioMes = now()->startOfMonth();
-    $doencaMaisMes = \Illuminate\Support\Facades\DB::table('monitoradas')
-        ->join('visitas', 'visitas.vis_id', '=', 'monitoradas.fk_visita_id')
-        ->join('doencas', 'doencas.doe_id', '=', 'monitoradas.fk_doenca_id')
-        ->where('visitas.vis_data', '>=', $inicioMes)
-        ->select('doencas.doe_nome', \Illuminate\Support\Facades\DB::raw('COUNT(*) as total'))
-        ->groupBy('doencas.doe_id', 'doencas.doe_nome')
-        ->orderByDesc('total')
-        ->first();
     $profissionaisAprovados = \App\Models\User::where(function ($query) { $query->where('use_perfil', 'agente_endemias')->orWhere('use_perfil', 'agente_saude'); })->where('use_aprovado', true)->count();
     $gestoresCount = \App\Models\User::where('use_perfil', 'gestor')->count();
-    $doencasCount = \App\Models\Doenca::count();
     $visitasCount = \App\Models\Visita::count();
 
     $totalImoveis = \App\Models\Local::count();
@@ -73,7 +63,7 @@
 
     <header class="v-dash-header">
         <div class="v-dash-header-text">
-            <p class="v-dash-eyebrow">{{ __('Console municipal') }}</p>
+            <p class="v-dash-eyebrow">{{ __('Painel municipal') }}</p>
             <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
             <p class="v-dash-sub">{{ __('Visão geral do município com indicadores e atalhos para a rotina da gestão.') }}</p>
         </div>
@@ -152,10 +142,6 @@
                 <span class="v-kpi-card-agi__value">{{ $gestoresCount }}</span>
             </div>
             <div class="v-kpi-card-agi">
-                <span class="v-kpi-card-agi__label">{{ __('Doenças monitoradas') }}</span>
-                <span class="v-kpi-card-agi__value">{{ $doencasCount }}</span>
-            </div>
-            <div class="v-kpi-card-agi">
                 <span class="v-kpi-card-agi__label">{{ __('Visitas registradas') }}</span>
                 <span class="v-kpi-card-agi__value">{{ $visitasCount }}</span>
             </div>
@@ -208,16 +194,8 @@
             @endif
         </section>
 
-        <div class="flex min-h-0 flex-col gap-4 lg:h-full">
-            @if ($doencaMaisMes && $doencaMaisMes->total > 0)
-                <section class="v-dash-card shrink-0 border-l-4 border-l-blue-500/85" aria-labelledby="gestor-monitor-heading">
-                    <h2 id="gestor-monitor-heading" class="v-dash-card__title">{{ __('Monitoramento no mês corrente') }}</h2>
-                    <p class="mt-2 text-lg font-semibold leading-snug text-slate-900 dark:text-slate-100" title="{{ $doencaMaisMes->doe_nome }}">{{ $doencaMaisMes->doe_nome }}</p>
-                    <p class="mt-1 text-sm tabular-nums text-slate-600 dark:text-slate-400">{{ (int) $doencaMaisMes->total }} {{ (int) $doencaMaisMes->total === 1 ? __('registro em monitoradas') : __('registros em monitoradas') }}</p>
-                </section>
-            @endif
-
-            <section class="v-dash-card flex min-h-0 min-w-0 flex-1 flex-col" aria-labelledby="gestor-atalhos-heading">
+        <div class="flex min-h-0 flex-col lg:h-full">
+            <section class="v-dash-card flex h-full min-h-0 min-w-0 flex-1 flex-col" aria-labelledby="gestor-atalhos-heading">
                 <h2 id="gestor-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
                 <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4 min-h-0 flex-1 content-start">
                     <a href="{{ route('gestor.pendentes') }}" class="v-dash-shortcut {{ $pendentesCount > 0 ? 'v-dash-shortcut--primary' : '' }}">

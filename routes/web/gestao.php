@@ -39,6 +39,10 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
         ->name('locais.moradores.ficha-socioeconomica-pdf')
         ->middleware(['can:view,local', 'can:view,morador', 'throttle:30,1']);
 
+    Route::get('locais/{local}/moradores/{morador}/documento-pessoal', [MoradorController::class, 'downloadDocumentoPessoal'])
+        ->name('locais.moradores.documento-pessoal')
+        ->middleware(['can:view,local', 'can:view,morador', 'throttle:30,1']);
+
     Route::get('locais/{local}', [LocalController::class, 'show'])
         ->name('locais.show')
         ->middleware('can:view,local');

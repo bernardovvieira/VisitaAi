@@ -14,6 +14,10 @@
 
     <x-flash-alerts />
 
+    @php
+        $fichaLocalUrl = route($profile . '.locais.ficha-socioeconomica-pdf', $local);
+    @endphp
+
     <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div class="min-w-0 flex-1">
             <x-page-header :eyebrow="__('Imóvel')" :title="config('visitaai_municipio.ocupantes.titulo_listagem')">
@@ -26,11 +30,17 @@
                 </x-slot>
             </x-page-header>
         </div>
-        <a href="{{ route($profile . '.locais.moradores.create', $local) }}"
-           class="v-btn-compact v-btn-compact--blue shrink-0 self-start">
-            <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ __('Cadastrar ocupante') }}
-        </a>
+        <div class="flex shrink-0 items-center gap-2 self-start">
+            <a href="{{ route($profile . '.locais.moradores.create', $local) }}"
+               class="v-btn-compact v-btn-compact--blue">
+                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Cadastrar ocupante') }}
+            </a>
+            <a href="{{ $fichaLocalUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
+                <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Ficha do imóvel (PDF)') }}
+            </a>
+        </div>
     </div>
 
     @php
@@ -38,7 +48,6 @@
         $rendaOpcoes = config('visitaai_municipio.renda_faixa_opcoes', []);
         $corOpcoes = config('visitaai_municipio.cor_raca_opcoes', []);
         $trabOpcoes = config('visitaai_municipio.situacao_trabalho_opcoes', []);
-        $fichaLocalUrl = route($profile . '.locais.ficha-socioeconomica-pdf', $local);
     @endphp
     <x-section-card class="v-card--flush overflow-hidden dark:bg-gray-800">
         <div class="v-list-toolbar !p-3 sm:!p-4">
@@ -53,12 +62,6 @@
                         @endif
                     </div>
                 </form>
-                <div class="flex flex-wrap items-center gap-2">
-                    <a href="{{ $fichaLocalUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
-                        <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                        {{ __('Ficha do imóvel (PDF)') }}
-                    </a>
-                </div>
             </div>
         </div>
 

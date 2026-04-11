@@ -56,6 +56,8 @@ class MoradorRequest extends FormRequest
             'mor_rg_numero' => ['nullable', 'string', 'max:45'],
             'mor_rg_orgao' => ['nullable', 'string', 'max:60'],
             'mor_cpf' => ['nullable', 'string', 'max:20'],
+            'mor_documento_pessoal' => ['nullable', 'file', 'max:10240', 'mimetypes:application/pdf,image/jpeg,image/png,image/webp,image/heic,image/heif'],
+            'remover_documento_pessoal' => ['nullable', 'boolean'],
             'mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
             'mor_ajuda_compra_imovel' => ['nullable', 'string', 'max:255'],
             'mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfi)],

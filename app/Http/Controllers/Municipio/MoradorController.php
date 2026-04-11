@@ -9,7 +9,9 @@ use App\Models\Local;
 use App\Models\Morador;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MoradorController extends Controller
 {
@@ -74,6 +76,12 @@ class MoradorController extends Controller
         $this->authorize('create', Morador::class);
 
         $data = $request->validated();
+        unset($data['mor_documento_pessoal'], $data['remover_documento_pessoal']);
+
+        if ($request->hasFile('mor_documento_pessoal')) {
+            $data = array_merge($data, $this->uploadDocumentoPessoal($request->file('mor_documento_pessoal')));
+        }
+
         $data['fk_local_id'] = $local->loc_id;
         $morador = Morador::create($data);
 
@@ -114,7 +122,24 @@ class MoradorController extends Controller
             abort(404);
         }
 
-        $morador->update($request->validated());
+        $data = $request->validated();
+        $removeDocumento = (bool) ($data['remover_documento_pessoal'] ?? false);
+        unset($data['mor_documento_pessoal'], $data['remover_documento_pessoal']);
+
+        if ($removeDocumento) {
+            $this->deleteDocumentoPessoal($morador);
+            $data['mor_documento_pessoal_path'] = null;
+            $data['mor_documento_pessoal_nome'] = null;
+            $data['mor_documento_pessoal_mime'] = null;
+            $data['mor_documento_pessoal_tamanho'] = null;
+        }
+
+        if ($request->hasFile('mor_documento_pessoal')) {
+            $this->deleteDocumentoPessoal($morador);
+            $data = array_merge($data, $this->uploadDocumentoPessoal($request->file('mor_documento_pessoal')));
+        }
+
+        $morador->update($data);
 
         LogHelper::registrar(
             'Atualização de ocupante (Visita Aí)',
@@ -138,6 +163,8 @@ class MoradorController extends Controller
         if ((int) $morador->fk_local_id !== (int) $local->loc_id) {
             abort(404);
         }
+
+        $this->deleteDocumentoPessoal($morador);
 
         $id = $morador->mor_id;
         $morador->delete();
@@ -181,5 +208,44 @@ class MoradorController extends Controller
         $safeMorador = $safeMorador !== '' ? $safeMorador : 'morador';
 
         return $pdf->download('ficha-socioeconomica-'.$safeCode.'-'.$safeMorador.'.pdf');
+    }
+
+    public function downloadDocumentoPessoal(Local $local, Morador $morador)
+    {
+        $this->authorize('view', $local);
+        $this->authorize('view', $morador);
+
+        if ((int) $morador->fk_local_id !== (int) $local->loc_id) {
+            abort(404);
+        }
+
+        $path = (string) ($morador->mor_documento_pessoal_path ?? '');
+        if ($path === '' || ! Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+
+        $downloadName = $morador->mor_documento_pessoal_nome ?: ('documento-pessoal-ocupante-'.$morador->mor_id);
+
+        return response()->download(Storage::disk('local')->path($path), $downloadName);
+    }
+
+    private function uploadDocumentoPessoal(UploadedFile $file): array
+    {
+        $path = $file->store('moradores/documentos', 'local');
+
+        return [
+            'mor_documento_pessoal_path' => $path,
+            'mor_documento_pessoal_nome' => $file->getClientOriginalName(),
+            'mor_documento_pessoal_mime' => $file->getClientMimeType(),
+            'mor_documento_pessoal_tamanho' => $file->getSize(),
+        ];
+    }
+
+    private function deleteDocumentoPessoal(Morador $morador): void
+    {
+        $path = (string) ($morador->mor_documento_pessoal_path ?? '');
+        if ($path !== '' && Storage::disk('local')->exists($path)) {
+            Storage::disk('local')->delete($path);
+        }
     }
 }

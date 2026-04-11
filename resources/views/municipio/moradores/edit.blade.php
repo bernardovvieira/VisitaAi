@@ -15,7 +15,7 @@
 
     <x-section-card class="w-full space-y-4">
         <x-page-header :eyebrow="__('Ocupantes')" :title="__('Editar ocupante')" />
-        <form method="post" action="{{ route($profile . '.locais.moradores.update', [$local, $morador]) }}" class="space-y-6">
+        <form method="post" action="{{ route($profile . '.locais.moradores.update', [$local, $morador]) }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('patch')
             @include('municipio.moradores._form')

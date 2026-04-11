@@ -24,7 +24,7 @@
     <div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <div class="space-y-5 xl:col-span-2">
             <dl class="grid grid-cols-1 gap-x-4 gap-y-3 text-sm text-gray-700 dark:text-gray-300 sm:grid-cols-3">
-                <div class="sm:col-span-2">
+                <div class="sm:col-span-3">
                     <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código único do imóvel') }}</dt>
                     <dd class="mt-1">
                         <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_codigo_unico }}</span>
@@ -33,41 +33,47 @@
                         @endif
                     </dd>
                 </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Tipo') }}</dt>
-                    <dd class="mt-1">{{ $tipoLabel }}</dd>
+                <div class="space-y-3">
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Tipo') }}</dt>
+                        <dd class="mt-1">{{ $tipoLabel }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Zona') }}</dt>
+                        <dd class="mt-1">{{ $zonaLabel }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Quarteirão') }}</dt>
+                        <dd class="mt-1">{{ $local->loc_quarteirao ?? $na }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Criado em') }}</dt>
+                        <dd class="mt-1 italic">{{ $local->created_at->format('d/m/Y H:i') }}</dd>
+                    </div>
                 </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Zona') }}</dt>
-                    <dd class="mt-1">{{ $zonaLabel }}</dd>
+                <div class="space-y-3">
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código da localidade') }}</dt>
+                        <dd class="mt-1">{{ $local->loc_codigo ?? $na }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Sequência') }}</dt>
+                        <dd class="mt-1">{{ $local->loc_sequencia ?? $na }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Atualizado em') }}</dt>
+                        <dd class="mt-1 italic">{{ $local->updated_at->format('d/m/Y H:i') }}</dd>
+                    </div>
                 </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código da localidade') }}</dt>
-                    <dd class="mt-1">{{ $local->loc_codigo ?? $na }}</dd>
-                </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Categoria') }}</dt>
-                    <dd class="mt-1">{{ $local->loc_categoria ?? $na }}</dd>
-                </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Quarteirão') }}</dt>
-                    <dd class="mt-1">{{ $local->loc_quarteirao ?? $na }}</dd>
-                </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Sequência') }}</dt>
-                    <dd class="mt-1">{{ $local->loc_sequencia ?? $na }}</dd>
-                </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Lado') }}</dt>
-                    <dd class="mt-1">{{ $local->loc_lado ?? $na }}</dd>
-                </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Criado em') }}</dt>
-                    <dd class="mt-1">{{ $local->created_at->format('d/m/Y H:i') }}</dd>
-                </div>
-                <div>
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Atualizado em') }}</dt>
-                    <dd class="mt-1">{{ $local->updated_at->format('d/m/Y H:i') }}</dd>
+                <div class="space-y-3">
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Categoria') }}</dt>
+                        <dd class="mt-1">{{ $local->loc_categoria ?? $na }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Lado') }}</dt>
+                        <dd class="mt-1">{{ $local->loc_lado ?? $na }}</dd>
+                    </div>
                 </div>
                 <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
                     <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Endereço completo') }}</dt>
@@ -78,10 +84,6 @@
                             <span class="text-slate-500 dark:text-slate-400"> · </span>{{ __('Complemento') }}: {{ $local->loc_complemento }}
                         @endif
                     </dd>
-                </div>
-                <div class="sm:col-span-3">
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Responsável pelo imóvel') }}</dt>
-                    <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $local->loc_responsavel_nome ?? __('Não informado') }}</dd>
                 </div>
             </dl>
         </div>

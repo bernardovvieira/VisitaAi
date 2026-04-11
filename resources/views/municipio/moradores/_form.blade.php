@@ -143,6 +143,33 @@
                 <x-input-label for="mor_cpf" :value="__('CPF')" />
                 <x-text-input id="mor_cpf" name="mor_cpf" type="text" class="mt-1 block w-full" :value="old('mor_cpf', $morador->mor_cpf)" />
             </div>
+            <div class="sm:col-span-2 lg:col-span-3 space-y-2 rounded-lg border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-700 dark:bg-slate-900/40">
+                <x-input-label for="mor_documento_pessoal" :value="__('Documento pessoal (arquivo ou foto)')" />
+                <input
+                    id="mor_documento_pessoal"
+                    name="mor_documento_pessoal"
+                    type="file"
+                    accept="image/*,application/pdf"
+                    capture="environment"
+                    class="v-input mt-1 block w-full file:mr-3 file:rounded-md file:border-0 file:bg-slate-700 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-slate-800 dark:file:bg-slate-200 dark:file:text-slate-900 dark:hover:file:bg-white"
+                >
+                <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('Você pode selecionar um arquivo do aparelho ou tirar uma foto no celular. Formatos: PDF, JPG, PNG, WEBP, HEIC. Limite: 10 MB.') }}</p>
+                <x-input-error :messages="$errors->get('mor_documento_pessoal')" class="mt-1" />
+
+                @if($morador->exists && $morador->mor_documento_pessoal_path)
+                    <div class="flex flex-wrap items-center gap-3 text-xs">
+                        <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $morador]) }}"
+                           class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                            {{ __('Baixar documento atual') }}
+                        </a>
+                        <label class="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                            <input type="checkbox" name="remover_documento_pessoal" value="1" class="rounded border-slate-300 text-red-600 focus:ring-red-500">
+                            <span>{{ __('Remover documento atual') }}</span>
+                        </label>
+                    </div>
+                    <x-input-error :messages="$errors->get('remover_documento_pessoal')" class="mt-1" />
+                @endif
+            </div>
         </div>
     </fieldset>
 </div>

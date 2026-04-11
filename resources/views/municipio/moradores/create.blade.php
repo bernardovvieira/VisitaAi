@@ -15,7 +15,7 @@
 
     <x-section-card class="w-full space-y-4">
         <x-page-header :eyebrow="__('Ocupantes')" :title="__('Novo ocupante')" />
-        <form method="post" action="{{ route($profile . '.locais.moradores.store', $local) }}" class="space-y-6">
+        <form method="post" action="{{ route($profile . '.locais.moradores.store', $local) }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @include('municipio.moradores._form')
             <div class="flex flex-wrap gap-3 pt-2">
