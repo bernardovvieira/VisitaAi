@@ -18,6 +18,7 @@
 @php
     use App\Support\SocioeconomicoEtiquetas as SE;
     $s = $socio;
+    $moradoresPdf = $moradores ?? $local->moradores;
 @endphp
 
 <h1>{{ __('CADASTRO SOCIOECONÔMICO') }}</h1>
@@ -51,6 +52,9 @@
 </table>
 
 <h2>{{ $titulos['moradores'] ?? 'Composição familiar' }}</h2>
+@if(isset($moradorSelecionado) && $moradorSelecionado)
+    <p class="small">{{ __('Ocupante selecionado') }}: <strong>{{ $moradorSelecionado->mor_nome ?? __('N/D') }}</strong></p>
+@endif
 <table>
     <thead>
         <tr>
@@ -67,7 +71,7 @@
         </tr>
     </thead>
     <tbody>
-        @forelse($local->moradores as $m)
+        @forelse($moradoresPdf as $m)
             <tr>
                 <td>{{ $m->mor_nome ?? '-' }}</td>
                 <td>{{ $m->mor_referencia_familiar ? '★' : '-' }}</td>

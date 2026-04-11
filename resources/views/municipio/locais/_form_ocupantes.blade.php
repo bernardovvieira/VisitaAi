@@ -170,7 +170,7 @@
                 </div>
                 <x-ui.disclosure variant="muted-card-simple" :open="false">
                     <x-slot name="summary">
-                        <span class="border-b border-dotted border-slate-400 pb-px text-xs dark:border-slate-500">{{ __('Documentos (opcional, sensível)') }}</span>
+                        <span class="border-b border-dotted border-slate-400 pb-px text-xs dark:border-slate-500">{{ __('Documentos (sensível)') }}</span>
                     </x-slot>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 pt-2">
                         <div>

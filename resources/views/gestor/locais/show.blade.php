@@ -29,6 +29,10 @@
 
     @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 
-    @include('municipio.locais._painel_sensivel_gestor', ['local' => $local])
+    @include('municipio.locais._painel_sensivel_gestor', [
+        'local' => $local,
+        'profile' => 'gestor',
+        'fichaPdfUrl' => route('gestor.locais.ficha-socioeconomica-pdf', $local),
+    ])
 </div>
 @endsection

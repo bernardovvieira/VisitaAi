@@ -5,10 +5,11 @@
     $rendaL = config('visitaai_municipio.renda_faixa_opcoes', []);
     $corL = config('visitaai_municipio.cor_raca_opcoes', []);
     $trabL = config('visitaai_municipio.situacao_trabalho_opcoes', []);
+    $profile = $profile ?? (auth()->user()?->isGestor() ? 'gestor' : 'agente');
     $local->loadMissing(['moradores', 'visitas']);
     $porMorId = $local->moradores->keyBy('mor_id');
 @endphp
-<x-section-card class="border-slate-200/90 border-l-[3px] border-l-blue-600/80 bg-slate-50/70 text-sm dark:border-slate-700/80 dark:border-l-blue-500/65 dark:bg-slate-900/35">
+<x-section-card class="border-slate-200/90 bg-slate-50/70 text-sm dark:border-slate-700/80 dark:bg-slate-900/35">
     <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $cfg['painel_sensivel_gestor_titulo'] ?? '' }}</h2>
     @if(filled(trim((string) ($cfg['painel_sensivel_gestor_texto'] ?? ''))))
         <x-ui.disclosure variant="lead-mt">
@@ -23,8 +24,26 @@
     @if($local->moradores->isEmpty())
         <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">{{ __('Nenhum ocupante cadastrado neste imóvel.') }}</p>
     @else
-        <div class="mt-4 overflow-x-auto rounded-lg ring-1 ring-slate-200/90 dark:ring-slate-700/80">
-            <table class="min-w-full border-collapse text-[13px] leading-snug text-slate-900 dark:text-slate-100">
+        <div x-data="{ query: '' }" class="mt-4 space-y-3">
+            <div class="v-list-toolbar !p-3 sm:!p-4">
+                <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="min-w-0 flex-1">
+                        <label for="moradores-search-local" class="v-toolbar-label">{{ __('Pesquisar ocupantes') }}</label>
+                        <input id="moradores-search-local" type="text" x-model="query" class="v-input" placeholder="{{ __('Nome, escolaridade, renda, trabalho...') }}">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        @if(! empty($fichaPdfUrl))
+                            <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
+                                <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+                                {{ __('Baixar ficha socioeconômica (imóvel)') }}
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="v-table-wrap rounded-lg border border-slate-200/90 dark:border-slate-700/80">
+            <table class="v-data-table">
                 <thead>
                     <tr class="bg-slate-100/95 text-left dark:bg-slate-800/70">
                         <th class="whitespace-nowrap px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-700 dark:text-slate-300">ID</th>
@@ -35,11 +54,22 @@
                         <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-700 dark:text-slate-300">{{ __('Cor/raça') }}</th>
                         <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-700 dark:text-slate-300">{{ __('Trabalho') }}</th>
                         <th class="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-700 dark:text-slate-300">{{ __('Obs.') }}</th>
+                        <th class="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-700 dark:text-slate-300">{{ __('Ficha') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
                     @foreach($local->moradores->sortBy('mor_id') as $m)
-                        <tr class="bg-white/90 dark:bg-slate-900/40">
+                        @php
+                            $search = 
+                                mb_strtolower(trim(implode(' ', [
+                                    $m->mor_nome ?? '',
+                                    $escL[$m->mor_escolaridade] ?? $m->mor_escolaridade ?? '',
+                                    $rendaL[$m->mor_renda_faixa] ?? $m->mor_renda_faixa ?? '',
+                                    $trabL[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho ?? '',
+                                    $m->mor_observacao ?? '',
+                                ])));
+                        @endphp
+                        <tr class="bg-white/90 dark:bg-slate-900/40" data-search="{{ $search }}" x-show="!query || ($el.dataset.search && $el.dataset.search.includes(query.toLowerCase()))">
                             <td class="whitespace-nowrap px-3 py-2.5 font-mono text-xs text-slate-800 dark:text-slate-200">{{ $m->mor_id }}</td>
                             <td class="max-w-[12rem] truncate px-3 py-2.5 text-slate-900 dark:text-slate-100" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: __('N/D') }}</td>
                             <td class="whitespace-nowrap px-3 py-2.5 text-slate-800 dark:text-slate-200">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? __('N/D') }}</td>
@@ -48,10 +78,18 @@
                             <td class="max-w-[8rem] px-3 py-2.5 text-slate-800 dark:text-slate-200">{{ $corL[$m->mor_cor_raca] ?? ($m->mor_cor_raca ?? __('N/D')) }}</td>
                             <td class="max-w-[10rem] px-3 py-2.5 text-slate-800 dark:text-slate-200">{{ $trabL[$m->mor_situacao_trabalho] ?? ($m->mor_situacao_trabalho ?? __('N/D')) }}</td>
                             <td class="max-w-[14rem] whitespace-pre-wrap px-3 py-2.5 text-xs text-slate-800 dark:text-slate-200">{{ $m->mor_observacao ?: __('N/D') }}</td>
+                            <td class="whitespace-nowrap px-3 py-2.5 text-right">
+                                <a href="{{ route($profile . '.locais.moradores.ficha-socioeconomica-pdf', [$local, $m]) }}"
+                                   class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                    <x-heroicon-o-document-arrow-down class="h-3.5 w-3.5" />
+                                    {{ __('PDF') }}
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
     @endif
 

@@ -38,8 +38,30 @@
         $rendaOpcoes = config('visitaai_municipio.renda_faixa_opcoes', []);
         $corOpcoes = config('visitaai_municipio.cor_raca_opcoes', []);
         $trabOpcoes = config('visitaai_municipio.situacao_trabalho_opcoes', []);
+        $fichaLocalUrl = route($profile . '.locais.ficha-socioeconomica-pdf', $local);
     @endphp
     <x-section-card class="v-card--flush overflow-hidden dark:bg-gray-800">
+        <div class="v-list-toolbar !p-3 sm:!p-4">
+            <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                <form method="get" class="min-w-0 flex-1">
+                    <label for="ocupantes-q" class="v-toolbar-label">{{ __('Pesquisar ocupantes') }}</label>
+                    <div class="flex items-center gap-2">
+                        <input id="ocupantes-q" name="q" type="text" value="{{ $search ?? '' }}" class="v-input" placeholder="{{ __('Nome, escolaridade, renda, trabalho...') }}">
+                        <button type="submit" class="v-btn-compact v-btn-compact--slate">{{ __('Buscar') }}</button>
+                        @if(filled($search ?? ''))
+                            <a href="{{ route($profile . '.locais.moradores.index', $local) }}" class="v-btn-compact v-btn-compact--ghost">{{ __('Limpar') }}</a>
+                        @endif
+                    </div>
+                </form>
+                <div class="flex flex-wrap items-center gap-2">
+                    <a href="{{ $fichaLocalUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
+                        <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+                        {{ __('Ficha do imóvel (PDF)') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div class="v-table-wrap">
             <table class="v-data-table">
                 <thead>
@@ -66,6 +88,12 @@
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
                             <td class="text-right whitespace-nowrap">
                                 <div class="inline-flex justify-end gap-1.5">
+                                    <a href="{{ route($profile . '.locais.moradores.ficha-socioeconomica-pdf', [$local, $m]) }}"
+                                       class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                       title="{{ __('Baixar ficha socioeconômica') }}"
+                                       aria-label="{{ __('Baixar ficha socioeconômica') }}">
+                                        <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" />
+                                    </a>
                                     <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
                                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                                        title="{{ __('Editar') }}"

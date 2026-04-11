@@ -9,14 +9,15 @@
     $rfi = config('visitaai_socioeconomico.renda_formal_informal_opcoes', []);
 @endphp
 
-<div class="space-y-4">
-    <div>
-        <x-input-label for="mor_nome" :value="__('Nome (opcional)')" />
+<div class="space-y-5">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="lg:col-span-2">
+        <x-input-label for="mor_nome" :value="__('Nome')" />
         <x-text-input id="mor_nome" name="mor_nome" type="text" class="mt-1 block w-full" :value="old('mor_nome', $morador->mor_nome)" />
         <x-input-error :messages="$errors->get('mor_nome')" class="mt-2" />
     </div>
     <div>
-        <x-input-label for="mor_data_nascimento" :value="__('Data de nascimento (opcional)')" />
+        <x-input-label for="mor_data_nascimento" :value="__('Data de nascimento')" />
         <x-text-input id="mor_data_nascimento" name="mor_data_nascimento" type="date" class="mt-1 block w-full" :value="old('mor_data_nascimento', optional($morador->mor_data_nascimento)->format('Y-m-d'))" />
         <x-input-error :messages="$errors->get('mor_data_nascimento')" class="mt-2" />
     </div>
@@ -60,15 +61,16 @@
         </select>
         <x-input-error :messages="$errors->get('mor_situacao_trabalho')" class="mt-2" />
     </div>
-    <div>
-        <x-input-label for="mor_observacao" :value="__('Observações (opcional)')" />
+    <div class="lg:col-span-2">
+        <x-input-label for="mor_observacao" :value="__('Observações')" />
         <textarea id="mor_observacao" name="mor_observacao" rows="3" class="v-input mt-1">{{ old('mor_observacao', $morador->mor_observacao) }}</textarea>
         <x-input-error :messages="$errors->get('mor_observacao')" class="mt-2" />
     </div>
+    </div>
 
     <fieldset class="space-y-4 border-t border-slate-200 pt-4 dark:border-slate-600">
-        <legend class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Ficha socioeconômica (opcional)') }}</legend>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <legend class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Ficha socioeconômica') }}</legend>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
                 <x-input-label for="mor_sexo" :value="__('Sexo')" />
                 <select id="mor_sexo" name="mor_sexo" class="v-select mt-1">
@@ -137,7 +139,7 @@
                 <x-input-label for="mor_rg_orgao" :value="__('RG (órgão)')" />
                 <x-text-input id="mor_rg_orgao" name="mor_rg_orgao" type="text" class="mt-1 block w-full" :value="old('mor_rg_orgao', $morador->mor_rg_orgao)" />
             </div>
-            <div class="sm:col-span-2">
+            <div class="sm:col-span-2 lg:col-span-3">
                 <x-input-label for="mor_cpf" :value="__('CPF')" />
                 <x-text-input id="mor_cpf" name="mor_cpf" type="text" class="mt-1 block w-full" :value="old('mor_cpf', $morador->mor_cpf)" />
             </div>

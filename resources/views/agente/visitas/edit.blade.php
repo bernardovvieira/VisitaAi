@@ -103,7 +103,7 @@
 
                     <div class="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-600" x-show="selectedId" x-cloak>
                         <p class="v-section-title text-sm">{{ __('Ocupantes (nesta visita)') }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel. Opcional.') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel.') }}</p>
                         <template x-for="m in ((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || []" :key="m.mor_id">
                             <div>
                                 <label class="v-toolbar-label" x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></label>
@@ -112,7 +112,7 @@
                                     rows="2"
                                     x-bind:name="'morador_obs[' + m.mor_id + ']'"
                                     x-init="$el.value = (oldMoradorObs[String(m.mor_id)] ?? oldMoradorObs[m.mor_id] ?? '')"
-                                    placeholder="{{ __('Informações sobre este ocupante nesta visita (opcional)') }}"
+                                    placeholder="{{ __('Informações sobre este ocupante nesta visita') }}"
                                 ></textarea>
                             </div>
                         </template>

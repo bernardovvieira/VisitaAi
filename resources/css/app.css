@@ -234,7 +234,7 @@
     }
 
     .v-app-main-inner {
-        @apply mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7;
+        @apply mx-auto w-full max-w-[min(100%,112rem)] px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 2xl:max-w-[min(100%,124rem)];
     }
 
     /* Páginas públicas: coluna central; largura sobe no desktop (não ficar “carta” no PC) */
@@ -519,7 +519,7 @@
 
     /* Página: ritmo vertical consistente (use v-stack dentro de secções) */
     .v-page {
-        @apply mx-auto max-w-7xl space-y-5;
+        @apply mx-auto w-full max-w-[min(100%,100rem)] space-y-5 2xl:max-w-[min(100%,112rem)];
     }
 
     .v-page.v-page--dense {
@@ -532,7 +532,7 @@
 
     /* Listagens operacionais: mais largura útil em desktop e menos espaço vertical entre blocos */
     .v-page--wide {
-        @apply max-w-[min(100%,100rem)] 2xl:max-w-[min(100%,112rem)];
+        @apply max-w-[min(100%,112rem)] 2xl:max-w-[min(100%,124rem)];
     }
 
     /* Pilha vertical padrão (formulários, secções internas) */

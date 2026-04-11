@@ -19,97 +19,88 @@
     $numeroExibicao = $local->loc_numero !== null && $local->loc_numero !== '' ? $local->loc_numero : $sn;
 @endphp
 
-@if(! empty($fichaPdfUrl))
-    <p class="mb-4 flex justify-end">
-        <a href="{{ $fichaPdfUrl }}"
-           class="v-btn-export v-btn-export--pdf inline-flex no-underline">
-            <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ __('Baixar ficha socioeconômica (PDF)') }}
-        </a>
-    </p>
-@endif
-
 <x-section-card class="space-y-5">
     <h2 class="v-section-title">{{ __('Dados cadastrais') }}</h2>
-    <dl class="grid grid-cols-1 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300 sm:grid-cols-4">
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código único do imóvel') }}</dt>
-            <dd class="mt-1">
-                <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">
-                    {{ $local->loc_codigo_unico }}
-                </span>
-                @if($local->isPrimary())
-                    <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">{{ __('Primário') }}</span>
-                @endif
-            </dd>
+    <div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
+        <div class="space-y-5 xl:col-span-2">
+            <dl class="grid grid-cols-1 gap-x-4 gap-y-3 text-sm text-gray-700 dark:text-gray-300 sm:grid-cols-3">
+                <div class="sm:col-span-2">
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código único do imóvel') }}</dt>
+                    <dd class="mt-1">
+                        <span class="inline-block rounded bg-slate-100 px-2 py-1 font-mono text-xs font-semibold tracking-tight text-slate-800 dark:bg-slate-700 dark:text-slate-200">{{ $local->loc_codigo_unico }}</span>
+                        @if($local->isPrimary())
+                            <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">{{ __('Primário') }}</span>
+                        @endif
+                    </dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Tipo') }}</dt>
+                    <dd class="mt-1">{{ $tipoLabel }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Zona') }}</dt>
+                    <dd class="mt-1">{{ $zonaLabel }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código da localidade') }}</dt>
+                    <dd class="mt-1">{{ $local->loc_codigo ?? $na }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Categoria') }}</dt>
+                    <dd class="mt-1">{{ $local->loc_categoria ?? $na }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Quarteirão') }}</dt>
+                    <dd class="mt-1">{{ $local->loc_quarteirao ?? $na }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Sequência') }}</dt>
+                    <dd class="mt-1">{{ $local->loc_sequencia ?? $na }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Lado') }}</dt>
+                    <dd class="mt-1">{{ $local->loc_lado ?? $na }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Criado em') }}</dt>
+                    <dd class="mt-1">{{ $local->created_at->format('d/m/Y H:i') }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Atualizado em') }}</dt>
+                    <dd class="mt-1">{{ $local->updated_at->format('d/m/Y H:i') }}</dd>
+                </div>
+                <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Endereço completo') }}</dt>
+                    <dd class="mt-1 text-gray-900 dark:text-gray-100">
+                        {{ $local->loc_endereco }}, {{ $numeroExibicao }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, {{ $local->loc_pais }}
+                        <span class="text-slate-500 dark:text-slate-400"> · </span>{{ __('CEP') }}: {{ $local->loc_cep }}
+                        @if($local->loc_complemento)
+                            <span class="text-slate-500 dark:text-slate-400"> · </span>{{ __('Complemento') }}: {{ $local->loc_complemento }}
+                        @endif
+                    </dd>
+                </div>
+                <div class="sm:col-span-3">
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Responsável pelo imóvel') }}</dt>
+                    <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $local->loc_responsavel_nome ?? __('Não informado') }}</dd>
+                </div>
+            </dl>
         </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Código da localidade') }}</dt>
-            <dd class="mt-1">{{ $local->loc_codigo ?? $na }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Categoria da localidade') }}</dt>
-            <dd class="mt-1">{{ $local->loc_categoria ?? $na }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Tipo') }}</dt>
-            <dd class="mt-1">{{ $tipoLabel }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Zona') }}</dt>
-            <dd class="mt-1">{{ $zonaLabel }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Quarteirão') }}</dt>
-            <dd class="mt-1">{{ $local->loc_quarteirao ?? $na }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Sequência') }}</dt>
-            <dd class="mt-1">{{ $local->loc_sequencia ?? $na }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Lado') }}</dt>
-            <dd class="mt-1">{{ $local->loc_lado ?? $na }}</dd>
-        </div>
-        <div class="sm:col-span-4" style="padding-top: 0.5rem;">
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Endereço completo') }}</dt>
-            <dd class="mt-1 text-gray-900 dark:text-gray-100">
-                {{ $local->loc_endereco }}, {{ $numeroExibicao }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, {{ $local->loc_pais }}
-                <span class="text-slate-500 dark:text-slate-400"> · </span>{{ __('CEP') }}: {{ $local->loc_cep }}<br>
-                <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('Complemento') }}: {{ $local->loc_complemento ?? $na }}</span>
-            </dd>
-        </div>
-        <div class="sm:col-span-4">
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Responsável pelo imóvel') }}</dt>
-            <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $local->loc_responsavel_nome ?? __('Não informado') }}</dd>
-        </div>
-    </dl>
 
-    <dl class="grid grid-cols-1 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300 sm:grid-cols-2">
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Latitude') }}</dt>
-            <dd class="mt-1 tabular-nums">{{ $local->loc_latitude }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Longitude') }}</dt>
-            <dd class="mt-1 tabular-nums">{{ $local->loc_longitude }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Criado em') }}</dt>
-            <dd class="mt-1">{{ $local->created_at->format('d/m/Y H:i') }}</dd>
-        </div>
-        <div>
-            <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Atualizado em') }}</dt>
-            <dd class="mt-1">{{ $local->updated_at->format('d/m/Y H:i') }}</dd>
-        </div>
-    </dl>
-
-    <div>
-        <h3 class="mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h3>
-        <div id="map" class="h-72 rounded-lg border border-gray-300 shadow-sm dark:border-gray-600 dark:shadow-none"></div>
-        <p class="mt-2 text-sm italic text-gray-600 dark:text-gray-400">
-            {{ __('A posição exibida é baseada nas coordenadas fornecidas.') }}
-        </p>
+        <aside class="space-y-3 xl:col-span-1">
+            <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h3>
+            <div id="map" class="h-52 rounded-lg border border-gray-300 shadow-sm dark:border-gray-600 dark:shadow-none"></div>
+            <dl class="grid grid-cols-1 gap-2 rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-xs dark:border-slate-700/70 dark:bg-slate-900/45">
+                <div>
+                    <dt class="font-medium text-slate-500 dark:text-slate-400">{{ __('Latitude') }}</dt>
+                    <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $local->loc_latitude }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium text-slate-500 dark:text-slate-400">{{ __('Longitude') }}</dt>
+                    <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $local->loc_longitude }}</dd>
+                </div>
+            </dl>
+            <p class="text-xs italic text-gray-600 dark:text-gray-400">{{ __('A posição exibida é baseada nas coordenadas fornecidas.') }}</p>
+        </aside>
     </div>
 
     <div class="mt-6 border-t border-slate-200/90 pt-5 dark:border-slate-700/80">

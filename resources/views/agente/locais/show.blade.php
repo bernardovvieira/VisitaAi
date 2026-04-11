@@ -31,5 +31,11 @@
     ])
 
     @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
+
+    @include('municipio.locais._painel_sensivel_gestor', [
+        'local' => $local,
+        'profile' => 'agente',
+        'fichaPdfUrl' => $fichaPdfUrl,
+    ])
 </div>
 @endsection

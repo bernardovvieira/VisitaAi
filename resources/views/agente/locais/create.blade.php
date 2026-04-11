@@ -139,7 +139,7 @@
                     <label for="loc_responsavel_nome" class="v-toolbar-label">Nome completo (morador, locatário ou proprietário)</label>
                     <input id="loc_responsavel_nome" name="loc_responsavel_nome" type="text" value="{{ old('loc_responsavel_nome') }}" maxlength="255"
                            class="v-input mt-1"
-                           placeholder="Opcional">
+                              placeholder="">
                 </div>
             </fieldset>
 
