@@ -2,14 +2,14 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Locais'))
-@section('og_description', __('Locais cadastrados pelos profissionais (ACE/ACS). Visualize os detalhes de cada endereço de visitação (vigilância entomológica e controle vetorial).'))
+@section('og_description', __('Locais cadastrados pelos profissionais de campo (ACE/ACS). Consulte endereços, códigos e coordenadas da base territorial.'))
 
 @section('content')
 <div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')">
         <x-slot name="lead">
-            <p>{{ __('Locais registrados pelos profissionais (ACE/ACS). Visualize endereço, código único e coordenadas.') }}</p>
+            <p>{{ __('Locais registrados pelos profissionais (ACE/ACS). Consulte endereço, código único e coordenadas.') }}</p>
         </x-slot>
     </x-page-header>
 
@@ -18,7 +18,7 @@
     @if(!empty($coordenadasDuplicadas))
         <x-ui.callout variant="amber" class="v-alert-erp border-amber-200/60 dark:border-amber-900/40" role="alert">
             <p class="text-sm font-medium text-amber-950 dark:text-amber-100">{{ __('Coordenadas duplicadas') }}</p>
-            <p class="mt-1 text-sm text-amber-900/90 dark:text-amber-200/85">{{ __('Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.') }}</p>
+            <p class="mt-1 text-sm text-amber-900/90 dark:text-amber-200/85">{{ __('Existem imóveis com a mesma coordenada (latitude e longitude). Revise os locais para evitar duplicidade.') }}</p>
         </x-ui.callout>
     @endif
 

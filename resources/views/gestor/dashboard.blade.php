@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Painel do gestor'))
-@section('og_description', __('Painel do gestor municipal: visitas, imóveis cadastrados, ocupantes, indicadores e relatórios; módulos que se integram conforme a necessidade local.'))
+@section('og_description', __('Painel do gestor municipal com visão consolidada da operação territorial, indicadores e relatórios.'))
 
 @section('content')
 @php
@@ -33,7 +33,7 @@
         <div class="v-dash-header-text">
             <p class="v-dash-eyebrow">{{ __('Console municipal') }}</p>
             <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
-            <p class="v-dash-sub">{{ __('Visão geral do município, indicadores e atalhos para o dia a dia.') }}</p>
+            <p class="v-dash-sub">{{ __('Visão geral do município com indicadores e atalhos para a rotina da gestão.') }}</p>
         </div>
     </header>
 
@@ -167,7 +167,7 @@
                     <a href="{{ route('gestor.indicadores.ocupantes') }}" class="v-dash-shortcut">
                         <x-heroicon-o-chart-bar class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Indicadores dos imóveis') }}</span>
+                            <span class="v-dash-shortcut__label">{{ __('Indicadores municipais') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>
@@ -188,7 +188,7 @@
                     <a href="{{ route('gestor.relatorios.index') }}" class="v-dash-shortcut">
                         <x-heroicon-o-document-text class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Relatórios de vigilância') }}</span>
+                            <span class="v-dash-shortcut__label">{{ __('Relatórios operacionais') }}</span>
                         </span>
                         <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
                     </a>

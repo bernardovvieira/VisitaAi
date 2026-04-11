@@ -543,7 +543,7 @@
     }
 
     .v-page-header {
-        @apply mb-0 border-b border-slate-200/70 pb-4 dark:border-slate-700/60;
+        @apply mb-1 border-b border-slate-200/70 pb-5 dark:border-slate-700/60;
     }
 
     .v-page-eyebrow {
@@ -551,19 +551,19 @@
     }
 
     .v-page-title {
-        @apply text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl;
+        @apply text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-3xl;
         letter-spacing: -0.025em;
-        line-height: 1.2;
+        line-height: 1.15;
     }
 
     .v-page-lead {
-        @apply mt-3 max-w-2xl text-sm leading-relaxed;
+        @apply mt-3.5 max-w-3xl text-[14px] leading-relaxed;
         color: rgb(var(--v-text-muted) / 1);
     }
 
     /* Título de secção / fieldset: peso médio, sem gritar */
     .v-section-title {
-        @apply text-sm font-semibold tracking-tight text-slate-800 dark:text-slate-100;
+        @apply text-[15px] font-semibold tracking-tight text-slate-800 dark:text-slate-100;
     }
 
     /* Rótulo de grupo denso (tabelas, meta): microcaption discreto */
@@ -573,7 +573,7 @@
 
     /* Cartão: superfície plana, borda fina, sombra quase imperceptível */
     .v-card {
-        @apply overflow-hidden p-5 sm:p-6;
+        @apply overflow-hidden p-5 sm:p-6 lg:p-7;
         border-radius: var(--v-radius-2xl);
         border: 1px solid rgb(var(--v-border) / 0.75);
         background-color: rgb(var(--v-surface) / 1);

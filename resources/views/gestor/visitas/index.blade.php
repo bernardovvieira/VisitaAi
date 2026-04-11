@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Visitas'))
-@section('og_description', __('Visitas de vigilância entomológica e controle vetorial registradas. Visualize e busque visitas realizadas pelos profissionais (ACE/ACS).'))
+@section('og_description', __('Visitas registradas pelos profissionais de campo. Acompanhe e consulte os registros operacionais.'))
 
 @section('content')
 <div class="v-page v-page--wide v-page--dense">
@@ -9,7 +9,7 @@
 
     <x-page-header :eyebrow="__('Vigilância em campo')" :title="__('Visitas')">
         <x-slot name="lead">
-            <p>{{ __('Visualize e busque visitas registradas pelos profissionais de campo (ACE e ACS).') }}</p>
+            <p>{{ __('Acompanhe e busque visitas registradas pelos profissionais de campo (ACE e ACS).') }}</p>
         </x-slot>
     </x-page-header>
 
@@ -17,7 +17,7 @@
 
     @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
         <x-ui.callout variant="amber" :title="__('Pendências sem revisita')">
-            <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada e sem visita posterior.') }}</p>
+            <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada sem revisita posterior.') }}</p>
             <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
                 @foreach ($locaisComPendenciasNaoRevisitadas as $local)
                     @php

@@ -4,7 +4,7 @@
     $logoHrefOnline = route('dashboard');
     $logoHrefOffline = route('dashboard');
     $yearEnd = (int) now()->format('Y');
-    $copyrightYears = $yearEnd <= 2025 ? '2025' : '2025-'.$yearEnd;
+    $copyrightYears = $yearEnd <= 2025 ? '2025' : '2025–'.$yearEnd;
 @endphp
 
 <aside id="app-sidebar" role="navigation"
@@ -47,13 +47,13 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Imóveis e cadastro')" />
+            <x-sidebar-nav-section :label="__('Núcleo municipal')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.locais.index')"
                                 :active="request()->routeIs('gestor.locais.*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Locais') }}</span>
+                    <span class="truncate">{{ __('Cadastro territorial') }}</span>
                 </x-sidebar-link>
             </div>
             <div x-show="online" x-cloak>
@@ -61,16 +61,16 @@
                                 :active="request()->routeIs('gestor.indicadores.ocupantes*')"
                                 @click="if (window.innerWidth < 1024) sidebarOpen = false">
                     <x-heroicon-o-chart-bar class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                    <span class="truncate">{{ __('Indicadores') }}</span>
+                    <span class="truncate">{{ __('Painéis e indicadores') }}</span>
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Vigilância')" />
+            <x-sidebar-nav-section :label="__('Especializações em saúde')" />
             <x-sidebar-link :href="route('gestor.visitas.index')"
                             :active="request()->routeIs('gestor.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Visitas') }}</span>
+                <span class="truncate">{{ __('Operação de campo') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.doencas.index')"
@@ -89,7 +89,7 @@
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Equipe e sistema')" />
+            <x-sidebar-nav-section :label="__('Governança e sistema')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('gestor.users.index')"
                                 :active="request()->routeIs('gestor.users.*')"
@@ -115,20 +115,20 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Imóveis')" />
+            <x-sidebar-nav-section :label="__('Núcleo municipal')" />
             <x-sidebar-link :href="route('agente.locais.index')"
                             :active="request()->routeIs('agente.locais.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Locais') }}</span>
+                <span class="truncate">{{ __('Cadastro territorial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('Vigilância no campo')" />
+            <x-sidebar-nav-section :label="__('Especializações em saúde')" />
             <x-sidebar-link :href="route('agente.visitas.index')"
                             :active="request()->routeIs('agente.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Visitas') }}</span>
+                <span class="truncate">{{ __('Operação de campo') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('agente.doencas.index')"
@@ -139,7 +139,7 @@
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Sincronização')" />
+            <x-sidebar-nav-section :label="__('Operação e sincronização')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('agente.sincronizar')"
                                 :active="request()->routeIs('agente.sincronizar')"
@@ -157,12 +157,12 @@
                 <span class="truncate">{{ __('Página Inicial') }}</span>
             </x-sidebar-link>
 
-            <x-sidebar-nav-section :label="__('LIRAa')" />
+            <x-sidebar-nav-section :label="__('Especializações em saúde')" />
             <x-sidebar-link :href="route('saude.visitas.index')"
                             :active="request()->routeIs('saude.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Minhas Visitas') }}</span>
+                <span class="truncate">{{ __('Operação de campo') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('saude.doencas.index')"
@@ -173,7 +173,7 @@
                 </x-sidebar-link>
             </div>
 
-            <x-sidebar-nav-section :label="__('Sincronização')" />
+            <x-sidebar-nav-section :label="__('Operação e sincronização')" />
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('saude.sincronizar')"
                                 :active="request()->routeIs('saude.sincronizar')"

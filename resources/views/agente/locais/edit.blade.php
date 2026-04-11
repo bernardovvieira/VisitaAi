@@ -214,7 +214,7 @@
 
             <div class="flex justify-end">
                 <button type="submit" class="v-btn-primary px-6">
-                    Salvar Alterações
+                    Salvar alterações
                 </button>
             </div>
         </form>

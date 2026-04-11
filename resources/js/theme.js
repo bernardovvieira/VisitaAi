@@ -17,7 +17,9 @@ function setStored(value) {
   try {
     if (value) localStorage.setItem(STORAGE_KEY, value);
     else localStorage.removeItem(STORAGE_KEY);
-  } catch {}
+  } catch {
+    // Ignore storage errors (private mode/quota).
+  }
 }
 
 function prefersDark() {

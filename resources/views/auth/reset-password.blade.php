@@ -1,8 +1,8 @@
 <x-guest-layout>
-    <h1 class="mb-1 text-xl font-semibold text-slate-900 dark:text-slate-100 sm:text-2xl">
+    <h1 class="mb-1 text-2xl font-bold text-slate-900 dark:text-slate-100">
         {{ __('Redefinir Senha') }}
     </h1>
-    <p class="mb-6 text-sm text-slate-600 dark:text-slate-400">
+    <p class="mb-5 text-sm text-slate-600 dark:text-slate-400">
         {{ __('Defina uma nova senha forte para sua conta.') }}
     </p>
 
@@ -70,7 +70,7 @@
 
     <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
         {{ __('Já lembra da senha?') }}
-        <a href="{{ route('login') }}" class="font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400">
+        <a href="{{ route('login') }}" class="font-medium text-blue-700 underline hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">
             {{ __('Entrar') }}
         </a>
     </p>

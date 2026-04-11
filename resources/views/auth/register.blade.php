@@ -1,4 +1,11 @@
 <x-guest-layout>
+    <div class="max-w-md mx-auto mt-2 mb-6 text-center">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Criar conta</h1>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            Cadastro de acesso para operação municipal de campo e gestão.
+        </p>
+    </div>
+
     @if ($errors->has('register'))
         <x-alert type="error" :title="__('Erro')" :message="$errors->first('register')" />
     @endif
@@ -23,7 +30,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-8" id="register-form"
+    <form method="POST" action="{{ route('register') }}" class="max-w-md mx-auto mt-4" id="register-form"
           data-msg-cpf-invalid="{{ __('CPF inválido.') }}"
           data-msg-cpf-valid="{{ __('CPF válido.') }}"
           data-msg-match-ok="{{ __('Senhas conferem.') }}"
@@ -100,7 +107,7 @@
 
     <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
         {{ __('Já tem conta?') }}
-        <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+        <a href="{{ route('login') }}" class="text-blue-700 dark:text-blue-400 hover:underline font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">
             {{ __('Faça login') }}
         </a>
     </p>

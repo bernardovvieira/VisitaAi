@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Locais'))
-@section('og_description', __('Locais de visitação. Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.'))
+@section('og_description', __('Locais cadastrados para a operação de campo. Visualize, crie e edite registros territoriais.'))
 
 @section('content')
 <div class="v-page v-page--wide v-page--dense">
@@ -34,14 +34,14 @@
             <div class="min-w-0 max-w-3xl space-y-2">
                 <h2 class="v-section-title">{{ __('Locais de visitação') }}</h2>
                 <p class="text-sm text-slate-600 dark:text-slate-400">
-                    {{ __('Visualize, cadastre e edite locais para realização de visitas de vigilância entomológica e controle vetorial.') }}
+                    {{ __('Visualize, crie e edite locais usados na operação de campo.') }}
                 </p>
                 <x-ui.disclosure variant="lead-mt" class="mt-1">
                     <x-slot name="summary">
                         <span class="border-b border-dotted border-slate-500/45 pb-px dark:border-slate-400/45">{{ __('Uso offline e dica de campo') }}</span>
                     </x-slot>
                     <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                        {!! __('<strong>Uso offline:</strong> Sem internet você pode cadastrar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Cadastrar local</strong> pelo menos uma vez com internet para poder usá-las offline.') !!}
+                        {!! __('<strong>Uso offline:</strong> Sem internet você pode salvar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Novo local</strong> pelo menos uma vez com internet para habilitar o uso offline.') !!}
                     </p>
                 </x-ui.disclosure>
                 <x-ui.disclosure variant="footer-lgpd" class="mt-2 max-w-2xl">
@@ -54,7 +54,7 @@
             <a href="{{ route('agente.locais.create') }}"
                class="v-btn-compact v-btn-compact--blue shrink-0 self-start sm:self-auto">
                 <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Cadastrar local') }}
+                {{ __('Novo local') }}
             </a>
         </div>
         <div class="mt-4 border-t border-slate-200/80 pt-4 dark:border-slate-700/70">
@@ -174,10 +174,10 @@
                                         <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
                                     </div>
                                     <p class="font-medium text-slate-600 dark:text-slate-400">{{ __('Nenhum local cadastrado.') }}</p>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-500">{{ __('Cadastre o primeiro local para realizar visitas.') }}</p>
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-500">{{ __('Crie o primeiro local para iniciar os registros de campo.') }}</p>
                                     <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                                        {{ __('Cadastrar local') }}
+                                        {{ __('Novo local') }}
                                     </a>
                                 </div>
                             </td>

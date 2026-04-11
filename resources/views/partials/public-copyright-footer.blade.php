@@ -2,7 +2,7 @@
     $copyrightYearStart = 2025;
     $copyrightYearNow = (int) now()->format('Y');
     $copyrightYears = $copyrightYearNow > $copyrightYearStart
-        ? $copyrightYearStart.' a '.$copyrightYearNow
+        ? $copyrightYearStart.'–'.$copyrightYearNow
         : (string) $copyrightYearNow;
     $footerClass = trim($footerClass ?? '');
     $footerId = $footerId ?? null;
@@ -28,7 +28,7 @@
                     {{ config('app.brand') }}
                 </p>
                 <p class="text-[11px] leading-relaxed text-slate-400 dark:text-slate-500">
-                    {{ __('Solução de apoio à vigilância em saúde e controle de vetores.') }}
+                    {{ __('Plataforma municipal para operação territorial, indicadores e transparência.') }}
                 </p>
             </div>
         </div>

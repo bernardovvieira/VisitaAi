@@ -102,7 +102,7 @@
             <div class="flex justify-end">
                 <button type="submit" id="doenca-edit-btn"
                         class="v-btn-compact v-btn-compact--blue">
-                    Salvar Alterações
+                    Salvar alterações
                 </button>
             </div>
         </form>

@@ -1,4 +1,5 @@
 /database/testing_registry*.sqlite
+/database/e2e.sqlite
 /.phpunit.cache
 .DS_Store
 /node_modules
@@ -24,3 +25,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/playwright-report
+/test-results

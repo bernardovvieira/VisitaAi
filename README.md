@@ -1,6 +1,15 @@
-# Visita Aí - Controle de Visitas (Vigilância Entomológica e Controle Vetorial)
+# Visita Aí - Plataforma Municipal de Operação Territorial e Indicadores
 
-Sistema desenvolvido para a gestão de visitas de vigilância entomológica e controle vetorial, utilizando o framework Laravel.
+Sistema desenvolvido para gestão municipal de operação territorial, indicadores e transparência pública, com módulos especializados de vigilância em saúde quando aplicável, utilizando o framework Laravel.
+
+## Escopo do produto (resumo)
+
+- **Núcleo municipal (sempre ativo):** cadastro territorial, operação de campo, painéis/indicadores, relatórios e transparência por código/QR.
+- **Especializações em saúde (quando contratadas):** vigilância entomológica, LIRAa, PNCD e agravos monitorados.
+- **Módulos complementares (opcionais):** cadastro socioeconômico/ocupantes e recortes agregados adicionais.
+
+Documento de referência de produto: `docs/product-architecture.md`.
+Guia de UI e conteúdo: `docs/ui-standards.md`.
 
 **Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde), Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
 

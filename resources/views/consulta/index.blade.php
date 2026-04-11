@@ -3,136 +3,133 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.name') . ' · ' . __('Consulta pública'))
-@section('og_description', __('Consulta pública pelo código do imóvel: transparência alimentada pelos mesmos registros usados nos indicadores municipais. Gratuita, sem cadastro e sem dados clínicos. Visitas de campo e vigilância em saúde conforme a operação local. Cadastro complementar do imóvel não aparece aqui.'))
+@section('og_title', config('app.name') . ' — Consulta Pública')
+@section('og_description', 'Consulta pública municipal para histórico de visitas, com acesso rápido por código da placa do imóvel.')
 
 @section('content')
-<div class="welcome-public welcome-public--extend w-full min-w-0">
-    <div class="public-page__stack">
-        <x-public.page-hero :kicker="__('Indicadores municipais · transparência ao cidadão')">
-            <x-slot name="heading">
-                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                    <h1 class="welcome-public__title min-w-0 shrink">
-                        {{ __('Verificar visitas no imóvel') }}
-                    </h1>
-                    <x-public-municipality-pill :local="$localPrimario ?? null" class="shrink-0" />
-                </div>
-            </x-slot>
-            <x-slot name="leadFull">
-                <p class="welcome-public__lead welcome-public__lead--full">
-                    {{ __('Na consulta pública aparecem apenas endereço vinculado ao código, datas e status das visitas de campo e informações já divulgadas sobre doenças. Não são exibidos dados clínicos, nome de ocupantes nem cadastro socioeconômico do imóvel.') }}
-                </p>
-            </x-slot>
-            <x-slot name="actions">
-                <a href="{{ url('/') }}" class="welcome-public__link">
-                    <x-heroicon-o-arrow-left class="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden="true" />
-                    {{ __('Voltar à página inicial') }}
-                </a>
-            </x-slot>
-        </x-public.page-hero>
+<div class="max-w-4xl mx-auto space-y-10">
 
-        <x-flash-alerts />
-
-        <section class="welcome-public__surface public-surface-form flex flex-col p-6" aria-labelledby="consulta-codigo-titulo">
-            <h2 id="consulta-codigo-titulo" class="public-card-eyebrow">{{ __('Código do imóvel') }}</h2>
-            <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form" class="mt-3 flex flex-col gap-4">
-                <div>
-                    <label for="codigo" class="public-form-label">
-                        {!! __('Informe o <strong>código numérico</strong> que consta no comprovante ou foi passado pelo ACE ou ACS na visita.') !!}
-                        <span class="text-red-500" aria-hidden="true">*</span>
-                    </label>
-                    <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-stretch">
-                        <input
-                            type="text"
-                            id="codigo"
-                            name="codigo"
-                            value="{{ old('codigo') }}"
-                            placeholder="{{ __('Ex.: 12345678') }}"
-                            required
-                            inputmode="numeric"
-                            pattern="[0-9]{8}"
-                            maxlength="8"
-                            autocomplete="off"
-                            class="v-input max-w-md w-full"
-                            aria-describedby="codigo-ajuda"
-                        />
-                        <button type="submit" id="consulta-codigo-btn" class="v-btn-primary inline-flex min-h-[2.875rem] shrink-0 items-center justify-center px-5 text-sm font-medium sm:w-auto">
-                            {{ __('Consultar agora') }}
-                        </button>
-                    </div>
-                </div>
-                @error('codigo')
-                    <p class="text-sm text-red-600 dark:text-red-400" role="alert">{{ $message }}</p>
-                @enderror
-                <p id="codigo-ajuda" class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                    {{ __('Cada imóvel cadastrado recebe um código exclusivo. Se não tiver o número em mãos, peça orientação na Secretaria Municipal de Saúde ou ao agente no próximo contato.') }}
-                </p>
-            </form>
-        </section>
-
-        <section class="welcome-public__surface flex flex-col overflow-hidden" aria-labelledby="consulta-doencas-titulo">
-            <div class="p-6">
-                <h2 id="consulta-doencas-titulo" class="public-card-eyebrow">{{ __('Doenças monitoradas no município') }}</h2>
-                @if($doencasIndisponivel ?? false)
-                    <div class="mt-3 space-y-2 text-sm leading-relaxed">
-                        <p class="font-medium text-amber-900 dark:text-amber-100">{{ __('Serviço temporariamente indisponível') }}</p>
-                        <p class="text-slate-600 dark:text-slate-400">{{ __('As orientações sobre doenças não puderam ser exibidas. Use o formulário acima para verificar visitas no seu imóvel.') }}</p>
-                    </div>
-                @elseif($doencas->isEmpty())
-                    <div class="mt-3 space-y-2 text-sm leading-relaxed">
-                        <p class="font-medium text-slate-800 dark:text-slate-200">{{ __('Nenhuma doença cadastrada no momento') }}</p>
-                        <p class="text-slate-600 dark:text-slate-400">{{ __('Volte mais tarde ou procure a Secretaria Municipal de Saúde para orientações gerais sobre dengue e outras arboviroses.') }}</p>
-                    </div>
-                @else
-                    <p class="public-card-text">{{ __('Sintomas, transmissão e medidas de controle informados pelo município.') }}</p>
-                @endif
-            </div>
-
-            @if(!($doencasIndisponivel ?? false) && !$doencas->isEmpty())
-                <div class="border-t border-slate-200/50 dark:border-slate-700/50">
-                    <div class="v-table-meta border-t-0 border-slate-200/80 dark:border-slate-700/80">
-                        <span>{{ __(':n doença(s) cadastrada(s) para consulta.', ['n' => $doencas->count()]) }}</span>
-                    </div>
-                    <div class="v-table-wrap">
-                        <table class="v-data-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="text-left">{{ __('Doença') }}</th>
-                                    <th scope="col" class="text-left">{{ __('Sintomas') }}</th>
-                                    <th scope="col" class="text-left">{{ __('Transmissão') }}</th>
-                                    <th scope="col" class="text-left">{{ __('Medidas de controle') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($doencas as $doenca)
-                                    <tr>
-                                        <td class="font-medium text-slate-900 dark:text-slate-100">{{ $doenca->doe_nome }}</td>
-                                        <td class="text-slate-600 dark:text-slate-300">
-                                            {{ is_array($doenca->doe_sintomas) ? implode(', ', $doenca->doe_sintomas) : $doenca->doe_sintomas }}
-                                        </td>
-                                        <td class="text-slate-600 dark:text-slate-300">
-                                            {{ is_array($doenca->doe_transmissao) ? implode(', ', $doenca->doe_transmissao) : $doenca->doe_transmissao }}
-                                        </td>
-                                        <td class="text-slate-600 dark:text-slate-300">
-                                            {{ is_array($doenca->doe_medidas_controle) ? implode(', ', $doenca->doe_medidas_controle) : $doenca->doe_medidas_controle }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            @endif
-        </section>
-
-        @include('partials.public-copyright-footer', ['footerClass' => 'welcome-public__footer'])
+    {{-- Cabeçalho --}}
+    <div style="padding-top: 2rem;">
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/visitaai_rembg.png') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Consulta Pública</h1>
+        </div>
+        <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-blue-700 dark:text-blue-400 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Voltar para o início
+        </a>
     </div>
+
+    {{-- Busca por código --}}
+    <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
+          class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
+        <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Digite o <strong>código único do imóvel</strong> fornecido pelo agente <span class="text-red-500">*</span>
+        </label>
+        <div class="flex gap-4 flex-col md:flex-row">
+            <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                value="{{ old('codigo') }}"
+                placeholder="Ex: 12345678 (apenas números)"
+                required
+                inputmode="numeric"
+                pattern="[0-9]*"
+                class="w-full rounded-md p-2 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600">
+                <button type="submit" id="consulta-codigo-btn"
+                    class="v-btn-primary px-4 py-2 inline-flex items-center justify-center min-w-[120px]">
+                Consultar
+            </button>
+        </div>
+        @error('codigo')
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+        @enderror
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            O código único é um identificador exclusivo para cada imóvel (apenas números), fornecido pelo agente durante a visita.
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ __('Código do imóvel') }}
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ __('Na consulta pública aparecem apenas endereço vinculado ao código, datas e status das visitas de campo e informações já divulgadas sobre doenças. Não são exibidos dados clínicos, nome de ocupantes nem cadastro socioeconômico do imóvel.') }}
+        </p>
+    </form>
+    <script>
+    (function(){
+        var form = document.getElementById('consulta-codigo-form');
+        var btn = document.getElementById('consulta-codigo-btn');
+        if (form && btn) {
+            form.addEventListener('submit', function() {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Consultando…</span>';
+            });
+        }
+    })();
+    </script>
+
+    {{-- Alerta de erro (código não encontrado ou inválido) --}}
+    @if (session('erro'))
+        <div class="bg-red-100 dark:bg-red-900/40 border border-red-400 dark:border-red-600 text-red-800 dark:text-red-100 px-4 py-3 rounded-lg flex items-start gap-3" role="alert">
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <div>
+                <strong class="font-semibold text-red-900 dark:text-red-50">Não foi possível consultar</strong>
+                <p class="mt-1 text-sm text-red-800 dark:text-red-100 opacity-100">{{ session('erro') }}</p>
+            </div>
+        </div>
+    @endif
+
+    {{-- Seção de doenças monitoradas --}}
+    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow space-y-4">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Doenças Monitoradas</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+            @if($doencas->isEmpty())
+                Lista de doenças do sistema municipal. Quando houver doenças cadastradas, elas aparecerão abaixo com sintomas, formas de transmissão e medidas de controle.
+            @else
+                Essas são as doenças cadastradas no sistema municipal, com seus sintomas, formas de transmissão e medidas de controle.
+            @endif
+        </p>
+
+        @if($doencas->isEmpty())
+            <div class="my-6 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 px-8 py-12 text-center">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Nenhuma doença cadastrada no momento</p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">As informações serão exibidas aqui quando o gestor municipal cadastrar as doenças monitoradas.</p>
+            </div>
+        @else
+            <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                <table class="min-w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold">
+                        <tr>
+                            <th class="px-4 py-3 text-left">Doença</th>
+                            <th class="px-4 py-3 text-left">Sintomas</th>
+                            <th class="px-4 py-3 text-left">Transmissão</th>
+                            <th class="px-4 py-3 text-left">Medidas de Controle</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-800 dark:text-gray-100">
+                        @foreach($doencas as $doenca)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                                <td class="px-4 py-3 font-medium">{{ $doenca->doe_nome }}</td>
+                                <td class="px-4 py-3">
+                                    {{ is_array($doenca->doe_sintomas) ? implode(', ', $doenca->doe_sintomas) : $doenca->doe_sintomas }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ is_array($doenca->doe_transmissao) ? implode(', ', $doenca->doe_transmissao) : $doenca->doe_transmissao }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ is_array($doenca->doe_medidas_controle) ? implode(', ', $doenca->doe_medidas_controle) : $doenca->doe_medidas_controle }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </section>
 </div>
 @endsection
-
-@push('scripts')
-<script type="application/json" id="consulta-index-config">
-@json(['searching' => __('Buscando…')])
-</script>
-@vite(['resources/js/consulta-index.js'])
-@endpush

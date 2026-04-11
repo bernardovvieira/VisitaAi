@@ -1,12 +1,12 @@
 <!-- resources/views/agente/locais/create.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . (($isPrimario ?? false) ? __('Cadastrar local de referência') : __('Cadastrar local')))
+@section('og_title', config('app.name') . ' · ' . (($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')))
 @section('og_description', __('Cadastro de imóvel para visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')
 <div class="v-page">
-    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Cadastrar')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Novo')]]" />
 
     @if($isPrimario ?? false)
     <x-section-card class="v-card--muted">
@@ -20,7 +20,7 @@
     </x-section-card>
     @endif
 
-    <x-page-header :eyebrow="__('Locais')" :title="($isPrimario ?? false) ? __('Cadastrar local de referência') : __('Cadastrar local')" />
+    <x-page-header :eyebrow="__('Locais')" :title="($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')" />
 
     <x-ui.disclosure variant="muted-card">
         <x-slot name="summary">
@@ -227,7 +227,7 @@
                 <button type="submit" id="btn-cadastrar-local"
                         x-bind:disabled="carregando"
                         class="v-btn-primary px-6 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Cadastrar
+                    Salvar
                 </button>
             </div>
         </form>
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.textContent = 'Guardar local';
             btn.className = 'v-btn-amber-solid px-6' + baseDisabled;
         } else {
-            btn.textContent = 'Cadastrar';
+            btn.textContent = 'Salvar';
             btn.className = 'v-btn-primary px-6' + baseDisabled;
         }
     }

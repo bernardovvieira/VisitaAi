@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Visitas'))
-@section('og_description', __('Visitas de vigilância entomológica e controle vetorial registradas. Visualize, busque, edite ou remova suas visitas.'))
+@section('og_description', __('Visitas registradas no campo. Visualize, busque, edite ou exclua registros da sua rotina.'))
 
 @section('content')
 <div class="v-page v-page--wide v-page--dense"
@@ -15,7 +15,7 @@
 
     <x-page-header :eyebrow="__('Registro em campo')" :title="__('Visitas')">
         <x-slot name="lead">
-            <p>{{ __('Veja as visitas que você registrou, busque, edite ou cadastre novas. Em campo sem internet, salve no dispositivo e envie depois pela sincronização.') }}</p>
+            <p>{{ __('Veja as visitas que você registrou, busque, edite ou exclua. Sem internet, salve no dispositivo e sincronize depois.') }}</p>
         </x-slot>
     </x-page-header>
 
@@ -38,13 +38,13 @@
                 <div class="min-w-0 space-y-3">
                     <div>
                         <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Ações rápidas') }}</h2>
-                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Cadastrar visita ou enviar rascunhos guardados no aparelho.') }}</p>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Criar nova visita ou enviar registros guardados no dispositivo.') }}</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <a href="{{ route('agente.visitas.create') }}"
                            class="v-btn-compact v-btn-compact--blue">
                             <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                            {{ __('Cadastrar visita') }}
+                            {{ __('Nova visita') }}
                         </a>
                         <span x-show="online" x-cloak>
                             <a href="{{ route('agente.visitas.sync') }}"
@@ -189,7 +189,7 @@
                                     <p class="mt-1 text-sm text-slate-500">{{ __('Registre a primeira visita para começar.') }}</p>
                                     <a href="{{ route('agente.visitas.create') }}" class="v-btn-compact v-btn-compact--blue mt-5">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                                        {{ __('Registrar visita') }}
+                                        {{ __('Nova visita') }}
                                     </a>
                                 </div>
                             </td>

@@ -1,7 +1,14 @@
 <x-guest-layout>
+    <div class="max-w-md mx-auto mt-2 mb-6 text-center">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Acessar a plataforma</h1>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            Entre com CPF ou e-mail para continuar na operação municipal.
+        </p>
+    </div>
+
     <form method="POST"
           action="{{ route('login.store') }}"
-          class="max-w-md mx-auto mt-8"
+            class="max-w-md mx-auto mt-4"
           id="login-form"
           data-cpf-format-msg="{{ __('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).') }}"
           data-label-entering="{{ __('Entrando…') }}">
@@ -39,8 +46,7 @@
                     type="button"
                     id="password-toggle-btn"
                     aria-label="{{ __('Mostrar senha') }}"
-                    class="absolute inset-y-0 right-0 px-3 flex items-center focus:outline-none"
-                    tabindex="-1"
+                    class="absolute inset-y-0 right-0 px-3 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm"
                 >
                     {{-- Ícone: olho aberto (senha oculta) --}}
                     <svg id="icon-password-show" class="h-5 w-5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -61,7 +67,7 @@
         {{-- Botões --}}
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
             <a href="{{ route('password.request') }}"
-            class="text-sm text-slate-600 underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100">
+            class="text-sm text-slate-700 underline hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">
                 {{ __('Esqueceu a senha?') }}
             </a>
             <x-primary-button id="login-submit-btn" class="ml-3">{{ __('Entrar') }}</x-primary-button>
@@ -71,7 +77,7 @@
     @if(config('features.open_registration'))
     <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
         {{ __('Não tem conta?') }}
-        <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+        <a href="{{ route('register') }}" class="text-blue-700 dark:text-blue-400 hover:underline font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">
             {{ __('Registre-se') }}
         </a>
     </p>
