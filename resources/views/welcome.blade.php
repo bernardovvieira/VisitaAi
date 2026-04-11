@@ -24,11 +24,6 @@
         <div class="space-y-8 md:pl-4 max-w-xl" id="anim-texto">
             <div class="space-y-4">
                 <p class="v-page-eyebrow">Plataforma municipal</p>
-                 <img src="{{ asset('images/visitaai.svg') }}"
-                     alt="{{ config('app.name') }}"
-                     class="h-14 w-auto object-contain"
-                     width="96"
-                     height="56" />
                 <h1 class="v-page-title text-4xl sm:text-5xl">
                     Bem-vindo(a) ao <span class="text-blue-600 dark:text-blue-400">Visita Aí</span>
                 </h1>
