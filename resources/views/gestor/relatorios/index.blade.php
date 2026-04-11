@@ -99,36 +99,38 @@
         </div>
 
         <x-section-card>
-            <h2 class="v-section-title mb-1">{{ __('Filtros') }}</h2>
-            <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
+            <header class="mb-5 space-y-1.5">
+                <h2 class="v-section-title">{{ __('Filtros') }}</h2>
+                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
+            </header>
             <form method="GET" x-ref="formulario" @@submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
-                  class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 items-end">
-                <div>
-                    <label class="v-toolbar-label mb-1">{{ __('Tipo') }} <span class="text-red-500">*</span></label>
-                    <select name="tipo_relatorio" x-model="tipo" class="v-select">
+                  class="space-y-4">
+                <div class="max-w-md">
+                    <label class="v-toolbar-label mb-1 block">{{ __('Tipo') }} <span class="text-red-500">*</span></label>
+                    <select name="tipo_relatorio" x-model="tipo" class="v-select w-full">
                         <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>{{ __('Completo') }}</option>
                         <option value="diario">{{ __('Diário') }}</option>
                         <option value="semanal">{{ __('Por período') }}</option>
                         <option value="individual">{{ __('Individual') }}</option>
                     </select>
                 </div>
-                <div x-show="tipo === 'diario'" x-cloak>
-                    <label class="v-toolbar-label mb-1">{{ __('Data') }} <span class="text-red-500">*</span></label>
-                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @@change="filtrosAlterados = true" class="v-input" />
+                <div x-show="tipo === 'diario'" x-cloak class="max-w-md">
+                    <label class="v-toolbar-label mb-1 block">{{ __('Data') }} <span class="text-red-500">*</span></label>
+                    <input type="date" name="data_unica" value="{{ request('data_unica') }}" @@change="filtrosAlterados = true" class="v-input w-full" />
                 </div>
                 <template x-if="tipo === 'semanal'">
-                    <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                    <div class="grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="v-toolbar-label mb-1">{{ __('Início') }} <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @@change="filtrosAlterados = true" class="v-input" />
+                            <label class="v-toolbar-label mb-1 block">{{ __('Início') }} <span class="text-red-500">*</span></label>
+                            <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @@change="filtrosAlterados = true" class="v-input w-full" />
                         </div>
                         <div>
-                            <label class="v-toolbar-label mb-1">{{ __('Fim') }} <span class="text-red-500">*</span></label>
-                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @@change="filtrosAlterados = true" class="v-input" />
+                            <label class="v-toolbar-label mb-1 block">{{ __('Fim') }} <span class="text-red-500">*</span></label>
+                            <input type="date" name="data_fim" value="{{ request('data_fim') }}" @@change="filtrosAlterados = true" class="v-input w-full" />
                         </div>
                     </div>
                 </template>
-                <div x-show="tipo === 'individual'" x-cloak class="md:col-span-3"
+                <div x-show="tipo === 'individual'" x-cloak class="min-w-0 max-w-3xl"
                     x-data="{
                         open: false,
                         search: '',
@@ -171,7 +173,7 @@
                         }, (array) request('local_id', [])))
                     )) }}"
                     @@click.outside="open = false">
-                    <label class="v-toolbar-label mb-1">{{ __('Local(is)') }} <span class="text-red-500">*</span></label>
+                    <label class="v-toolbar-label mb-1 block">{{ __('Local(is)') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
                             <template x-for="item in selected" :key="item.id">
@@ -201,7 +203,7 @@
                         <input type="hidden" :name="'local_id[]'" :value="item.id">
                     </template>
                 </div>
-                <div x-show="tipo !== 'individual'" x-cloak :class="tipo === 'completo' ? 'md:col-span-3' : ''"
+                <div x-show="tipo !== 'individual'" x-cloak class="min-w-0 max-w-3xl"
                     x-data="{
                         open: false,
                         search: '',
@@ -239,7 +241,7 @@
                     data-options="{{ e(json_encode($bairros ?? [])) }}"
                     data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
                     @@click.outside="open = false">
-                    <label class="v-toolbar-label mb-1">{{ __('Bairro(s)') }}</label>
+                    <label class="v-toolbar-label mb-1 block">{{ __('Bairro(s)') }}</label>
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">
@@ -269,9 +271,9 @@
                         <input type="hidden" :name="'bairro[]'" :value="val">
                     </template>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-2 justify-end items-stretch sm:items-center">
-                    <button type="submit" class="v-btn-primary h-10 px-5">{{ __('Filtrar') }}</button>
-                    <a href="{{ route('gestor.relatorios.index') }}" class="v-btn-secondary h-10 px-5">{{ __('Limpar') }}</a>
+                <div class="flex flex-wrap items-center justify-end gap-2 border-t pt-4 border-slate-200/80 dark:border-slate-700/60">
+                    <button type="submit" class="v-btn-primary">{{ __('Filtrar') }}</button>
+                    <a href="{{ route('gestor.relatorios.index') }}" class="v-btn-secondary">{{ __('Limpar') }}</a>
                 </div>
             </form>
         </x-section-card>

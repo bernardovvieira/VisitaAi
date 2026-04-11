@@ -106,7 +106,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-slate-900 antialiased dark:text-slate-100">
+    <body class="font-sans text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         <div class="auth-guest-layout flex min-h-screen flex-col items-center px-4 pt-6 sm:justify-center sm:px-6 sm:pt-0">
             <div class="flex flex-col items-center gap-3">

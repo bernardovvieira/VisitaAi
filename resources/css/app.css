@@ -444,12 +444,14 @@
         );
     }
 
+    /* Cores opacas: stops com alpha deixavam o branco do body vazar e “estourar” o fundo */
     .dark .auth-guest-layout {
-        background: linear-gradient(
+        background-color: rgb(2 6 23);
+        background-image: linear-gradient(
             168deg,
             rgb(2 6 23) 0%,
-            rgb(23 37 84 / 0.65) 48%,
-            rgb(15 23 42) 100%
+            rgb(15 23 42) 42%,
+            rgb(30 41 59) 100%
         );
     }
 
