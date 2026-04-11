@@ -38,7 +38,7 @@
             </a>
             <a href="{{ $fichaLocalUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
                 <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Ficha do imóvel (PDF)') }}
+                {{ __('Ficha socioeconômica') }}
             </a>
         </div>
     </div>
@@ -48,6 +48,9 @@
         $rendaOpcoes = config('visitaai_municipio.renda_faixa_opcoes', []);
         $corOpcoes = config('visitaai_municipio.cor_raca_opcoes', []);
         $trabOpcoes = config('visitaai_municipio.situacao_trabalho_opcoes', []);
+        $local->loadMissing(['moradores', 'visitas']);
+        $porMorId = $local->moradores->keyBy('mor_id');
+        $visitasComObs = $local->visitas->filter(fn ($v) => is_array($v->vis_ocupantes_observacoes) && count($v->vis_ocupantes_observacoes) > 0);
     @endphp
     <x-section-card class="v-card--flush overflow-hidden dark:bg-gray-800">
         <div class="v-list-toolbar !p-3 sm:!p-4">
@@ -55,8 +58,12 @@
                 <form method="get" class="min-w-0 flex-1">
                     <label for="ocupantes-q" class="v-toolbar-label">{{ __('Pesquisar ocupantes') }}</label>
                     <div class="flex items-center gap-2">
-                        <input id="ocupantes-q" name="q" type="text" value="{{ $search ?? '' }}" class="v-input" placeholder="{{ __('Nome, escolaridade, renda, trabalho...') }}">
-                        <button type="submit" class="v-btn-compact v-btn-compact--slate">{{ __('Buscar') }}</button>
+                        <input id="ocupantes-q" name="q" type="text" value="{{ $search ?? '' }}"
+                               data-live-url="{{ route($profile . '.locais.moradores.index', $local) }}"
+                               data-live-param="q"
+                               data-live-loading-id="search-loading-moradores"
+                               class="v-input" placeholder="{{ __('Nome, escolaridade, renda, trabalho...') }}">
+                        <span id="search-loading-moradores" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
                         @if(filled($search ?? ''))
                             <a href="{{ route($profile . '.locais.moradores.index', $local) }}" class="v-btn-compact v-btn-compact--ghost">{{ __('Limpar') }}</a>
                         @endif
@@ -130,5 +137,36 @@
             <div class="border-t border-gray-200 px-4 py-3 dark:border-gray-600">{{ $moradores->links() }}</div>
         @endif
     </x-section-card>
+
+    @if($visitasComObs->isNotEmpty())
+        <x-section-card class="mt-4">
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Registros nas visitas sobre ocupantes') }}</h3>
+            <ul class="mt-3 space-y-3 text-xs text-slate-800 dark:text-slate-200 sm:text-sm">
+                @foreach($visitasComObs as $vis)
+                    <li>
+                        <x-ui.disclosure variant="muted-card-simple" class="!rounded-lg !border !border-slate-200/80 !bg-white/70 dark:!border-slate-700/80 dark:!bg-slate-900/40">
+                            <x-slot name="summary">
+                                <span class="text-sm font-medium text-slate-900 dark:text-slate-100">
+                                    {{ __('Visita') }} #{{ $vis->vis_id }}, {{ $vis->vis_data ? \Carbon\Carbon::parse($vis->vis_data)->format('d/m/Y') : __('N/D') }}
+                                </span>
+                            </x-slot>
+                            <ul class="space-y-1.5 border-t border-slate-100 pt-2 dark:border-slate-700/80">
+                                @foreach($vis->vis_ocupantes_observacoes as $mid => $texto)
+                                    @php $midInt = (int) $mid; $nomeMor = optional($porMorId->get($midInt))->mor_nome; @endphp
+                                    <li class="text-slate-800 dark:text-slate-200">
+                                        <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">#{{ $midInt }}</span>
+                                        @if(filled($nomeMor))
+                                            <span class="font-medium">: {{ $nomeMor }}</span>
+                                        @endif
+                                        <span class="block mt-0.5 whitespace-pre-wrap text-xs">{{ $texto }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </x-ui.disclosure>
+                    </li>
+                @endforeach
+            </ul>
+        </x-section-card>
+    @endif
 </div>
 @endsection

@@ -56,7 +56,7 @@
             <p>
                 <strong>Zona:</strong>
                 @if ($local->loc_zona === 'U')
-                    <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-0.5 rounded text-xs font-semibold">Urbana</span>
+                    <span class="inline-block bg-violet-100 text-violet-900 dark:bg-violet-900/60 dark:text-violet-200 px-2 py-0.5 rounded text-xs font-semibold">Urbana</span>
                 @elseif ($local->loc_zona === 'R')
                     <span class="inline-block bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-200 px-2 py-0.5 rounded text-xs font-semibold">Rural</span>
                 @else

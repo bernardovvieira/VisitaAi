@@ -15,7 +15,7 @@
         @if(! empty($fichaPdfUrl))
             <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
                 <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Baixar ficha socioeconômica (imóvel)') }}
+                {{ __('Baixar ficha socioeconômica') }}
             </a>
         @endif
     </div>
@@ -99,24 +99,28 @@
     @endphp
     @if($visitasComObs->isNotEmpty())
         <h3 class="mt-6 text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $cfg['visitas_ocupantes_titulo'] ?? __('Visitas') }}</h3>
-        <ul class="mt-2 space-y-4 text-xs text-slate-800 dark:text-slate-200 sm:text-sm">
+        <ul class="mt-2 space-y-3 text-xs text-slate-800 dark:text-slate-200 sm:text-sm">
             @foreach($visitasComObs as $vis)
-                <li class="rounded-lg border border-slate-200/80 bg-white/70 p-3 dark:border-slate-700/80 dark:bg-slate-900/40">
-                    <p class="font-medium text-slate-900 dark:text-slate-100">
-                        {{ __('Visita') }} #{{ $vis->vis_id }}, {{ $vis->vis_data ? \Carbon\Carbon::parse($vis->vis_data)->format('d/m/Y') : __('N/D') }}
-                    </p>
-                    <ul class="mt-2 space-y-1.5 border-t border-slate-100 pt-2 dark:border-slate-700/80">
-                        @foreach($vis->vis_ocupantes_observacoes as $mid => $texto)
-                            @php $midInt = (int) $mid; $nomeMor = optional($porMorId->get($midInt))->mor_nome; @endphp
-                            <li class="text-slate-800 dark:text-slate-200">
-                                <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">#{{ $midInt }}</span>
-                                @if(filled($nomeMor))
-                                    <span class="font-medium">: {{ $nomeMor }}</span>
-                                @endif
-                                <span class="block mt-0.5 whitespace-pre-wrap text-xs">{{ $texto }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
+                <li>
+                    <x-ui.disclosure variant="muted-card-simple" class="!rounded-lg !border !border-slate-200/80 !bg-white/70 dark:!border-slate-700/80 dark:!bg-slate-900/40">
+                        <x-slot name="summary">
+                            <span class="text-sm font-medium text-slate-900 dark:text-slate-100">
+                                {{ __('Visita') }} #{{ $vis->vis_id }}, {{ $vis->vis_data ? \Carbon\Carbon::parse($vis->vis_data)->format('d/m/Y') : __('N/D') }}
+                            </span>
+                        </x-slot>
+                        <ul class="space-y-1.5 border-t border-slate-100 pt-2 dark:border-slate-700/80">
+                            @foreach($vis->vis_ocupantes_observacoes as $mid => $texto)
+                                @php $midInt = (int) $mid; $nomeMor = optional($porMorId->get($midInt))->mor_nome; @endphp
+                                <li class="text-slate-800 dark:text-slate-200">
+                                    <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">#{{ $midInt }}</span>
+                                    @if(filled($nomeMor))
+                                        <span class="font-medium">: {{ $nomeMor }}</span>
+                                    @endif
+                                    <span class="block mt-0.5 whitespace-pre-wrap text-xs">{{ $texto }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </x-ui.disclosure>
                 </li>
             @endforeach
         </ul>

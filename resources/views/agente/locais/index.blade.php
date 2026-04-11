@@ -108,7 +108,7 @@
                             </td>
                             <td>
                                 @if ($local->loc_zona == 'U')
-                                    <span class="inline-block rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-800 dark:bg-slate-700 dark:text-slate-200">
+                                    <span class="inline-block rounded bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-900 dark:bg-violet-900/60 dark:text-violet-200">
                                         {{ __('Urbana') }}
                                     </span>
                                 @elseif ($local->loc_zona == 'R')
