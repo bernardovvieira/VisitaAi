@@ -152,9 +152,15 @@
                     </header>
                 @endisset
                 <main id="main-content" class="w-full" tabindex="-1">
-                    <div class="mx-auto w-full max-w-[min(100%,90rem)] px-5 py-8 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
-                        @yield('content')
-                    </div>
+                    @if (View::hasSection('public_full_bleed'))
+                        <div class="w-full min-h-screen">
+                            @yield('content')
+                        </div>
+                    @else
+                        <div class="mx-auto w-full max-w-[min(100%,90rem)] px-5 py-8 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
+                            @yield('content')
+                        </div>
+                    @endif
                 </main>
             </div>
         @else
