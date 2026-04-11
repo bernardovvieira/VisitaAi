@@ -3,6 +3,11 @@
 ## Objetivo do Produto
 Visita Aí e uma plataforma municipal para organizar operacao territorial e transformar dados de campo em indicadores para decisao, gestao e transparencia.
 
+## Estado atual da solucao (abril/2026)
+- `application` (Laravel): sistema principal da operacao municipal.
+- `website` (Nuxt): landing institucional e comercial.
+- Os dois repositorios partilham a mesma mensagem de produto, mas possuem ciclos de deploy independentes.
+
 O produto nao e um sistema de nicho unico. A vigilancia em saude e uma especializacao importante, mas o nucleo da plataforma e mais amplo.
 
 ## Arquitetura de Escopo

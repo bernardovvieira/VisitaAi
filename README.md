@@ -2,6 +2,12 @@
 
 Sistema desenvolvido para gestão municipal de operação territorial, indicadores e transparência pública, com módulos especializados de vigilância em saúde quando aplicável, utilizando o framework Laravel.
 
+## Estrutura atual dos repositórios
+
+- Este repositório (`application`) contém a aplicação principal em Laravel (operações, gestão, autenticação, API e regras de negócio).
+- A landing institucional roda em repositório separado (`website`), em Nuxt 3.
+- Imagens e screenshots usados na landing são mantidos em `website/public/images/*`. A remoção desses ativos no Laravel não afeta o build da landing.
+
 ## Escopo do produto (resumo)
 
 - **Núcleo municipal (sempre ativo):** cadastro territorial, operação de campo, painéis/indicadores, relatórios e transparência por código/QR.
