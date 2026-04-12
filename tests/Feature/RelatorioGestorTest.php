@@ -24,8 +24,11 @@ class RelatorioGestorTest extends TestCase
     #[Test]
     public function gestor_acessa_pagina_relatorios_sem_erro(): void
     {
+        $gestor = $this->gestorAprovado();
         $local = Local::factory()->create();
-        $agente = User::factory()->create();
+        $agente = User::factory()->create([
+            'fk_gestor_id' => $gestor->use_id,
+        ]);
         Visita::create([
             'fk_usuario_id' => $agente->getKey(),
             'fk_local_id' => $local->getKey(),
@@ -34,7 +37,7 @@ class RelatorioGestorTest extends TestCase
             'vis_pendencias' => false,
         ]);
 
-        $this->actingAs($this->gestorAprovado())
+        $this->actingAs($gestor)
             ->get(route('gestor.relatorios.index'))
             ->assertOk()
             ->assertSee(__('Cadastro complementar do imóvel'))

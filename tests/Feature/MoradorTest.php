@@ -73,4 +73,20 @@ class MoradorTest extends TestCase
             ->get(url('/saude/locais/'.$local->loc_id.'/moradores'))
             ->assertNotFound();
     }
+
+    #[Test]
+    public function download_de_documento_bloqueia_path_traversal(): void
+    {
+        $gestor = $this->gestorAprovado();
+        $local = Local::factory()->create();
+        $morador = Morador::factory()->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_documento_pessoal_path' => '../../../.env',
+            'mor_documento_pessoal_nome' => 'env.txt',
+        ]);
+
+        $this->actingAs($gestor)
+            ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador]))
+            ->assertNotFound();
+    }
 }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Helpers\LogHelper;
 use App\Models\Local;
+use App\Models\User;
 use App\Models\Visita;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -13,8 +15,42 @@ use Illuminate\Validation\Rule;
 
 class RelatorioController extends Controller
 {
+    private function idsUsuariosDoGestorAutenticado(): array
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+        if (! $user || ! $user->isGestor()) {
+            abort(403);
+        }
+
+        return User::query()
+            ->where('use_id', $user->use_id)
+            ->orWhere('fk_gestor_id', $user->use_id)
+            ->pluck('use_id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
+    }
+
+    private function aplicarEscopoGestorEmVisitas(Builder $query): array
+    {
+        $userIds = $this->idsUsuariosDoGestorAutenticado();
+
+        $query->whereIn('fk_usuario_id', $userIds);
+
+        return Visita::query()
+            ->whereIn('fk_usuario_id', $userIds)
+            ->distinct()
+            ->pluck('fk_local_id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
+    }
+
     public function index(Request $request)
     {
+        $this->authorize('isGestor');
+
         $request->validate([
             'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
             'local_id' => ['nullable'],
@@ -38,8 +74,15 @@ class RelatorioController extends Controller
             'usuario',
             'tratamentos',
         ]);
+        $localIdsPermitidos = $this->aplicarEscopoGestorEmVisitas($query);
 
-        $localIds = array_filter(array_map('intval', (array) $request->input('local_id', [])));
+        $localIdsSolicitados = array_values(array_filter(array_map('intval', (array) $request->input('local_id', []))));
+        $localIds = array_values(array_intersect($localIdsSolicitados, $localIdsPermitidos));
+
+        if (! empty($localIdsSolicitados) && count(array_unique($localIdsSolicitados)) !== count($localIds)) {
+            abort(403, __('Um ou mais locais selecionados não pertencem ao escopo permitido.'));
+        }
+
         if ($tipo === 'individual' && ! empty($localIds)) {
             $query->whereIn('fk_local_id', $localIds);
         } elseif ($tipo === 'diario' && $request->filled('data_unica')) {
@@ -105,8 +148,32 @@ class RelatorioController extends Controller
         $visitasComTratamento = $visitas->filter(fn ($v) => $v->tratamentos->isNotEmpty())->count();
         $totalDepEliminados = $visitas->sum('vis_depositos_eliminados');
 
-        $bairros = Local::select('loc_bairro')->distinct()->whereNotNull('loc_bairro')->orderBy('loc_bairro')->pluck('loc_bairro')->map(fn ($b) => trim((string) $b))->filter(fn ($b) => $b !== '')->values()->toArray();
-        $locaisParaSelect = Local::has('visitas')->withCount('visitas')->orderBy('loc_bairro')->orderBy('loc_endereco')->orderBy('loc_numero')->get();
+        $bairrosQuery = Local::select('loc_bairro')
+            ->distinct()
+            ->whereNotNull('loc_bairro')
+            ->orderBy('loc_bairro');
+        if (! empty($localIdsPermitidos)) {
+            $bairrosQuery->whereIn('loc_id', $localIdsPermitidos);
+        } else {
+            $bairrosQuery->whereRaw('1 = 0');
+        }
+        $bairros = $bairrosQuery->pluck('loc_bairro')
+            ->map(fn ($b) => trim((string) $b))
+            ->filter(fn ($b) => $b !== '')
+            ->values()
+            ->toArray();
+
+        $locaisParaSelectQuery = Local::has('visitas')
+            ->withCount('visitas')
+            ->orderBy('loc_bairro')
+            ->orderBy('loc_endereco')
+            ->orderBy('loc_numero');
+        if (! empty($localIdsPermitidos)) {
+            $locaisParaSelectQuery->whereIn('loc_id', $localIdsPermitidos);
+        } else {
+            $locaisParaSelectQuery->whereRaw('1 = 0');
+        }
+        $locaisParaSelect = $locaisParaSelectQuery->get();
         $locaisParaSelectArray = $locaisParaSelect->map(function ($loc) {
             $endereco = trim(($loc->loc_endereco ?? '').($loc->loc_numero ? ', '.$loc->loc_numero : ''));
             $codigo = $loc->loc_codigo_unico ?? '-';
@@ -145,6 +212,8 @@ class RelatorioController extends Controller
 
     public function gerarPdf(Request $request)
     {
+        $this->authorize('isGestor');
+
         $tipo = $request->input('tipo_relatorio', 'completo');
 
         $request->validate([
@@ -173,8 +242,15 @@ class RelatorioController extends Controller
             'usuario',
             'tratamentos',
         ]);
+        $localIdsPermitidos = $this->aplicarEscopoGestorEmVisitas($query);
 
-        $localIdsPdf = array_filter(array_map('intval', (array) $request->input('local_id', [])));
+        $localIdsSolicitados = array_values(array_filter(array_map('intval', (array) $request->input('local_id', []))));
+        $localIdsPdf = array_values(array_intersect($localIdsSolicitados, $localIdsPermitidos));
+
+        if (! empty($localIdsSolicitados) && count(array_unique($localIdsSolicitados)) !== count($localIdsPdf)) {
+            abort(403, __('Um ou mais locais selecionados não pertencem ao escopo permitido.'));
+        }
+
         if ($tipo === 'individual' && empty($localIdsPdf)) {
             return redirect()->route('gestor.relatorios.index')->with('error', __('Selecione ao menos um local para o relatório individual.'));
         }

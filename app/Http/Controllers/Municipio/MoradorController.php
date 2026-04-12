@@ -219,14 +219,22 @@ class MoradorController extends Controller
             abort(404);
         }
 
-        $path = (string) ($morador->mor_documento_pessoal_path ?? '');
-        if ($path === '' || ! Storage::disk('local')->exists($path)) {
+        $path = str_replace('\\', '/', ltrim((string) ($morador->mor_documento_pessoal_path ?? ''), '/'));
+        if ($path === '' || str_contains($path, '..') || ! str_starts_with($path, 'moradores/documentos/')) {
             abort(404);
         }
 
-        $downloadName = $morador->mor_documento_pessoal_nome ?: ('documento-pessoal-ocupante-'.$morador->mor_id);
+        if (! Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
 
-        return response()->download(Storage::disk('local')->path($path), $downloadName);
+        $downloadName = (string) ($morador->mor_documento_pessoal_nome ?: ('documento-pessoal-ocupante-'.$morador->mor_id));
+        $downloadName = trim((string) preg_replace('/[\r\n]+/', '', $downloadName));
+        if ($downloadName === '') {
+            $downloadName = 'documento-pessoal-ocupante-'.$morador->mor_id;
+        }
+
+        return Storage::disk('local')->download($path, $downloadName);
     }
 
     private function uploadDocumentoPessoal(UploadedFile $file): array
