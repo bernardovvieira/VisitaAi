@@ -172,4 +172,108 @@ class MsTerminologia
     {
         return Config::get('ms_terminologia.referencias', []);
     }
+
+    /**
+     * Traduz valor de faixa de renda usando config/visitaai_municipio.php
+     */
+    public static function rendaFaixaLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_municipio.renda_faixa_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz condição da casa usando config/visitaai_socioeconomico.php
+     */
+    public static function condicaoCasaLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_socioeconomico.condicao_casa_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz situação de posse usando config/visitaai_socioeconomico.php
+     */
+    public static function situacaoPosseLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_socioeconomico.situacao_posse_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz renda formal/informal usando config/visitaai_socioeconomico.php
+     */
+    public static function rendaFormalInformalLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_socioeconomico.renda_formal_informal_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz posição do entrevistado usando config/visitaai_socioeconomico.php
+     */
+    public static function posicaoEntrevistadoLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_socioeconomico.posicao_entrevistado_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz escolaridade usando config/visitaai_municipio.php
+     */
+    public static function escolaridadeLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_municipio.escolaridade_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz cor/raça usando config/visitaai_municipio.php
+     */
+    public static function corRacaLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_municipio.cor_raca_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
+
+    /**
+     * Traduz situação de trabalho usando config/visitaai_municipio.php
+     */
+    public static function situacaoTrabalhoLabel(?string $chave): string
+    {
+        if ($chave === null || $chave === '') {
+            return '';
+        }
+        $opcoes = Config::get('visitaai_municipio.situacao_trabalho_opcoes', []);
+        $label = $opcoes[$chave] ?? $chave;
+        return is_string($label) ? __($label) : (string) $label;
+    }
 }

@@ -263,7 +263,7 @@
           <td>{{ (int) ($locPdf->moradores_count ?? 0) }}</td>
           <td>{{ $lsePdf ? __('Sim') : __('Não') }}</td>
           <td>{{ $lsePdf && $lsePdf->lse_n_moradores_declarado !== null ? $lsePdf->lse_n_moradores_declarado : '-' }}</td>
-          <td class="text-left">{{ $lsePdf && $lsePdf->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit((string) $lsePdf->lse_renda_familiar_faixa, 42) : '-' }}</td>
+          <td class="text-left">{{ $lsePdf && $lsePdf->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit(\App\Helpers\MsTerminologia::rendaFaixaLabel($lsePdf->lse_renda_familiar_faixa), 42) : '-' }}</td>
         </tr>
       @endforeach
     </tbody>

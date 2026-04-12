@@ -19,7 +19,8 @@ class SocioeconomicoEtiquetas
             return $value;
         }
 
-        return $opts[$value] ?? $value;
+        $label = $opts[$value] ?? $value;
+        return is_string($label) ? __($label) : (string) $label;
     }
 
     public static function municipioRenda(?string $value): string
@@ -28,8 +29,12 @@ class SocioeconomicoEtiquetas
             return '-';
         }
         $opts = config('visitaai_municipio.renda_faixa_opcoes', []);
+        if (is_array($opts) && isset($opts[$value])) {
+            $label = $opts[$value];
+            return is_string($label) ? __($label) : (string) $label;
+        }
 
-        return is_array($opts) && isset($opts[$value]) ? $opts[$value] : $value;
+        return $value;
     }
 
     public static function municipioEscolaridade(?string $value): string
@@ -38,8 +43,12 @@ class SocioeconomicoEtiquetas
             return '-';
         }
         $opts = config('visitaai_municipio.escolaridade_opcoes', []);
+        if (is_array($opts) && isset($opts[$value])) {
+            $label = $opts[$value];
+            return is_string($label) ? __($label) : (string) $label;
+        }
 
-        return is_array($opts) && isset($opts[$value]) ? $opts[$value] : $value;
+        return $value;
     }
 
     public static function municipioCor(?string $value): string
@@ -48,8 +57,12 @@ class SocioeconomicoEtiquetas
             return '-';
         }
         $opts = config('visitaai_municipio.cor_raca_opcoes', []);
+        if (is_array($opts) && isset($opts[$value])) {
+            $label = $opts[$value];
+            return is_string($label) ? __($label) : (string) $label;
+        }
 
-        return is_array($opts) && isset($opts[$value]) ? $opts[$value] : $value;
+        return $value;
     }
 
     public static function municipioTrabalho(?string $value): string
@@ -58,8 +71,12 @@ class SocioeconomicoEtiquetas
             return '-';
         }
         $opts = config('visitaai_municipio.situacao_trabalho_opcoes', []);
+        if (is_array($opts) && isset($opts[$value])) {
+            $label = $opts[$value];
+            return is_string($label) ? __($label) : (string) $label;
+        }
 
-        return is_array($opts) && isset($opts[$value]) ? $opts[$value] : $value;
+        return $value;
     }
 
     public static function simNaoBool(?bool $v): string

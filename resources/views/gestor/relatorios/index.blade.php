@@ -384,7 +384,7 @@
                             <td class="text-center tabular-nums">{{ (int) ($loc->moradores_count ?? 0) }}</td>
                             <td class="text-center">{{ $lse ? __('Sim') : __('Não') }}</td>
                             <td class="text-center tabular-nums">{{ $lse && $lse->lse_n_moradores_declarado !== null ? $lse->lse_n_moradores_declarado : '-' }}</td>
-                            <td class="text-sm text-slate-600 dark:text-slate-400">{{ $lse && $lse->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit($lse->lse_renda_familiar_faixa, 48) : '-' }}</td>
+                            <td class="text-sm text-slate-600 dark:text-slate-400">{{ $lse && $lse->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit(\App\Helpers\MsTerminologia::rendaFaixaLabel($lse->lse_renda_familiar_faixa), 48) : '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
