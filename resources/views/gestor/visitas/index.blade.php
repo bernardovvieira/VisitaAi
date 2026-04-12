@@ -18,7 +18,7 @@
     @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
         @php
             $locaisPendencias = $locaisComPendenciasNaoRevisitadas->values();
-            $pendenciasVisiveis = 5;
+            $pendenciasVisiveis = 3;
         @endphp
         <x-ui.callout variant="amber" :title="__('Pendências sem revisita')" x-data="{ expandedPendencias: false }">
             <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada sem revisita posterior.') }}</p>
@@ -27,7 +27,7 @@
                     @php
                         $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
                     @endphp
-                    <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-baseline sm:justify-between"
+                    <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-center sm:justify-between"
                         @if($indice >= $pendenciasVisiveis) x-show="expandedPendencias" x-cloak @endif>
                         <span>{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
                         @if($ultimaPendencia)

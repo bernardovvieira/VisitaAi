@@ -14,7 +14,7 @@ class VisitasPendenciasCalloutTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function gestor_ve_apenas_cinco_pendencias_iniciais_com_botao_ver_mais(): void
+    public function gestor_ve_apenas_tres_pendencias_iniciais_com_botao_ver_mais(): void
     {
         $gestor = User::factory()->create([
             'use_perfil' => 'gestor',
@@ -49,6 +49,6 @@ class VisitasPendenciasCalloutTest extends TestCase
         $this->assertStringContainsString('x-show="expandedPendencias"', $html);
         $this->assertStringContainsString('x-cloak', $html);
         $this->assertStringContainsString('Rua A', $html);
-        $this->assertStringContainsString('Rua E', $html);
+        $this->assertStringContainsString('Rua D', $html);
     }
 }
