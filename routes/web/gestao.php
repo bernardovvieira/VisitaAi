@@ -66,7 +66,7 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
         ->name('indicadores.ocupantes.export-cadastro-pdf');
 
     Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
-    Route::get('relatorios/pdf', fn () => redirect()->route('gestor.relatorios.index')->with('info', 'Use os filtros na página de relatórios e clique em "Gerar relatório em PDF" para gerar o documento.'));
+    Route::get('relatorios/pdf', fn () => redirect(route('gestor.relatorios.index'))->with('info', __('Use os filtros na página de relatórios e clique em "Gerar relatório em PDF" para gerar o documento.')));
     Route::post('relatorios/pdf', [RelatorioController::class, 'gerarPdf'])
         ->middleware('throttle:6,1')
         ->name('relatorios.pdf');
