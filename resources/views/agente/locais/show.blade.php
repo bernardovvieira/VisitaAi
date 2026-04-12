@@ -10,10 +10,10 @@
         ? route('agente.locais.ficha-socioeconomica-pdf', $local)
         : null;
 @endphp
-<div class="v-page">
+<div class="v-page v-page--wide">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Visualizar')]]" />
 
-    <x-page-header :eyebrow="__('Locais')" :title="__('Imóvel cadastrado')">
+    <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Imóvel cadastrado')">
         <x-slot name="lead">
             <p class="text-sm text-slate-600 dark:text-slate-400">
                 <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">{{ $local->loc_codigo_unico }}</span>

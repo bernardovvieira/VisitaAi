@@ -5,7 +5,7 @@
 @section('og_description', __('Cadastro de imóvel para visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')
-<div class="v-page">
+<div class="v-page v-page--wide">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Novo')]]" />
 
     @if($isPrimario ?? false)
@@ -20,7 +20,7 @@
     </x-section-card>
     @endif
 
-    <x-page-header :eyebrow="__('Locais')" :title="($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')" />
+    <x-page-header :eyebrow="__('Cadastro territorial')" :title="($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')" />
 
     <x-ui.disclosure variant="muted-card">
         <x-slot name="summary">
@@ -75,6 +75,7 @@
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 italic">
                     Os campos acima serão utilizados em relatórios e análises de localização, certifique-se de escolher as opções corretas.
+                </p>
             </fieldset> 
 
             <fieldset class="space-y-3">
@@ -177,6 +178,7 @@
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 italic">
                     Os campos <strong>quarteirão</strong>, <strong>sequência</strong> e <strong>lado</strong> são utilizados para identificar a localização exata do imóvel.    
+                </p>
             </fieldset>
 
             <fieldset class="space-y-3">

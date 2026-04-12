@@ -46,9 +46,9 @@
                 </x-ui.disclosure>
                 <x-ui.disclosure variant="footer-lgpd" class="mt-2 max-w-2xl">
                     <x-slot name="summary">
-                        <span>{{ __('O que significa "Primário"?') }}</span>
+                        <span>{{ __('O que significa um imóvel marcado como "Primário"?') }}</span>
                     </x-slot>
-                    <p class="text-[10px] leading-relaxed">{!! __('O local <strong>primário</strong> é o endereço de referência do município (cidade/estado) no sistema. Foi configurado previamente pelo gestor e não pode ser editado nem excluído pela interface. Os demais locais são os imóveis visitados pelos profissionais (ACE/ACS).') !!}</p>
+                    <p class="text-xs leading-relaxed">{!! __('Um imóvel marcado como <strong>primário</strong> é o endereço de referência do município no sistema (cidade/estado). Esse registro é definido na configuração inicial e, por segurança, não pode ser editado nem excluído pela interface. Os demais imóveis são os locais de campo cadastrados e visitados pelos profissionais (ACE/ACS).') !!}</p>
                 </x-ui.disclosure>
             </div>
             <a href="{{ route('agente.locais.create') }}"

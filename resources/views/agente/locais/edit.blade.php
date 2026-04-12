@@ -5,10 +5,10 @@
 @section('og_description', __('Edição de endereço, CEP e localização do imóvel de visitação.'))
 
 @section('content')
-<div class="v-page">
+<div class="v-page v-page--wide">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Editar')]]" />
 
-    <x-page-header :eyebrow="__('Locais')" :title="__('Editar local')" />
+    <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Editar local')" />
 
     <x-ui.disclosure variant="muted-card-simple">
         <x-slot name="summary">

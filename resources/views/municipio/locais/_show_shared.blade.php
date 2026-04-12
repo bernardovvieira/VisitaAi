@@ -92,7 +92,7 @@
 
         <aside class="space-y-3 xl:col-span-1">
             <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h3>
-            <div id="map" class="h-52 rounded-lg border border-gray-300 shadow-sm dark:border-gray-600 dark:shadow-none"></div>
+            <div id="map" class="h-48 rounded-lg border border-gray-300 shadow-sm dark:border-gray-600 dark:shadow-none"></div>
             <dl class="grid grid-cols-2 gap-3 rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-[11px] dark:border-slate-700/70 dark:bg-slate-900/45">
                 <div class="min-w-0">
                     <dt class="font-medium text-slate-500 dark:text-slate-400">{{ __('Latitude') }}</dt>
