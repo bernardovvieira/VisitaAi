@@ -4,6 +4,8 @@ namespace App\Http\Requests\Municipio;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Local;
+use App\Models\Morador;
 
 class MoradorRequest extends FormRequest
 {
@@ -65,5 +67,39 @@ class MoradorRequest extends FormRequest
             'mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfi)],
             'mor_observacao' => ['nullable', 'string', 'max:2000'],
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $refRaw = $this->input('mor_referencia_familiar', false);
+            $isTitular = in_array($refRaw, [true, 1, '1', 'true', 'on', 'yes'], true);
+            if (! $isTitular) {
+                return;
+            }
+
+            $local = $this->route('local');
+            if (! $local instanceof Local) {
+                return;
+            }
+
+            $moradorAtual = $this->route('morador');
+            $moradorAtualId = $moradorAtual instanceof Morador ? (int) $moradorAtual->mor_id : null;
+
+            $q = Morador::query()
+                ->where('fk_local_id', $local->loc_id)
+                ->where('mor_referencia_familiar', true);
+
+            if ($moradorAtualId) {
+                $q->where('mor_id', '!=', $moradorAtualId);
+            }
+
+            if ($q->exists()) {
+                $validator->errors()->add(
+                    'mor_referencia_familiar',
+                    __('Este imóvel já possui um titular cadastrado. Remova a marcação do titular atual antes de definir outro.')
+                );
+            }
+        });
     }
 }

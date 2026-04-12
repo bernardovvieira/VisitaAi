@@ -19,8 +19,10 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class LocalController extends Controller
@@ -176,6 +178,7 @@ class LocalController extends Controller
     {
         $data = $request->validated();
         $ocupantes = $data['ocupantes'] ?? [];
+        $ocupantesFiles = $request->file('ocupantes', []);
         unset($data['ocupantes']);
         $socio = array_key_exists('socio', $data) ? ($data['socio'] ?? []) : null;
         unset($data['socio']);
@@ -188,7 +191,7 @@ class LocalController extends Controller
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
 
         $local = Local::create($data);
-        $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : []);
+        $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : [], is_array($ocupantesFiles) ? $ocupantesFiles : []);
         if (is_array($socio)) {
             $this->persistSocioeconomicoNoLocal($local, $socio);
         }
@@ -278,12 +281,13 @@ class LocalController extends Controller
         }
         $data = $request->validated();
         $ocupantes = $data['ocupantes'] ?? [];
+        $ocupantesFiles = $request->file('ocupantes', []);
         unset($data['ocupantes']);
         $socio = array_key_exists('socio', $data) ? ($data['socio'] ?? []) : null;
         unset($data['socio']);
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
         $local->update($data);
-        $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : []);
+        $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : [], is_array($ocupantesFiles) ? $ocupantesFiles : []);
         if (is_array($socio)) {
             $this->persistSocioeconomicoNoLocal($local, $socio);
         }
@@ -427,9 +431,9 @@ class LocalController extends Controller
     /**
      * @param  array<int, array<string, mixed>>  $rows
      */
-    private function persistOcupantesNoLocal(Local $local, array $rows): void
+    private function persistOcupantesNoLocal(Local $local, array $rows, array $files = []): void
     {
-        foreach ($rows as $row) {
+        foreach ($rows as $index => $row) {
             if (! is_array($row)) {
                 continue;
             }
@@ -477,6 +481,10 @@ class LocalController extends Controller
             $aj = in_array($aj, ['sim', 'nao'], true) ? $aj : null;
             $rfi = $row['mor_renda_formal_informal'] ?? null;
             $rfi = ($rfi === '' || $rfi === null) ? null : $rfi;
+            $documentoPessoal = data_get($files, $index.'.mor_documento_pessoal');
+            if (! $documentoPessoal instanceof UploadedFile) {
+                $documentoPessoal = null;
+            }
 
             $payload = [
                 'mor_nome' => $nome !== '' ? $nome : null,
@@ -510,6 +518,10 @@ class LocalController extends Controller
                 if (! $m) {
                     continue;
                 }
+                if ($documentoPessoal) {
+                    $this->deleteDocumentoPessoal($m);
+                    $payload = array_merge($payload, $this->uploadDocumentoPessoal($documentoPessoal));
+                }
                 $m->update($payload);
 
                 continue;
@@ -522,7 +534,31 @@ class LocalController extends Controller
                 continue;
             }
 
+            if ($documentoPessoal) {
+                $payload = array_merge($payload, $this->uploadDocumentoPessoal($documentoPessoal));
+            }
+
             Morador::create(array_merge(['fk_local_id' => $local->loc_id], $payload));
+        }
+    }
+
+    private function uploadDocumentoPessoal(UploadedFile $file): array
+    {
+        $path = $file->store('moradores/documentos', 'local');
+
+        return [
+            'mor_documento_pessoal_path' => $path,
+            'mor_documento_pessoal_nome' => $file->getClientOriginalName(),
+            'mor_documento_pessoal_mime' => $file->getClientMimeType(),
+            'mor_documento_pessoal_tamanho' => $file->getSize(),
+        ];
+    }
+
+    private function deleteDocumentoPessoal(Morador $morador): void
+    {
+        $path = (string) ($morador->mor_documento_pessoal_path ?? '');
+        if ($path !== '' && Storage::disk('local')->exists($path)) {
+            Storage::disk('local')->delete($path);
         }
     }
 

@@ -118,6 +118,7 @@ class LocalRequest extends FormRequest
             'ocupantes.*.mor_rg_orgao' => ['nullable', 'string', 'max:60'],
             'ocupantes.*.mor_rg_expedicao' => ['nullable', 'date'],
             'ocupantes.*.mor_cpf' => ['nullable', 'string', 'max:20'],
+            'ocupantes.*.mor_documento_pessoal' => ['nullable', 'file', 'max:10240', 'mimetypes:application/pdf,image/jpeg,image/png,image/webp,image/heic,image/heif'],
             'ocupantes.*.mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
             'ocupantes.*.mor_ajuda_compra_imovel' => ['nullable', 'string', Rule::in(['sim', 'nao'])],
             'ocupantes.*.mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfiKeys)],
@@ -164,6 +165,64 @@ class LocalRequest extends FormRequest
             }
             if ($refs > 1) {
                 $validator->errors()->add('ocupantes', __('Marque no máximo um morador como referência familiar (titular).'));
+
+                return;
+            }
+
+            if (! $local instanceof Local) {
+                return;
+            }
+
+            $rowsByMorId = [];
+            foreach ($ocupantes as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $mid = isset($row['mor_id']) ? (int) $row['mor_id'] : 0;
+                if ($mid > 0) {
+                    $rowsByMorId[$mid] = $row;
+                }
+            }
+
+            $titularIdsExistentes = Morador::query()
+                ->where('fk_local_id', $local->loc_id)
+                ->where('mor_referencia_familiar', true)
+                ->pluck('mor_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+
+            $titularesMantidos = 0;
+            foreach ($titularIdsExistentes as $titularId) {
+                if (! array_key_exists($titularId, $rowsByMorId)) {
+                    // Se o titular existente não veio no payload, ele continua titular.
+                    $titularesMantidos++;
+
+                    continue;
+                }
+                $rowTitular = $rowsByMorId[$titularId];
+                $refAtualizado = $rowTitular['mor_referencia_familiar'] ?? false;
+                if ($refAtualizado === true || $refAtualizado === 1 || $refAtualizado === '1' || $refAtualizado === 'true') {
+                    $titularesMantidos++;
+                }
+            }
+
+            $titularesNovos = 0;
+            foreach ($ocupantes as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $mid = isset($row['mor_id']) ? (int) $row['mor_id'] : 0;
+                if ($mid > 0 && in_array($mid, $titularIdsExistentes, true)) {
+                    continue;
+                }
+                $ref = $row['mor_referencia_familiar'] ?? false;
+                if ($ref === true || $ref === 1 || $ref === '1' || $ref === 'true') {
+                    $titularesNovos++;
+                }
+            }
+
+            if (($titularesMantidos + $titularesNovos) > 1) {
+                $validator->errors()->add('ocupantes', __('Este imóvel já possui um titular cadastrado. Mantenha apenas um ocupante como referência familiar.'));
             }
         });
     }

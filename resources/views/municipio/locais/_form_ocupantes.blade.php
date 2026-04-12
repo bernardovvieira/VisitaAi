@@ -28,6 +28,10 @@
             'mor_rg_orgao' => $m->mor_rg_orgao ?? '',
             'mor_rg_expedicao' => $m->mor_rg_expedicao ? $m->mor_rg_expedicao->format('Y-m-d') : '',
             'mor_cpf' => $m->mor_cpf ?? '',
+            'mor_documento_pessoal_path' => $m->mor_documento_pessoal_path ?? '',
+            'mor_documento_pessoal_nome' => $m->mor_documento_pessoal_nome ?? '',
+            'mor_documento_pessoal_mime' => $m->mor_documento_pessoal_mime ?? '',
+            'mor_documento_pessoal_tamanho' => $m->mor_documento_pessoal_tamanho ?? '',
             'mor_tempo_uniao_conjuge' => $m->mor_tempo_uniao_conjuge ?? '',
             'mor_ajuda_compra_imovel' => in_array(strtolower(trim((string) ($m->mor_ajuda_compra_imovel ?? ''))), ['sim', 'nao'], true)
                 ? strtolower(trim((string) ($m->mor_ajuda_compra_imovel ?? '')))
@@ -60,6 +64,10 @@
         'mor_rg_orgao' => '',
         'mor_rg_expedicao' => '',
         'mor_cpf' => '',
+        'mor_documento_pessoal_path' => '',
+        'mor_documento_pessoal_nome' => '',
+        'mor_documento_pessoal_mime' => '',
+        'mor_documento_pessoal_tamanho' => '',
         'mor_tempo_uniao_conjuge' => '',
         'mor_ajuda_compra_imovel' => '',
         'mor_renda_formal_informal' => '',
@@ -223,6 +231,17 @@
         addRow() {
             this.rows.push(JSON.parse(JSON.stringify(this.emptyRow)));
         },
+        enforceSingleTitular(idx) {
+            var selected = this.rows[idx] || null;
+            var isTitular = selected && String(selected.mor_referencia_familiar) === '1';
+            if (!isTitular) return;
+            this.rows.forEach(function(r, i) {
+                if (i === idx) return;
+                if (String(r.mor_referencia_familiar) === '1') {
+                    r.mor_referencia_familiar = '0';
+                }
+            });
+        },
         removeRow(i) {
             if (this.rows[i] && !this.rows[i].mor_id) {
                 this.rows.splice(i, 1);
@@ -236,7 +255,10 @@
             <details class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-600 dark:bg-slate-900/30" x-bind:open="!row.mor_id">
                 <summary class="cursor-pointer list-none font-semibold text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs" x-text="row.mor_id ? '{{ __('Ocupante') }} #' + row.mor_id : '{{ __('Novo ocupante') }}'"></span>
+                        <span class="inline-flex items-center gap-2 text-xs">
+                            <span x-text="row.mor_id ? '{{ __('Ocupante') }} #' + row.mor_id : '{{ __('Novo ocupante') }}'"></span>
+                            <span x-show="String(row.mor_referencia_familiar) === '1'" class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">{{ __('Titular') }}</span>
+                        </span>
                         <span class="truncate text-right text-xs font-normal text-slate-500 dark:text-slate-400" x-text="(row.mor_nome && row.mor_nome.trim()) ? row.mor_nome : '{{ __('Sem nome informado') }}'"></span>
                     </div>
                 </summary>
@@ -284,7 +306,7 @@
                             <label class="v-toolbar-label">{{ __('Referência familiar (titular)') }}</label>
                             <select x-bind:name="'ocupantes[' + idx + '][mor_referencia_familiar]'"
                                     x-model="row.mor_referencia_familiar"
-                                    @change="if (String(row.mor_referencia_familiar) !== '0') row.mor_parentesco = ''"
+                                    @change="if (String(row.mor_referencia_familiar) !== '0') row.mor_parentesco = ''; enforceSingleTitular(idx)"
                                     class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <option value="1">{{ __('Sim') }}</option>
@@ -333,6 +355,21 @@
                         <div>
                             <label class="v-toolbar-label">{{ __('RG: expedição') }}</label>
                             <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_rg_expedicao]'" x-model="row.mor_rg_expedicao" class="v-input mt-1 w-full">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="v-toolbar-label">{{ __('Documento pessoal') }}</label>
+                            <input type="file"
+                                   x-bind:name="'ocupantes[' + idx + '][mor_documento_pessoal]'"
+                                   accept="image/*,application/pdf"
+                                   capture="environment"
+                                   class="v-input mt-1 w-full bg-white dark:bg-slate-800">
+                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('PDF, JPG, PNG, WEBP, HEIC. Limite: 10 MB.') }}</p>
+                            <template x-if="row.mor_documento_pessoal_path">
+                                <p class="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                                    <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
+                                    <span x-text="row.mor_documento_pessoal_nome || '{{ __('Documento salvo') }}'"></span>
+                                </p>
+                            </template>
                         </div>
                     </div>
                 </fieldset>

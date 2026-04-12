@@ -11,7 +11,7 @@
         <x-slot name="actions">
             <div id="sync-actions" class="hidden flex flex-wrap items-center gap-3">
                 <button type="button" id="sync-btn"
-                        class="v-btn-compact v-btn-compact--blue">
+                        class="v-btn-compact v-btn-compact--blue text-white">
                     {{ __('Enviar todas agora') }}
                 </button>
                 <button type="button" id="sync-clear-btn"

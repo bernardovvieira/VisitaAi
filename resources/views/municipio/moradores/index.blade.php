@@ -89,7 +89,14 @@
                 <tbody>
                     @forelse ($moradores as $m)
                         <tr>
-                            <td class="font-medium text-slate-900 dark:text-slate-100">{{ $m->mor_nome ?: '-' }}</td>
+                            <td class="font-medium text-slate-900 dark:text-slate-100">
+                                <div class="inline-flex items-center gap-2">
+                                    <span>{{ $m->mor_nome ?: '-' }}</span>
+                                    @if($m->mor_referencia_familiar)
+                                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">{{ __('Titular') }}</span>
+                                    @endif
+                                </div>
+                            </td>
                             <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ $m->mor_data_nascimento ? $m->mor_data_nascimento->format('d/m/Y') : '-' }}</td>
                             <td class="text-slate-700 dark:text-slate-300">{{ $m->idadeAnos() !== null ? $m->idadeAnos() . ' ' . __('anos') : '-' }}</td>
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '' }}">{{ $m->mor_escolaridade ? ($escOpcoes[$m->mor_escolaridade] ?? $m->mor_escolaridade) : '-' }}</td>
