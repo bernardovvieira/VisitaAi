@@ -22,13 +22,6 @@
 
     <x-flash-alerts />
 
-    <x-section-card>
-        <div class="min-w-0">
-            <h2 class="v-section-title">{{ __('Doenças monitoradas') }}</h2>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ __('Use a busca para filtrar por nome, sintomas, transmissão ou medidas de controle.') }}</p>
-        </div>
-    </x-section-card>
-
     <x-section-card class="v-card--muted">
         <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
         <div class="mt-1 flex items-center gap-2">
