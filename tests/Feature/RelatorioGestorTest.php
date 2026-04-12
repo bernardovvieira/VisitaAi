@@ -82,4 +82,40 @@ class RelatorioGestorTest extends TestCase
         $response->assertSee(__('Até 1 salário mínimo'));  // ate_1_sm traduzido
         $response->assertDontSee('ate_1_sm');               // valor cru NÃO deve aparecer
     }
+
+    #[Test]
+    public function relatorio_pdf_exporta_com_sucesso(): void
+    {
+        $gestor = $this->gestorAprovado();
+        $local = Local::factory()->create();
+        
+        LocalSocioeconomico::create([
+            'fk_local_id' => $local->loc_id,
+            'lse_data_entrevista' => now()->toDateString(),
+            'lse_renda_familiar_faixa' => 'ate_2_sm',
+        ]);
+
+        $agente = User::factory()->create([
+            'fk_gestor_id' => $gestor->use_id,
+        ]);
+        Visita::create([
+            'fk_usuario_id' => $agente->getKey(),
+            'fk_local_id' => $local->getKey(),
+            'vis_data' => now()->toDateString(),
+            'vis_atividade' => '1',
+            'vis_pendencias' => false,
+        ]);
+
+        // Teste a export em PDF
+        $response = $this->actingAs($gestor)
+            ->post(route('gestor.relatorios.pdf'), [
+                'data_inicio' => now()->subDays(30)->toDateString(),
+                'data_fim' => now()->toDateString(),
+                'bairros' => [],
+                'tipo_relatorio' => 'completo',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('content-type', 'application/pdf');
+    }
 }

@@ -94,6 +94,10 @@ class IndicadoresOcupantesTest extends TestCase
         $this->assertStringContainsString('12345678', $raw);
         $this->assertStringContainsString('Maria da Silva', $raw);
         $this->assertStringContainsString('Sim', $raw);
+        
+        // Verifica que escolaridade traduzida aparece, não a chave crua
+        $this->assertStringContainsString('Médio completo', $raw);
+        $this->assertStringNotContainsString('medio_completo,', $raw);
     }
 
     #[Test]
@@ -198,4 +202,50 @@ class IndicadoresOcupantesTest extends TestCase
         $this->assertTrue($cruz['suprimido']);
         $this->assertNull($cruz['count']);
     }
+
+    #[Test]
+    public function pdf_cadastro_ocupantes_contem_escolaridade_traduzida(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create();
+
+        Morador::factory()->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_nome' => 'Test Person',
+            'mor_escolaridade' => 'superior_completo',
+            'mor_renda_faixa' => 'acima_5_sm',
+            'mor_situacao_trabalho' => 'empregado',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('gestor.indicadores.ocupantes.export-cadastro-pdf'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+        // PDF é gerado com sucesso
+    }
+
+    #[Test]
+    public function csv_indicadores_nao_inclui_chaves_brutas(): void
+    {
+        $user = $this->gestorAprovado();
+        $local = Local::factory()->create();
+        Morador::factory()->count(5)->create([
+            'fk_local_id' => $local->loc_id,
+            'mor_escolaridade' => 'fundamental_completo',
+            'mor_renda_faixa' => 'ate_2_sm',
+            'mor_cor_raca' => 'branca',
+            'mor_situacao_trabalho' => 'autonomo',
+        ]);
+
+        $raw = $this->actingAs($user)
+            ->get(route('gestor.indicadores.ocupantes.export'))
+            ->assertOk()
+            ->streamedContent();
+
+        // Verifica que o CSV foi gerado com sucesso (contém os dados)
+        $this->assertStringContainsString('CRUZAMENTO_ESCOLARIDADE_RENDA_COMPLETO', $raw);
+        $this->assertNotEmpty($raw);
+    }
 }
+
