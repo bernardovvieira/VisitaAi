@@ -66,6 +66,21 @@ class LoginRequest extends FormRequest
         }
 
         /* -----------------------------------------------------------------
+         | 2.1 Inativa automaticamente contas sem login há mais de 2 meses
+         |-----------------------------------------------------------------*/
+        $limiteInatividade = now()->subMonthsNoOverflow(2);
+        $referenciaInatividade = $user->use_ultimo_login_em ?? $user->use_data_criacao;
+
+        if ($user->isAprovado() && $referenciaInatividade !== null && $referenciaInatividade->lte($limiteInatividade)) {
+            $user->forceFill(['use_aprovado' => false])->save();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'use_email' => __('CPF/e-mail ou senha incorretos.'),
+            ]);
+        }
+
+        /* -----------------------------------------------------------------
          | 3. Conta precisa estar aprovada
          |-----------------------------------------------------------------*/
         if (! $user->isAprovado()) {
@@ -91,6 +106,8 @@ class LoginRequest extends FormRequest
          | 5. Tudo certo → efetua login
          |-----------------------------------------------------------------*/
         Auth::login($user, $this->boolean('remember'));
+
+        $user->forceFill(['use_ultimo_login_em' => now()])->save();
 
         RateLimiter::clear($this->throttleKey());
     }

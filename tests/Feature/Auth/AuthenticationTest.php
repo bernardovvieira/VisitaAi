@@ -28,6 +28,27 @@ class AuthenticationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('gestor.dashboard', [], false));
+        $this->assertNotNull($user->fresh()->use_ultimo_login_em);
+    }
+
+    public function test_users_are_inactivated_and_cannot_login_after_two_months_without_access(): void
+    {
+        $user = User::factory()->create([
+            'use_perfil' => 'gestor',
+            'use_aprovado' => true,
+            'use_data_criacao' => now()->subMonthsNoOverflow(3),
+            'use_ultimo_login_em' => now()->subMonthsNoOverflow(3),
+        ]);
+
+        $response = $this->from('/login')->post('/login', [
+            'use_email' => $user->use_email,
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect('/login');
+        $response->assertSessionHasErrors('use_email');
+        $this->assertGuest();
+        $this->assertFalse((bool) $user->fresh()->use_aprovado);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void

@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'use_cpf',
         'use_email',
         'use_senha',
+        'use_ultimo_login_em',
         'email_verified_at',
         'use_perfil',
         'use_aprovado',
@@ -55,6 +56,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * Casts de tipo.
      */
     protected $casts = [
+        'use_ultimo_login_em' => 'datetime',
         'email_verified_at' => 'datetime',
         'use_aprovado' => 'boolean',
         'use_data_criacao' => 'datetime',

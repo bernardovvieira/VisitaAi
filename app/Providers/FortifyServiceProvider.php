@@ -100,6 +100,19 @@ class FortifyServiceProvider extends ServiceProvider
                 ]);
             }
 
+            $limiteInatividade = now()->subMonthsNoOverflow(2);
+            $referenciaInatividade = $user->use_ultimo_login_em ?? $user->use_data_criacao;
+
+            if ($user->isAprovado() && $referenciaInatividade !== null && $referenciaInatividade->lte($limiteInatividade)) {
+                $user->forceFill(['use_aprovado' => false])->save();
+
+                throw ValidationException::withMessages([
+                    'use_email' => __('Conta inativada por inatividade superior a 2 meses. Entre em contato com um gestor.'),
+                ]);
+            }
+
+            $user->forceFill(['use_ultimo_login_em' => now()])->save();
+
             return $user;
         });
 
