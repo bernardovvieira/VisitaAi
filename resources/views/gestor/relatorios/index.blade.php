@@ -356,11 +356,25 @@
     </section>
 
     @if(isset($imoveisComplementoResumo) && $imoveisComplementoResumo->isNotEmpty())
-      <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+      <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none" x-data="{ search: '', matches(row) { const term = this.search.trim().toLowerCase(); return term === '' || (row.dataset.search || '').includes(term); } }">
           <h2 class="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Imóveis no período: cadastro complementar') }}</h2>
         <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Resumo por imóvel: quantidade de ocupantes e indicação de ficha socioeconômica. O PDF inclui a mesma tabela.') }}</p>
+
+        <div class="v-list-toolbar mb-4">
+            <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                <div class="min-w-0 flex-1">
+                    <label for="imoveis-periodo-search" class="v-toolbar-label">{{ __('Pesquisar imóveis no período') }}</label>
+                    <div class="flex items-center gap-2">
+                        <input id="imoveis-periodo-search" type="text" x-model.debounce.150ms="search" class="v-input" placeholder="{{ __('Código, endereço, bairro, ocupantes ou ficha…') }}">
+                        <button type="button" class="v-btn-compact v-btn-compact--ghost shrink-0" x-show="search" x-cloak @click="search = ''">{{ __('Limpar') }}</button>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 lg:text-right">{{ __('A tabela se ajusta horizontalmente no celular e a busca filtra em tempo real.') }}</p>
+            </div>
+        </div>
+
         <div class="v-table-wrap overflow-x-auto">
-            <table class="v-data-table min-w-[42rem]">
+            <table class="v-data-table min-w-[56rem]">
                 <thead>
                     <tr>
                         <th scope="col">{{ __('Cód.') }}</th>
@@ -376,8 +390,17 @@
                     @foreach($imoveisComplementoResumo as $loc)
                         @php
                             $lse = $loc->socioeconomico;
+                            $searchText = mb_strtolower(implode(' ', array_filter([
+                                $loc->loc_codigo_unico ?? '',
+                                trim(($loc->loc_endereco ?? '').($loc->loc_numero ? ', '.$loc->loc_numero : '')),
+                                $loc->loc_bairro ?? '',
+                                (string) (int) ($loc->moradores_count ?? 0),
+                                $lse ? __('Sim') : __('Não'),
+                                $lse && $lse->lse_n_moradores_declarado !== null ? (string) $lse->lse_n_moradores_declarado : '',
+                                $lse && $lse->lse_renda_familiar_faixa ? \App\Helpers\MsTerminologia::rendaFaixaLabel($lse->lse_renda_familiar_faixa) : '',
+                            ], fn ($value) => $value !== null && $value !== '')));
                         @endphp
-                        <tr>
+                        <tr data-search="{{ $searchText }}" x-show="matches($el)" x-cloak>
                             <td class="whitespace-nowrap font-mono text-xs">{{ $loc->loc_codigo_unico ?? '-' }}</td>
                             <td>{{ trim(($loc->loc_endereco ?? '').($loc->loc_numero ? ', '.$loc->loc_numero : '')) ?: '-' }}</td>
                             <td>{{ $loc->loc_bairro ?? '-' }}</td>
@@ -387,6 +410,11 @@
                             <td class="text-sm text-slate-600 dark:text-slate-400">{{ $lse && $lse->lse_renda_familiar_faixa ? \Illuminate\Support\Str::limit(\App\Helpers\MsTerminologia::rendaFaixaLabel($lse->lse_renda_familiar_faixa), 48) : '-' }}</td>
                         </tr>
                     @endforeach
+                    <tr x-show="search && !Array.from($el.parentElement.querySelectorAll('tr[data-search]')).some((row) => row.style.display !== 'none')" x-cloak>
+                        <td colspan="7" class="!p-0">
+                            <div class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('Nenhum imóvel encontrado para esta busca.') }}</div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

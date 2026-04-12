@@ -88,11 +88,14 @@
                     <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $visita->local->loc_longitude }}</dd>
                 </div>
             </dl>
+        </aside>
+
+        <div class="xl:col-span-3">
             <a href="{{ route('gestor.locais.show', $visita->local) }}" class="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
                 <x-heroicon-o-arrow-top-right-on-square class="h-3.5 w-3.5" aria-hidden="true" />
                 {{ __('Ver todos os dados') }}
             </a>
-        </aside>
+        </div>
     </div>
 </x-section-card>
 
