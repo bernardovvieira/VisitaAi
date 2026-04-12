@@ -213,28 +213,55 @@ class FullSystemTestSeeder extends Seeder
             if (LocalSocioeconomico::query()->where('fk_local_id', $local->loc_id)->exists()) {
                 continue;
             }
-            if (random_int(0, 100) > 82) {
+            
+            // 35% chance de deixar sem ficha socioeconômica
+            if (random_int(0, 100) > 65) {
                 continue;
             }
 
-            LocalSocioeconomico::query()->create([
-                'fk_local_id' => $local->loc_id,
-                'lse_data_entrevista' => Carbon::now()->subDays(random_int(1, 240))->toDateString(),
-                'lse_condicao_casa' => $condCasa[array_rand($condCasa)] ?? 'nao_informado',
-                'lse_posicao_entrevistado' => $posicao[array_rand($posicao)] ?? 'nao_informado',
-                'lse_telefone_contato' => $faker->numerify('(54) 9####-####'),
-                'lse_n_moradores_declarado' => random_int(1, 7),
-                'lse_renda_formal_informal' => $rendaTipo[array_rand($rendaTipo)] ?? 'nao_informado',
-                'lse_principal_fonte_renda' => $faker->randomElement(['Assalariado', 'Autônomo', 'Benefício social', 'Aposentadoria']),
-                'lse_renda_familiar_faixa' => $rendaFam[array_rand($rendaFam)] ?? 'nao_informado',
-                'lse_qtd_contribuintes' => random_int(1, 3),
-                'lse_beneficios_sociais' => $faker->randomElement(['Bolsa Família', 'BPC', 'Nenhum', 'Auxílio eventual']),
-                'lse_situacao_posse' => $situacaoPosse[array_rand($situacaoPosse)] ?? 'nao_informado',
-                'lse_num_comodos' => random_int(3, 9),
-                'lse_num_quartos' => random_int(1, 4),
-                'lse_num_banheiros' => random_int(1, 3),
-                'lse_observacoes_imovel' => random_int(0, 100) < 20 ? $faker->sentence() : null,
-            ]);
+            $randoPreenchimento = random_int(0, 100);
+            
+            // 30% chance de preenchimento parcial (alguns campos null)
+            if ($randoPreenchimento < 30) {
+                LocalSocioeconomico::query()->create([
+                    'fk_local_id' => $local->loc_id,
+                    'lse_data_entrevista' => Carbon::now()->subDays(random_int(1, 240))->toDateString(),
+                    'lse_condicao_casa' => random_int(0, 100) < 60 ? $condCasa[array_rand($condCasa)] ?? 'nao_informado' : null,
+                    'lse_posicao_entrevistado' => $posicao[array_rand($posicao)] ?? 'nao_informado',
+                    'lse_telefone_contato' => null,
+                    'lse_n_moradores_declarado' => random_int(1, 7),
+                    'lse_renda_formal_informal' => null,
+                    'lse_principal_fonte_renda' => null,
+                    'lse_renda_familiar_faixa' => $rendaFam[array_rand($rendaFam)] ?? 'nao_informado',
+                    'lse_qtd_contribuintes' => null,
+                    'lse_beneficios_sociais' => null,
+                    'lse_situacao_posse' => $situacaoPosse[array_rand($situacaoPosse)] ?? 'nao_informado',
+                    'lse_num_comodos' => null,
+                    'lse_num_quartos' => null,
+                    'lse_num_banheiros' => null,
+                    'lse_observacoes_imovel' => null,
+                ]);
+            } else {
+                // 70% chance de preenchimento completo
+                LocalSocioeconomico::query()->create([
+                    'fk_local_id' => $local->loc_id,
+                    'lse_data_entrevista' => Carbon::now()->subDays(random_int(1, 240))->toDateString(),
+                    'lse_condicao_casa' => $condCasa[array_rand($condCasa)] ?? 'nao_informado',
+                    'lse_posicao_entrevistado' => $posicao[array_rand($posicao)] ?? 'nao_informado',
+                    'lse_telefone_contato' => $faker->numerify('(54) 9####-####'),
+                    'lse_n_moradores_declarado' => random_int(1, 7),
+                    'lse_renda_formal_informal' => $rendaTipo[array_rand($rendaTipo)] ?? 'nao_informado',
+                    'lse_principal_fonte_renda' => $faker->randomElement(['Assalariado', 'Autônomo', 'Benefício social', 'Aposentadoria']),
+                    'lse_renda_familiar_faixa' => $rendaFam[array_rand($rendaFam)] ?? 'nao_informado',
+                    'lse_qtd_contribuintes' => random_int(1, 3),
+                    'lse_beneficios_sociais' => $faker->randomElement(['Bolsa Família', 'BPC', 'Nenhum', 'Auxílio eventual']),
+                    'lse_situacao_posse' => $situacaoPosse[array_rand($situacaoPosse)] ?? 'nao_informado',
+                    'lse_num_comodos' => random_int(3, 9),
+                    'lse_num_quartos' => random_int(1, 4),
+                    'lse_num_banheiros' => random_int(1, 3),
+                    'lse_observacoes_imovel' => random_int(0, 100) < 20 ? $faker->sentence() : null,
+                ]);
+            }
         }
     }
 
