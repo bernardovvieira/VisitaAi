@@ -4,7 +4,7 @@
 @section('og_description', __('Envie locais e visitas salvos no dispositivo quando estiver sem internet.'))
 
 @section('content')
-<div class="v-page">
+<div class="v-page v-page--wide">
     @include('visitas.partials._sync-js-strings')
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Sincronizar')]]" />
     <x-page-header :eyebrow="__('Dispositivo')" :title="__('Sincronizar')">
@@ -13,10 +13,10 @@
         </x-slot>
     </x-page-header>
 
-    <x-section-card>
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Enviar dados guardados offline') }}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">{{ __('Envie locais e visitas guardados no dispositivo. Serão enviados primeiro os locais, depois as visitas.') }}</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('Quando você usar «:btn» na tela de registrar visita, as visitas aparecerão aqui para enviar.', ['btn' => __('Guardar visita')]) }}</p>
+    <x-section-card class="v-card--muted border border-slate-200/80 dark:border-slate-700/80">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Enviar dados guardados no dispositivo') }}</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">{{ __('Envie locais e visitas guardados no dispositivo. O sistema envia primeiro os locais e depois as visitas.') }}</p>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Ao usar :btn na tela de registrar visita, os itens aparecem aqui para envio.', ['btn' => __('Guardar visita')]) }}</p>
         <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
             <button type="button" id="sync-btn"
                     class="v-btn-compact v-btn-compact--blue">
@@ -31,7 +31,7 @@
     </x-section-card>
 
     @if(!empty($locaisSyncSubmitUrl))
-    <x-section-card id="sync-locais-section"
+    <x-section-card id="sync-locais-section" class="v-card--muted"
              data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Locais guardados no dispositivo') }}</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">{{ __('Carregando…') }}</p>
@@ -39,7 +39,7 @@
     </x-section-card>
     @endif
 
-    <x-section-card
+    <x-section-card class="v-card--muted"
              id="sync-section"
              data-sync-url="{{ $syncSubmitUrl }}"
              data-locais-sync-url="{{ $locaisSyncSubmitUrl ?? '' }}"
@@ -54,7 +54,7 @@
             <!-- Preenchido via JS a partir do IndexedDB -->
         </div>
         <p id="sync-empty-hint" class="hidden mt-3 text-sm text-gray-500 dark:text-gray-400">
-            {{ __('Para guardar visitas sem internet, use «:btn» no formulário de visita; elas aparecerão nesta lista para envio.', ['btn' => __('Guardar visita')]) }}
+            {{ __('Para guardar visitas sem internet, use :btn no formulário de visita. Elas aparecerão nesta lista para envio.', ['btn' => __('Guardar visita')]) }}
         </p>
         <p id="sync-offline-warning" class="hidden mt-4 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
             {{ __('Você está sem internet. Conecte o dispositivo à internet (Wi-Fi ou dados) para poder enviar as visitas.') }}
@@ -207,7 +207,7 @@
         RESULT.textContent = '';
         drafts.forEach(function(d, i) {
             var row = document.createElement('div');
-            row.className = 'flex items-center justify-between gap-2 p-4 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
+            row.className = 'flex items-center justify-between gap-2 rounded-xl border border-slate-200/80 bg-white p-4 text-sm text-slate-800 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-100';
             row.setAttribute('data-draft-id', d.id);
             var label = document.createElement('span');
             label.className = 'flex-1 min-w-0';
@@ -266,7 +266,7 @@
         locais.forEach(function(d, i) {
             var p = d.payload || {};
             var row = document.createElement('div');
-            row.className = 'flex items-center justify-between gap-2 p-3 rounded-lg bg-gray-100 dark:bg-gray-600 text-sm text-gray-800 dark:text-gray-200';
+            row.className = 'flex items-center justify-between gap-2 rounded-xl border border-slate-200/80 bg-white p-3 text-sm text-slate-800 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-100';
             row.setAttribute('data-draft-id', d.id);
             var label = document.createElement('span');
             label.className = 'flex-1 min-w-0';

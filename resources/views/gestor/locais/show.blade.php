@@ -13,7 +13,7 @@
     <x-page-header :eyebrow="__('Locais')" :title="__('Imóvel cadastrado')">
         <x-slot name="lead">
             <p class="text-sm text-slate-600 dark:text-slate-400">
-                <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">{{ $local->loc_codigo_unico }}</span>
+                <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">#{{ $local->loc_codigo_unico }}</span>
                 <span class="text-slate-400"> · </span>
                 {{ $local->loc_endereco }}, {{ $numeroLead }}, {{ $local->loc_bairro }}
             </p>

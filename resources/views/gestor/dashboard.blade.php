@@ -181,10 +181,10 @@
             @endif
         </section>
 
-        <div class="flex min-h-0 flex-col">
-            <section class="v-dash-card flex min-h-0 min-w-0 flex-col" aria-labelledby="gestor-atalhos-heading">
+        <div class="flex min-h-0 flex-col lg:h-full">
+            <section class="v-dash-card flex min-h-0 min-w-0 flex-col lg:h-full" aria-labelledby="gestor-atalhos-heading">
                 <h2 id="gestor-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
-                <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
+                <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4 min-h-0 flex-1 content-start">
                     <a href="{{ route('gestor.pendentes') }}" class="v-dash-shortcut {{ $pendentesCount > 0 ? 'v-dash-shortcut--primary' : '' }}">
                         <x-heroicon-o-exclamation-triangle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">

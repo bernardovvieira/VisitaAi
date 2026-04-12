@@ -79,7 +79,7 @@
             <p><strong>Cidade:</strong> <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-0.5 rounded text-xs font-semibold">{{ $local->loc_cidade }}/{{ $local->loc_estado }}</span></p>
             <p>
                 <strong>Código de Identificação:</strong>
-                <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">{{ $local->loc_codigo_unico }}</span>
+                <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs font-semibold">#{{ $local->loc_codigo_unico }}</span>
             </p>
         </div>
         <div class="w-full h-64 rounded-lg overflow-hidden border border-slate-200/90 dark:border-slate-700/80" id="mapa-local"></div>

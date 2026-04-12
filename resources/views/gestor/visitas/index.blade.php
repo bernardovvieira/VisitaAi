@@ -117,7 +117,7 @@
                             <td class="leading-snug">
                                 <div class="font-semibold text-slate-900 dark:text-slate-100">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                                 <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                                    {{ $visita->local->loc_bairro }} · {{ __('Cód.') }} {{ $visita->local->loc_codigo_unico }}
+                                    {{ $visita->local->loc_bairro }} · {{ __('Cód.') }} #{{ $visita->local->loc_codigo_unico }}
                                     <br>{{ __('Resp.') }} {{ $visita->local->loc_responsavel_nome ?? __('Não informado') }}
                                 </div>
                             </td>

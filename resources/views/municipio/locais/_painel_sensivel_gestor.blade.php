@@ -70,7 +70,7 @@
                                 ])));
                         @endphp
                         <tr class="bg-white/90 dark:bg-slate-900/40" data-search="{{ $search }}" x-show="!query || ($el.dataset.search && $el.dataset.search.includes(query.toLowerCase()))">
-                            <td class="whitespace-nowrap px-3 py-2.5 font-mono text-xs text-slate-800 dark:text-slate-200">{{ $m->mor_id }}</td>
+                            <td class="whitespace-nowrap px-3 py-2.5 font-mono text-xs text-slate-800 dark:text-slate-200">#{{ $m->mor_id }}</td>
                             <td class="max-w-[12rem] truncate px-3 py-2.5 text-slate-900 dark:text-slate-100" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: __('N/D') }}</td>
                             <td class="whitespace-nowrap px-3 py-2.5 text-slate-800 dark:text-slate-200">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? __('N/D') }}</td>
                             <td class="max-w-[10rem] px-3 py-2.5 text-slate-800 dark:text-slate-200">{{ $escL[$m->mor_escolaridade] ?? ($m->mor_escolaridade ?? __('N/D')) }}</td>

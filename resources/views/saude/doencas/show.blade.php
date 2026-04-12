@@ -13,7 +13,7 @@
     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
       <div>
         <dt class="font-medium">{{ __('ID do registro') }}</dt>
-        <dd class="mt-1 text-gray-900 dark:text-gray-100">{{ $doenca->doe_id }}</dd>
+        <dd class="mt-1 text-gray-900 dark:text-gray-100">#{{ $doenca->doe_id }}</dd>
       </div>
       <div>
         <dt class="font-medium">{{ __('Criado em') }}</dt>

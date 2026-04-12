@@ -14,6 +14,20 @@
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Visitas')]]" />
 
     <x-page-header :eyebrow="__('Registro em campo')" :title="__('Visitas')">
+        <x-slot name="actions">
+            <a href="{{ route('agente.visitas.create') }}"
+               class="v-btn-compact v-btn-compact--blue">
+                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Nova visita') }}
+            </a>
+            <span x-show="online" x-cloak>
+                <a href="{{ route('agente.visitas.sync') }}"
+                   class="v-btn-compact v-btn-compact--amber">
+                    <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {{ __('Enviar visitas do dispositivo') }}
+                </a>
+            </span>
+        </x-slot>
         <x-slot name="lead">
             <p>{{ __('Veja as visitas que você registrou, busque, edite ou exclua. Sem internet, salve no dispositivo e sincronize depois.') }}</p>
         </x-slot>
@@ -32,42 +46,6 @@
     <div id="visita-offline-pending-alert" class="hidden rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-100" role="alert">
         <span id="visita-offline-pending-alert-msg"></span>
     </div>
-
-        <x-section-card class="v-card--muted">
-            <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(12rem,24rem)] lg:items-end">
-                <div class="min-w-0 space-y-3">
-                    <div>
-                        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Ações rápidas') }}</h2>
-                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Criar nova visita ou enviar registros guardados no dispositivo.') }}</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('agente.visitas.create') }}"
-                           class="v-btn-compact v-btn-compact--blue">
-                            <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                            {{ __('Nova visita') }}
-                        </a>
-                        <span x-show="online" x-cloak>
-                            <a href="{{ route('agente.visitas.sync') }}"
-                               class="v-btn-compact v-btn-compact--amber">
-                                <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
-                                {{ __('Enviar visitas do dispositivo') }}
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="min-w-0">
-                    <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-                    <div class="mt-1 flex items-center gap-2">
-                        <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
-                               data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
-                               data-live-loading-id="search-loading"
-                               placeholder="{{ __('Local, doença, atividade, pendentes ou data…') }}"
-                               class="v-input" />
-                        <span id="search-loading" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
-                    </div>
-                </div>
-            </div>
-        </x-section-card>
 
         @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
             @php
@@ -102,6 +80,17 @@
         @endif
 
         <x-section-card class="v-card--flush overflow-hidden">
+        <div class="v-list-toolbar">
+            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+            <div class="mt-1 flex items-center gap-2">
+                <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
+                       data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
+                       data-live-loading-id="search-loading"
+                       placeholder="{{ __('Local, doença, atividade, pendentes ou data…') }}"
+                       class="v-input" />
+                <span id="search-loading" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+            </div>
+        </div>
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total :item.', ['atual' => $visitas->count(), 'total' => $visitas->total(), 'item' => $visitas->total() === 1 ? __('visita') : __('visitas')]) }}
@@ -159,7 +148,7 @@
                             <td class="leading-snug">
                                 <div class="font-semibold text-slate-900 dark:text-slate-100">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                                 <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                                    {{ $visita->local->loc_bairro }} · {{ __('Cód.') }} {{ $visita->local->loc_codigo_unico }}
+                                    {{ $visita->local->loc_bairro }} · {{ __('Cód.') }} #{{ $visita->local->loc_codigo_unico }}
                                     <br>{{ __('Resp.') }} {{ $visita->local->loc_responsavel_nome ?? __('Não informado') }}
                                 </div>
                             </td>

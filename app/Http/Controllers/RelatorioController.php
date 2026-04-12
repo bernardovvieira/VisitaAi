@@ -9,6 +9,7 @@ use App\Models\Visita;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -189,6 +190,19 @@ class RelatorioController extends Controller
 
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
         $statsComplemento = $this->statsComplemento($imoveisComplementoResumo);
+        $imoveisPage = LengthAwarePaginator::resolveCurrentPage('imoveis_page');
+        $imoveisPerPage = 10;
+        $imoveisComplementoResumoPaginated = new LengthAwarePaginator(
+            $imoveisComplementoResumo->forPage($imoveisPage, $imoveisPerPage)->values(),
+            $imoveisComplementoResumo->count(),
+            $imoveisPerPage,
+            $imoveisPage,
+            [
+                'path' => $request->url(),
+                'pageName' => 'imoveis_page',
+                'query' => $request->query(),
+            ]
+        );
 
         return view('gestor.relatorios.index', compact(
             'visitas',
@@ -206,6 +220,7 @@ class RelatorioController extends Controller
             'visitasComTratamento',
             'totalDepEliminados',
             'imoveisComplementoResumo',
+            'imoveisComplementoResumoPaginated',
             'statsComplemento',
         ));
     }

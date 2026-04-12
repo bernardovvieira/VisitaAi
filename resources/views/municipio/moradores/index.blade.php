@@ -23,7 +23,7 @@
             <x-page-header :eyebrow="__('Imóvel')" :title="config('visitaai_municipio.ocupantes.titulo_listagem')">
                 <x-slot name="lead">
                     <p class="text-sm">
-                        <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">{{ $local->loc_codigo_unico }}</span>
+                        <span class="font-mono font-semibold text-slate-900 dark:text-slate-100">#{{ $local->loc_codigo_unico }}</span>
                         <span class="text-slate-500 dark:text-slate-400"> · </span>
                         <span class="text-slate-600 dark:text-slate-400">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}</span>
                     </p>

@@ -12,9 +12,65 @@
     </div>
 </div>
 
-<div class="v-page v-page--wide v-page--loose">
+<div class="v-page v-page--wide v-page--loose"
+    x-data="{
+        tipo: '{{ request('tipo_relatorio', 'completo') }}',
+        filtrosAplicados: false,
+        filtrosAlterados: false,
+        appliedParams: { data_unica: '', data_inicio: '', data_fim: '', local_ids: [] },
+        relPdfMsgs: @js([
+            'filtrosAlterados' => __('Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.'),
+            'diario' => __('Selecione a data para o relatório diário e clique em Filtrar.'),
+            'semanal' => __('Selecione as datas de início e fim e clique em Filtrar.'),
+            'individual' => __('Selecione ao menos um local e clique em Filtrar.'),
+            'generico' => __('Aplique os filtros antes de gerar o PDF.'),
+        ]),
+        get botaoAtivo() {
+            if (this.filtrosAlterados) return false;
+            if (this.tipo === 'completo') return true;
+            if (this.tipo === 'diario') return (this.appliedParams.data_unica || '') !== '';
+            if (this.tipo === 'semanal') return (this.appliedParams.data_inicio || '') !== '' && (this.appliedParams.data_fim || '') !== '';
+            if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
+            return false;
+        }
+    }"
+    x-init="
+        var p = new URLSearchParams(window.location.search);
+        appliedParams = {
+            data_unica: p.get('data_unica') || '',
+            data_inicio: p.get('data_inicio') || '',
+            data_fim: p.get('data_fim') || '',
+            local_ids: p.getAll('local_id[]') || []
+        };
+        filtrosAplicados = p.toString() !== '';
+        $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
+    "
+    @@filtro-alterado.window="filtrosAlterados = true">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
     <x-page-header :eyebrow="__('Inteligência municipal')" :title="__('Relatórios')">
+        @if(!($sem_visitas ?? false))
+            <x-slot name="actions">
+                <div class="flex w-full max-w-xl flex-col items-end gap-2 text-right sm:w-auto sm:max-w-md">
+                    <p x-show="filtrosAlterados" x-cloak class="text-sm font-medium text-amber-600 dark:text-amber-400">
+                        {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
+                    </p>
+                    <button type="button" :disabled="!botaoAtivo"
+                        @@click.prevent="if (!botaoAtivo) {
+                            let msg = filtrosAlterados ? relPdfMsgs.filtrosAlterados : '';
+                            if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = relPdfMsgs.diario;
+                            if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = relPdfMsgs.semanal;
+                            if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = relPdfMsgs.individual;
+                            if (!msg) msg = relPdfMsgs.generico;
+                            alert(msg);
+                            return;
+                        } gerarBase64Graficos();"
+                        class="v-btn-export v-btn-export--pdf">
+                        <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+                        {{ __('Gerar relatório em PDF') }}
+                    </button>
+                </div>
+            </x-slot>
+        @endif
         <x-slot name="lead">
             <p>{{ __('Gere PDFs e indicadores do período; use os filtros abaixo após aplicar.') }}</p>
         </x-slot>
@@ -40,63 +96,7 @@
             </div>
         </x-section-card>
     @else
-    <div
-        x-data="{
-            tipo: '{{ request('tipo_relatorio', 'completo') }}',
-            filtrosAplicados: false,
-            filtrosAlterados: false,
-            appliedParams: { data_unica: '', data_inicio: '', data_fim: '', local_ids: [] },
-            relPdfMsgs: @js([
-                'filtrosAlterados' => __('Você alterou os filtros. Clique em Filtrar antes de gerar o PDF.'),
-                'diario' => __('Selecione a data para o relatório diário e clique em Filtrar.'),
-                'semanal' => __('Selecione as datas de início e fim e clique em Filtrar.'),
-                'individual' => __('Selecione ao menos um local e clique em Filtrar.'),
-                'generico' => __('Aplique os filtros antes de gerar o PDF.'),
-            ]),
-            get botaoAtivo() {
-                if (this.filtrosAlterados) return false;
-                if (this.tipo === 'completo') return true;
-                if (this.tipo === 'diario') return (this.appliedParams.data_unica || '') !== '';
-                if (this.tipo === 'semanal') return (this.appliedParams.data_inicio || '') !== '' && (this.appliedParams.data_fim || '') !== '';
-                if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
-                return false;
-            }
-        }"
-        x-init="
-            var p = new URLSearchParams(window.location.search);
-            appliedParams = {
-                data_unica: p.get('data_unica') || '',
-                data_inicio: p.get('data_inicio') || '',
-                data_fim: p.get('data_fim') || '',
-                local_ids: p.getAll('local_id[]') || []
-            };
-            filtrosAplicados = p.toString() !== '';
-            $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
-        "
-        @@filtro-alterado.window="filtrosAlterados = true"
-        class="space-y-4">
-
-        <div class="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <div class="flex w-full max-w-xl flex-col items-end gap-2 text-right sm:w-auto sm:max-w-md">
-                <p x-show="filtrosAlterados" x-cloak class="text-sm font-medium text-amber-600 dark:text-amber-400">
-                    {{ __('Você alterou os filtros. Clique em') }} <strong>{{ __('Filtrar') }}</strong> {{ __('antes de gerar o PDF para que o relatório use os dados corretos.') }}
-                </p>
-                <button type="button" :disabled="!botaoAtivo"
-                    @@click.prevent="if (!botaoAtivo) {
-                        let msg = filtrosAlterados ? relPdfMsgs.filtrosAlterados : '';
-                        if (!msg && tipo === 'diario' && !appliedParams.data_unica) msg = relPdfMsgs.diario;
-                        if (!msg && tipo === 'semanal' && (!appliedParams.data_inicio || !appliedParams.data_fim)) msg = relPdfMsgs.semanal;
-                        if (!msg && tipo === 'individual' && (!appliedParams.local_ids || appliedParams.local_ids.length === 0)) msg = relPdfMsgs.individual;
-                        if (!msg) msg = relPdfMsgs.generico;
-                        alert(msg);
-                        return;
-                    } gerarBase64Graficos();"
-                    class="v-btn-export v-btn-export--pdf">
-                    <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    {{ __('Gerar relatório em PDF') }}
-                </button>
-            </div>
-        </div>
+    <div class="space-y-4">
 
         <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <header class="mb-5 space-y-1.5">
@@ -355,7 +355,7 @@
         </div>
     </section>
 
-    @if(isset($imoveisComplementoResumo) && $imoveisComplementoResumo->isNotEmpty())
+        @if(isset($imoveisComplementoResumoPaginated) && $imoveisComplementoResumoPaginated->total() > 0)
       <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none" x-data="{ search: '', matches(row) { const term = this.search.trim().toLowerCase(); return term === '' || (row.dataset.search || '').includes(term); } }">
           <h2 class="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Imóveis no período: cadastro complementar') }}</h2>
         <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Resumo por imóvel: quantidade de ocupantes e indicação de ficha socioeconômica. O PDF inclui a mesma tabela.') }}</p>
@@ -369,12 +369,11 @@
                         <button type="button" class="v-btn-compact v-btn-compact--ghost shrink-0" x-show="search" x-cloak @click="search = ''">{{ __('Limpar') }}</button>
                     </div>
                 </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400 lg:text-right">{{ __('A tabela se ajusta horizontalmente no celular e a busca filtra em tempo real.') }}</p>
             </div>
         </div>
 
         <div class="v-table-wrap overflow-x-auto">
-            <table class="v-data-table min-w-[56rem]">
+            <table class="v-data-table w-full">
                 <thead>
                     <tr>
                         <th scope="col">{{ __('Cód.') }}</th>
@@ -387,7 +386,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($imoveisComplementoResumo as $loc)
+                    @foreach($imoveisComplementoResumoPaginated as $loc)
                         @php
                             $lse = $loc->socioeconomico;
                             $searchText = mb_strtolower(implode(' ', array_filter([
@@ -401,7 +400,7 @@
                             ], fn ($value) => $value !== null && $value !== '')));
                         @endphp
                         <tr data-search="{{ $searchText }}" x-show="matches($el)" x-cloak>
-                            <td class="whitespace-nowrap font-mono text-xs">{{ $loc->loc_codigo_unico ?? '-' }}</td>
+                            <td class="whitespace-nowrap font-mono text-xs">{{ $loc->loc_codigo_unico ? '#'.$loc->loc_codigo_unico : '-' }}</td>
                             <td>{{ trim(($loc->loc_endereco ?? '').($loc->loc_numero ? ', '.$loc->loc_numero : '')) ?: '-' }}</td>
                             <td>{{ $loc->loc_bairro ?? '-' }}</td>
                             <td class="text-center tabular-nums">{{ (int) ($loc->moradores_count ?? 0) }}</td>
@@ -418,6 +417,7 @@
                 </tbody>
             </table>
         </div>
+        <x-pagination-relatorio :paginator="$imoveisComplementoResumoPaginated" item-label="imóveis" />
     </x-section-card>
     @endif
 
@@ -518,14 +518,8 @@
                             @if($visita->local)
                                 <div class="font-semibold text-slate-900 dark:text-slate-100">{{ $visita->local->loc_endereco }}, {{ $visita->local->loc_numero }}</div>
                                 <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                                    {{ __('Bairro/Localidade: :bairro · Cód.: :codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
+                                    {{ __('Bairro/Localidade: :bairro · Cód.: #:codigo', ['bairro' => $visita->local->loc_bairro, 'codigo' => $visita->local->loc_codigo_unico]) }}
                                 </div>
-                                @if(($visita->local->moradores_count ?? 0) > 0)
-                                    <div class="mt-1 text-xs font-medium text-slate-600 dark:text-slate-300">{{ __(':n ocupante(s) no cadastro do imóvel', ['n' => $visita->local->moradores_count]) }}</div>
-                                @endif
-                                @if($visita->local->socioeconomico)
-                                    <div class="mt-0.5 text-xs text-emerald-700 dark:text-emerald-300">{{ __('Ficha socioeconômica do imóvel preenchida') }}</div>
-                                @endif
                             @else
                                 <p class="text-xs font-medium text-amber-700 dark:text-amber-300">{{ __('Local não disponível para esta visita.') }}</p>
                             @endif

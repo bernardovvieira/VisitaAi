@@ -22,7 +22,7 @@
       <dl class="grid grid-cols-1 gap-x-6 gap-y-4 text-sm text-slate-700 dark:text-slate-300 sm:grid-cols-2">
         <div>
           <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('ID do registro') }}</dt>
-          <dd class="mt-1 text-slate-900 dark:text-slate-100">{{ $doenca->doe_id }}</dd>
+          <dd class="mt-1 text-slate-900 dark:text-slate-100">#{{ $doenca->doe_id }}</dd>
         </div>
         <div>
           <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Criado em') }}</dt>

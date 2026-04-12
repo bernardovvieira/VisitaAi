@@ -8,6 +8,13 @@
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças')]]" />
     <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Doenças')">
+        <x-slot name="actions">
+            <a href="{{ route('gestor.doencas.create') }}"
+               class="v-btn-compact v-btn-compact--blue">
+                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Cadastrar doença') }}
+            </a>
+        </x-slot>
         <x-slot name="lead">
             <p>{{ __('Visualize, edite ou exclua doenças cadastradas para vigilância municipal. Inclua novas para orientar o trabalho em campo.') }}</p>
         </x-slot>
@@ -16,16 +23,9 @@
     <x-flash-alerts />
 
     <x-section-card>
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="min-w-0 flex-1">
-                <h2 class="v-section-title">{{ __('Doenças monitoradas') }}</h2>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ __('Use a busca para filtrar por nome, sintomas, transmissão ou medidas de controle.') }}</p>
-            </div>
-            <a href="{{ route('gestor.doencas.create') }}"
-               class="v-btn-compact v-btn-compact--blue shrink-0">
-                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Cadastrar doença') }}
-            </a>
+        <div class="min-w-0">
+            <h2 class="v-section-title">{{ __('Doenças monitoradas') }}</h2>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ __('Use a busca para filtrar por nome, sintomas, transmissão ou medidas de controle.') }}</p>
         </div>
     </x-section-card>
 

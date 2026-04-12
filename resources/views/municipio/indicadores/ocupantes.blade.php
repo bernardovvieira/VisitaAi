@@ -64,20 +64,19 @@
     <x-flash-alerts />
 
     <x-page-header :eyebrow="__('Gestão municipal')" :title="$cfgInd['titulo_pagina'] ?? __('Indicadores')">
+        <x-slot:actions>
+            <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
+                  class="v-btn-export v-btn-export--sheet no-underline">
+                <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
+            </a>
+        </x-slot:actions>
         <x-slot:lead>
             @if(filled($cfgInd['subtitulo'] ?? ''))
                 <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{{ $cfgInd['subtitulo'] }}</p>
             @endif
         </x-slot:lead>
     </x-page-header>
-
-    <div class="flex flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-        <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-              class="v-btn-export v-btn-export--sheet no-underline">
-            <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
-        </a>
-    </div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }</style>
