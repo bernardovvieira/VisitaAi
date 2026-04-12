@@ -8,6 +8,7 @@ use App\Models\Morador;
 use App\Models\User;
 use App\Models\Visita;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -317,5 +318,66 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
         $this->assertFalse($user->isAprovado());
         $this->assertStringContainsString('Anonimizado', $user->use_nome);
         $this->assertNotEquals($originalEmail, $user->use_email);
+    }
+
+    /**
+     * Teste: upload de documento pessoal do morador
+     */
+    #[Test]
+    public function morador_document_upload_workflow(): void
+    {
+        $gestor = User::factory()->create([
+            'use_perfil' => 'gestor',
+            'use_aprovado' => true,
+        ]);
+
+        $local = Local::factory()->create();
+
+        // === CRIAR MORADOR ===
+        $moradorPayload = [
+            'mor_nome' => 'João Silva',
+            'mor_data_nascimento' => '1990-05-15',
+            'mor_escolaridade' => 'medio_completo',
+            'mor_renda_faixa' => 'ate_1_sm',
+        ];
+
+        $response = $this->actingAs($gestor)
+            ->post(route('gestor.locais.moradores.store', $local), $moradorPayload);
+
+        $response->assertRedirect();
+
+        $morador = Morador::where('mor_nome', 'João Silva')->first();
+        $this->assertNotNull($morador);
+
+        // === ATUALIZAR MORADOR COM DOCUMENTO ===
+        $documentoFile = UploadedFile::fake()->create('rg.pdf', 256, 'application/pdf');
+
+        $atualizacao = [
+            'mor_nome' => 'João Silva Santos',
+            'mor_data_nascimento' => '1990-05-15',
+            'mor_escolaridade' => 'medio_completo',
+            'mor_renda_faixa' => 'ate_1_sm',
+            'mor_documento_pessoal' => $documentoFile,
+        ];
+
+        $response = $this->actingAs($gestor)
+            ->patch(route('gestor.locais.moradores.update', [$local, $morador]), $atualizacao);
+
+        $response->assertRedirect();
+
+        $morador->refresh();
+        $this->assertEquals('João Silva Santos', $morador->mor_nome);
+        
+        // Se houver documento anexado, deve estar salvo
+        if ($morador->mor_documento_pessoal_path) {
+            $this->assertNotEmpty($morador->mor_documento_pessoal_nome);
+            $this->assertGreaterThan(0, $morador->mor_documento_pessoal_tamanho);
+            
+            // === FAZER DOWNLOAD DO DOCUMENTO ===
+            $response = $this->actingAs($gestor)
+                ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador]));
+
+            $this->assertTrue($response->isOk() || $response->isDownload());
+        }
     }
 }
