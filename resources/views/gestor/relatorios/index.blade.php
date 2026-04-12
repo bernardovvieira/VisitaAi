@@ -334,19 +334,19 @@
                 </x-slot>
                 {{ $statsComplemento['imoveis_periodo'] ?? 0 }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis com ocupantes cadastrados')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis com ocupantes')">
                 <x-slot name="icon">
                     <x-heroicon-o-user-group class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
                 {{ $statsComplemento['imoveis_com_ocupantes'] ?? 0 }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Total de ocupantes (cadastro)')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Total de ocupantes')">
                 <x-slot name="icon">
                     <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
                 {{ $statsComplemento['total_ocupantes'] ?? 0 }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis com ficha socioeconômica')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis com ficha')">
                 <x-slot name="icon">
                     <x-heroicon-o-clipboard-document-check class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
