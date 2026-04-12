@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Municipio;
 
+use App\Exports\OcupantesIndicadoresExport;
+use App\Exports\OcupantesCadastroExportOnly;
 use App\Http\Controllers\Controller;
 use App\Services\Municipio\IndicadoresOcupantesMunicipioService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class IndicadoresOcupantesController extends Controller
@@ -27,32 +30,22 @@ class IndicadoresOcupantesController extends Controller
         ]);
     }
 
-    public function exportCsv(IndicadoresOcupantesMunicipioService $indicadores): StreamedResponse
+    public function exportCsv(IndicadoresOcupantesMunicipioService $indicadores)
     {
         $this->authorize('isGestor');
 
-        $csv = $indicadores->exportCsvGestor();
-        $filename = 'indicadores_ocupantes_'.now()->format('Y-m-d_His').'.csv';
+        $filename = 'indicadores_ocupantes_'.now()->format('Y-m-d_His').'.xlsx';
 
-        return response()->streamDownload(function () use ($csv) {
-            echo $csv;
-        }, $filename, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
+        return Excel::download(new OcupantesIndicadoresExport(), $filename);
     }
 
-    public function exportCadastroOcupantesCsv(IndicadoresOcupantesMunicipioService $indicadores): StreamedResponse
+    public function exportCadastroOcupantesCsv(IndicadoresOcupantesMunicipioService $indicadores)
     {
         $this->authorize('isGestor');
 
-        $csv = $indicadores->exportCadastroOcupantesCsvGestor();
-        $filename = 'cadastro_socioeconomico_ocupantes_'.now()->format('Y-m-d_His').'.csv';
+        $filename = 'cadastro_socioeconomico_ocupantes_'.now()->format('Y-m-d_His').'.xlsx';
 
-        return response()->streamDownload(function () use ($csv) {
-            echo $csv;
-        }, $filename, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
+        return Excel::download(new OcupantesCadastroExportOnly(), $filename);
     }
 
     public function exportCadastroOcupantesPdf(IndicadoresOcupantesMunicipioService $indicadores)
