@@ -53,8 +53,8 @@
                             <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ preg_replace('/\d(?=(?:.*\d){2})/', '*', $u->use_cpf) }}</td>
                             <td><a href="mailto:{{ $u->use_email }}" class="text-blue-600 hover:underline dark:text-blue-400">{{ $u->use_email }}</a></td>
                             <td class="tabular-nums">{{ $u->use_data_criacao->format('d/m/Y') }}</td>
-                            <td class="text-center">
-                                <form method="POST" action="{{ route('gestor.approve', $u) }}" class="inline">
+                            <td class="align-middle text-center">
+                                <form method="POST" action="{{ route('gestor.approve', $u) }}" class="inline-flex items-center justify-center">
                                     @csrf
                                     <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')"
                                         class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-transparent bg-emerald-600 text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/45 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
