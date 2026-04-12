@@ -68,35 +68,16 @@
             @if(filled($cfgInd['subtitulo'] ?? ''))
                 <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{{ $cfgInd['subtitulo'] }}</p>
             @endif
-            @if(filled($cfgInd['aviso'] ?? ''))
-                <p class="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-500">{{ $cfgInd['aviso'] }}</p>
-            @endif
         </x-slot:lead>
     </x-page-header>
 
     <div class="flex flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
         <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
-           class="v-btn-export v-btn-export--sheet no-underline">
+           class="v-btn-compact v-btn-compact--blue no-underline">
             <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ $cfgInd['botao_export_csv'] ?? __('Exportar CSV') }}
         </a>
-        <a href="{{ route('gestor.indicadores.ocupantes.export-cadastro') }}"
-           class="v-btn-export v-btn-export--sheet no-underline">
-            <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ $cfgInd['botao_export_cadastro_ocupantes_csv'] ?? __('Exportar cadastro de ocupantes (CSV)') }}
-        </a>
-        <a href="{{ route('gestor.indicadores.ocupantes.export-cadastro-pdf') }}"
-           class="v-btn-export v-btn-export--pdf no-underline">
-            <x-heroicon-o-document-text class="h-4 w-4 shrink-0" aria-hidden="true" />
-            {{ $cfgInd['botao_export_cadastro_ocupantes_pdf'] ?? __('Exportar cadastro de ocupantes (PDF)') }}
-        </a>
     </div>
-
-    @if(filled($cfgInd['aviso_privacidade'] ?? ''))
-        <p class="rounded-lg border border-slate-200/90 bg-slate-50/80 px-3 py-2 text-xs leading-relaxed text-slate-600 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-400">
-            {{ $cfgInd['aviso_privacidade'] }}
-        </p>
-    @endif
 
     {{-- Visão geral --}}
     <section class="space-y-3" aria-labelledby="ind-sec-visao">

@@ -76,7 +76,7 @@
                 <input type="hidden" name="mor_referencia_familiar" x-bind:value="relacaoFamiliar === 'titular' ? 1 : 0">
                 <input type="hidden" name="mor_parentesco" x-bind:value="relacaoFamiliar && relacaoFamiliar.startsWith('par:') ? relacaoFamiliar.slice(4) : ''">
             </div>
-            <div class="lg:col-span-2">
+            <div class="lg:col-span-3">
                 <x-input-label for="mor_observacao" :value="__('Observações')" />
                 <textarea id="mor_observacao" name="mor_observacao" rows="3" class="v-input mt-1">{{ old('mor_observacao', $morador->mor_observacao) }}</textarea>
                 <x-input-error :messages="$errors->get('mor_observacao')" class="mt-2" />
@@ -87,7 +87,7 @@
     <fieldset class="space-y-4 rounded-lg border border-slate-200 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
         <legend class="px-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Escolaridade e estudos') }}</legend>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
+            <div class="sm:col-span-2">
                 <x-input-label for="mor_escolaridade" :value="__('Escolaridade')" />
                 <select id="mor_escolaridade" name="mor_escolaridade" class="v-select mt-1 w-full">
                     <option value="">{{ __('Selecionar') }}</option>

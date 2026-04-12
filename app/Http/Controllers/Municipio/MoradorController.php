@@ -151,7 +151,7 @@ class MoradorController extends Controller
         $profile = $this->routeProfile();
 
         return redirect()
-            ->route($profile.'.locais.moradores.index', $local)
+            ->route($profile.'.locais.moradores.edit', [$local, $morador])
             ->with('success', __('Ocupante atualizado com sucesso.'));
     }
 

@@ -42,7 +42,15 @@
                     </div>
                     <div>
                         <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Zona') }}</dt>
-                        <dd class="mt-1">{{ $zonaLabel }}</dd>
+                        <dd class="mt-1">
+                            @if ($local->loc_zona === 'U')
+                                <span class="inline-flex rounded-md bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-900 dark:bg-violet-900/60 dark:text-violet-200">{{ __('Urbana') }}</span>
+                            @elseif ($local->loc_zona === 'R')
+                                <span class="inline-flex rounded-md bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900 dark:bg-amber-950/60 dark:text-amber-200">{{ __('Rural') }}</span>
+                            @else
+                                {{ $zonaLabel }}
+                            @endif
+                        </dd>
                     </div>
                     <div>
                         <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Quarteirão') }}</dt>
@@ -85,7 +93,7 @@
         <aside class="space-y-3 xl:col-span-1">
             <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h3>
             <div id="map" class="h-52 rounded-lg border border-gray-300 shadow-sm dark:border-gray-600 dark:shadow-none"></div>
-            <dl class="grid grid-cols-2 gap-3 rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-xs dark:border-slate-700/70 dark:bg-slate-900/45">
+            <dl class="grid grid-cols-2 gap-3 rounded-lg border border-slate-200/80 bg-slate-50/70 p-3 text-[11px] dark:border-slate-700/70 dark:bg-slate-900/45">
                 <div class="min-w-0">
                     <dt class="font-medium text-slate-500 dark:text-slate-400">{{ __('Latitude') }}</dt>
                     <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $local->loc_latitude }}</dd>
@@ -95,7 +103,6 @@
                     <dd class="tabular-nums text-slate-800 dark:text-slate-100">{{ $local->loc_longitude }}</dd>
                 </div>
             </dl>
-            <p class="text-xs italic text-gray-600 dark:text-gray-400">{{ __('A posição exibida é baseada nas coordenadas fornecidas.') }}</p>
         </aside>
     </div>
 
@@ -118,13 +125,10 @@
             </div>
             <div class="flex shrink-0 flex-col items-stretch gap-2 sm:items-end">
                 <button type="button" onclick="baixarAdesivo()"
-                        class="v-btn-slate inline-flex items-center justify-center gap-2">
-                    <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+                        class="v-btn-slate inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs">
+                    <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                     {{ __('Salvar adesivo') }}
                 </button>
-                <p class="max-w-xs text-[11px] text-slate-500 dark:text-slate-400 sm:text-right">
-                    {{ __('Gera imagem para imprimir e colar no imóvel.') }}
-                </p>
             </div>
         </div>
     </div>

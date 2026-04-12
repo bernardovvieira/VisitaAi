@@ -56,7 +56,7 @@
         </div>
     </dl>
 
-    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-gray-700 dark:text-gray-300">
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs text-gray-700 dark:text-gray-300">
         <div>
             <dt class="font-medium">{{ __('Latitude') }}</dt>
             <dd class="mt-1">{{ $visita->local->loc_latitude }}</dd>
@@ -70,9 +70,6 @@
     <div>
         <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ __('Localização no mapa') }}</h3>
         <div id="map" class="h-72 rounded-md shadow border border-gray-300"></div>
-        <p class="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
-            {{ __('A posição exibida é baseada nas coordenadas fornecidas.') }}
-        </p>
     </div>
 </x-section-card>
 

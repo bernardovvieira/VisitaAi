@@ -132,22 +132,9 @@
                 <span class="v-kpi-card-agi__value">{{ $profissionaisAprovados }}</span>
                 <span class="v-kpi-card-agi__hint">{{ __('Aprovados no sistema') }}</span>
             </div>
-            <div class="v-kpi-card-agi {{ $pendentesCount > 0 ? 'v-kpi-card-agi--warn' : '' }}">
-                <span class="v-kpi-card-agi__label">{{ __('Pendentes') }}</span>
-                <span class="v-kpi-card-agi__value">{{ $pendentesCount }}</span>
-                <span class="v-kpi-card-agi__hint">{{ __('ACE/ACS sem aprovação') }}</span>
-            </div>
-            <div class="v-kpi-card-agi">
-                <span class="v-kpi-card-agi__label">{{ __('Gestores') }}</span>
-                <span class="v-kpi-card-agi__value">{{ $gestoresCount }}</span>
-            </div>
             <div class="v-kpi-card-agi">
                 <span class="v-kpi-card-agi__label">{{ __('Visitas registradas') }}</span>
                 <span class="v-kpi-card-agi__value">{{ $visitasCount }}</span>
-            </div>
-            <div class="v-kpi-card-agi {{ $visitasComPendencia > 0 ? 'v-kpi-card-agi--danger' : '' }}">
-                <span class="v-kpi-card-agi__label">{{ __('Visitas com pendência') }}</span>
-                <span class="v-kpi-card-agi__value">{{ $visitasComPendencia }}</span>
             </div>
         </div>
         <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">
