@@ -21,13 +21,15 @@
                 <x-slot name="summary">
                     <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Modo offline e envio depois (expandir)') }}</span>
                 </x-slot>
-                <p><strong>{{ __('Sem internet?') }}</strong>
-                    {{ __('Use o botão «:btn» no final do formulário. A visita fica salva só no seu aparelho. Quando tiver conexão, abra o menu Visitas e clique em «:menu» para enviar todas de uma vez.', [
-                        'btn' => __('Guardar no dispositivo para enviar depois'),
-                        'menu' => __('Enviar visitas salvas no dispositivo'),
-                    ]) }}</p>
-                <p><span class="font-semibold">{{ __('Nota:') }}</span>
-                    {{ __('Antes de ir a campo, abra a tela de registrar visita pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.') }}</p>
+                <div class="mt-2 rounded-lg border border-sky-200/70 bg-gradient-to-br from-sky-50/90 to-white p-3 dark:border-sky-900/40 dark:from-slate-900/70 dark:to-slate-900/40">
+                    <p class="text-sm text-slate-700 dark:text-slate-300"><strong>{{ __('Sem internet?') }}</strong>
+                        {{ __('Use o botão :btn no final do formulário. A visita fica salva no seu aparelho e pode ser enviada depois em :menu.', [
+                            'btn' => __('Guardar no dispositivo para enviar depois'),
+                            'menu' => __('Enviar visitas salvas no dispositivo'),
+                        ]) }}</p>
+                    <p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">{{ __('Antes de ir a campo:') }}</span>
+                        {{ __('Abra a tela de registrar visita pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
+                </div>
             </x-ui.disclosure>
         </x-slot>
     </x-page-header>
@@ -66,7 +68,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {{ __('O ciclo deve ser informado no formato «mm/aa», por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
+                    {{ __('O ciclo deve ser informado no formato mm/aa, por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
                 </p>
             </fieldset>
 

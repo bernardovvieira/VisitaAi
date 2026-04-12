@@ -130,7 +130,8 @@ class IndicadoresOcupantesTest extends TestCase
 
         $response->assertStatus(200)
             ->assertSeeText(config('visitaai_municipio.indicadores.titulo_pagina'), false)
-            ->assertSeeText('Centro', false);
+            ->assertSeeText('Centro', false)
+            ->assertSee('indicadores-locais-mapa', false);
     }
 
     #[Test]

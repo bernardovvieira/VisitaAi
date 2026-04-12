@@ -62,10 +62,6 @@
             <input type="number" name="socio[num_quartos]" value="{{ $sv('num_quartos') }}" class="v-input mt-1 w-full" min="0">
         </div>
         <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de banheiros (total declarado)') }}</label>
-            <input type="number" name="socio[num_banheiros]" value="{{ $sv('num_banheiros') }}" class="v-input mt-1 w-full" min="0">
-        </div>
-        <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Área externa / quintal') }}</label>
             <select name="socio[area_externa]" class="v-select mt-1 w-full">
                 @foreach(config('visitaai_socioeconomico.area_externa_opcoes', []) as $k => $lab)
@@ -86,25 +82,9 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('5. Cadastro físico e confrontantes') }}</span>
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('5. Cadastro físico') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho: frente') }}</label>
-            <input type="text" name="socio[viz_frente]" value="{{ $sv('viz_frente') }}" class="v-input mt-1 w-full">
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho: fundos') }}</label>
-            <input type="text" name="socio[viz_fundos]" value="{{ $sv('viz_fundos') }}" class="v-input mt-1 w-full">
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho: direita') }}</label>
-            <input type="text" name="socio[viz_direita]" value="{{ $sv('viz_direita') }}" class="v-input mt-1 w-full">
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho: esquerda') }}</label>
-            <input type="text" name="socio[viz_esquerda]" value="{{ $sv('viz_esquerda') }}" class="v-input mt-1 w-full">
-        </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipologia') }}</label>
             <select name="socio[tipologia]" class="v-select mt-1 w-full">
@@ -287,7 +267,7 @@
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('IPTU: desde / observação') }}</label>
-            <input type="text" name="socio[iptu_desde]" value="{{ $sv('iptu_desde') }}" class="v-input mt-1 w-full" maxlength="60">
+            <input type="number" name="socio[iptu_desde]" value="{{ $sv('iptu_desde') }}" class="v-input mt-1 w-full" min="1900" max="2100" step="1" placeholder="{{ __('Ex.: 2020') }}">
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Proprietário anterior: nome') }}</label>
@@ -304,13 +284,3 @@
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
-    <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['finalizacao'] ?? __('9. Finalização no papel') }}</span>
-    </x-slot>
-    <div>
-        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Local, data e observações para assinatura (texto livre)') }}</label>
-        <input type="text" name="socio[local_data_assinatura]" value="{{ $sv('local_data_assinatura') }}" class="v-input mt-1 w-full" maxlength="255" placeholder="{{ __('Ex.: Município, 15/06/2023') }}">
-        <p class="mt-1 text-xs text-slate-500">{{ __('As assinaturas no PDF impresso podem ser colhidas em campo. Este campo registra local/data para o relatório.') }}</p>
-    </div>
-</x-ui.disclosure>

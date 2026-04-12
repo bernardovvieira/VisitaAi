@@ -79,6 +79,23 @@
         </a>
     </div>
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <section class="space-y-3" aria-labelledby="ind-sec-mapa-locais">
+        <h2 id="ind-sec-mapa-locais" class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">
+            {{ __('Mapa de locais cadastrados') }}
+        </h2>
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+            <div class="mb-3 flex items-center justify-between gap-3">
+                <h3 class="text-base font-semibold text-slate-800 dark:text-slate-200">{{ __('Locais com coordenadas') }}</h3>
+                <span class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
+                    {{ number_format(count($locaisMapa ?? []), 0, ',', '.') }} {{ __('pinos') }}
+                </span>
+            </div>
+            <div id="indicadores-locais-mapa" class="h-[24rem] w-full overflow-hidden rounded-xl border border-slate-200/90 dark:border-slate-700/80"></div>
+            <p class="mt-2 text-xs text-slate-600 dark:text-slate-400">{{ __('Clique no pino para abrir o cadastro do local.') }}</p>
+        </x-section-card>
+    </section>
+
     {{-- Visão geral --}}
     <section class="space-y-3" aria-labelledby="ind-sec-visao">
         <h2 id="ind-sec-visao" class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">
@@ -356,4 +373,63 @@
         </section>
     @endif
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    (function () {
+        var el = document.getElementById('indicadores-locais-mapa');
+        if (!el || typeof L === 'undefined') {
+            return;
+        }
+
+        var pontos = {{ Js::from($locaisMapa ?? []) }};
+        var fallbackCenter = [-14.235, -51.9253];
+        var map = L.map(el, {
+            scrollWheelZoom: true,
+        }).setView(fallbackCenter, 4);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+            maxZoom: 19,
+        }).addTo(map);
+
+        if (!Array.isArray(pontos) || pontos.length === 0) {
+            return;
+        }
+
+        var bounds = [];
+        pontos.forEach(function (ponto) {
+            var lat = Number(ponto.loc_latitude);
+            var lng = Number(ponto.loc_longitude);
+            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                return;
+            }
+
+            bounds.push([lat, lng]);
+            var marker = L.marker([lat, lng]).addTo(map);
+
+            var codigo = ponto.loc_codigo_unico ? ('#' + ponto.loc_codigo_unico) : '#'+ ponto.loc_id;
+            var numero = ponto.loc_numero ? (', ' + ponto.loc_numero) : '';
+            var endereco = (ponto.loc_endereco || '') + numero;
+            var bairro = ponto.loc_bairro || '';
+            var link = ponto.url || '#';
+
+            var popupHtml =
+                '<div style="min-width:220px">' +
+                '<div style="font-weight:600; margin-bottom:4px;">' + codigo + '</div>' +
+                '<div style="font-size:12px; margin-bottom:2px;">' + endereco + '</div>' +
+                '<div style="font-size:12px; color:#475569; margin-bottom:8px;">' + bairro + '</div>' +
+                '<a href="' + link + '" style="display:inline-block; font-size:12px; font-weight:600; color:#1d4ed8; text-decoration:none;">{{ __('Abrir cadastro do local') }}</a>' +
+                '</div>';
+
+            marker.bindPopup(popupHtml);
+        });
+
+        if (bounds.length === 1) {
+            map.setView(bounds[0], 16);
+        } else if (bounds.length > 1) {
+            map.fitBounds(bounds, { padding: [24, 24], maxZoom: 16 });
+        }
+    })();
+</script>
 @endsection

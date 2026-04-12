@@ -26,9 +26,12 @@
             'mor_telefone' => $m->mor_telefone ?? '',
             'mor_rg_numero' => $m->mor_rg_numero ?? '',
             'mor_rg_orgao' => $m->mor_rg_orgao ?? '',
+            'mor_rg_expedicao' => $m->mor_rg_expedicao ? $m->mor_rg_expedicao->format('Y-m-d') : '',
             'mor_cpf' => $m->mor_cpf ?? '',
             'mor_tempo_uniao_conjuge' => $m->mor_tempo_uniao_conjuge ?? '',
-            'mor_ajuda_compra_imovel' => $m->mor_ajuda_compra_imovel ?? '',
+            'mor_ajuda_compra_imovel' => in_array(strtolower(trim((string) ($m->mor_ajuda_compra_imovel ?? ''))), ['sim', 'nao'], true)
+                ? strtolower(trim((string) ($m->mor_ajuda_compra_imovel ?? '')))
+                : '',
             'mor_renda_formal_informal' => $m->mor_renda_formal_informal ?? '',
             'mor_observacao' => $m->mor_observacao ?? '',
         ];
@@ -55,6 +58,7 @@
         'mor_telefone' => '',
         'mor_rg_numero' => '',
         'mor_rg_orgao' => '',
+        'mor_rg_expedicao' => '',
         'mor_cpf' => '',
         'mor_tempo_uniao_conjuge' => '',
         'mor_ajuda_compra_imovel' => '',
@@ -113,6 +117,7 @@
             return this.hasValue(row.mor_nome)
                 || this.hasValue(row.mor_data_nascimento)
                 || this.hasValue(row.mor_telefone)
+                || this.hasValue(row.mor_rg_expedicao)
                 || this.hasValue(row.mor_escolaridade)
                 || this.hasValue(row.mor_renda_faixa)
                 || this.hasValue(row.mor_situacao_trabalho)
@@ -224,15 +229,6 @@
     }" class="space-y-4">
         <div x-effect="syncSocioFromRows()"></div>
 
-        <div class="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3 text-xs text-emerald-900 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-100">
-            <p class="font-semibold">{{ __('Resumo automático por moradores (preenche a ficha socioeconômica)') }}</p>
-            <p class="mt-1">{{ __('Moradores:') }} <span x-text="resumo.totalMoradores"></span> · {{ __('Contribuintes:') }} <span x-text="resumo.totalContribuintes"></span> · {{ __('Fonte principal:') }} <span x-text="resumo.principalFonteRenda"></span></p>
-            <p class="mt-1" x-show="resumo.sexo.length">{{ __('Sexo:') }} <span x-text="resumo.sexo.join(' | ')"></span></p>
-            <p class="mt-1" x-show="resumo.escolaridade.length">{{ __('Escolaridade:') }} <span x-text="resumo.escolaridade.join(' | ')"></span></p>
-            <p class="mt-1" x-show="resumo.renda.length">{{ __('Renda:') }} <span x-text="resumo.renda.join(' | ')"></span></p>
-            <p class="mt-1" x-show="resumo.trabalho.length">{{ __('Trabalho:') }} <span x-text="resumo.trabalho.join(' | ')"></span></p>
-        </div>
-
         <template x-for="(row, idx) in rows" :key="idx">
             <div class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 space-y-3 dark:border-slate-600 dark:bg-slate-900/30">
                 <div class="flex items-center justify-between gap-2">
@@ -321,9 +317,13 @@
                             <label class="v-toolbar-label">{{ __('RG: número') }}</label>
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_rg_numero]'" x-model="row.mor_rg_numero" class="v-input mt-1 w-full" maxlength="45">
                         </div>
-                        <div class="sm:col-span-2">
+                        <div>
                             <label class="v-toolbar-label">{{ __('RG: órgão') }}</label>
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_rg_orgao]'" x-model="row.mor_rg_orgao" class="v-input mt-1 w-full" maxlength="60">
+                        </div>
+                        <div>
+                            <label class="v-toolbar-label">{{ __('RG: expedição') }}</label>
+                            <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_rg_expedicao]'" x-model="row.mor_rg_expedicao" class="v-input mt-1 w-full">
                         </div>
                     </div>
                 </fieldset>
@@ -386,7 +386,11 @@
                         </div>
                         <div>
                             <label class="v-toolbar-label">{{ __('Ajudou na compra/construção do imóvel') }}</label>
-                            <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_ajuda_compra_imovel]'" x-model="row.mor_ajuda_compra_imovel" class="v-input mt-1 w-full" maxlength="255">
+                            <select x-bind:name="'ocupantes[' + idx + '][mor_ajuda_compra_imovel]'" x-model="row.mor_ajuda_compra_imovel" class="v-select mt-1 w-full">
+                                <option value="">{{ __('Selecionar') }}</option>
+                                <option value="sim">{{ __('Sim') }}</option>
+                                <option value="nao">{{ __('Não') }}</option>
+                            </select>
                         </div>
                     </div>
                 </fieldset>

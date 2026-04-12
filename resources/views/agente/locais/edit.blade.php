@@ -10,15 +10,55 @@
 
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Editar local')" />
 
-    <x-section-card class="v-card--muted space-y-2">
-        <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200">
-            {{ __('Modo offline, CEP e localização') }}
-        </h2>
-        <p><strong>{{ __('Sem internet?') }}</strong> {{ __('Use «Guardar local» para salvar no dispositivo e envie depois na tela «Sincronizar».') }}</p>
-        <p><strong>{{ __('Antes de ir a campo:') }}</strong> {{ __('abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
-        <p><strong>{{ __('CEP e endereço:') }}</strong> {{ __('informe o CEP para preencher o endereço automaticamente e revise número/complemento antes de salvar.') }}</p>
-        <p><strong>{{ __('Coordenadas:') }}</strong> {{ __('use «Minha localização» para capturar latitude/longitude do ponto onde você está.') }}</p>
-        <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('Dica: se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}</p>
+    <x-section-card class="v-card--muted border border-sky-200/70 bg-gradient-to-br from-sky-50/90 to-white dark:border-sky-900/40 dark:from-slate-900/70 dark:to-slate-900/40">
+        <div class="flex items-start gap-3">
+            <span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">
+                <x-heroicon-o-wifi class="h-4 w-4" />
+            </span>
+            <div class="min-w-0">
+                <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">
+                    {{ __('Modo offline, CEP e localização') }}
+                </h2>
+                <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    {{ __('Salve o local no dispositivo quando estiver sem internet e finalize o envio na sincronização quando houver conexão.') }}
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Sem internet?') }}</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                    {{ __('Use o botão :botao para salvar no dispositivo e envie depois na tela :tela.', ['botao' => __('Guardar local'), 'tela' => __('Sincronizar')]) }}
+                </p>
+            </div>
+
+            <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Antes de ir a campo') }}</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                    {{ __('Abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}
+                </p>
+            </div>
+
+            <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('CEP e endereço') }}</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                    {{ __('Informe o CEP para preencher o endereço automaticamente e revise número e complemento antes de salvar.') }}
+                </p>
+            </div>
+
+            <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Coordenadas') }}</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                    {{ __('Use o botão :botao para capturar latitude e longitude do ponto onde você está.', ['botao' => __('Minha localização')]) }}
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
+            <span class="font-semibold">{{ __('Dica:') }}</span>
+            {{ __('Se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}
+        </div>
     </x-section-card>
 
     <x-section-card class="space-y-4">

@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {{ __('O ciclo deve ser informado no formato «mm/aa», por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
+                    {{ __('O ciclo deve ser informado no formato mm/aa, por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
                 </p>
             </fieldset>
 

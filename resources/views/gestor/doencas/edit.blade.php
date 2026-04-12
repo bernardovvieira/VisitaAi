@@ -12,107 +12,14 @@
     <x-section-card class="w-full space-y-4">
         <x-flash-alerts />
 
-        <form method="POST" action="{{ route('gestor.doencas.update', $doenca) }}" class="space-y-6" id="doenca-edit-form">
-            @csrf
-            @method('PATCH')
-
-            <div>
-                <label for="doe_nome" class="v-toolbar-label">
-                    Nome <span class="text-red-500">*</span>
-                </label>
-                <input id="doe_nome" name="doe_nome" type="text"
-                       value="{{ old('doe_nome', $doenca->doe_nome) }}"
-                       required autofocus
-                       class="v-input mt-1">
-                @error('doe_nome')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <!-- Sintomas -->
-            <div class="rounded-xl border border-amber-200/90 bg-amber-50/55 p-4 dark:border-amber-800/45 dark:bg-amber-950/25">
-                <label class="v-toolbar-label mb-2">
-                    Sintomas <span class="text-red-500">*</span>
-                </label>
-                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                    @foreach($optionsSintomas as $opt)
-                        <label class="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
-                                name="doe_sintomas[]"
-                                value="{{ $opt }}"
-                                {{   in_array($opt, old('doe_sintomas', $doenca->doe_sintomas)) ? 'checked' : '' }}
-                                class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
-                            />
-                            <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $opt }}</span>
-                        </label>
-                    @endforeach
-                </div>
-                @error('doe_sintomas')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Transmissão -->
-            <div class="rounded-xl border border-sky-200/90 bg-sky-50/55 p-4 dark:border-sky-800/45 dark:bg-sky-950/25">
-                <label class="v-toolbar-label mb-2">
-                    Modos de Transmissão <span class="text-red-500">*</span>
-                </label>
-                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                    @foreach($optionsTransmissao as $opt)
-                        <label class="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
-                                name="doe_transmissao[]"
-                                value="{{ $opt }}"
-                                {{ in_array($opt, old('doe_transmissao', $doenca->doe_transmissao)) ? 'checked' : '' }}
-                                class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
-                            />
-                            <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $opt }}</span>
-                        </label>
-                    @endforeach
-                </div>
-                @error('doe_transmissao')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Medidas de Controle -->
-            <div class="rounded-xl border border-violet-200/90 bg-violet-50/55 p-4 dark:border-violet-800/45 dark:bg-violet-950/25">
-                <label class="v-toolbar-label mb-2">
-                    Medidas de Controle <span class="text-red-500">*</span>
-                </label>
-                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                    @foreach($optionsMedidas as $opt)
-                        <label class="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
-                                name="doe_medidas_controle[]"
-                                value="{{ $opt }}"
-                                {{ in_array($opt, old('doe_medidas_controle', $doenca->doe_medidas_controle)) ? 'checked' : '' }}
-                                class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
-                            />
-                            <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $opt }}</span>
-                        </label>
-                    @endforeach
-                </div>
-                @error('doe_medidas_controle')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="flex justify-end">
-                <button type="submit" id="doenca-edit-btn"
-                        class="v-btn-compact v-btn-compact--blue">
-                    Salvar alterações
-                </button>
-            </div>
-        </form>
+        @include('gestor.doencas._form', [
+            'doenca' => $doenca,
+            'formAction' => route('gestor.doencas.update', $doenca),
+            'formMethod' => 'PATCH',
+            'formId' => 'doenca-edit-form',
+            'submitId' => 'doenca-edit-btn',
+            'submitLabel' => __('Salvar alterações'),
+        ])
     </x-section-card>
 </div>
-<script>
-(function(){
-    var form = document.getElementById('doenca-edit-form');
-    var btn = document.getElementById('doenca-edit-btn');
-    if (form && btn) form.addEventListener('submit', function(){ btn.disabled = true; btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Salvando…'; });
-})();
-</script>
 @endsection

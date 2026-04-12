@@ -23,7 +23,8 @@ class LocalCreatePageTest extends TestCase
         $response = $this->actingAs($gestor)
             ->get(route('gestor.locais.create'));
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSeeText('RG: expedição');
     }
 
     #[Test]
@@ -39,6 +40,7 @@ class LocalCreatePageTest extends TestCase
         $response = $this->actingAs($agente)
             ->get(route('agente.locais.create'));
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSeeText('RG: expedição');
     }
 }

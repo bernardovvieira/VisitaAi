@@ -467,12 +467,14 @@ class LocalController extends Controller
             $rgN = $rgN === '' ? null : $rgN;
             $rgO = isset($row['mor_rg_orgao']) ? trim((string) $row['mor_rg_orgao']) : '';
             $rgO = $rgO === '' ? null : $rgO;
+            $rgExp = $row['mor_rg_expedicao'] ?? null;
+            $rgExp = ($rgExp === '' || $rgExp === null) ? null : $rgExp;
             $cpf = isset($row['mor_cpf']) ? trim((string) $row['mor_cpf']) : '';
             $cpf = $cpf === '' ? null : $cpf;
             $tu = isset($row['mor_tempo_uniao_conjuge']) ? trim((string) $row['mor_tempo_uniao_conjuge']) : '';
             $tu = $tu === '' ? null : $tu;
-            $aj = isset($row['mor_ajuda_compra_imovel']) ? trim((string) $row['mor_ajuda_compra_imovel']) : '';
-            $aj = $aj === '' ? null : $aj;
+            $aj = isset($row['mor_ajuda_compra_imovel']) ? strtolower(trim((string) $row['mor_ajuda_compra_imovel'])) : '';
+            $aj = in_array($aj, ['sim', 'nao'], true) ? $aj : null;
             $rfi = $row['mor_renda_formal_informal'] ?? null;
             $rfi = ($rfi === '' || $rfi === null) ? null : $rfi;
 
@@ -492,6 +494,7 @@ class LocalController extends Controller
                 'mor_telefone' => $tel,
                 'mor_rg_numero' => $rgN,
                 'mor_rg_orgao' => $rgO,
+                'mor_rg_expedicao' => $rgExp,
                 'mor_cpf' => $cpf,
                 'mor_tempo_uniao_conjuge' => $tu,
                 'mor_ajuda_compra_imovel' => $aj,
@@ -514,7 +517,7 @@ class LocalController extends Controller
 
             $vacuous = $nome === '' && $dn === null && $esc === null && $renda === null && $cor === null && $trab === null && $obs === null
                 && $sexo === null && $ec === null && $nat === null && $prof === null && $par === null && ! $ref && $tel === null
-                && $rgN === null && $rgO === null && $cpf === null && $tu === null && $aj === null && $rfi === null;
+                && $rgN === null && $rgO === null && $rgExp === null && $cpf === null && $tu === null && $aj === null && $rfi === null;
             if ($vacuous) {
                 continue;
             }

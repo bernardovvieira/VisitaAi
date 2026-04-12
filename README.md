@@ -14,8 +14,7 @@ Sistema desenvolvido para gestão municipal de operação territorial, indicador
 - **Especializações em saúde (quando contratadas):** vigilância entomológica, LIRAa, PNCD e agravos monitorados.
 - **Módulos complementares (opcionais):** cadastro socioeconômico/ocupantes e recortes agregados adicionais.
 
-Documento de referência de produto: `docs/product-architecture.md`.
-Guia de UI e conteúdo: `docs/ui-standards.md`.
+Toda a documentação funcional, arquitetural e de testes deste repositório está centralizada neste README principal.
 
 **Perfis no sistema (conformes ao MS):** Gestor municipal; ACE (Agente de Combate às Endemias); ACS (Agente Comunitário de Saúde), Lei nº 11.350/2006 e Diretrizes Nacionais para Atuação Integrada dos ACE e ACS.
 
@@ -24,6 +23,93 @@ Guia de UI e conteúdo: `docs/ui-standards.md`.
 - **Locais e visitas** de vigilância entomológica / PNCD (atividades 1 a 8, LIRAa para ACS onde aplicável).
 - **Doenças monitoradas**, pendências, relatórios, consulta pública por código do imóvel, QR Code.
 - **Ocupantes do imóvel (Visita Aí):** registro opcional vinculado a **locais**, com dados operacionais municipais agregados no painel. **Não** substitui e-SUS APS, PEC, Ficha de Visita Domiciliar e Territorial nem e-SUS Território. Textos legais e opções: `config/visitaai_municipio.php`.
+
+## Arquitetura de Produto e Mensagem
+
+### Objetivo do produto
+Visita Aí é uma plataforma municipal para organizar operação territorial e transformar dados de campo em indicadores para decisão, gestão e transparência.
+
+### Estado atual da solução (abril/2026)
+- `application` (Laravel): sistema principal da operação municipal.
+- `website` (Nuxt): landing institucional e comercial.
+- Os dois repositórios compartilham a mesma mensagem de produto, com ciclos de deploy independentes.
+
+### Arquitetura de escopo
+
+1. **Núcleo municipal (sempre ativo)**
+- Cadastro territorial de locais/imóveis
+- Operação de campo (visitas e pendências)
+- Painéis e indicadores para gestão
+- Relatórios e exportações
+- Consulta pública por código/QR sem dados sensíveis
+- Governança de acesso por perfil e auditoria
+
+2. **Especializações em saúde (quando contratadas)**
+- Vigilância entomológica
+- LIRAa
+- PNCD
+- Cadastro e leitura de doenças/agravos monitorados
+
+3. **Módulos complementares (opcionais)**
+- Cadastro de ocupantes/socioeconômico
+- Indicadores agregados complementares para planejamento local
+
+### Proposta de valor
+- Para gestor: indicadores acionáveis, leitura de território e prestação de contas
+- Para coordenação técnica: rotina padronizada, rastreabilidade e continuidade
+- Para equipe de campo: captura simples, fluxo direto e sincronização
+- Para município/cidadão: transparência operacional com consulta pública segura
+
+### Linguagem oficial recomendada
+Usar sempre:
+- Núcleo municipal
+- Especializações em saúde
+- Módulos complementares
+
+Evitar:
+- Definir o produto apenas como sistema de dengue
+- Misturar objetivo principal com módulo opcional
+
+### Regra de comunicação
+Em qualquer tela, proposta comercial ou material institucional, responder em ordem:
+1. Qual problema municipal resolvemos?
+2. Qual o núcleo obrigatório da plataforma?
+3. Quais especializações e opcionais podem ser ativados?
+
+### Observação de conformidade
+Quando houver uso de módulo socioeconômico ou ocupantes, manter a comunicação de que não substitui os sistemas nacionais obrigatórios (como e-SUS/PEC, quando aplicável).
+
+## Padrão de UI e Conteúdo
+
+### Objetivo
+Garantir telas simples, elegantes e funcionais, com linguagem consistente e foco em decisão.
+
+### Estrutura obrigatória de tela
+- Título curto orientado a benefício
+- Subtítulo de uma frase com contexto
+- Bloco principal de conteúdo
+- Uma ação primária em destaque
+- Ações secundárias discretas
+
+### Regras de texto
+- Frases curtas e diretas
+- Evitar repetição de conceitos
+- Evitar jargão técnico sem necessidade
+- Preferir verbos de ação: Registrar, Consultar, Exportar, Sincronizar
+- Nomear módulos conforme arquitetura oficial: Núcleo, Especializações, Complementares
+
+### Hierarquia visual
+- Espaçamento consistente entre seções
+- Títulos e subtítulos com escala tipográfica fixa
+- Cartões com mesma lógica de raio, sombra e contraste
+- Estados visuais padronizados: vazio, carregando, erro, sucesso
+
+### Checklist de revisão de tela
+- O usuário entende em 5 segundos o objetivo da tela?
+- A ação principal está clara?
+- Existe excesso de texto ou elementos decorativos?
+- Os termos usados batem com o glossário do produto?
+- A tela ajuda decisão ou só exibe informação?
 
 ### Rotas HTTP
 
@@ -98,6 +184,69 @@ docker compose down
 ### Testes automatizados
 
 O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rode na máquina local sem MySQL/Docker. Em produção e no Docker, o banco continua sendo o MySQL definido no `.env`. Para forçar outro banco nos testes, use `.env.testing` ou variáveis de ambiente.
+
+## Suíte de testes de integração
+
+### Resumo
+Existe uma suíte abrangente de testes de integração para fluxos realistas do sistema com múltiplos usuários e operações.
+
+Status atual:
+- 84 testes passando
+- 285 asserções
+
+Arquivo principal:
+- `tests/Feature/CompleteSystemWorkflowIntegrationTest.php`
+
+### Fluxos cobertos
+
+1. Registro e aprovação de usuário
+- Novo agente submete registro
+- Gestor aprova usuário pendente
+
+2. Autenticação e inatividade (2 meses)
+- Login atualiza use_ultimo_login_em
+- Usuário inativo por mais de 2 meses é inativado automaticamente
+- Comando diário users:inactivate-inactive mantém sincronização
+
+3. Atualização de perfil
+- Alteração de nome, e-mail e tema
+- Validação de e-mail único
+
+4. Controle de acesso por perfil
+- Gestor acessa área de gestão
+- Agente não acessa área de gestor
+- ACS acessa área de saúde
+
+5. Upload e download de documentos de morador
+- Upload de PDF/imagem
+- Armazenamento de metadados
+- Download autenticado e autorizado
+- Validação de tipos e limite de tamanho (10MB)
+
+6. Anonimização de usuário
+- Usuário anonimiza a própria conta com confirmação de senha
+- Gestor pode anonimizar outros usuários
+
+7. Gestão de usuários pelo gestor
+- Criação direta de usuários
+- Listagem e administração de contas
+
+### Comandos úteis de teste
+
+Executar suíte de integração:
+```bash
+php artisan test tests/Feature/CompleteSystemWorkflowIntegrationTest.php
+```
+
+Executar um cenário específico:
+```bash
+php artisan test tests/Feature/CompleteSystemWorkflowIntegrationTest.php --filter="access_control"
+```
+
+Executar todos os testes:
+```bash
+php artisan test
+```
 
 ---
 

@@ -13,8 +13,17 @@ class IndicadoresOcupantesController extends Controller
     {
         $this->authorize('isGestor');
 
+        $locaisMapa = $indicadores->locaisComCoordenadasParaMapa()
+            ->map(function (array $local): array {
+                $local['url'] = route('gestor.locais.show', ['local' => $local['loc_id']]);
+
+                return $local;
+            })
+            ->all();
+
         return view('municipio.indicadores.ocupantes', [
             'painel' => $indicadores->painelCompleto(),
+            'locaisMapa' => $locaisMapa,
         ]);
     }
 

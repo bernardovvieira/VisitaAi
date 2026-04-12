@@ -24,6 +24,6 @@ class SocioeconomicoAutofillUiTest extends TestCase
         $response->assertOk();
         $response->assertSee('syncSocioFromRows', false);
         $response->assertSee('data-autofill-from-ocupantes="1"', false);
-        $response->assertSee('Resumo automático por moradores', false);
+        $response->assertDontSee('Resumo automático por moradores', false);
     }
 }

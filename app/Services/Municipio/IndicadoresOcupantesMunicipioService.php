@@ -120,6 +120,43 @@ class IndicadoresOcupantesMunicipioService
     }
 
     /**
+     * @return Collection<int, array{loc_id:int, loc_codigo_unico:string|null, loc_endereco:string|null, loc_numero:string|null, loc_bairro:string|null, loc_latitude:float, loc_longitude:float}>
+     */
+    public function locaisComCoordenadasParaMapa(): Collection
+    {
+        return Local::query()
+            ->select([
+                'loc_id',
+                'loc_codigo_unico',
+                'loc_endereco',
+                'loc_numero',
+                'loc_bairro',
+                'loc_latitude',
+                'loc_longitude',
+            ])
+            ->whereNotNull('loc_latitude')
+            ->whereNotNull('loc_longitude')
+            ->where('loc_latitude', '!=', '')
+            ->where('loc_longitude', '!=', '')
+            ->orderBy('loc_bairro')
+            ->orderBy('loc_endereco')
+            ->orderBy('loc_numero')
+            ->get()
+            ->map(function (Local $local): array {
+                return [
+                    'loc_id' => (int) $local->loc_id,
+                    'loc_codigo_unico' => $local->loc_codigo_unico,
+                    'loc_endereco' => $local->loc_endereco,
+                    'loc_numero' => $local->loc_numero,
+                    'loc_bairro' => $local->loc_bairro,
+                    'loc_latitude' => (float) $local->loc_latitude,
+                    'loc_longitude' => (float) $local->loc_longitude,
+                ];
+            })
+            ->values();
+    }
+
+    /**
      * CSV para gestor: inclui cruzamento escolaridade × renda com contagens completas (sem supressão por célula).
      */
     public function exportCsvGestor(): string

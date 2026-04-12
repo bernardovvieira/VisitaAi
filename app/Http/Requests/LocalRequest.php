@@ -116,9 +116,10 @@ class LocalRequest extends FormRequest
             'ocupantes.*.mor_telefone' => ['nullable', 'string', 'max:40'],
             'ocupantes.*.mor_rg_numero' => ['nullable', 'string', 'max:45'],
             'ocupantes.*.mor_rg_orgao' => ['nullable', 'string', 'max:60'],
+            'ocupantes.*.mor_rg_expedicao' => ['nullable', 'date'],
             'ocupantes.*.mor_cpf' => ['nullable', 'string', 'max:20'],
             'ocupantes.*.mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
-            'ocupantes.*.mor_ajuda_compra_imovel' => ['nullable', 'string', 'max:255'],
+            'ocupantes.*.mor_ajuda_compra_imovel' => ['nullable', 'string', Rule::in(['sim', 'nao'])],
             'ocupantes.*.mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfiKeys)],
         ], $this->socioeconomicoFormRules());
     }
