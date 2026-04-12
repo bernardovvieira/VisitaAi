@@ -22,16 +22,16 @@
 
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')" />
 
-    <x-ui.disclosure variant="muted-card">
-        <x-slot name="summary">
-            <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Modo offline, CEP e localização (expandir)') }}</span>
-        </x-slot>
+    <x-section-card class="v-card--muted space-y-2">
+        <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+            {{ __('Modo offline, CEP e localização') }}
+        </h2>
         <p><strong>{{ __('Sem internet?') }}</strong> {{ __('Use «Guardar local» para salvar no dispositivo e envie depois na tela «Sincronizar».') }}</p>
         <p><strong>{{ __('Antes de ir a campo:') }}</strong> {{ __('abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
         <p><strong>{{ __('CEP e endereço:') }}</strong> {{ __('informe o CEP para preencher o endereço automaticamente e revise número/complemento antes de salvar.') }}</p>
         <p><strong>{{ __('Coordenadas:') }}</strong> {{ __('use «Minha localização» para capturar latitude/longitude do ponto onde você está.') }}</p>
         <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('Dica: se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}</p>
-    </x-ui.disclosure>
+    </x-section-card>
 
     <x-section-card class="space-y-4">
         <x-flash-alerts />
@@ -135,16 +135,6 @@
             <p class="text-sm text-gray-600 dark:text-gray-400 italic">
                 Os campos <strong>cidade</strong>, <strong>estado</strong> e <strong>país</strong> serão preenchidos automaticamente após digitar um CEP válido.
             </p>
-
-            <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Responsável pelo imóvel</legend>
-                <div>
-                    <label for="loc_responsavel_nome" class="v-toolbar-label">Nome completo (morador, locatário ou proprietário)</label>
-                    <input id="loc_responsavel_nome" name="loc_responsavel_nome" type="text" value="{{ old('loc_responsavel_nome') }}" maxlength="255"
-                           class="v-input mt-1"
-                              placeholder="">
-                </div>
-            </fieldset>
 
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">Informações Complementares</legend>
@@ -285,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!checkCepLive()) { e.preventDefault(); return false; }
         if (!navigator.onLine && typeof window.VisitaOfflineSaveLocalDraft === 'function') {
             e.preventDefault();
-            var names = ['loc_cep','loc_tipo','loc_zona','loc_endereco','loc_numero','loc_bairro','loc_cidade','loc_estado','loc_pais','loc_latitude','loc_longitude','loc_codigo','loc_quarteirao','loc_complemento','loc_categoria','loc_sequencia','loc_lado','loc_responsavel_nome'];
+            var names = ['loc_cep','loc_tipo','loc_zona','loc_endereco','loc_numero','loc_bairro','loc_cidade','loc_estado','loc_pais','loc_latitude','loc_longitude','loc_codigo','loc_quarteirao','loc_complemento','loc_categoria','loc_sequencia','loc_lado'];
             var payload = {};
             names.forEach(function(n) {
                 var el = document.querySelector('[name="' + n + '"]');

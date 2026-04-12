@@ -20,7 +20,7 @@ class SecurityHeadersTest extends TestCase
         $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->assertHeader('X-DNS-Prefetch-Control', 'off');
         $response->assertHeader('X-Permitted-Cross-Domain-Policies', 'none');
-        $response->assertHeader('Permissions-Policy');
+        $response->assertHeader('Permissions-Policy', 'geolocation=(self), microphone=(), camera=(), payment=(), usb=()');
         $response->assertHeader('Content-Security-Policy');
     }
 

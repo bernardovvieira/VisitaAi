@@ -17,8 +17,17 @@
     $disc = 'border-t border-gray-200 pt-6 mt-2 dark:border-gray-600';
 @endphp
 
-<p class="text-sm text-slate-600 dark:text-slate-400 mb-4">{{ config('visitaai_socioeconomico.disclaimer') }}</p>
-<p class="text-xs text-emerald-700 dark:text-emerald-300 mb-4">{{ __('Os campos de moradores, contribuintes, renda e fonte principal são preenchidos automaticamente com base no cadastro individual dos moradores.') }}</p>
+<x-ui.callout variant="amber" class="v-alert-erp border-amber-200/60 dark:border-amber-900/40 mb-4" role="alert">
+    <p class="text-sm text-amber-900/90 dark:text-amber-200/90">{{ __('Ficha socioeconômica complementar ao cadastro territorial e às obrigações de sistemas oficiais (ex.: CadÚnico, e-SUS). Informe apenas o necessário (minimização, LGPD). CPF/RG são opcionais e sensíveis.') }}</p>
+</x-ui.callout>
+
+<input type="hidden" name="socio[telefone_contato]" value="{{ $sv('telefone_contato') }}" data-autofill-from-ocupantes="1">
+<input type="hidden" name="socio[posicao_entrevistado]" value="{{ $sv('posicao_entrevistado') }}" data-autofill-from-ocupantes="1">
+<input type="hidden" name="socio[n_moradores_declarado]" value="{{ $sv('n_moradores_declarado') }}" data-autofill-from-ocupantes="1">
+<input type="hidden" name="socio[renda_formal_informal]" value="{{ $sv('renda_formal_informal') }}" data-autofill-from-ocupantes="1">
+<input type="hidden" name="socio[renda_familiar_faixa]" value="{{ $sv('renda_familiar_faixa') }}" data-autofill-from-ocupantes="1">
+<input type="hidden" name="socio[principal_fonte_renda]" value="{{ $sv('principal_fonte_renda') }}" data-autofill-from-ocupantes="1">
+<input type="hidden" name="socio[qtd_contribuintes]" value="{{ $sv('qtd_contribuintes') }}" data-autofill-from-ocupantes="1">
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
@@ -30,28 +39,12 @@
             <input type="date" name="socio[data_entrevista]" value="{{ $sv('data_entrevista') }}" class="v-input mt-1 w-full">
         </div>
         <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Telefone de contato (domicílio)') }}</label>
-            <input type="text" name="socio[telefone_contato]" value="{{ $sv('telefone_contato') }}" class="v-input mt-1 w-full" maxlength="45" data-autofill-from-ocupantes="1">
-        </div>
-        <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Condição da moradia') }}</label>
             <select name="socio[condicao_casa]" class="v-select mt-1 w-full">
                 @foreach(config('visitaai_socioeconomico.condicao_casa_opcoes', []) as $k => $lab)
                     <option value="{{ $k }}" @selected($sv('condicao_casa') === $k)>{{ $lab }}</option>
                 @endforeach
             </select>
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Quem respondeu (posição)') }}</label>
-            <select name="socio[posicao_entrevistado]" class="v-select mt-1 w-full" data-autofill-from-ocupantes="1">
-                @foreach(config('visitaai_socioeconomico.posicao_entrevistado_opcoes', []) as $k => $lab)
-                    <option value="{{ $k }}" @selected($sv('posicao_entrevistado') === $k)>{{ $lab }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de moradores (declarado)') }}</label>
-            <input type="number" name="socio[n_moradores_declarado]" value="{{ $sv('n_moradores_declarado') }}" class="v-input mt-1 w-full" min="0" max="100" data-autofill-from-ocupantes="1">
         </div>
     </div>
 </x-ui.disclosure>
@@ -61,30 +54,6 @@
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['economia'] ?? __('2. Economia do grupo familiar') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Renda formal / informal (domicílio)') }}</label>
-            <select name="socio[renda_formal_informal]" class="v-select mt-1 w-full" data-autofill-from-ocupantes="1">
-                @foreach(config('visitaai_socioeconomico.renda_formal_informal_opcoes', []) as $k => $lab)
-                    <option value="{{ $k }}" @selected($sv('renda_formal_informal') === $k)>{{ $lab }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Renda familiar (faixa)') }}</label>
-            <select name="socio[renda_familiar_faixa]" class="v-select mt-1 w-full" data-autofill-from-ocupantes="1">
-                @foreach(config('visitaai_municipio.renda_faixa_opcoes', []) as $k => $lab)
-                    <option value="{{ $k }}" @selected($sv('renda_familiar_faixa') === $k)>{{ $lab }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="sm:col-span-2">
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Principal fonte de renda') }}</label>
-            <textarea name="socio[principal_fonte_renda]" rows="2" class="v-input mt-1 w-full" data-autofill-from-ocupantes="1">{{ $sv('principal_fonte_renda') }}</textarea>
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Quantas pessoas contribuem com a renda') }}</label>
-            <input type="number" name="socio[qtd_contribuintes]" value="{{ $sv('qtd_contribuintes') }}" class="v-input mt-1 w-full" min="0" max="100" data-autofill-from-ocupantes="1">
-        </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Gastos mensais aproximados (faixa)') }}</label>
             <select name="socio[gastos_mensais_faixa]" class="v-select mt-1 w-full">

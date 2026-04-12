@@ -55,9 +55,19 @@ return [
         "style-src 'self' 'unsafe-inline' https://fonts.bunny.net https://fonts.googleapis.com https://unpkg.com",
         "font-src 'self' data: https://fonts.bunny.net https://fonts.gstatic.com https://use.typekit.net",
         "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
-        "connect-src 'self' https://viacep.com.br https://nominatim.openstreetmap.org https://cdn.jsdelivr.net https://unpkg.com",
+        "connect-src 'self' https://viacep.com.br https://nominatim.openstreetmap.org https://ipapi.co https://ipwho.is https://cdn.jsdelivr.net https://unpkg.com",
         "base-uri 'self'",
         "form-action 'self'",
         "frame-ancestors 'self'",
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permissions-Policy
+    |--------------------------------------------------------------------------
+    | Habilita geolocalização no próprio site para suporte ao botão
+    | "Minha Localização". Demais recursos continuam bloqueados por padrão.
+    */
+
+    'permissions_policy' => "geolocation=(self), microphone=(), camera=(), payment=(), usb=()",
 ];

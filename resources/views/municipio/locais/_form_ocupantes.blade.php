@@ -170,7 +170,7 @@
             return 'nao_informado';
         },
         writeSocioField(name, value) {
-            var el = document.querySelector('[name="' + name + '"]');
+            var el = (document.getElementsByName(name) || [])[0] || null;
             if (!el) return;
             if (el.getAttribute('data-autofill-from-ocupantes') !== '1') return;
             var normalized = value == null ? '' : String(value);

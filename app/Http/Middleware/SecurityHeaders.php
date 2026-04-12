@@ -17,7 +17,7 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('X-DNS-Prefetch-Control', 'off');
         $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
-        $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=(), usb=()');
+        $response->headers->set('Permissions-Policy', (string) config('security-headers.permissions_policy', "geolocation=(self), microphone=(), camera=(), payment=(), usb=()"));
 
         if ($request->secure() && config('security-headers.hsts_enabled', false)) {
             $maxAge = max(0, (int) config('security-headers.hsts_max_age', 31536000));
