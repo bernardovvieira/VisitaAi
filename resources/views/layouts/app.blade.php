@@ -157,7 +157,7 @@
             .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
         </style>
     </head>
-    <body class="font-sans antialiased text-[14px] leading-relaxed sm:text-[15px] {{ View::hasSection('public') ? 'bg-white' : 'bg-slate-50' }} dark:bg-gray-950">
+    <body class="font-sans antialiased text-[14px] leading-relaxed sm:text-[15px] {{ View::hasSection('public') ? 'bg-white' : 'bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900' }}">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         @if (View::hasSection('public'))
             <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-gray-900 dark:via-gray-900 dark:to-slate-950">
@@ -183,7 +183,7 @@
         @else
             @auth
                 <div id="authenticated-shell"
-                     class="flex min-h-screen bg-slate-50 dark:bg-[rgb(3,7,18)]"
+                     class="flex min-h-screen bg-transparent"
                      x-data="{
                         sidebarOpen: false,
                         sidebarDesktop: (function () {
