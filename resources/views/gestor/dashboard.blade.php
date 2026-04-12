@@ -188,7 +188,7 @@
                     <a href="{{ route('gestor.pendentes') }}" class="v-dash-shortcut {{ $pendentesCount > 0 ? 'v-dash-shortcut--primary' : '' }}">
                         <x-heroicon-o-exclamation-triangle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
                         <span class="v-dash-shortcut__body">
-                            <span class="v-dash-shortcut__label">{{ __('Usuários pendentes') }}</span>
+                            <span class="v-dash-shortcut__label !text-amber-100">{{ __('Usuários pendentes') }}</span>
                         </span>
                         @if($pendentesCount > 0)
                             <span class="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white/20 px-1.5 text-xs font-bold tabular-nums">{{ $pendentesCount }}</span>

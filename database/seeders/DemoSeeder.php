@@ -15,6 +15,12 @@ use Illuminate\Database\Seeder;
  */
 class DemoSeeder extends Seeder
 {
+    private const BAIRRO_CENTROS = [
+        'Farroupilha' => ['lat' => -28.8347, 'lng' => -52.5073],
+        'Centro' => ['lat' => -28.8286, 'lng' => -52.5096],
+        'Botucaraí' => ['lat' => -28.8120, 'lng' => -52.5079],
+    ];
+
     public function run(): void
     {
         // Usuários (Gestor e profissionais ACE/ACS)
@@ -94,8 +100,8 @@ class DemoSeeder extends Seeder
                 'loc_cidade' => 'Soledade',
                 'loc_estado' => 'RS',
                 'loc_pais' => 'Brasil',
-                'loc_latitude' => '-28.8353131',
-                'loc_longitude' => '-52.5081682',
+                'loc_latitude' => (string) self::BAIRRO_CENTROS['Farroupilha']['lat'],
+                'loc_longitude' => (string) self::BAIRRO_CENTROS['Farroupilha']['lng'],
             ],
             [
                 'loc_codigo_unico' => '25164321',
@@ -114,8 +120,8 @@ class DemoSeeder extends Seeder
                 'loc_cidade' => 'Soledade',
                 'loc_estado' => 'RS',
                 'loc_pais' => 'Brasil',
-                'loc_latitude' => '-28.8283392',
-                'loc_longitude' => '-52.5098634',
+                'loc_latitude' => (string) self::BAIRRO_CENTROS['Centro']['lat'],
+                'loc_longitude' => (string) self::BAIRRO_CENTROS['Centro']['lng'],
                 'loc_responsavel_nome' => 'Bernardo Vivian Vieira',
             ],
             [
@@ -135,8 +141,8 @@ class DemoSeeder extends Seeder
                 'loc_cidade' => 'Soledade',
                 'loc_estado' => 'RS',
                 'loc_pais' => 'Brasil',
-                'loc_latitude' => '-28.8109116',
-                'loc_longitude' => '-52.5078464',
+                'loc_latitude' => (string) self::BAIRRO_CENTROS['Botucaraí']['lat'],
+                'loc_longitude' => (string) self::BAIRRO_CENTROS['Botucaraí']['lng'],
                 'loc_responsavel_nome' => null,
             ],
         ];

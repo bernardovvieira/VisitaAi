@@ -16,14 +16,19 @@
     <x-flash-alerts />
 
     @if($locaisComPendenciasNaoRevisitadas->isNotEmpty())
-        <x-ui.callout variant="amber" :title="__('Pendências sem revisita')">
+        @php
+            $locaisPendencias = $locaisComPendenciasNaoRevisitadas->values();
+            $pendenciasVisiveis = 5;
+        @endphp
+        <x-ui.callout variant="amber" :title="__('Pendências sem revisita')" x-data="{ expandedPendencias: false }">
             <p class="mt-1 text-xs text-amber-900/85 dark:text-amber-200/80">{{ __('Locais com pendência registrada sem revisita posterior.') }}</p>
             <ul class="mt-3 space-y-2 text-sm text-amber-950 dark:text-amber-100">
-                @foreach ($locaisComPendenciasNaoRevisitadas as $local)
+                @foreach ($locaisPendencias as $indice => $local)
                     @php
                         $ultimaPendencia = $local->visitas()->where('vis_pendencias', true)->latest('vis_data')->first();
                     @endphp
-                    <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-baseline sm:justify-between">
+                    <li class="flex flex-col gap-0.5 border-l-2 border-amber-400/80 pl-3 sm:flex-row sm:items-baseline sm:justify-between"
+                        @if($indice >= $pendenciasVisiveis) x-show="expandedPendencias" x-cloak @endif>
                         <span>{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}</span>
                         @if($ultimaPendencia)
                             <span class="text-xs font-medium text-amber-800 dark:text-amber-300">{{ __('Última pendência: :d', ['d' => \Carbon\Carbon::parse($ultimaPendencia->vis_data)->format('d/m/Y')]) }}</span>
@@ -31,6 +36,15 @@
                     </li>
                 @endforeach
             </ul>
+            @if($locaisPendencias->count() > $pendenciasVisiveis)
+                <div class="mt-3 flex justify-end">
+                    <button type="button"
+                            class="inline-flex items-center gap-2 rounded-lg border border-amber-300/80 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 shadow-sm transition hover:bg-amber-50 dark:border-amber-700/70 dark:bg-amber-950/30 dark:text-amber-100 dark:hover:bg-amber-950/50"
+                            @click="expandedPendencias = !expandedPendencias"
+                            x-text="expandedPendencias ? '{{ __('Ver menos') }}' : '{{ __('Ver mais') }}'">
+                    </button>
+                </div>
+            @endif
         </x-ui.callout>
     @endif
 

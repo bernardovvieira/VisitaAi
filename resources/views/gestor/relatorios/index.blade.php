@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div class="v-page">
+<div class="v-page v-page--wide v-page--loose">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
     <x-page-header :eyebrow="__('Inteligência municipal')" :title="__('Relatórios')">
         <x-slot name="lead">
@@ -23,7 +23,7 @@
     <x-flash-alerts />
 
     @if($sem_visitas ?? false)
-        <x-section-card>
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <div class="v-empty-state py-12">
                 <div class="v-empty-state__icon h-20 w-20" aria-hidden="true">
                     <x-heroicon-o-document-text class="h-10 w-10 shrink-0" />
@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        <x-section-card>
+        <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
             <header class="mb-5 space-y-1.5">
                 <h2 class="v-section-title">{{ __('Filtros') }}</h2>
                 <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{{ __('Para o filtro funcionar, todos os campos marcados com * devem ser preenchidos ou selecionados.') }}</p>
@@ -282,41 +282,41 @@
     {{-- Indicadores (estilo dashboard) --}}
     <section class="space-y-4">
         <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <h2 class="v-section-title text-base">{{ __('Indicadores do período') }}</h2>
+            <h2 class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Indicadores do período') }}</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Valores conforme filtros aplicados.') }}</p>
         </div>
         <div class="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            <x-ui.stat-tile :heading="__('Total de visitas')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Total de visitas')">
                 <x-slot name="icon">
                     <x-heroicon-o-clipboard-document-list class="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                 </x-slot>
                 {{ $totalVisitas }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Visitas com pendência')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Visitas com pendência')">
                 <x-slot name="icon">
                     <x-heroicon-o-clock class="h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400" />
                 </x-slot>
                 {{ $percentualPendencias }}% <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({{ $totalComPendencia }})</span>
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Depósitos eliminados')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Depósitos eliminados')">
                 <x-slot name="icon">
                     <x-heroicon-o-building-office-2 class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
                 </x-slot>
                 {{ $totalDepEliminados }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Visitas com tratamento')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Visitas com tratamento')">
                 <x-slot name="icon">
                     <x-heroicon-o-check-circle class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
                 </x-slot>
                 {{ $visitasComTratamento }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Coletas realizadas')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Coletas realizadas')">
                 <x-slot name="icon">
                     <x-heroicon-o-beaker class="h-5 w-5 shrink-0 text-blue-500 dark:text-blue-400" />
                 </x-slot>
                 {{ $totalComColeta }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Bairro com mais ocorrências')" valueClass="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Bairro com mais ocorrências')" valueClass="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
                 <x-slot name="icon">
                     <x-heroicon-o-map-pin class="h-5 w-5 shrink-0 text-slate-500 dark:text-slate-400" />
                 </x-slot>
@@ -328,25 +328,25 @@
             <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Imóveis vinculados às visitas do período filtrado.') }}</p>
         </div>
         <div class="mt-3 grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-            <x-ui.stat-tile :heading="__('Imóveis distintos no período')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis distintos no período')">
                 <x-slot name="icon">
                     <x-heroicon-o-home class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
                 {{ $statsComplemento['imoveis_periodo'] ?? 0 }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Imóveis com ocupantes cadastrados')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis com ocupantes cadastrados')">
                 <x-slot name="icon">
                     <x-heroicon-o-user-group class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
                 {{ $statsComplemento['imoveis_com_ocupantes'] ?? 0 }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Total de ocupantes (cadastro)')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Total de ocupantes (cadastro)')">
                 <x-slot name="icon">
                     <x-heroicon-o-users class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
                 {{ $statsComplemento['total_ocupantes'] ?? 0 }}
             </x-ui.stat-tile>
-            <x-ui.stat-tile :heading="__('Imóveis com ficha socioeconômica')">
+            <x-ui.stat-tile class="h-full shadow-md shadow-slate-200/25 dark:shadow-none" :heading="__('Imóveis com ficha socioeconômica')">
                 <x-slot name="icon">
                     <x-heroicon-o-clipboard-document-check class="h-5 w-5 shrink-0 text-slate-600 dark:text-slate-400" />
                 </x-slot>
@@ -356,8 +356,8 @@
     </section>
 
     @if(isset($imoveisComplementoResumo) && $imoveisComplementoResumo->isNotEmpty())
-    <x-section-card>
-        <h2 class="v-section-title mb-1 text-base">{{ __('Imóveis no período: cadastro complementar') }}</h2>
+      <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+          <h2 class="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Imóveis no período: cadastro complementar') }}</h2>
         <p class="mb-4 text-sm text-slate-600 dark:text-slate-400">{{ __('Resumo por imóvel: quantidade de ocupantes e indicação de ficha socioeconômica. O PDF inclui a mesma tabela.') }}</p>
         <div class="v-table-wrap overflow-x-auto">
             <table class="v-data-table min-w-[42rem]">
@@ -394,8 +394,8 @@
     @endif
 
     {{-- Gráficos: apenas os 4 mais relevantes para o relatório --}}
-    <x-section-card>
-        <h2 class="v-section-title mb-4 text-base">{{ __('Análise visual') }}</h2>
+    <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        <h2 class="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Análise visual') }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:grid-rows-2 sm:auto-rows-fr">
             <div class="flex flex-col min-h-[13rem]">
                 <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1 shrink-0">{{ __('Visitas por bairro') }}</h3>
@@ -429,8 +429,8 @@
     </x-section-card>
 
     {{-- Mapa de calor --}}
-    <x-section-card>
-        <h2 class="v-section-title mb-1">{{ __('Mapa de calor') }}</h2>
+    <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+        <h2 class="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Mapa de calor') }}</h2>
         <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">{{ __('Distribuição das visitas no mapa do município.') }}</p>
         <div class="relative h-64 w-full overflow-hidden rounded-lg border" style="border-color: rgb(var(--v-border) / 1);">
             <div id="mapa-calor" class="w-full h-full rounded-lg"></div>
@@ -439,8 +439,8 @@
     </x-section-card>
 
     {{-- Tabela de visitas --}}
-    <x-section-card>
-    <h2 class="v-section-title mb-4">{{ __('Visitas registradas') }}</h2>
+    <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
+    <h2 class="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Visitas registradas') }}</h2>
 
     <div class="v-table-wrap">
         <table class="v-data-table">

@@ -14,7 +14,7 @@
         <h2 class="v-section-title">{{ __('Usuários do sistema') }}</h2>
         <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{!!
             __('gestor.users.intro', [
-                'link' => '<a href="'.e(route('gestor.pendentes')).'" class="font-semibold text-blue-600 hover:underline dark:text-blue-400">'.e(__('Pendentes')).'</a>',
+                'link' => '<a href="'.e(route('gestor.pendentes')).'" class="font-semibold text-amber-600 hover:text-amber-700 hover:underline dark:text-amber-400 dark:hover:text-amber-300">'.e(__('pendentes')).'</a>',
             ])
         !!}</p>
     </x-section-card>

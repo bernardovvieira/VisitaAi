@@ -20,6 +20,22 @@ use Illuminate\Support\Carbon;
  */
 class FullSystemTestSeeder extends Seeder
 {
+    /**
+     * Centro aproximado dos bairros de Soledade/RS usado para manter os pontos
+     * dentro da cidade e próximos do bairro correspondente.
+     *
+     * @var array<string, array{lat:float,lng:float}>
+     */
+    private const BAIRRO_CENTROS = [
+        'Centro' => ['lat' => -28.8286, 'lng' => -52.5096],
+        'Farroupilha' => ['lat' => -28.8347, 'lng' => -52.5073],
+        'Botucarai' => ['lat' => -28.8120, 'lng' => -52.5079],
+        'Expedicionario' => ['lat' => -28.8318, 'lng' => -52.5038],
+        'Missoes' => ['lat' => -28.8327, 'lng' => -52.5142],
+        'Ipiranga' => ['lat' => -28.8239, 'lng' => -52.5037],
+        'Fontes' => ['lat' => -28.8198, 'lng' => -52.5150],
+    ];
+
     public function run(): void
     {
         $faker = fake('pt_BR');
@@ -138,8 +154,6 @@ class FullSystemTestSeeder extends Seeder
     private function ensureLocais($faker, int $target)
     {
         $existing = Local::query()->count();
-        $baseLat = -28.8353;
-        $baseLng = -52.5081;
 
         $enderecosSoledade = [
             ['rua' => 'Rua Venancio Aires', 'bairro' => 'Centro', 'cep' => '99300-000'],
@@ -157,6 +171,9 @@ class FullSystemTestSeeder extends Seeder
         for ($i = $existing; $i < $target; $i++) {
             $codigoUnico = $this->nextCodigoUnico();
             $end = $enderecosSoledade[array_rand($enderecosSoledade)];
+            $centro = self::BAIRRO_CENTROS[$end['bairro']] ?? ['lat' => -28.8286, 'lng' => -52.5096];
+            $lat = $this->offsetCoord($centro['lat'], 0.0035);
+            $lng = $this->offsetCoord($centro['lng'], 0.0040);
 
             Local::query()->create([
                 'loc_cep' => $end['cep'],
@@ -174,8 +191,8 @@ class FullSystemTestSeeder extends Seeder
                 'loc_cidade' => 'Soledade',
                 'loc_estado' => 'RS',
                 'loc_pais' => 'Brasil',
-                'loc_latitude' => number_format($baseLat + mt_rand(-700, 700) / 10000, 7, '.', ''),
-                'loc_longitude' => number_format($baseLng + mt_rand(-700, 700) / 10000, 7, '.', ''),
+                'loc_latitude' => number_format($lat, 7, '.', ''),
+                'loc_longitude' => number_format($lng, 7, '.', ''),
                 'loc_codigo_unico' => $codigoUnico,
                 'loc_responsavel_nome' => random_int(0, 100) <= 75 ? $faker->name() : null,
             ]);
@@ -344,5 +361,12 @@ class FullSystemTestSeeder extends Seeder
         } while (Local::query()->where('loc_codigo_unico', $codigo)->exists());
 
         return $codigo;
+    }
+
+    private function offsetCoord(float $center, float $maxOffset): float
+    {
+        $delta = random_int((int) (-$maxOffset * 1000000), (int) ($maxOffset * 1000000)) / 1000000;
+
+        return $center + $delta;
     }
 }
