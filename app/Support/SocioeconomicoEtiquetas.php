@@ -4,6 +4,8 @@ namespace App\Support;
 
 class SocioeconomicoEtiquetas
 {
+    private const NAO_INFORMADO = 'nao_informado';
+
     /**
      * @param  array<string, string>|null  $fallback
      */
@@ -11,6 +13,9 @@ class SocioeconomicoEtiquetas
     {
         if ($value === null || $value === '') {
             return '-';
+        }
+        if ($value === self::NAO_INFORMADO) {
+            return __('Não informado');
         }
         $opts = $configKey !== null
             ? config('visitaai_socioeconomico.'.$configKey, [])
@@ -28,6 +33,9 @@ class SocioeconomicoEtiquetas
         if ($value === null || $value === '') {
             return '-';
         }
+        if ($value === self::NAO_INFORMADO) {
+            return __('Não informado');
+        }
         $opts = config('visitaai_municipio.renda_faixa_opcoes', []);
         if (is_array($opts) && isset($opts[$value])) {
             $label = $opts[$value];
@@ -41,6 +49,9 @@ class SocioeconomicoEtiquetas
     {
         if ($value === null || $value === '') {
             return '-';
+        }
+        if ($value === self::NAO_INFORMADO) {
+            return __('Não informado');
         }
         $opts = config('visitaai_municipio.escolaridade_opcoes', []);
         if (is_array($opts) && isset($opts[$value])) {
@@ -56,6 +67,9 @@ class SocioeconomicoEtiquetas
         if ($value === null || $value === '') {
             return '-';
         }
+        if ($value === self::NAO_INFORMADO) {
+            return __('Não informado');
+        }
         $opts = config('visitaai_municipio.cor_raca_opcoes', []);
         if (is_array($opts) && isset($opts[$value])) {
             $label = $opts[$value];
@@ -69,6 +83,9 @@ class SocioeconomicoEtiquetas
     {
         if ($value === null || $value === '') {
             return '-';
+        }
+        if ($value === self::NAO_INFORMADO) {
+            return __('Não informado');
         }
         $opts = config('visitaai_municipio.situacao_trabalho_opcoes', []);
         if (is_array($opts) && isset($opts[$value])) {

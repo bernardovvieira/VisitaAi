@@ -9,12 +9,9 @@
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças')]]" />
     <x-page-header :eyebrow="__('Referência epidemiológica')" :title="__('Doenças')" />
 
-  <div>
-    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">Doenças monitoradas</p>
-    <p class="text-sm text-gray-600 dark:text-gray-400">
+    <p class="text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 pb-4 dark:border-gray-700">
       Consulte as doenças que você pode registrar nas visitas. Clique em Ver detalhes para mais informações.
     </p>
-  </div>
 
   <x-section-card>
     <div class="flex flex-col sm:flex-row sm:items-end gap-4">

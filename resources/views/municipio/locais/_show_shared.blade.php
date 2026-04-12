@@ -161,7 +161,7 @@
                 [__('Moradores'), $valor($socio->lse_n_moradores_declarado)],
                 [__('Renda'), SE::municipioRenda($socio->lse_renda_familiar_faixa)],
                 [__('Contribuintes'), $valor($socio->lse_qtd_contribuintes)],
-                [__('Titular'), $valor($socio->lse_posicao_entrevistado)],
+                [__('Posição entrevistado'), SE::opcao('posicao_entrevistado_opcoes', $socio->lse_posicao_entrevistado)],
                 [__('Posse'), SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse)],
             ];
 
@@ -173,7 +173,7 @@
                         [__('Data'), $socio->lse_data_entrevista?->format('d/m/Y')],
                         [__('Condição moradia'), SE::opcao('condicao_casa_opcoes', $socio->lse_condicao_casa)],
                         [__('Telefone'), $socio->lse_telefone_contato],
-                        [__('Posição entrevistado'), $socio->lse_posicao_entrevistado],
+                        [__('Posição entrevistado'), SE::opcao('posicao_entrevistado_opcoes', $socio->lse_posicao_entrevistado)],
                         [__('Moradores'), $socio->lse_n_moradores_declarado],
                     ],
                 ],
@@ -272,7 +272,23 @@
         </div>
 
         <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
-            @foreach($secoesSocio as $sec)
+            @foreach(array_slice($secoesSocio, 0, 2) as $sec)
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $sec['titulo'] }}</h4>
+                    <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
+                        @foreach($sec['itens'] as [$rotulo, $conteudo])
+                            <div class="flex items-start justify-between gap-2">
+                                <dt class="text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
+                                <dd class="max-w-[12rem] break-words text-right text-slate-800 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            @foreach(array_slice($secoesSocio, 2) as $sec)
                 <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40 {{ $sec['class'] ?? '' }}">
                     <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $sec['titulo'] }}</h4>
                     <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
