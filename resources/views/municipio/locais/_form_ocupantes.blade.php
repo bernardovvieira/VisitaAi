@@ -70,10 +70,13 @@
     }
 @endphp
 
-<fieldset class="space-y-3 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-    <legend class="v-section-title mb-2">{{ __('Composição familiar: cadastro por morador') }}</legend>
-    <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Cada pessoa pode ter qualificação completa (ficha socioeconômica). Marque no máximo um como referência familiar (titular).') }}</p>
-    <div x-data="{
+<x-ui.disclosure variant="muted-card-simple" :open="false">
+    <x-slot name="summary">
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('4. Composição familiar e ocupantes') }}</span>
+    </x-slot>
+    <div class="space-y-3">
+        <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Cada pessoa pode ter qualificação completa (ficha socioeconômica). Marque no máximo um como referência familiar (titular).') }}</p>
+        <div x-data="{
         rows: {{ Js::from($ocupantesRows) }},
         esc: {{ Js::from($esc) }},
         rendaOpts: {{ Js::from($renda) }},
@@ -227,7 +230,7 @@
             }
         }
     }" class="space-y-4">
-        <div x-effect="syncSocioFromRows()"></div>
+            <div x-effect="syncSocioFromRows()"></div>
 
         <template x-for="(row, idx) in rows" :key="idx">
             <div class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 space-y-3 dark:border-slate-600 dark:bg-slate-900/30">
@@ -401,8 +404,9 @@
                 </div>
             </div>
         </template>
-        <button type="button" @click="addRow()" class="v-btn-compact v-btn-compact--blue text-sm">
-            + {{ __('Adicionar morador') }}
-        </button>
+            <button type="button" @click="addRow()" class="v-btn-compact v-btn-compact--blue text-sm">
+                + {{ __('Adicionar morador') }}
+            </button>
+        </div>
     </div>
-</fieldset>
+</x-ui.disclosure>

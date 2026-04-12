@@ -18,7 +18,7 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['imovel_caracteristicas'] ?? __('4. Características do imóvel') }}</span>
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['imovel_caracteristicas'] ?? __('5. Características do imóvel') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -82,7 +82,7 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('5. Cadastro físico') }}</span>
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('6. Cadastro físico') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -150,7 +150,7 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['infraestrutura'] ?? __('6. Infraestrutura e serviços') }}</span>
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['infraestrutura'] ?? __('7. Infraestrutura e serviços') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         @foreach([
@@ -174,7 +174,7 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['terreno'] ?? __('7. Terreno e tempo de residência') }}</span>
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['terreno'] ?? __('8. Terreno e tempo de residência') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -202,7 +202,7 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['historico'] ?? __('8. Histórico da posse') }}</span>
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['historico'] ?? __('9. Histórico da posse') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
