@@ -7,10 +7,11 @@
 @section('content')
 <div class="v-page">
   <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Doenças')]]" />
-  <x-page-header :eyebrow="__('Referência epidemiológica')" :title="__('Doenças')" />
-  <p class="text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 pb-4 dark:border-gray-700">
-    Consulte as doenças que você pode registrar nas visitas. Clique em Ver detalhes para mais informações.
-  </p>
+  <x-page-header :eyebrow="__('Referência epidemiológica')" :title="__('Doenças')">
+    <x-slot name="lead">
+      <p>Consulte as doenças que você pode registrar nas visitas. Clique em Ver detalhes para mais informações.</p>
+    </x-slot>
+  </x-page-header>
 
   <x-section-card>
     <div class="flex flex-col sm:flex-row sm:items-end gap-4">
