@@ -95,158 +95,114 @@
 
         @if($socio)
         @php
-            $rendaFam = config('visitaai_municipio.renda_faixa_opcoes', []);
             $t = config('visitaai_socioeconomico.secao_titulos', []);
         @endphp
         <div class="border-t border-slate-200/80 pt-5 dark:border-slate-700/70">
-            <h2 class="v-section-title mb-4">{{ __('Cadastro socioeconômico') }}</h2>
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                <div class="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/70 dark:bg-slate-900/40">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $t['entrevista'] ?? __('Entrevista e domicílio') }}</h3>
-                    <dl class="mt-3 grid grid-cols-1 gap-2 text-sm">
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Data da entrevista') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_data_entrevista?->format('d/m/Y') ?? $na }}</dd>
+            <h2 class="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Cadastro socioeconômico') }}</h2>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {{-- Entrevista --}}
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['entrevista'] ?? 'Entrevista' }}</h4>
+                    <dl class="mt-2 space-y-1.5 text-xs">
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Data') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_data_entrevista?->format('d/m/Y') ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Telefone de contato') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_telefone_contato ?? $na }}</dd>
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Telefone') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_telefone_contato ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Condição da moradia') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('condicao_casa_opcoes', $socio->lse_condicao_casa) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Posição de quem respondeu') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('posicao_entrevistado_opcoes', $socio->lse_posicao_entrevistado) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Nº moradores declarado') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_n_moradores_declarado ?? $na }}</dd>
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Moradores') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_n_moradores_declarado ?? '—' }}</dd>
                         </div>
                     </dl>
                 </div>
 
-                <div class="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/70 dark:bg-slate-900/40">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $t['economia'] ?? __('Economia do grupo familiar') }}</h3>
-                    <dl class="mt-3 grid grid-cols-1 gap-2 text-sm">
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Renda formal/informal') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('renda_formal_informal_opcoes', $socio->lse_renda_formal_informal) }}</dd>
+                {{-- Economia --}}
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['economia'] ?? 'Economia' }}</h4>
+                    <dl class="mt-2 space-y-1.5 text-xs">
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Renda') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::municipioRenda($socio->lse_renda_familiar_faixa) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Renda familiar (faixa)') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::municipioRenda($socio->lse_renda_familiar_faixa) }}</dd>
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Fonte renda') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_principal_fonte_renda ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Principal fonte de renda') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_principal_fonte_renda ?? $na }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Pessoas que contribuem') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_qtd_contribuintes ?? $na }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Benefícios sociais') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_beneficios_sociais ?? $na }}</dd>
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Benefícios') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_beneficios_sociais ?? '—' }}</dd>
                         </div>
                     </dl>
                 </div>
 
-                <div class="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/70 dark:bg-slate-900/40">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $t['imovel_caracteristicas'] ?? __('Características do imóvel') }}</h3>
-                    <dl class="mt-3 grid grid-cols-1 gap-2 text-sm">
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                {{-- Imóvel --}}
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['imovel_caracteristicas'] ?? 'Imóvel' }}</h4>
+                    <dl class="mt-2 space-y-1.5 text-xs">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Uso') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('uso_imovel_socio_opcoes', $socio->lse_uso_imovel) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('uso_imovel_socio_opcoes', $socio->lse_uso_imovel) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Posse') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Material') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('material_predominante_opcoes', $socio->lse_material_predominante) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Condição') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('condicao_edificacao_opcoes', $socio->lse_condicao_edificacao) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Cômodos / quartos / banheiros') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ ($socio->lse_num_comodos ?? $na) }} / {{ ($socio->lse_num_quartos ?? $na) }} / {{ ($socio->lse_num_banheiros ?? $na) }}</dd>
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Cômodos') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_num_comodos ?? '—' }}</dd>
                         </div>
                     </dl>
                 </div>
 
-                <div class="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/70 dark:bg-slate-900/40">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $t['infraestrutura'] ?? __('Infraestrutura') }}</h3>
-                    <dl class="mt-3 grid grid-cols-1 gap-2 text-sm">
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                {{-- Infraestrutura --}}
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['infraestrutura'] ?? 'Infraestrutura' }}</h4>
+                    <dl class="mt-2 space-y-1.5 text-xs">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Água') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('infra_sim_nao_redes_opcoes', $socio->lse_abastecimento_agua) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('infra_sim_nao_redes_opcoes', $socio->lse_abastecimento_agua) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Energia') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('infra_energia_opcoes', $socio->lse_energia_eletrica) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('infra_energia_opcoes', $socio->lse_energia_eletrica) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Esgoto') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('infra_esgoto_opcoes', $socio->lse_esgoto) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Lixo') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('infra_lixo_opcoes', $socio->lse_coleta_lixo) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Pavimentação') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('infra_pavimentacao_opcoes', $socio->lse_pavimentacao) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('infra_esgoto_opcoes', $socio->lse_esgoto) ?? '—' }}</dd>
                         </div>
                     </dl>
                 </div>
 
-                <div class="rounded-xl border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-700/70 dark:bg-slate-900/40 lg:col-span-2">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $t['historico'] ?? __('Histórico da posse') }}</h3>
-                    <dl class="mt-3 grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                {{-- Histórico compacto --}}
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40 sm:col-span-2 lg:col-span-2">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['historico'] ?? 'Histórico' }}</h4>
+                    <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-3">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Data ocupação') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_data_ocupacao?->format('d/m/Y') ?? $na }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_data_ocupacao?->format('d/m/Y') ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('IPTU') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_paga_iptu) }}{{ $socio->lse_iptu_desde ? ', '.$socio->lse_iptu_desde : '' }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_paga_iptu) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Compra e venda') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_houve_compra_venda) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Escritura') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('escritura_opcoes', $socio->lse_escritura) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('escritura_opcoes', $socio->lse_escritura) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Compra e venda') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_houve_compra_venda) ?? '—' }}</dd>
+                        </div>
+                        <div class="flex justify-between gap-2">
                             <dt class="text-slate-500 dark:text-slate-400">{{ __('Promessa compra') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_contrato_promessa) }}</dd>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_contrato_promessa) ?? '—' }}</dd>
                         </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Documento quitado') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_documento_quitado) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Sabe local vendedor') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_sabe_local_vendedor) }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Proprietário anterior') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_proprietario_anterior_nome ?? $na }}{{ $socio->lse_proprietario_anterior_doc ? ' ('.$socio->lse_proprietario_anterior_doc.')' : '' }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 border-b border-slate-200/70 pb-2 dark:border-slate-700/70 md:col-span-2">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Situação legal (obs.)') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_situacao_legal_obs ?? $na }}</dd>
-                        </div>
-                        <div class="flex items-start justify-between gap-3 md:col-span-2">
-                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Local e data (texto)') }}</dt>
-                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_local_data_assinatura ?? $na }}</dd>
+                        <div class="flex justify-between gap-2">
+                            <dt class="text-slate-500 dark:text-slate-400">{{ __('Quitado') }}</dt>
+                            <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_documento_quitado) ?? '—' }}</dd>
                         </div>
                     </dl>
                 </div>
