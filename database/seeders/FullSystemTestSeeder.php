@@ -138,24 +138,28 @@ class FullSystemTestSeeder extends Seeder
     private function ensureLocais($faker, int $target)
     {
         $existing = Local::query()->count();
-        $base = Local::query()->first();
+        $baseLat = -28.8353;
+        $baseLng = -52.5081;
 
-        $cidade = $base?->loc_cidade ?: 'Soledade';
-        $estado = $base?->loc_estado ?: 'RS';
-        $pais = $base?->loc_pais ?: 'Brasil';
-        $baseLat = (float) ($base?->loc_latitude ?: -28.8353);
-        $baseLng = (float) ($base?->loc_longitude ?: -52.5081);
-
-        $bairros = [
-            'Centro', 'Farroupilha', 'Botucarai', 'Missões', 'Expedicionário', 'Fontes', 'Ipiranga', 'Nova Soledade',
+        $enderecosSoledade = [
+            ['rua' => 'Rua Venancio Aires', 'bairro' => 'Centro', 'cep' => '99300-000'],
+            ['rua' => 'Rua 7 de Setembro', 'bairro' => 'Farroupilha', 'cep' => '99300-000'],
+            ['rua' => 'Avenida Marechal Floriano Peixoto', 'bairro' => 'Botucarai', 'cep' => '99300-000'],
+            ['rua' => 'Rua General Osorio', 'bairro' => 'Centro', 'cep' => '99300-000'],
+            ['rua' => 'Rua Bento Goncalves', 'bairro' => 'Expedicionario', 'cep' => '99300-000'],
+            ['rua' => 'Rua Coronel Falcon', 'bairro' => 'Missoes', 'cep' => '99300-000'],
+            ['rua' => 'Rua Benjamin Constant', 'bairro' => 'Ipiranga', 'cep' => '99300-000'],
+            ['rua' => 'Rua Mauricio Cardoso', 'bairro' => 'Fontes', 'cep' => '99300-000'],
+            ['rua' => 'Rua Pinheiro Machado', 'bairro' => 'Centro', 'cep' => '99300-000'],
+            ['rua' => 'Rua Julio de Castilhos', 'bairro' => 'Botucarai', 'cep' => '99300-000'],
         ];
 
         for ($i = $existing; $i < $target; $i++) {
             $codigoUnico = $this->nextCodigoUnico();
-            $bairro = $bairros[array_rand($bairros)];
+            $end = $enderecosSoledade[array_rand($enderecosSoledade)];
 
             Local::query()->create([
-                'loc_cep' => '99300-000',
+                'loc_cep' => $end['cep'],
                 'loc_tipo' => ['R', 'C', 'T'][array_rand(['R', 'C', 'T'])],
                 'loc_zona' => ['U', 'R'][array_rand(['U', 'R'])],
                 'loc_quarteirao' => (string) random_int(1, 35),
@@ -164,12 +168,12 @@ class FullSystemTestSeeder extends Seeder
                 'loc_sequencia' => random_int(1, 20),
                 'loc_lado' => random_int(1, 4),
                 'loc_codigo' => str_pad((string) random_int(1, 999), 5, '0', STR_PAD_LEFT),
-                'loc_endereco' => $faker->streetName(),
+                'loc_endereco' => $end['rua'],
                 'loc_numero' => random_int(1, 2500),
-                'loc_bairro' => $bairro,
-                'loc_cidade' => $cidade,
-                'loc_estado' => $estado,
-                'loc_pais' => $pais,
+                'loc_bairro' => $end['bairro'],
+                'loc_cidade' => 'Soledade',
+                'loc_estado' => 'RS',
+                'loc_pais' => 'Brasil',
                 'loc_latitude' => number_format($baseLat + mt_rand(-700, 700) / 10000, 7, '.', ''),
                 'loc_longitude' => number_format($baseLng + mt_rand(-700, 700) / 10000, 7, '.', ''),
                 'loc_codigo_unico' => $codigoUnico,
