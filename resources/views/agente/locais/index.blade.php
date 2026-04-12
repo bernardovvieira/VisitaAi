@@ -6,11 +6,22 @@
 @section('content')
 <div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
-    <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')">
-        <x-slot name="lead">
-            <p>{{ __('Locais usados na operação de campo. Consulte endereço, código único e coordenadas.') }}</p>
-        </x-slot>
-    </x-page-header>
+
+    <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <x-page-header class="min-w-0 flex-1" :eyebrow="__('Cadastro territorial')" :title="__('Locais')">
+            <x-slot name="lead">
+                <p>{{ __('Locais usados na operação de campo. Consulte endereço, código único e coordenadas.') }}</p>
+            </x-slot>
+        </x-page-header>
+
+        <div class="flex shrink-0 justify-end lg:pt-1">
+            <a href="{{ route('agente.locais.create') }}"
+               class="v-btn-compact v-btn-compact--blue">
+                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Novo local') }}
+            </a>
+        </div>
+    </div>
 
     <x-flash-alerts>
         <x-slot name="afterSuccess">
@@ -47,11 +58,6 @@
                         <span id="search-loading-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
                     </div>
                 </div>
-                <a href="{{ route('agente.locais.create') }}"
-                   class="v-btn-compact v-btn-compact--blue shrink-0 self-start lg:self-auto">
-                    <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                    {{ __('Novo local') }}
-                </a>
             </div>
         </div>
         <div class="v-table-meta">

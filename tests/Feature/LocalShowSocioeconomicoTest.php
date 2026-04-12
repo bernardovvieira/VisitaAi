@@ -77,4 +77,69 @@ class LocalShowSocioeconomicoTest extends TestCase
             ->assertSeeText('Rua Venancio Aires', false)
             ->assertSeeText('2025', false);
     }
+
+    #[Test]
+    public function agente_ve_dados_socioeconomicos_na_tela_do_local(): void
+    {
+        $agente = User::factory()->create([
+            'use_perfil' => 'agente_endemias',
+            'use_aprovado' => 1,
+        ]);
+
+        $local = Local::factory()->create([
+            'loc_codigo_unico' => '87654322',
+            'loc_endereco' => 'Rua Venancio Aires',
+            'loc_numero' => '947',
+            'loc_bairro' => 'Centro',
+            'loc_cidade' => 'Soledade',
+            'loc_estado' => 'RS',
+        ]);
+
+        LocalSocioeconomico::create([
+            'fk_local_id' => $local->loc_id,
+            'lse_data_entrevista' => '2025-04-01',
+            'lse_principal_fonte_renda' => 'Aposentadoria',
+            'lse_beneficios_sociais' => 'Bolsa Família',
+            'lse_renda_familiar_faixa' => 'ate_2_sm',
+            'lse_uso_imovel' => 'residencial',
+            'lse_situacao_posse' => 'proprio',
+            'lse_abastecimento_agua' => 'rede_publica',
+            'lse_energia_eletrica' => 'sim',
+            'lse_esgoto' => 'rede_publica',
+            'lse_data_ocupacao' => '2018-01-10',
+            'lse_escritura' => 'sim',
+        ]);
+
+        $response = $this->actingAs($agente)->get(route('agente.locais.show', $local));
+
+        $response->assertOk()
+            ->assertSeeText('Cadastro socioeconômico', false)
+            ->assertSeeText('Aposentadoria', false)
+            ->assertSeeText('Bolsa Família', false)
+            ->assertSeeText('Rua Venancio Aires', false);
+    }
+
+    #[Test]
+    public function local_sem_ficha_mostra_estado_vazio_socioeconomico(): void
+    {
+        $gestor = User::factory()->create([
+            'use_perfil' => 'gestor',
+            'use_aprovado' => 1,
+        ]);
+
+        $local = Local::factory()->create([
+            'loc_codigo_unico' => '87654323',
+            'loc_endereco' => 'Rua Venancio Aires',
+            'loc_numero' => '947',
+            'loc_bairro' => 'Centro',
+            'loc_cidade' => 'Soledade',
+            'loc_estado' => 'RS',
+        ]);
+
+        $response = $this->actingAs($gestor)->get(route('gestor.locais.show', $local));
+
+        $response->assertOk()
+            ->assertSeeText('Cadastro socioeconômico', false)
+            ->assertSeeText('Nenhum cadastro socioeconômico foi informado para este imóvel.', false);
+    }
 }

@@ -93,12 +93,16 @@
             </dl>
         </div>
 
-        @if($socio)
         @php
             $t = config('visitaai_socioeconomico.secao_titulos', []);
         @endphp
         <div class="border-t border-slate-200/80 pt-5 dark:border-slate-700/70">
             <h2 class="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{{ __('Cadastro socioeconômico') }}</h2>
+            @if(! $socio)
+                <div class="rounded-lg border border-dashed border-slate-200/80 bg-slate-50/70 p-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
+                    {{ __('Nenhum cadastro socioeconômico foi informado para este imóvel.') }}
+                </div>
+            @else
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {{-- Entrevista --}}
                 <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
@@ -207,8 +211,8 @@
                     </dl>
                 </div>
             </div>
+            @endif
         </div>
-        @endif
 
         <aside class="space-y-3 xl:col-span-1">
             <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Localização no mapa') }}</h3>
