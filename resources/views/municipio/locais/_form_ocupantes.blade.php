@@ -356,15 +356,29 @@
                             <label class="v-toolbar-label">{{ __('RG: expedição') }}</label>
                             <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_rg_expedicao]'" x-model="row.mor_rg_expedicao" class="v-input mt-1 w-full">
                         </div>
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-2" x-data="{
+                            fileName: row.mor_documento_pessoal_nome || '',
+                            openPicker() { this.$refs.documentoPessoal.click(); },
+                            updateName(event) { this.fileName = event.target.files && event.target.files.length ? event.target.files[0].name : ''; }
+                        }">
                             <label class="v-toolbar-label">{{ __('Documento pessoal') }}</label>
                             <input type="file"
+                                   x-ref="documentoPessoal"
                                    x-bind:name="'ocupantes[' + idx + '][mor_documento_pessoal]'"
                                    accept="image/*,application/pdf"
                                    capture="environment"
-                                   class="v-input mt-1 w-full bg-white dark:bg-slate-800">
+                                   class="sr-only"
+                                   @change="updateName($event)">
+                            <div class="mt-1 flex flex-wrap items-center gap-3">
+                                <button type="button"
+                                        @click="openPicker()"
+                                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                    {{ __('Selecionar arquivo ou tirar foto') }}
+                                </button>
+                                <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileName || '{{ __('Nenhum arquivo selecionado') }}'"></span>
+                            </div>
                             <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('PDF, JPG, PNG, WEBP, HEIC. Limite: 10 MB.') }}</p>
-                            <template x-if="row.mor_documento_pessoal_path">
+                            <template x-if="row.mor_documento_pessoal_path && !fileName">
                                 <p class="mt-1 text-xs text-slate-600 dark:text-slate-300">
                                     <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
                                     <span x-text="row.mor_documento_pessoal_nome || '{{ __('Documento salvo') }}'"></span>

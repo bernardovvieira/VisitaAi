@@ -156,8 +156,18 @@
                 return $s === '' ? '—' : $s;
             };
 
+            $resumoSocio = [
+                [__('Data'), $socio->lse_data_entrevista?->format('d/m/Y')],
+                [__('Moradores'), $valor($socio->lse_n_moradores_declarado)],
+                [__('Renda'), SE::municipioRenda($socio->lse_renda_familiar_faixa)],
+                [__('Contribuintes'), $valor($socio->lse_qtd_contribuintes)],
+                [__('Titular'), $valor($socio->lse_posicao_entrevistado)],
+                [__('Posse'), SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse)],
+            ];
+
             $secoesSocio = [
                 [
+                    'class' => 'xl:col-span-2',
                     'titulo' => $t['entrevista'] ?? __('1. Entrevista e domicílio'),
                     'itens' => [
                         [__('Data'), $socio->lse_data_entrevista?->format('d/m/Y')],
@@ -168,6 +178,7 @@
                     ],
                 ],
                 [
+                    'class' => 'xl:col-span-2',
                     'titulo' => $t['economia'] ?? __('2. Economia do grupo familiar'),
                     'itens' => [
                         [__('Renda'), SE::municipioRenda($socio->lse_renda_familiar_faixa)],
@@ -249,9 +260,20 @@
             ];
         @endphp
 
+        <div class="rounded-xl border border-slate-200/80 bg-slate-50/60 p-3 dark:border-slate-700/80 dark:bg-slate-900/35">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                @foreach($resumoSocio as [$rotulo, $conteudo])
+                    <div class="rounded-lg border border-white/70 bg-white/90 px-3 py-2 shadow-sm dark:border-slate-700 dark:bg-slate-900/55">
+                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
+                        <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
             @foreach($secoesSocio as $sec)
-                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40 {{ $sec['class'] ?? '' }}">
                     <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $sec['titulo'] }}</h4>
                     <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
                         @foreach($sec['itens'] as [$rotulo, $conteudo])

@@ -22,8 +22,8 @@
             </a>
             <span x-show="online" x-cloak>
                 <a href="{{ route('saude.visitas.sync') }}"
-                   class="v-btn-compact v-btn-compact--amber">
-                    <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0" aria-hidden="true" />
+                   class="v-btn-compact v-btn-compact--amber !text-white">
+                    <x-heroicon-o-arrow-path class="h-4 w-4 shrink-0 text-white" aria-hidden="true" />
                     {{ __('Enviar visitas do dispositivo') }}
                 </a>
             </span>
