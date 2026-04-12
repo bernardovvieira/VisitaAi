@@ -30,9 +30,9 @@
     <x-section-card id="sync-locais-section" class="v-card--muted"
              data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Locais guardados no dispositivo') }}</h2>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Ao usar :btn na tela de cadastro de local, os itens aparecem aqui para envio.', ['btn' => __('Guardar local')]) }}</p>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">{{ __('Carregando…') }}</p>
         <div id="sync-locais-list" class="space-y-2 mt-4"></div>
+        <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">{{ __('Ao usar Guardar local na tela de cadastro de local, os itens aparecem aqui para envio.') }}</p>
     </x-section-card>
     @endif
 
@@ -51,7 +51,7 @@
             <!-- Preenchido via JS a partir do IndexedDB -->
         </div>
         <p id="sync-empty-hint" class="hidden mt-3 text-sm text-gray-500 dark:text-gray-400">
-            {{ __('Para guardar visitas sem internet, use :btn no formulário de visita. Elas aparecerão nesta lista para envio.', ['btn' => __('Guardar visita')]) }}
+            {{ __('Para guardar visitas sem internet, use Guardar visita no formulário de visita. Elas aparecerão nesta lista para envio.') }}
         </p>
         <p id="sync-offline-warning" class="hidden mt-4 text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 px-3 py-2 rounded">
             {{ __('Você está sem internet. Conecte o dispositivo à internet (Wi-Fi ou dados) para poder enviar as visitas.') }}
