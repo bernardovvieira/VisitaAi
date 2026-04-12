@@ -26,9 +26,11 @@
         <x-slot name="summary">
             <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('Modo offline, CEP e localização (expandir)') }}</span>
         </x-slot>
-        <p><strong>{{ __('Sem internet?') }}</strong> {{ __('Use o botão «Guardar local» para salvar no dispositivo e sincronize depois na aba Sincronizar.') }}</p>
-        <p><strong>{{ __('Nota:') }}</strong> {{ __('Antes de ir a campo, abra esta tela pelo menos uma vez com internet para o sistema guardar a página e funcionar offline.') }}</p>
-        <p>{{ __('Preencha o CEP para completar endereço automaticamente. Use «Minha localização» para coordenadas do dispositivo.') }}</p>
+        <p><strong>{{ __('Sem internet?') }}</strong> {{ __('Use «Guardar local» para salvar no dispositivo e envie depois na tela «Sincronizar».') }}</p>
+        <p><strong>{{ __('Antes de ir a campo:') }}</strong> {{ __('abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
+        <p><strong>{{ __('CEP e endereço:') }}</strong> {{ __('informe o CEP para preencher o endereço automaticamente e revise número/complemento antes de salvar.') }}</p>
+        <p><strong>{{ __('Coordenadas:') }}</strong> {{ __('use «Minha localização» para capturar latitude/longitude do ponto onde você está.') }}</p>
+        <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('Dica: se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}</p>
     </x-ui.disclosure>
 
     <x-section-card class="space-y-4">
@@ -341,6 +343,31 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() { map.invalidateSize(); }, 100);
     };
 
+    function parseCoord(v) {
+        if (typeof v !== 'string' && typeof v !== 'number') return NaN;
+        return parseFloat(String(v).replace(',', '.').trim());
+    }
+    function syncMapFromInputs() {
+        var latEl = document.getElementById('loc_latitude');
+        var lngEl = document.getElementById('loc_longitude');
+        if (!latEl || !lngEl) return;
+        var latN = parseCoord(latEl.value);
+        var lngN = parseCoord(lngEl.value);
+        if (isNaN(latN) || isNaN(lngN)) return;
+        if (latN < -90 || latN > 90 || lngN < -180 || lngN > 180) return;
+        if (typeof window.setMapPosition === 'function') window.setMapPosition(latN, lngN);
+    }
+    var latInput = document.getElementById('loc_latitude');
+    var lngInput = document.getElementById('loc_longitude');
+    if (latInput) {
+        latInput.addEventListener('blur', syncMapFromInputs);
+        latInput.addEventListener('change', syncMapFromInputs);
+    }
+    if (lngInput) {
+        lngInput.addEventListener('blur', syncMapFromInputs);
+        lngInput.addEventListener('change', syncMapFromInputs);
+    }
+
     window.geocodeEndereco = function(callback) {
         var endereco = (document.getElementById('loc_endereco') && document.getElementById('loc_endereco').value) || '';
         var bairro = (document.getElementById('loc_bairro') && document.getElementById('loc_bairro').value) || '';
@@ -358,6 +385,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (callback) callback(true);
             } else { if (callback) callback(false); }
         }).catch(function() { if (callback) callback(false); });
+    };
+
+    window.tryIpGeolocationFallback = function(callback) {
+        var providers = [
+            {
+                url: 'https://ipapi.co/json/',
+                parser: function(data) {
+                    var lat = parseFloat(data && data.latitude);
+                    var lng = parseFloat(data && data.longitude);
+                    if (isNaN(lat) || isNaN(lng)) return null;
+                    return { lat: lat, lng: lng, source: 'ipapi' };
+                }
+            },
+            {
+                url: 'https://ipwho.is/',
+                parser: function(data) {
+                    var lat = parseFloat(data && data.latitude);
+                    var lng = parseFloat(data && data.longitude);
+                    if (isNaN(lat) || isNaN(lng)) return null;
+                    return { lat: lat, lng: lng, source: 'ipwhois' };
+                }
+            }
+        ];
+        var idx = 0;
+        function next() {
+            if (idx >= providers.length) { if (callback) callback(false, null); return; }
+            var p = providers[idx++];
+            fetch(p.url, { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { if (!r.ok) throw new Error('http'); return r.json(); })
+                .then(function(data) {
+                    var pos = p.parser(data);
+                    if (!pos) return next();
+                    if (typeof window.setMapPosition === 'function') window.setMapPosition(pos.lat, pos.lng);
+                    if (callback) callback(true, pos);
+                })
+                .catch(function() { next(); });
+        }
+        next();
     };
 
     function clearCepAddressFields() {
@@ -501,35 +566,95 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function obterMinhaLocalizacao() {
     var btn = document.getElementById('btn-minha-localizacao');
+    var defaultLabel = 'Minha Localização';
     if (btn) { btn.disabled = true; btn.textContent = 'Obtendo...'; }
-    if (!navigator.geolocation) {
-        alert('Geolocalização não é suportada por este navegador. Arraste o marcador no mapa ou preencha latitude e longitude manualmente.');
-        if (btn) { btn.disabled = false; btn.textContent = 'Minha Localização'; }
-        return;
+    function restoreBtn() {
+        if (btn) { btn.disabled = false; btn.textContent = defaultLabel; }
     }
-    function onOk(pos) {
-        if (typeof window.setMapPosition === 'function') window.setMapPosition(pos.coords.latitude, pos.coords.longitude);
-        if (btn) { btn.disabled = false; btn.textContent = 'Minha Localização'; }
-    }
-    function onErr(err, tentarSemPrecisao) {
-        if (err.code === 1 && tentarSemPrecisao) {
-            navigator.geolocation.getCurrentPosition(onOk, function(e2) { onErr(e2, false); }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    function fallbackByAddressOrIp() {
+        if (typeof window.geocodeEndereco === 'function') {
+            window.geocodeEndereco(function(okEndereco) {
+                if (okEndereco) {
+                    restoreBtn();
+                    alert('Não foi possível usar o GPS deste dispositivo. O marcador foi posicionado pelo endereço informado.');
+                    return;
+                }
+                if (typeof window.tryIpGeolocationFallback === 'function') {
+                    window.tryIpGeolocationFallback(function(okIp) {
+                        restoreBtn();
+                        if (okIp) {
+                            alert('GPS indisponível. Usamos uma posição aproximada por rede/IP; confirme o ponto no mapa antes de salvar.');
+                        } else {
+                            alert('Não foi possível capturar sua localização. Verifique permissão de localização no navegador/sistema, informe o CEP ou ajuste o ponto manualmente no mapa.');
+                        }
+                    });
+                    return;
+                }
+                restoreBtn();
+                alert('Não foi possível capturar sua localização. Informe o CEP ou ajuste latitude/longitude manualmente.');
+            });
             return;
         }
-        if (btn) { btn.disabled = false; btn.textContent = 'Minha Localização'; }
-        if (typeof window.geocodeEndereco === 'function') {
-            window.geocodeEndereco(function(ok) {
-                if (ok) alert('Não foi possível usar sua localização. O marcador foi posicionado no endereço informado (CEP).');
-                else {
-                    var msg = 'Não foi possível usar a localização do dispositivo. Informe um CEP (para preencher endereço) ou arraste o marcador no mapa / digite latitude e longitude manualmente.';
-                    alert(msg);
-                }
-            });
-        } else {
-            alert('Não foi possível usar a localização do dispositivo. Arraste o marcador no mapa ou digite latitude e longitude manualmente.');
-        }
+        restoreBtn();
+        alert('Não foi possível capturar sua localização. Ajuste latitude/longitude manualmente.');
     }
-    navigator.geolocation.getCurrentPosition(onOk, function(err) { onErr(err, true); }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+    var isLocalHost = ['localhost', '127.0.0.1', '::1'].indexOf(window.location.hostname) >= 0;
+    var secureOk = window.isSecureContext || isLocalHost;
+    if (!navigator.geolocation || !secureOk) {
+        if (!secureOk) {
+            alert('Seu navegador exige HTTPS para liberar GPS neste dispositivo. Vamos tentar usar endereço ou rede como fallback.');
+            fallbackByAddressOrIp();
+            return;
+        }
+        fallbackByAddressOrIp();
+        return;
+    }
+    var attempts = [
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+        { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 },
+        { enableHighAccuracy: false, timeout: 5000, maximumAge: Infinity }
+    ];
+    function getPosition(opts) {
+        return new Promise(function(resolve, reject) {
+            navigator.geolocation.getCurrentPosition(resolve, reject, opts);
+        });
+    }
+    function runAttempts(i) {
+        if (i >= attempts.length) {
+            fallbackByAddressOrIp();
+            return;
+        }
+        getPosition(attempts[i]).then(function(pos) {
+            var lat = pos && pos.coords ? parseFloat(pos.coords.latitude) : NaN;
+            var lng = pos && pos.coords ? parseFloat(pos.coords.longitude) : NaN;
+            if (isNaN(lat) || isNaN(lng)) {
+                runAttempts(i + 1);
+                return;
+            }
+            if (typeof window.setMapPosition === 'function') window.setMapPosition(lat, lng);
+            restoreBtn();
+        }).catch(function(err) {
+            if (err && err.code === 1) {
+                fallbackByAddressOrIp();
+                return;
+            }
+            runAttempts(i + 1);
+        });
+    }
+
+    if (navigator.permissions && typeof navigator.permissions.query === 'function') {
+        navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+            if (result && result.state === 'denied') {
+                fallbackByAddressOrIp();
+                return;
+            }
+            runAttempts(0);
+        }).catch(function() {
+            runAttempts(0);
+        });
+    } else {
+        runAttempts(0);
+    }
 }
 </script>
 @endsection

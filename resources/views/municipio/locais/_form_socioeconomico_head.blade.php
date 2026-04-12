@@ -18,6 +18,7 @@
 @endphp
 
 <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">{{ config('visitaai_socioeconomico.disclaimer') }}</p>
+<p class="text-xs text-emerald-700 dark:text-emerald-300 mb-4">{{ __('Os campos de moradores, contribuintes, renda e fonte principal são preenchidos automaticamente com base no cadastro individual dos moradores.') }}</p>
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
@@ -30,7 +31,7 @@
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Telefone de contato (domicílio)') }}</label>
-            <input type="text" name="socio[telefone_contato]" value="{{ $sv('telefone_contato') }}" class="v-input mt-1 w-full" maxlength="45">
+            <input type="text" name="socio[telefone_contato]" value="{{ $sv('telefone_contato') }}" class="v-input mt-1 w-full" maxlength="45" data-autofill-from-ocupantes="1">
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Condição da moradia') }}</label>
@@ -42,7 +43,7 @@
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Quem respondeu (posição)') }}</label>
-            <select name="socio[posicao_entrevistado]" class="v-select mt-1 w-full">
+            <select name="socio[posicao_entrevistado]" class="v-select mt-1 w-full" data-autofill-from-ocupantes="1">
                 @foreach(config('visitaai_socioeconomico.posicao_entrevistado_opcoes', []) as $k => $lab)
                     <option value="{{ $k }}" @selected($sv('posicao_entrevistado') === $k)>{{ $lab }}</option>
                 @endforeach
@@ -50,7 +51,7 @@
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de moradores (declarado)') }}</label>
-            <input type="number" name="socio[n_moradores_declarado]" value="{{ $sv('n_moradores_declarado') }}" class="v-input mt-1 w-full" min="0" max="100">
+            <input type="number" name="socio[n_moradores_declarado]" value="{{ $sv('n_moradores_declarado') }}" class="v-input mt-1 w-full" min="0" max="100" data-autofill-from-ocupantes="1">
         </div>
     </div>
 </x-ui.disclosure>
@@ -62,7 +63,7 @@
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Renda formal / informal (domicílio)') }}</label>
-            <select name="socio[renda_formal_informal]" class="v-select mt-1 w-full">
+            <select name="socio[renda_formal_informal]" class="v-select mt-1 w-full" data-autofill-from-ocupantes="1">
                 @foreach(config('visitaai_socioeconomico.renda_formal_informal_opcoes', []) as $k => $lab)
                     <option value="{{ $k }}" @selected($sv('renda_formal_informal') === $k)>{{ $lab }}</option>
                 @endforeach
@@ -70,7 +71,7 @@
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Renda familiar (faixa)') }}</label>
-            <select name="socio[renda_familiar_faixa]" class="v-select mt-1 w-full">
+            <select name="socio[renda_familiar_faixa]" class="v-select mt-1 w-full" data-autofill-from-ocupantes="1">
                 @foreach(config('visitaai_municipio.renda_faixa_opcoes', []) as $k => $lab)
                     <option value="{{ $k }}" @selected($sv('renda_familiar_faixa') === $k)>{{ $lab }}</option>
                 @endforeach
@@ -78,11 +79,11 @@
         </div>
         <div class="sm:col-span-2">
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Principal fonte de renda') }}</label>
-            <textarea name="socio[principal_fonte_renda]" rows="2" class="v-input mt-1 w-full">{{ $sv('principal_fonte_renda') }}</textarea>
+            <textarea name="socio[principal_fonte_renda]" rows="2" class="v-input mt-1 w-full" data-autofill-from-ocupantes="1">{{ $sv('principal_fonte_renda') }}</textarea>
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Quantas pessoas contribuem com a renda') }}</label>
-            <input type="number" name="socio[qtd_contribuintes]" value="{{ $sv('qtd_contribuintes') }}" class="v-input mt-1 w-full" min="0" max="100">
+            <input type="number" name="socio[qtd_contribuintes]" value="{{ $sv('qtd_contribuintes') }}" class="v-input mt-1 w-full" min="0" max="100" data-autofill-from-ocupantes="1">
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Gastos mensais aproximados (faixa)') }}</label>
