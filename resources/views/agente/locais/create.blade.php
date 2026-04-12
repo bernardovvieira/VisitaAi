@@ -238,6 +238,12 @@
                 </div>
             </fieldset>
 
+    </x-section-card>
+
+    <x-section-card class="space-y-4">
+            <h3 class="v-section-title">{{ __('Ficha socioeconômica do imóvel') }}</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Preencha os dados socioeconômicos em etapas. As seções abaixo podem ser abertas conforme necessário.') }}</p>
+
             <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
                 <h3 class="v-section-title">{{ __('Entrevista e economia') }}</h3>
                 @include('municipio.locais._form_socioeconomico_head', ['local' => null])

@@ -233,9 +233,15 @@
             <div x-effect="syncSocioFromRows()"></div>
 
         <template x-for="(row, idx) in rows" :key="idx">
-            <div class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 space-y-3 dark:border-slate-600 dark:bg-slate-900/30">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs font-semibold text-slate-600 dark:text-slate-300" x-text="row.mor_id ? '{{ __('Ocupante') }} #' + row.mor_id : '{{ __('Novo ocupante') }}'"></span>
+            <details class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-600 dark:bg-slate-900/30" x-bind:open="!row.mor_id">
+                <summary class="cursor-pointer list-none font-semibold text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs" x-text="row.mor_id ? '{{ __('Ocupante') }} #' + row.mor_id : '{{ __('Novo ocupante') }}'"></span>
+                        <span class="truncate text-right text-xs font-normal text-slate-500 dark:text-slate-400" x-text="(row.mor_nome && row.mor_nome.trim()) ? row.mor_nome : '{{ __('Sem nome informado') }}'"></span>
+                    </div>
+                </summary>
+                <div class="mt-3 space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
+                <div class="flex justify-end">
                     <button type="button" class="text-xs text-red-600 hover:underline dark:text-red-400" @click="removeRow(idx)" x-show="!row.mor_id && rows.length > 1">{{ __('Remover linha') }}</button>
                 </div>
                 <input type="hidden" x-bind:name="'ocupantes[' + idx + '][mor_id]'" x-bind:value="row.mor_id != null && row.mor_id !== '' ? row.mor_id : ''">
@@ -402,7 +408,8 @@
                     <label class="v-toolbar-label">{{ __('Observações') }}</label>
                     <textarea x-bind:name="'ocupantes[' + idx + '][mor_observacao]'" x-model="row.mor_observacao" rows="2" class="v-input mt-1 w-full"></textarea>
                 </div>
-            </div>
+                </div>
+            </details>
         </template>
             <button type="button" @click="addRow()" class="v-btn-compact v-btn-compact--blue text-sm">
                 + {{ __('Adicionar morador') }}

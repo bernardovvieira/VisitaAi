@@ -147,108 +147,122 @@
             {{ __('Nenhum cadastro socioeconômico foi informado para este imóvel.') }}
         </div>
     @else
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
-                <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['entrevista'] ?? 'Entrevista' }}</h4>
-                <dl class="mt-2 space-y-1.5 text-xs">
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Data') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_data_entrevista?->format('d/m/Y') ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Telefone') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_telefone_contato ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Moradores') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_n_moradores_declarado ?? '—' }}</dd>
-                    </div>
-                </dl>
-            </div>
+        @php
+            $valor = static function ($v) {
+                if ($v === null) {
+                    return '—';
+                }
+                $s = trim((string) $v);
+                return $s === '' ? '—' : $s;
+            };
 
-            <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
-                <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['economia'] ?? 'Economia' }}</h4>
-                <dl class="mt-2 space-y-1.5 text-xs">
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Renda') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::municipioRenda($socio->lse_renda_familiar_faixa) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Fonte renda') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_principal_fonte_renda ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Benefícios') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ $socio->lse_beneficios_sociais ?? '—' }}</dd>
-                    </div>
-                </dl>
-            </div>
+            $secoesSocio = [
+                [
+                    'titulo' => $t['entrevista'] ?? __('1. Entrevista e domicílio'),
+                    'itens' => [
+                        [__('Data'), $socio->lse_data_entrevista?->format('d/m/Y')],
+                        [__('Condição moradia'), SE::opcao('condicao_casa_opcoes', $socio->lse_condicao_casa)],
+                        [__('Telefone'), $socio->lse_telefone_contato],
+                        [__('Posição entrevistado'), $socio->lse_posicao_entrevistado],
+                        [__('Moradores'), $socio->lse_n_moradores_declarado],
+                    ],
+                ],
+                [
+                    'titulo' => $t['economia'] ?? __('2. Economia do grupo familiar'),
+                    'itens' => [
+                        [__('Renda'), SE::municipioRenda($socio->lse_renda_familiar_faixa)],
+                        [__('Renda formal/informal'), SE::opcao('renda_formal_informal_opcoes', $socio->lse_renda_formal_informal)],
+                        [__('Fonte renda'), $socio->lse_principal_fonte_renda],
+                        [__('Contribuintes'), $socio->lse_qtd_contribuintes],
+                        [__('Gastos mensais'), SE::opcao('gastos_mensais_faixa_opcoes', $socio->lse_gastos_mensais_faixa)],
+                        [__('Benefícios'), $socio->lse_beneficios_sociais],
+                    ],
+                ],
+                [
+                    'titulo' => __('3. Proprietário e contato'),
+                    'itens' => [
+                        [__('Nome proprietário'), $socio->lse_proprietario_nome],
+                        [__('Telefone proprietário'), $socio->lse_proprietario_telefone],
+                        [__('Endereço proprietário'), $socio->lse_proprietario_endereco],
+                    ],
+                ],
+                [
+                    'titulo' => $t['imovel_caracteristicas'] ?? __('5. Características do imóvel'),
+                    'itens' => [
+                        [__('Uso'), SE::opcao('uso_imovel_socio_opcoes', $socio->lse_uso_imovel)],
+                        [__('Posse'), SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse)],
+                        [__('Material'), SE::opcao('material_predominante_opcoes', $socio->lse_material_predominante)],
+                        [__('Condição edificação'), SE::opcao('condicao_edificacao_opcoes', $socio->lse_condicao_edificacao)],
+                        [__('Cômodos'), $socio->lse_num_comodos],
+                        [__('Quartos'), $socio->lse_num_quartos],
+                        [__('Área externa'), SE::opcao('area_externa_opcoes', $socio->lse_area_externa)],
+                        [__('Área livre'), $socio->lse_area_livre],
+                        [__('Obs. imóvel'), $socio->lse_observacoes_imovel],
+                    ],
+                ],
+                [
+                    'titulo' => $t['cadastro_fisico'] ?? __('6. Cadastro físico'),
+                    'itens' => [
+                        [__('Tipologia'), SE::opcao('tipologia_opcoes', $socio->lse_tipologia)],
+                        [__('Tipo implantação'), SE::opcao('tipo_implantacao_opcoes', $socio->lse_tipo_implantacao)],
+                        [__('Posição lote'), SE::opcao('posicao_lote_opcoes', $socio->lse_posicao_lote)],
+                        [__('Pavimentos'), $socio->lse_num_pavimentos],
+                        [__('Banheiros dentro'), $socio->lse_banheiro_dentro],
+                        [__('Banheiros fora'), $socio->lse_banheiro_fora],
+                        [__('Banheiro compartilha'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_banheiro_compartilha)],
+                        [__('Acesso imóvel'), SE::opcao('acesso_imovel_opcoes', $socio->lse_acesso_imovel)],
+                        [__('Entrada para'), SE::opcao('entrada_para_opcoes', $socio->lse_entrada_para)],
+                    ],
+                ],
+                [
+                    'titulo' => $t['infraestrutura'] ?? __('7. Infraestrutura e serviços'),
+                    'itens' => [
+                        [__('Água'), SE::opcao('infra_sim_nao_redes_opcoes', $socio->lse_abastecimento_agua)],
+                        [__('Energia'), SE::opcao('infra_energia_opcoes', $socio->lse_energia_eletrica)],
+                        [__('Esgoto'), SE::opcao('infra_esgoto_opcoes', $socio->lse_esgoto)],
+                        [__('Coleta lixo'), SE::opcao('infra_lixo_opcoes', $socio->lse_coleta_lixo)],
+                        [__('Pavimentação'), SE::opcao('infra_pavimentacao_opcoes', $socio->lse_pavimentacao)],
+                    ],
+                ],
+                [
+                    'titulo' => $t['terreno'] ?? __('8. Terreno e tempo de residência'),
+                    'itens' => [
+                        [__('Situação terreno'), SE::opcao('situacao_terreno_opcoes', $socio->lse_situacao_terreno)],
+                        [__('Posse da área'), SE::opcao('posse_area_opcoes', $socio->lse_posse_area)],
+                        [__('Tempo residência'), $socio->lse_tempo_residencia_texto],
+                    ],
+                ],
+                [
+                    'titulo' => $t['historico'] ?? __('9. Histórico da posse'),
+                    'itens' => [
+                        [__('Data ocupação'), $socio->lse_data_ocupacao?->format('d/m/Y')],
+                        [__('IPTU'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_paga_iptu)],
+                        [__('Escritura'), SE::opcao('escritura_opcoes', $socio->lse_escritura)],
+                        [__('Compra e venda'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_houve_compra_venda)],
+                        [__('Promessa compra'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_contrato_promessa)],
+                        [__('Quitado'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_documento_quitado)],
+                        [__('Sabe local vendedor'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_sabe_local_vendedor)],
+                        [__('Forma aquisição'), $socio->lse_forma_aquisicao],
+                        [__('Como ocupou'), $socio->lse_como_ocupou],
+                    ],
+                ],
+            ];
+        @endphp
 
-            <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
-                <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['imovel_caracteristicas'] ?? 'Imóvel' }}</h4>
-                <dl class="mt-2 space-y-1.5 text-xs">
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Uso') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('uso_imovel_socio_opcoes', $socio->lse_uso_imovel) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Posse') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Cômodos') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_num_comodos ?? '—' }}</dd>
-                    </div>
-                </dl>
-            </div>
-
-            <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
-                <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['infraestrutura'] ?? 'Infraestrutura' }}</h4>
-                <dl class="mt-2 space-y-1.5 text-xs">
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Água') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('infra_sim_nao_redes_opcoes', $socio->lse_abastecimento_agua) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Energia') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('infra_energia_opcoes', $socio->lse_energia_eletrica) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Esgoto') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100 truncate">{{ SE::opcao('infra_esgoto_opcoes', $socio->lse_esgoto) ?? '—' }}</dd>
-                    </div>
-                </dl>
-            </div>
-
-            <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40 sm:col-span-2 lg:col-span-2">
-                <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $t['historico'] ?? 'Histórico' }}</h4>
-                <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-3">
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Data ocupação') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ $socio->lse_data_ocupacao?->format('d/m/Y') ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('IPTU') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_paga_iptu) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Escritura') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('escritura_opcoes', $socio->lse_escritura) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Compra e venda') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_houve_compra_venda) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Promessa compra') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_contrato_promessa) ?? '—' }}</dd>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <dt class="text-slate-500 dark:text-slate-400">{{ __('Quitado') }}</dt>
-                        <dd class="text-right text-slate-800 dark:text-slate-100">{{ SE::opcao('sim_nao_curto_opcoes', $socio->lse_documento_quitado) ?? '—' }}</dd>
-                    </div>
-                </dl>
-            </div>
+        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            @foreach($secoesSocio as $sec)
+                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
+                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $sec['titulo'] }}</h4>
+                    <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
+                        @foreach($sec['itens'] as [$rotulo, $conteudo])
+                            <div class="flex items-start justify-between gap-2">
+                                <dt class="text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
+                                <dd class="max-w-[12rem] break-words text-right text-slate-800 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                </div>
+            @endforeach
         </div>
     @endif
 </x-section-card>

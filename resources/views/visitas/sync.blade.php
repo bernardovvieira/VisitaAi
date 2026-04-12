@@ -8,32 +8,29 @@
     @include('visitas.partials._sync-js-strings')
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Sincronizar')]]" />
     <x-page-header :eyebrow="__('Dispositivo')" :title="__('Sincronizar')">
+        <x-slot name="actions">
+            <div id="sync-actions" class="hidden flex flex-wrap items-center gap-3">
+                <button type="button" id="sync-btn"
+                        class="v-btn-compact v-btn-compact--blue">
+                    {{ __('Enviar todas agora') }}
+                </button>
+                <button type="button" id="sync-clear-btn"
+                        class="v-btn-compact v-btn-compact--red">
+                    {{ __('Apagar todas do dispositivo') }}
+                </button>
+                <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
+            </div>
+        </x-slot>
         <x-slot name="lead">
             <p>{{ __('Envie locais e visitas guardados no aparelho quando voltar a ter conexão.') }}</p>
         </x-slot>
     </x-page-header>
 
-    <x-section-card class="v-card--muted border border-slate-200/80 dark:border-slate-700/80">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Enviar dados guardados no dispositivo') }}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">{{ __('Envie locais e visitas guardados no dispositivo. O sistema envia primeiro os locais e depois as visitas.') }}</p>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Ao usar :btn na tela de registrar visita, os itens aparecem aqui para envio.', ['btn' => __('Guardar visita')]) }}</p>
-        <div id="sync-actions" class="hidden flex flex-wrap gap-3 items-center mt-4">
-            <button type="button" id="sync-btn"
-                    class="v-btn-compact v-btn-compact--blue">
-                {{ __('Enviar todas agora') }}
-            </button>
-            <button type="button" id="sync-clear-btn"
-                    class="v-btn-compact v-btn-compact--red">
-                {{ __('Apagar todas do dispositivo') }}
-            </button>
-            <span class="text-sm text-gray-500 dark:text-gray-400" id="sync-result"></span>
-        </div>
-    </x-section-card>
-
     @if(!empty($locaisSyncSubmitUrl))
     <x-section-card id="sync-locais-section" class="v-card--muted"
              data-sync-url="{{ $locaisSyncSubmitUrl }}" data-index-url="{{ $locaisIndexRoute ?? $visitasIndexRoute }}">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ __('Locais guardados no dispositivo') }}</h2>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Ao usar :btn na tela de cadastro de local, os itens aparecem aqui para envio.', ['btn' => __('Guardar local')]) }}</p>
         <p class="mt-2 text-gray-600 dark:text-gray-400" id="sync-locais-status">{{ __('Carregando…') }}</p>
         <div id="sync-locais-list" class="space-y-2 mt-4"></div>
     </x-section-card>
