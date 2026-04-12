@@ -80,6 +80,7 @@
     </div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>.leaflet-marker-icon.custom-pin { background: none !important; border: none !important; }</style>
     <section class="space-y-3" aria-labelledby="ind-sec-mapa-locais">
         <h2 id="ind-sec-mapa-locais" class="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">
             {{ __('Mapa de locais cadastrados') }}
@@ -388,11 +389,13 @@
             scrollWheelZoom: true,
         }).setView(fallbackCenter, 4);
 
-        // Garantir ícones padrão do Leaflet mesmo quando o CSS não resolve assets locais.
-        L.Icon.Default.mergeOptions({
-            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+        var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40" aria-hidden="true"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
+        var localPinIcon = L.divIcon({
+            className: 'custom-pin',
+            html: pinSvg,
+            iconSize: [28, 40],
+            iconAnchor: [14, 40],
+            popupAnchor: [0, -40]
         });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -413,7 +416,7 @@
             }
 
             bounds.push([lat, lng]);
-            var marker = L.marker([lat, lng]).addTo(map);
+            var marker = L.marker([lat, lng], { icon: localPinIcon }).addTo(map);
 
             var codigo = ponto.loc_codigo_unico ? ('#' + ponto.loc_codigo_unico) : '#'+ ponto.loc_id;
             var numero = ponto.loc_numero ? (', ' + ponto.loc_numero) : '';
