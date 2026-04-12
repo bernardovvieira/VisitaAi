@@ -34,30 +34,23 @@
             </div>
 
             <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Antes de ir a campo') }}</p>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    {{ __('Abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}
-                </p>
-            </div>
-
-            <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
                 <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('CEP e endereço') }}</p>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    {{ __('Informe o CEP para preencher o endereço automaticamente e revise número e complemento antes de salvar.') }}
+                    {{ __('O CEP preenche o endereço automaticamente. Revise número e complemento antes de salvar.') }}
                 </p>
             </div>
 
             <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
                 <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Coordenadas') }}</p>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    {{ __('Use o botão :botao para capturar latitude e longitude do ponto onde você está.', ['botao' => __('Minha localização')]) }}
+                    {{ __('Use :botao para capturar a posição atual.', ['botao' => __('Minha localização')]) }}
                 </p>
             </div>
         </div>
 
         <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
             <span class="font-semibold">{{ __('Dica:') }}</span>
-            {{ __('Se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}
+            {{ __('Se o sinal estiver instável, guarde localmente e sincronize depois.') }}
         </div>
     </x-section-card>
 
@@ -102,7 +95,7 @@
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Endereço Completo</legend>
+                <legend class="v-section-title mb-2">Endereço</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div id="wrap_loc_cep">
                         <label for="loc_cep" class="v-toolbar-label">CEP <span class="text-red-500">*</span></label>
@@ -141,12 +134,12 @@
                 <input id="loc_estado" name="loc_estado" type="hidden" required value="{{ old('loc_estado', $local->loc_estado ?? '') }}">
                 <input id="loc_pais" name="loc_pais" type="hidden" required value="{{ old('loc_pais', $local->loc_pais ?? '') }}">
                 <p class="text-sm text-gray-600 dark:text-gray-400 italic">
-                    Cidade, estado e pais sao definidos automaticamente pelo CEP e nao sao editados manualmente nesta tela.
+                    Cidade, estado e país são definidos automaticamente pelo CEP.
                 </p>
             </fieldset>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Informações Complementares</legend>
+                <legend class="v-section-title mb-2">Complementos</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="loc_codigo" class="v-toolbar-label">Código da Localidade <span class="text-red-500">*</span></label>
@@ -211,19 +204,19 @@
             </fieldset>
 
             <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                <h3 class="v-section-title">{{ __('Ficha socioeconômica: entrevista e economia') }}</h3>
+                <h3 class="v-section-title">{{ __('Entrevista e economia') }}</h3>
                 @include('municipio.locais._form_socioeconomico_head', ['local' => $local])
             </div>
 
             @include('municipio.locais._form_ocupantes', ['local' => $local])
 
             <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                <h3 class="v-section-title">{{ __('Ficha socioeconômica: imóvel, infraestrutura e posse') }}</h3>
+                <h3 class="v-section-title">{{ __('Imóvel, infraestrutura e posse') }}</h3>
                 @include('municipio.locais._form_socioeconomico_tail', ['local' => $local])
             </div>
 
             <x-section-card class="v-card--muted space-y-1">
-                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Dados automáticos do imóvel') }}</h3>
+                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Dados automáticos') }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     {{ __('Código único') }}: <span class="font-mono font-semibold text-gray-800 dark:text-gray-200">{{ $local->loc_codigo_unico }}</span>
                 </p>
@@ -256,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var cepPermitidoNorm = cepPermitido ? cepPermitido.replace(/\D/g, '') : '';
     var cidadeEstadoRaw = (cepInput && cepInput.getAttribute('data-cidade-estado')) || '';
     var cidadeEstado = cidadeEstadoRaw ? (function() { try { return JSON.parse(cidadeEstadoRaw); } catch(e) { return null; } })() : null;
-    var cepsCadastrados = @json($cepsCadastrados ?? []);
+    var cepsCadastrados = <?php echo json_encode($cepsCadastrados ?? []); ?>;
     function normStr(s) { if (!s || typeof s !== 'string') return ''; return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim(); }
     var cepValidouMunicipio = false;
     function getCepFromCadastrados(cepNorm) {

@@ -16,13 +16,34 @@
 <div class="v-dash">
     <x-breadcrumbs :items="[['label' => __('Página Inicial')]]" />
 
-    <header class="v-dash-header">
-        <div class="v-dash-header-text">
-            <p class="v-dash-eyebrow">{{ __('Operações de campo') }}</p>
-            <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
-            <p class="v-dash-sub">{{ __('Registre visitas, mantenha locais e complete dados complementares do imóvel quando fizer parte do fluxo local; use os atalhos para o que for mais comum.') }}</p>
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <header class="v-dash-header min-w-0 flex-1">
+            <div class="v-dash-header-text">
+                <p class="v-dash-eyebrow">{{ __('Operações de campo') }}</p>
+                <h1 class="v-dash-title">{{ __('Olá, :nome', ['nome' => $primeiroNome]) }}</h1>
+                <p class="v-dash-sub">{{ __('Registre visitas, mantenha locais e complete dados complementares do imóvel quando fizer parte do fluxo local; use os atalhos para o que for mais comum.') }}</p>
+            </div>
+        </header>
+
+        <div class="flex shrink-0 flex-wrap justify-end gap-2 lg:pt-1">
+            <a href="{{ route('agente.visitas.create') }}" class="v-btn-compact v-btn-compact--blue">
+                <x-heroicon-o-plus-circle class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Registrar visita') }}
+            </a>
+            <a href="{{ route('agente.visitas.index') }}" class="v-btn-compact v-btn-compact--slate">
+                <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Minhas visitas') }}
+            </a>
+            <a href="{{ route('agente.locais.index') }}" class="v-btn-compact v-btn-compact--slate">
+                <x-heroicon-o-map-pin class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Locais') }}
+            </a>
+            <a href="{{ route('agente.doencas.index') }}" class="v-btn-compact v-btn-compact--slate">
+                <x-heroicon-o-beaker class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {{ __('Doenças monitoradas') }}
+            </a>
         </div>
-    </header>
+    </div>
 
     <section class="v-dash-card" aria-labelledby="agente-resumo-heading">
         <h2 id="agente-resumo-heading" class="v-dash-card__title">{{ __('Resumo') }}</h2>
@@ -48,44 +69,8 @@
         </div>
     </section>
 
-    <div class="v-dash-card">
-        <p class="m-0 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-            {{ __('As visitas podem ser preenchidas offline e enviadas depois pela sincronização.') }}
-        </p>
-    </div>
-
-    <section class="v-dash-card" aria-labelledby="agente-atalhos-heading">
-        <h2 id="agente-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
-        <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
-            <a href="{{ route('agente.visitas.create') }}" class="v-dash-shortcut v-dash-shortcut--primary">
-                <x-heroicon-o-plus-circle class="v-dash-shortcut__icon" aria-hidden="true" />
-                <span class="v-dash-shortcut__body">
-                    <span class="v-dash-shortcut__label">{{ __('Registrar visita') }}</span>
-                </span>
-                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-            </a>
-            <a href="{{ route('agente.visitas.index') }}" class="v-dash-shortcut">
-                <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon" aria-hidden="true" />
-                <span class="v-dash-shortcut__body">
-                    <span class="v-dash-shortcut__label">{{ __('Minhas visitas') }}</span>
-                </span>
-                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-            </a>
-            <a href="{{ route('agente.locais.index') }}" class="v-dash-shortcut">
-                <x-heroicon-o-map-pin class="v-dash-shortcut__icon" aria-hidden="true" />
-                <span class="v-dash-shortcut__body">
-                    <span class="v-dash-shortcut__label">{{ __('Locais') }}</span>
-                </span>
-                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-            </a>
-            <a href="{{ route('agente.doencas.index') }}" class="v-dash-shortcut">
-                <x-heroicon-o-beaker class="v-dash-shortcut__icon" aria-hidden="true" />
-                <span class="v-dash-shortcut__body">
-                    <span class="v-dash-shortcut__label">{{ __('Doenças monitoradas') }}</span>
-                </span>
-                <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
-            </a>
-        </div>
-    </section>
+    <p class="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+        {{ __('As visitas podem ser preenchidas offline e enviadas depois pela sincronização.') }}
+    </p>
 </div>
 @endsection

@@ -22,7 +22,7 @@
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Uso do imóvel (ficha)') }}</label>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Uso do imóvel') }}</label>
             <select name="socio[uso_imovel]" class="v-select mt-1 w-full">
                 @foreach(config('visitaai_socioeconomico.uso_imovel_socio_opcoes', []) as $k => $lab)
                     <option value="{{ $k }}" @selected($sv('uso_imovel') === $k)>{{ $lab }}</option>

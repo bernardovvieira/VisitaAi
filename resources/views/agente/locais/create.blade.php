@@ -46,30 +46,23 @@
             </div>
 
             <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Antes de ir a campo') }}</p>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    {{ __('Abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}
-                </p>
-            </div>
-
-            <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
                 <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('CEP e endereço') }}</p>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    {{ __('Informe o CEP para preencher o endereço automaticamente e revise número e complemento antes de salvar.') }}
+                    {{ __('O CEP preenche o endereço automaticamente. Revise número e complemento antes de salvar.') }}
                 </p>
             </div>
 
             <div class="rounded-lg border border-slate-200/80 bg-white/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
                 <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ __('Coordenadas') }}</p>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    {{ __('Use o botão :botao para capturar latitude e longitude do ponto onde você está.', ['botao' => __('Minha localização')]) }}
+                    {{ __('Use :botao para capturar a posição atual.', ['botao' => __('Minha localização')]) }}
                 </p>
             </div>
         </div>
 
         <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
             <span class="font-semibold">{{ __('Dica:') }}</span>
-            {{ __('Se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}
+            {{ __('Se o sinal estiver instável, guarde localmente e sincronize depois.') }}
         </div>
     </x-section-card>
 
@@ -173,11 +166,11 @@
             </fieldset>
 
             <p class="text-sm text-gray-600 dark:text-gray-400 italic">
-                Os campos <strong>cidade</strong>, <strong>estado</strong> e <strong>país</strong> serão preenchidos automaticamente após digitar um CEP válido.
+                Cidade, estado e país serão preenchidos automaticamente com um CEP válido.
             </p>
 
             <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Informações Complementares</legend>
+                <legend class="v-section-title mb-2">Complementos</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="loc_codigo" class="v-toolbar-label">Código da Localidade <span class="text-red-500">*</span></label>
@@ -209,7 +202,7 @@
                     </div>  
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 italic">
-                    Os campos <strong>quarteirão</strong>, <strong>sequência</strong> e <strong>lado</strong> são utilizados para identificar a localização exata do imóvel.    
+                    Quarteirão, sequência e lado ajudam a localizar o imóvel com precisão.
                 </p>
             </fieldset>
 
@@ -246,14 +239,14 @@
             </fieldset>
 
             <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                <h3 class="v-section-title">{{ __('Ficha socioeconômica: entrevista e economia') }}</h3>
+                <h3 class="v-section-title">{{ __('Entrevista e economia') }}</h3>
                 @include('municipio.locais._form_socioeconomico_head', ['local' => null])
             </div>
 
             @include('municipio.locais._form_ocupantes')
 
             <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                <h3 class="v-section-title">{{ __('Ficha socioeconômica: imóvel, infraestrutura e posse') }}</h3>
+                <h3 class="v-section-title">{{ __('Imóvel, infraestrutura e posse') }}</h3>
                 @include('municipio.locais._form_socioeconomico_tail', ['local' => null])
             </div>
 
@@ -283,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var cepPermitidoNorm = cepPermitido ? cepPermitido.replace(/\D/g, '') : '';
     var cidadeEstadoRaw = (cepInput && cepInput.getAttribute('data-cidade-estado')) || '';
     var cidadeEstado = cidadeEstadoRaw ? (function() { try { return JSON.parse(cidadeEstadoRaw); } catch(e) { return null; } })() : null;
-    var cepsCadastrados = @json($cepsCadastrados ?? []);
+    var cepsCadastrados = <?php echo json_encode($cepsCadastrados ?? []); ?>;
     var cepValidouMunicipio = false;
     function getCepFromCadastrados(cepNorm) {
         if (!cepsCadastrados || !cepsCadastrados.length) return null;
@@ -330,7 +323,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var btn = document.getElementById('btn-cadastrar-local');
             if (btn) btn.disabled = true;
             window.VisitaOfflineSaveLocalDraft('agente', payload).then(function() {
-                setTimeout(function() { window.location.replace('{{ route('agente.locais.index') }}?guardada=1'); }, 100);
+                var indexUrl = <?php echo json_encode(route('agente.locais.index')); ?>;
+                setTimeout(function() { window.location.replace(indexUrl + '?guardada=1'); }, 100);
             }).catch(function() { if (btn) btn.disabled = false; });
             return false;
         }

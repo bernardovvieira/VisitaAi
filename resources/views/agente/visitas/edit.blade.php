@@ -102,19 +102,24 @@
                     <input type="hidden" name="fk_local_id" :value="selectedId">
 
                     <div class="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-600" x-show="selectedId" x-cloak>
-                        <p class="v-section-title text-sm">{{ __('Ocupantes (nesta visita)') }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Um campo por ocupante cadastrado no imóvel.') }}</p>
+                        <p class="v-section-title text-sm">{{ __('Ocupantes desta visita') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Abra apenas o ocupante que precisar observar.') }}</p>
                         <template x-for="m in ((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || []" :key="m.mor_id">
-                            <div>
-                                <label class="v-toolbar-label" x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></label>
-                                <textarea
-                                    class="v-input mt-1"
-                                    rows="2"
-                                    x-bind:name="'morador_obs[' + m.mor_id + ']'"
-                                    x-init="$el.value = (oldMoradorObs[String(m.mor_id)] ?? oldMoradorObs[m.mor_id] ?? '')"
-                                    placeholder="{{ __('Informações sobre este ocupante nesta visita') }}"
-                                ></textarea>
-                            </div>
+                            <details class="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+                                <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-sm font-medium text-gray-800 dark:text-gray-100 [&::-webkit-details-marker]:hidden">
+                                    <span x-text="(m.mor_nome && m.mor_nome.trim()) ? m.mor_nome : ('{{ __('Ocupante') }} #' + m.mor_id)"></span>
+                                    <span class="text-xs font-normal text-gray-500 dark:text-gray-400">{{ __('Abrir observação') }}</span>
+                                </summary>
+                                <div class="border-t border-gray-200 px-3 pb-3 pt-2 dark:border-gray-700">
+                                    <textarea
+                                        class="v-input mt-1"
+                                        rows="2"
+                                        x-bind:name="'morador_obs[' + m.mor_id + ']'"
+                                        x-init="$el.value = (oldMoradorObs[String(m.mor_id)] ?? oldMoradorObs[m.mor_id] ?? '')"
+                                        placeholder="{{ __('Informações sobre este ocupante nesta visita') }}"
+                                    ></textarea>
+                                </div>
+                            </details>
                         </template>
                         <p class="text-xs text-gray-500 dark:text-gray-400" x-show="selectedId && (!((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores) || !((locais.find(l => Number(l.loc_id) === Number(selectedId)) || {}).moradores).length)">
                             {{ __('Nenhum ocupante cadastrado para este imóvel.') }}
@@ -197,8 +202,8 @@
                         class="mr-2 text-blue-600 dark:text-blue-400">
                     <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">{{ __('Houve coleta de amostra?') }}</label>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 pb-4">
-                    {{ __('Se marcado, você poderá informar o número de amostra inicial e final, além da quantidade de tubitos utilizados.') }}
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ __('Se marcado, informe as amostras e a quantidade de tubitos usados.') }}
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -221,11 +226,11 @@
 
             {{-- Tratamentos --}}
             <div x-data="{ exibirTratamentos: {{ old('tratamentos') || ($visita->tratamentos && count($visita->tratamentos)) ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', json_encode($visita->tratamentos ?? [])) }} }" class="space-y-4">
-                <label class="v-toolbar-label">{{ __('Tratamentos realizados') }}</label>
+                <label class="v-toolbar-label">{{ __('Tratamentos') }}</label>
 
                 <template x-if="tratamentos.length === 0">
                     <div class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
-                        {{ __('Nenhum tratamento foi informado. Caso tenha realizado algum, clique no botão abaixo.') }}
+                        {{ __('Nenhum tratamento foi informado. Adicione se necessário.') }}
                         <div class="mt-2">
                             <button type="button"
                                     @click="exibirTratamentos = true; tratamentos.push({trat_forma:'Focal', linha:'1', trat_tipo:'Larvicida', qtd_gramas:null, qtd_depositos_tratados:null, qtd_cargas:null})"
