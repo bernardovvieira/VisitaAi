@@ -58,28 +58,28 @@
         <h2 id="agente-atalhos-heading" class="v-dash-card__title">{{ __('Ações rápidas') }}</h2>
         <div class="v-dash-shortcuts v-dash-shortcuts--tight mt-4">
             <a href="{{ route('agente.visitas.create') }}" class="v-dash-shortcut v-dash-shortcut--primary">
-                <x-heroicon-o-plus-circle class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <x-heroicon-o-plus-circle class="v-dash-shortcut__icon" aria-hidden="true" />
                 <span class="v-dash-shortcut__body">
                     <span class="v-dash-shortcut__label">{{ __('Registrar visita') }}</span>
                 </span>
                 <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
             </a>
             <a href="{{ route('agente.visitas.index') }}" class="v-dash-shortcut">
-                <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <x-heroicon-o-clipboard-document-list class="v-dash-shortcut__icon" aria-hidden="true" />
                 <span class="v-dash-shortcut__body">
                     <span class="v-dash-shortcut__label">{{ __('Minhas visitas') }}</span>
                 </span>
                 <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
             </a>
             <a href="{{ route('agente.locais.index') }}" class="v-dash-shortcut">
-                <x-heroicon-o-map-pin class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <x-heroicon-o-map-pin class="v-dash-shortcut__icon" aria-hidden="true" />
                 <span class="v-dash-shortcut__body">
                     <span class="v-dash-shortcut__label">{{ __('Locais') }}</span>
                 </span>
                 <x-heroicon-o-chevron-right class="v-dash-shortcut__chevron h-4 w-4" aria-hidden="true" />
             </a>
             <a href="{{ route('agente.doencas.index') }}" class="v-dash-shortcut">
-                <x-heroicon-o-beaker class="v-dash-shortcut__icon h-5 w-5" aria-hidden="true" />
+                <x-heroicon-o-beaker class="v-dash-shortcut__icon" aria-hidden="true" />
                 <span class="v-dash-shortcut__body">
                     <span class="v-dash-shortcut__label">{{ __('Doenças monitoradas') }}</span>
                 </span>
