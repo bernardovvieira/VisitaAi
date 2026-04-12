@@ -111,4 +111,43 @@ class ProfileTest extends TestCase
             ->patch(route('profile.update'), $payload)
             ->assertSessionHasErrors('email');
     }
+
+    #[Test]
+    public function user_can_anonymize_own_profile_with_current_password(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->delete(route('profile.destroy'), [
+                'password' => 'password',
+            ])
+            ->assertRedirect('/');
+
+        $this->assertGuest();
+        $this->assertDatabaseHas('users', [
+            'use_id' => $user->use_id,
+            'use_nome' => 'Anonimizado (ref. '.$user->use_id.')',
+            'use_aprovado' => 0,
+        ]);
+    }
+
+    #[Test]
+    public function profile_anonymization_requires_current_password(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->delete(route('profile.destroy'), [
+                'password' => 'senha-invalida',
+            ])
+            ->assertSessionHasErrors('password');
+
+        $this->assertDatabaseHas('users', [
+            'use_id' => $user->use_id,
+            'use_email' => $user->use_email,
+            'use_data_anonimizacao' => null,
+        ]);
+    }
 }

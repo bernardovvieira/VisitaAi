@@ -7,6 +7,8 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -97,5 +99,34 @@ class ProfileController extends Controller
         $secretKeyFormatted = trim(chunk_split($secretKey, 4, ' '));
 
         return view('profile.two-factor-confirm', compact('qrCodeSvg', 'secretKey', 'secretKeyFormatted'));
+    }
+
+    /**
+     * Anonimiza a própria conta e encerra a sessão atual.
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+
+        $user->update([
+            'use_nome' => 'Anonimizado (ref. '.$user->use_id.')',
+            'use_email' => 'anonimizado-'.$user->use_id.'@example.invalid',
+            'use_cpf' => str_pad((string) $user->use_id, 11, '0', STR_PAD_LEFT),
+            'use_senha' => Hash::make('senha_anonima_'.$user->use_id),
+            'use_aprovado' => false,
+            'fk_gestor_id' => null,
+            'use_data_anonimizacao' => now(),
+        ]);
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/')->with('status', __('Conta anonimizada com sucesso.'));
     }
 }

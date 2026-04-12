@@ -48,7 +48,8 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
         ->middleware('can:view,local');
 
     Route::resource('locais.moradores', MoradorController::class)
-        ->parameters(['locais' => 'local', 'moradores' => 'morador']);
+        ->parameters(['locais' => 'local', 'moradores' => 'morador'])
+        ->except(['show']);
 
     Route::get('visitas', [VisitaController::class, 'index'])->name('visitas.index');
     Route::get('visitas/{visita}', [VisitaController::class, 'show'])->name('visitas.show');

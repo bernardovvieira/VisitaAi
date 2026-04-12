@@ -29,6 +29,7 @@ class StoreUserRequest extends FormRequest
         $id = $user ? $user->use_id : null;
 
         return [
+            'use_nome' => ['required', 'string', 'max:255'],
             'use_cpf' => ['required', 'string', 'max:255', Rule::unique('users', 'use_cpf')->ignore($id)],
             'use_email' => ['required', 'email', 'max:255', Rule::unique('users', 'use_email')->ignore($id)],
             'use_senha' => [$id ? 'nullable' : 'required', 'confirmed', Password::defaults()],

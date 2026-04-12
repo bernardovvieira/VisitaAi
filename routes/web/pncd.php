@@ -37,7 +37,8 @@ Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->
         ->middleware('can:view,local');
 
     Route::resource('locais.moradores', MoradorController::class)
-        ->parameters(['locais' => 'local', 'moradores' => 'morador']);
+        ->parameters(['locais' => 'local', 'moradores' => 'morador'])
+        ->except(['show']);
 
     Route::resource('visitas', VisitaController::class)
         ->except(['show'])

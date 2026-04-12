@@ -1,6 +1,6 @@
 {{-- Strings para Alpine/JS nos formulários de visita (offline, busca de local, erros). --}}
 <script>
-    window.__visitaFormStrings = @json([
+    window.__visitaFormStrings = {!! json_encode([
         'deviceLocalPending' => __('(Dispositivo) Local a sincronizar'),
         'codePrefix' => __('Cód. '),
         'sn' => __('S/N'),
@@ -20,7 +20,7 @@
         'withInternet' => __('Com internet'),
         'withoutInternet' => __('Sem internet'),
         'fetchDiseaseSuggestionsFailed' => __('Não foi possível carregar as sugestões.'),
-    ]);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!};
     window.__visitaFormatLocalLine = function (local) {
         var p = window.__visitaFormStrings;
         var num = local.loc_numero;

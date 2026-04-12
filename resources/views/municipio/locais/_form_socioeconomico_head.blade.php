@@ -1,6 +1,18 @@
 {{-- Ficha socioeconômica: entrevista, economia e proprietário (antes dos moradores) --}}
-@include('municipio.locais._socioeconomico_val')
 @php
+    /** @var \App\Models\Local|null $local */
+    $sf = old('socio');
+    if (! is_array($sf)) {
+        $sf = [];
+    }
+    if (count($sf) === 0 && isset($local) && $local !== null) {
+        $local->loadMissing('socioeconomico');
+        if ($local->socioeconomico) {
+            $sf = $local->socioeconomico->toFormArray();
+        }
+    }
+    $sv = fn (string $k) => old('socio.'.$k, $sf[$k] ?? '');
+
     $t = config('visitaai_socioeconomico.secao_titulos', []);
     $disc = 'border-t border-gray-200 pt-6 mt-2 dark:border-gray-600';
 @endphp

@@ -6,7 +6,11 @@
 @section('content')
 <div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
-    <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')" />
+    <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Locais')">
+        <x-slot name="lead">
+            <p>{{ __('Locais usados na operação de campo. Consulte endereço, código único e coordenadas.') }}</p>
+        </x-slot>
+    </x-page-header>
 
     <x-flash-alerts>
         <x-slot name="afterSuccess">
@@ -18,7 +22,7 @@
         </x-slot>
     </x-flash-alerts>
 
-    <div id="locais-offline-pending-alert" class="hidden p-3 mb-4 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800" role="alert">
+    <div id="locais-offline-pending-alert" class="hidden rounded-lg border border-amber-200/60 bg-amber-100 px-3 py-2 text-amber-800 dark:border-amber-900/40 dark:bg-amber-900/30 dark:text-amber-200" role="alert">
         <span id="locais-offline-pending-alert-msg"></span>
     </div>
 
@@ -29,50 +33,29 @@
         </x-ui.callout>
     @endif
 
-    <x-section-card class="v-card--muted">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div class="min-w-0 max-w-3xl space-y-2">
-                <h2 class="v-section-title">{{ __('Locais de visitação') }}</h2>
-                <p class="text-sm text-slate-600 dark:text-slate-400">
-                    {{ __('Visualize, crie e edite locais usados na operação de campo.') }}
-                </p>
-                <x-ui.disclosure variant="lead-mt" class="mt-1">
-                    <x-slot name="summary">
-                        <span class="border-b border-dotted border-slate-500/45 pb-px dark:border-slate-400/45">{{ __('Uso offline e dica de campo') }}</span>
-                    </x-slot>
-                    <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                        {!! __('<strong>Uso offline:</strong> Sem internet você pode salvar o local no dispositivo e sincronizar depois. Antes de ir a campo, abra esta lista e a tela de <strong>Novo local</strong> pelo menos uma vez com internet para habilitar o uso offline.') !!}
-                    </p>
-                </x-ui.disclosure>
-                <x-ui.disclosure variant="footer-lgpd" class="mt-2 max-w-2xl">
-                    <x-slot name="summary">
-                        <span>{{ __('O que significa um imóvel marcado como "Primário"?') }}</span>
-                    </x-slot>
-                    <p class="text-xs leading-relaxed">{!! __('Um imóvel marcado como <strong>primário</strong> é o endereço de referência do município no sistema (cidade/estado). Esse registro é definido na configuração inicial e, por segurança, não pode ser editado nem excluído pela interface. Os demais imóveis são os locais de campo cadastrados e visitados pelos profissionais (ACE/ACS).') !!}</p>
-                </x-ui.disclosure>
-            </div>
-            <a href="{{ route('agente.locais.create') }}"
-               class="v-btn-compact v-btn-compact--blue shrink-0 self-start sm:self-auto">
-                <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Novo local') }}
-            </a>
-        </div>
-        <div class="mt-4 border-t border-slate-200/80 pt-4 dark:border-slate-700/70">
-            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-            <div class="mt-1 flex items-center gap-2">
-                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                       data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
-                       data-live-loading-id="search-loading-locais"
-                       placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
-                       class="v-input">
-                <span id="search-loading-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap" aria-live="polite">{{ __('Buscando…') }}</span>
-            </div>
-        </div>
-    </x-section-card>
-
     <x-section-card class="v-card--flush overflow-hidden">
+        <div class="v-list-toolbar">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div class="min-w-0 flex-1 space-y-2">
+                    <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                               data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
+                               data-live-loading-id="search-loading-locais"
+                               placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
+                               class="v-input" />
+                        <span id="search-loading-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+                    </div>
+                </div>
+                <a href="{{ route('agente.locais.create') }}"
+                   class="v-btn-compact v-btn-compact--blue shrink-0 self-start lg:self-auto">
+                    <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {{ __('Novo local') }}
+                </a>
+            </div>
+        </div>
         <div class="v-table-meta">
-            <span class="text-sm text-slate-600 dark:text-slate-400">
+            <span>
                 {{ __('Exibindo :atual de :total :item cadastrados.', ['atual' => $locais->count(), 'total' => $locais->total(), 'item' => $locais->total() === 1 ? __('local') : __('locais')]) }}
                 @if(request('search'))
                     <span class="text-slate-500 dark:text-slate-500">{{ __('Resultados para:') }} <strong class="text-slate-700 dark:text-slate-300">{{ request('search') }}</strong></span>
@@ -136,7 +119,7 @@
                             <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_bairro }}</td>
                             <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_cidade }}</td>
                             <td class="text-slate-800 dark:text-slate-100">{{ $local->loc_responsavel_nome ?? __('Não informado') }}</td>
-                            <td class="tabular-nums text-slate-700 dark:text-slate-300">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
+                            <td class="tabular-nums text-xs text-slate-600 dark:text-slate-400">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="text-center">
                                 <div class="flex flex-wrap items-center justify-center gap-1.5">
                                     <a href="{{ route('agente.locais.show', $local) }}"
@@ -169,12 +152,12 @@
                     @empty
                         <tr>
                             <td colspan="9" class="!p-0">
-                                <div class="flex flex-col items-center justify-center px-4 py-10 text-center max-w-sm mx-auto">
-                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700">
-                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
+                                <div class="v-empty-state px-4">
+                                    <div class="v-empty-state__icon" aria-hidden="true">
+                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0" />
                                     </div>
-                                    <p class="font-medium text-slate-600 dark:text-slate-400">{{ __('Nenhum local cadastrado.') }}</p>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-500">{{ __('Crie o primeiro local para iniciar os registros de campo.') }}</p>
+                                    <p class="v-empty-state__title">{{ __('Nenhum local cadastrado.') }}</p>
+                                    <p class="v-empty-state__text">{{ __('Crie o primeiro local para iniciar os registros de campo.') }}</p>
                                     <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Novo local') }}
@@ -187,6 +170,15 @@
             </table>
         </div>
         <x-pagination-relatorio :paginator="$locais" item-label="locais" />
+    </x-section-card>
+
+    <x-section-card>
+        <x-ui.disclosure variant="footer-lgpd">
+            <x-slot name="summary">
+                <span>{{ __('O que significa um imóvel marcado como "Primário"?') }}</span>
+            </x-slot>
+            <p class="text-xs leading-relaxed">{!! __('Um imóvel marcado como <strong>primário</strong> é o endereço de referência do município no sistema (cidade/estado). Esse registro é definido na configuração inicial e, por segurança, não pode ser editado nem excluído pela interface. Os demais imóveis são os locais de campo cadastrados e visitados pelos profissionais (ACE/ACS).') !!}</p>
+        </x-ui.disclosure>
     </x-section-card>
 </div>
 <script>

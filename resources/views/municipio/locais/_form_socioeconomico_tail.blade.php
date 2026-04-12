@@ -1,6 +1,18 @@
 {{-- Ficha socioeconômica: imóvel, físico, infra, terreno, histórico, finalização --}}
-@include('municipio.locais._socioeconomico_val')
 @php
+    /** @var \App\Models\Local|null $local */
+    $sf = old('socio');
+    if (! is_array($sf)) {
+        $sf = [];
+    }
+    if (count($sf) === 0 && isset($local) && $local !== null) {
+        $local->loadMissing('socioeconomico');
+        if ($local->socioeconomico) {
+            $sf = $local->socioeconomico->toFormArray();
+        }
+    }
+    $sv = fn (string $k) => old('socio.'.$k, $sf[$k] ?? '');
+
     $t = config('visitaai_socioeconomico.secao_titulos', []);
 @endphp
 

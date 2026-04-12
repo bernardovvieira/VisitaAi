@@ -1,6 +1,6 @@
 {{-- Strings para visitas/sync.blade.php (IndexedDB + fetch). --}}
 <script>
-    window.__syncStrings = @json([
+    window.__syncStrings = {!! json_encode([
         'visitEm' => __('Visita em '),
         'localIdSuffix' => __(', local :id'),
         'localPendingSuffix' => __(', local a sincronizar'),
@@ -41,5 +41,5 @@
         'couldNotLoadSavedVisits' => __('Não foi possível carregar as visitas salvas. Verifique se o navegador permite armazenamento local.'),
         'couldNotLoadLocais' => __('Não foi possível carregar os locais.'),
         'errorWithMessage' => __('Erro :code'),
-    ]);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!};
 </script>
