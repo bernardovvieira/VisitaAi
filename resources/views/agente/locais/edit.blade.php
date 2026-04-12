@@ -10,12 +10,16 @@
 
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Editar local')" />
 
-    <x-ui.disclosure variant="muted-card-simple">
-        <x-slot name="summary">
-            <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('CEP, endereço e localização (expandir)') }}</span>
-        </x-slot>
-        <p>{{ __('Preencha o CEP para completar endereço automaticamente. Use «Minha localização» para coordenadas do dispositivo.') }}</p>
-    </x-ui.disclosure>
+    <x-section-card class="v-card--muted space-y-2">
+        <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+            {{ __('Modo offline, CEP e localização') }}
+        </h2>
+        <p><strong>{{ __('Sem internet?') }}</strong> {{ __('Use «Guardar local» para salvar no dispositivo e envie depois na tela «Sincronizar».') }}</p>
+        <p><strong>{{ __('Antes de ir a campo:') }}</strong> {{ __('abra esta página pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
+        <p><strong>{{ __('CEP e endereço:') }}</strong> {{ __('informe o CEP para preencher o endereço automaticamente e revise número/complemento antes de salvar.') }}</p>
+        <p><strong>{{ __('Coordenadas:') }}</strong> {{ __('use «Minha localização» para capturar latitude/longitude do ponto onde você está.') }}</p>
+        <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('Dica: se o sinal estiver instável, guarde localmente e sincronize quando a conexão voltar.') }}</p>
+    </x-section-card>
 
     <x-section-card class="space-y-4">
         @if ($errors->any())
@@ -93,33 +97,12 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label for="loc_cidade" class="v-toolbar-label">Cidade <span class="text-red-500">*</span></label>
-                        <input id="loc_cidade" name="loc_cidade" type="text" required readonly value="{{ old('loc_cidade', $local->loc_cidade ?? '') }}"
-                            class="v-input mt-1">
-                    </div>
-                    <div>
-                        <label for="loc_estado" class="v-toolbar-label">Estado <span class="text-red-500">*</span></label>
-                        <input id="loc_estado" name="loc_estado" type="text" required readonly value="{{ old('loc_estado', $local->loc_estado ?? '') }}"
-                            class="v-input mt-1">
-                    </div>
-                    <div>
-                        <label for="loc_pais" class="v-toolbar-label">País <span class="text-red-500">*</span></label>
-                        <input id="loc_pais" name="loc_pais" type="text" required readonly value="{{ old('loc_pais', $local->loc_pais ?? '') }}"
-                            class="v-input mt-1">
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Responsável pelo imóvel</legend>
-                <div>
-                    <label for="loc_responsavel_nome" class="v-toolbar-label">Nome completo (morador, locatário ou proprietário)</label>
-                    <input id="loc_responsavel_nome" name="loc_responsavel_nome" type="text" value="{{ old('loc_responsavel_nome', $local->loc_responsavel_nome ?? '') }}" maxlength="255"
-                           class="v-input mt-1"
-                              placeholder="">
-                </div>
+                <input id="loc_cidade" name="loc_cidade" type="hidden" required value="{{ old('loc_cidade', $local->loc_cidade ?? '') }}">
+                <input id="loc_estado" name="loc_estado" type="hidden" required value="{{ old('loc_estado', $local->loc_estado ?? '') }}">
+                <input id="loc_pais" name="loc_pais" type="hidden" required value="{{ old('loc_pais', $local->loc_pais ?? '') }}">
+                <p class="text-sm text-gray-600 dark:text-gray-400 italic">
+                    Cidade, estado e pais sao definidos automaticamente pelo CEP e nao sao editados manualmente nesta tela.
+                </p>
             </fieldset>
 
             <fieldset class="space-y-3">
@@ -199,18 +182,15 @@
                 @include('municipio.locais._form_socioeconomico_tail', ['local' => $local])
             </div>
 
-            <fieldset class="space-y-3">
-                <legend class="v-section-title mb-2">Informações Adicionais</legend>
-                <div>
-                    <label for="loc_codigo_unico" class="v-toolbar-label">Código Único do Imóvel <span class="text-red-500">*</span></label>
-                    <input id="loc_codigo_unico" name="loc_codigo_unico" type="number" value="{{ old('loc_codigo_unico', $local->loc_codigo_unico) }}" required readonly
-                            class="v-input mt-1">
-                    @error('loc_codigo_unico')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
-                    <p class="text-sm mt-2 text-gray-600 dark:text-gray-400 italic">
-                        O código único do imóvel é gerado automaticamente e não pode ser alterado. Ele é utilizado para identificar o local de forma exclusiva no sistema.
-                    </p>
-                </div>
-            </fieldset>
+            <x-section-card class="v-card--muted space-y-1">
+                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Dados automáticos do imóvel') }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('Código único') }}: <span class="font-mono font-semibold text-gray-800 dark:text-gray-200">{{ $local->loc_codigo_unico }}</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ __('Este código é gerado automaticamente e não pode ser alterado.') }}
+                </p>
+            </x-section-card>
 
             <div class="flex justify-end">
                 <button type="submit" class="v-btn-primary px-6">
