@@ -12,6 +12,13 @@
     </div>
 </div>
 
+<div id="relatorios-dados"
+    data-locais-select='@json($locaisParaSelectArray ?? [])'
+    data-local-selected-ids='@json(array_values(array_map("intval", (array) request("local_id", []))))'
+    data-bairros='@json($bairros ?? [])'
+    data-bairro-selected='@json(array_values((array) request("bairro", [])))'
+    class="hidden"></div>
+
 <div class="v-page v-page--wide v-page--loose"
     x-data="{
         tipo: '{{ request('tipo_relatorio', 'completo') }}',
@@ -146,19 +153,18 @@
                             }
                             this.$dispatch('filtro-alterado');
                         },
-                        isSelected(id) { return this.selected.some(s => s.id === id); }
+                        isSelected(id) { return this.selected.some(s => s.id === id); },
+                        init() {
+                            const dados = document.getElementById('relatorios-dados');
+                            const locais = dados ? JSON.parse(dados.dataset.locaisSelect || '[]') : [];
+                            const ids = dados ? JSON.parse(dados.dataset.localSelectedIds || '[]') : [];
+                            this.options = Array.isArray(locais) ? locais : [];
+                            this.selected = (Array.isArray(ids) ? ids : []).map((id) => {
+                                const item = this.options.find((option) => Number(option.id) === Number(id));
+                                return item ? item : { id: Number(id), label: 'Local #' + id };
+                            });
+                        }
                     }"
-                    x-init="
-                        options = {!! json_encode($locaisParaSelectArray ?? []) !!};
-                        selected = {!! json_encode(
-                            array_values(array_map(function($id) use ($locaisParaSelectArray) {
-                                $id = (int) $id;
-                                $arr = $locaisParaSelectArray ?? [];
-                                $item = collect($arr)->firstWhere('id', $id);
-                                return ['id' => $id, 'label' => $item ? ($item['label'] ?? 'Local #'.$id) : 'Local #'.$id];
-                            }, (array) request('local_id', [])))
-                        ) !!};
-                    "
                     @@click.outside="open = false">
                     <x-input-label :value="__('Locais')" :required="true" class="mb-1 block" />
                     <div class="relative">
@@ -210,12 +216,15 @@
                                 this.selected = [...this.selected, opt];
                             }
                             this.$dispatch('filtro-alterado');
+                        },
+                        init() {
+                            const dados = document.getElementById('relatorios-dados');
+                            const bairros = dados ? JSON.parse(dados.dataset.bairros || '[]') : [];
+                            const selecionados = dados ? JSON.parse(dados.dataset.bairroSelected || '[]') : [];
+                            this.options = Array.isArray(bairros) ? bairros : [];
+                            this.selected = Array.isArray(selecionados) ? selecionados : [];
                         }
                     }"
-                    x-init="
-                        options = {!! json_encode($bairros ?? []) !!};
-                        selected = {!! json_encode(array_values((array) request('bairro', []))) !!};
-                    "
                     @@click.outside="open = false">
                     <x-input-label :value="__('Bairros')" class="mb-1 block" />
                     <div class="relative">
