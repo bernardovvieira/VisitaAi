@@ -32,19 +32,18 @@
             if (this.tipo === 'semanal') return (this.appliedParams.data_inicio || '') !== '' && (this.appliedParams.data_fim || '') !== '';
             if (this.tipo === 'individual') return Array.isArray(this.appliedParams.local_ids) && this.appliedParams.local_ids.length > 0;
             return false;
+        },
+        init() {
+            const p = new URLSearchParams(window.location.search);
+            this.appliedParams = {
+                data_unica: p.get('data_unica') || '',
+                data_inicio: p.get('data_inicio') || '',
+                data_fim: p.get('data_fim') || '',
+                local_ids: p.getAll('local_id[]') || []
+            };
+            this.filtrosAplicados = p.toString() !== '';
         }
     }"
-    x-init="(() => {
-        const p = new URLSearchParams(window.location.search);
-        this.appliedParams = {
-            data_unica: p.get('data_unica') || '',
-            data_inicio: p.get('data_inicio') || '',
-            data_fim: p.get('data_fim') || '',
-            local_ids: p.getAll('local_id[]') || []
-        };
-        this.filtrosAplicados = p.toString() !== '';
-        this.$watch('tipo', () => { this.filtrosAplicados = false; this.filtrosAlterados = true; });
-    })()"
     @@filtro-alterado.window="filtrosAlterados = true">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
     <x-page-header :eyebrow="__('Inteligência municipal')" :title="__('Relatórios')">
@@ -66,7 +65,7 @@
                         } gerarBase64Graficos();"
                         class="v-btn-export v-btn-export--pdf">
                         <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                        {{ __('Gerar relatório em PDF') }}
+                        {{ __('Gerar tabela no estilo PNCD') }}
                     </button>
                 </div>
             </x-slot>
@@ -105,7 +104,7 @@
                   class="space-y-4">
                 <div class="max-w-md">
                     <x-input-label :value="__('Tipo')" :required="true" class="mb-1 block" />
-                    <select name="tipo_relatorio" x-model="tipo" class="v-select w-full">
+                    <select name="tipo_relatorio" x-model="tipo" @@change="filtrosAplicados = false; filtrosAlterados = true" class="v-select w-full">
                         <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>{{ __('Completo') }}</option>
                         <option value="diario">{{ __('Diário') }}</option>
                         <option value="semanal">{{ __('Por período') }}</option>
