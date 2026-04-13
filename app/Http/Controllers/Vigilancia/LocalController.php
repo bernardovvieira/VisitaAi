@@ -10,6 +10,7 @@ use App\Models\LocalSocioeconomico;
 use App\Models\Morador;
 use App\Models\User;
 use App\Services\Municipio\ResumoOcupantesMunicipioService;
+use App\Support\SmartSearch;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -40,7 +41,9 @@ class LocalController extends Controller
             return redirect()->to($request->url());
         }
 
-        $search = strtolower(trim($request->input('search')));
+        $search = trim($request->input('search'));
+        $searchLower = mb_strtolower($search);
+        $terms = SmartSearch::terms($search);
 
         $query = Local::query();
 
@@ -49,35 +52,65 @@ class LocalController extends Controller
             $tipo = null;
             $zona = null;
             $minPrefix = 2;
-            if (strlen($search) >= $minPrefix) {
-                if (str_starts_with('residencial', $search)) {
+            if (strlen($searchLower) >= $minPrefix) {
+                if (str_starts_with('residencial', $searchLower)) {
                     $tipo = 'R';
-                } elseif (str_starts_with('comercial', $search)) {
+                } elseif (str_starts_with('comercial', $searchLower)) {
                     $tipo = 'C';
-                } elseif (str_starts_with('terreno', $search)) {
+                } elseif (str_starts_with('terreno', $searchLower)) {
                     $tipo = 'T';
                 }
-                if (str_starts_with('urbano', $search) || str_starts_with('urbana', $search)
-                    || str_starts_with($search, 'urbano') || str_starts_with($search, 'urbana')) {
+                if (str_starts_with('urbano', $searchLower) || str_starts_with('urbana', $searchLower)
+                    || str_starts_with($searchLower, 'urbano') || str_starts_with($searchLower, 'urbana')) {
                     $zona = 'U';
-                } elseif (str_starts_with('rural', $search) || str_starts_with($search, 'rural')) {
+                } elseif (str_starts_with('rural', $searchLower) || str_starts_with($searchLower, 'rural')) {
                     $zona = 'R';
                 }
             }
-            if ($search === 'r' || $search === 'c' || $search === 't') {
-                $tipo = strtoupper($search);
+            if ($searchLower === 'r' || $searchLower === 'c' || $searchLower === 't') {
+                $tipo = strtoupper($searchLower);
             }
-            if ($search === 'u') {
+            if ($searchLower === 'u') {
                 $zona = 'U';
-            } elseif ($search === 'r' && $zona === null) {
+            } elseif ($searchLower === 'r' && $zona === null) {
                 $zona = 'R';
             }
 
-            $query->where(function ($q) use ($search, $tipo, $zona) {
-                $q->whereRaw('LOWER(loc_endereco) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(loc_bairro) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw("LOWER(COALESCE(loc_responsavel_nome, '')) LIKE ?", ["%{$search}%"])
-                    ->orWhere('loc_codigo_unico', $search);
+            $query->where(function ($q) use ($terms, $tipo, $zona) {
+                foreach ($terms as $term) {
+                    $like = '%'.$term.'%';
+                    $q->orWhereRaw('LOWER(COALESCE(loc_endereco, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_numero, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_complemento, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_bairro, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_cidade, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_estado, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_pais, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_categoria, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_lado, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(loc_responsavel_nome, "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('loc_responsavel_nome').' LIKE ?', [$like])
+                        ->orWhereRaw('CAST(loc_cep AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(loc_codigo_unico AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(loc_codigo AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(loc_quarteirao AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(loc_sequencia AS CHAR) LIKE ?', [$like])
+                        ->orWhereHas('moradores', function ($moradoresQuery) use ($like) {
+                            $moradoresQuery->whereRaw('LOWER(COALESCE(mor_nome, "")) LIKE ?', [$like])
+                                ->orWhereRaw(SmartSearch::foldExpr('mor_nome').' LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(mor_profissao, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(mor_observacao, "")) LIKE ?', [$like])
+                                ->orWhereRaw('CAST(mor_id AS CHAR) LIKE ?', [$like]);
+                        })
+                        ->orWhereHas('socioeconomico', function ($socioQuery) use ($like) {
+                            $socioQuery->whereRaw('LOWER(COALESCE(lse_proprietario_nome, "")) LIKE ?', [$like])
+                                ->orWhereRaw(SmartSearch::foldExpr('lse_proprietario_nome').' LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_proprietario_endereco, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_proprietario_telefone, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_telefone_contato, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_observacoes_imovel, "")) LIKE ?', [$like]);
+                        });
+                }
 
                 if ($tipo) {
                     $q->orWhere('loc_tipo', $tipo);

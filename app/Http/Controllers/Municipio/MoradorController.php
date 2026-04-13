@@ -7,11 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Municipio\MoradorRequest;
 use App\Models\Local;
 use App\Models\Morador;
+use App\Support\SmartSearch;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MoradorController extends Controller
 {
@@ -37,19 +39,50 @@ class MoradorController extends Controller
         $this->authorize('viewAny', Morador::class);
 
         $search = trim((string) $request->query('q', ''));
+        $searchNormalized = $this->normalizeSearchTerm($search);
+        $terms = SmartSearch::terms($search);
         $moradoresQuery = $local->moradores()->orderBy('mor_id');
 
         if ($search !== '') {
-            $like = '%'.$search.'%';
-            $moradoresQuery->where(function ($q) use ($like) {
-                $q->where('mor_nome', 'like', $like)
-                    ->orWhere('mor_profissao', 'like', $like)
-                    ->orWhere('mor_naturalidade', 'like', $like)
-                    ->orWhere('mor_escolaridade', 'like', $like)
-                    ->orWhere('mor_renda_faixa', 'like', $like)
-                    ->orWhere('mor_cor_raca', 'like', $like)
-                    ->orWhere('mor_situacao_trabalho', 'like', $like)
-                    ->orWhere('mor_observacao', 'like', $like);
+            $moradoresQuery->where(function ($q) use ($terms, $searchNormalized) {
+                foreach ($terms as $term) {
+                    $like = '%'.$term.'%';
+                    $q->orWhereRaw('LOWER(COALESCE(mor_nome, "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('mor_nome').' LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_profissao, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_naturalidade, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_parentesco, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_telefone, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_rg_numero, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_rg_orgao, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_cpf, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_observacao, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_renda_formal_informal, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_ajuda_compra_imovel, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_tempo_uniao_conjuge, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(mor_data_nascimento, "")) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(mor_id AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(fk_local_id AS CHAR) LIKE ?', [$like]);
+                }
+
+                foreach ($this->configOptionMatches($searchNormalized, config('visitaai_socioeconomico.sexo_opcoes', [])) as $value) {
+                    $q->orWhere('mor_sexo', $value);
+                }
+                foreach ($this->configOptionMatches($searchNormalized, config('visitaai_socioeconomico.estado_civil_opcoes', [])) as $value) {
+                    $q->orWhere('mor_estado_civil', $value);
+                }
+                foreach ($this->configOptionMatches($searchNormalized, config('visitaai_municipio.escolaridade_opcoes', [])) as $value) {
+                    $q->orWhere('mor_escolaridade', $value);
+                }
+                foreach ($this->configOptionMatches($searchNormalized, config('visitaai_municipio.renda_faixa_opcoes', [])) as $value) {
+                    $q->orWhere('mor_renda_faixa', $value);
+                }
+                foreach ($this->configOptionMatches($searchNormalized, config('visitaai_municipio.cor_raca_opcoes', [])) as $value) {
+                    $q->orWhere('mor_cor_raca', $value);
+                }
+                foreach ($this->configOptionMatches($searchNormalized, config('visitaai_municipio.situacao_trabalho_opcoes', [])) as $value) {
+                    $q->orWhere('mor_situacao_trabalho', $value);
+                }
             });
         }
 
@@ -234,7 +267,7 @@ class MoradorController extends Controller
             $downloadName = 'documento-pessoal-ocupante-'.$morador->mor_id;
         }
 
-        return Storage::disk('local')->download($path, $downloadName);
+        return response()->download(Storage::disk('local')->path($path), $downloadName);
     }
 
     private function uploadDocumentoPessoal(UploadedFile $file): array
@@ -255,5 +288,33 @@ class MoradorController extends Controller
         if ($path !== '' && Storage::disk('local')->exists($path)) {
             Storage::disk('local')->delete($path);
         }
+    }
+
+    private function normalizeSearchTerm(string $value): string
+    {
+        return (string) Str::of($value)->ascii()->lower()->trim()->replaceMatches('/\s+/', ' ');
+    }
+
+    /**
+     * @param  array<string, string>  $options
+     * @return array<int, string>
+     */
+    private function configOptionMatches(string $search, array $options): array
+    {
+        if ($search === '') {
+            return [];
+        }
+
+        $matches = [];
+        foreach ($options as $value => $label) {
+            $valueNormalized = $this->normalizeSearchTerm((string) $value);
+            $labelNormalized = $this->normalizeSearchTerm((string) $label);
+
+            if (str_contains($valueNormalized, $search) || str_contains($labelNormalized, $search)) {
+                $matches[] = (string) $value;
+            }
+        }
+
+        return array_values(array_unique($matches));
     }
 }

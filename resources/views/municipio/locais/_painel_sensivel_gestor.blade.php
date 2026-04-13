@@ -1,6 +1,8 @@
 {{-- Painel com dados identificáveis e socioeconômicos; apenas gestor, ficha do imóvel após busca em Locais. --}}
 @php
     $cfg = config('visitaai_municipio.ocupantes', []);
+    $sexoL = config('visitaai_socioeconomico.sexo_opcoes', []);
+    $ecL = config('visitaai_socioeconomico.estado_civil_opcoes', []);
     $escL = config('visitaai_municipio.escolaridade_opcoes', []);
     $rendaL = config('visitaai_municipio.renda_faixa_opcoes', []);
     $corL = config('visitaai_municipio.cor_raca_opcoes', []);
@@ -32,7 +34,7 @@
     @if($local->moradores->isEmpty())
         <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">{{ __('Nenhum ocupante cadastrado neste imóvel.') }}</p>
     @else
-        <div x-data="{ query: '' }" class="mt-4 space-y-3">
+        <div x-data="{ query: '', normalize(value) { return (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } }" class="mt-4 space-y-3">
             <div class="v-list-toolbar !p-3 sm:!p-4">
                 <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div class="min-w-0 flex-1">
@@ -62,14 +64,24 @@
                         @php
                             $search = 
                                 mb_strtolower(trim(implode(' ', [
+                                    (string) $m->mor_id,
                                     $m->mor_nome ?? '',
+                                    $m->mor_data_nascimento?->format('d/m/Y') ?? '',
+                                    $m->mor_telefone ?? '',
+                                    $m->mor_cpf ?? '',
+                                    $m->mor_rg_numero ?? '',
+                                    $m->mor_rg_orgao ?? '',
+                                    $m->mor_naturalidade ?? '',
+                                    $m->mor_parentesco ?? '',
+                                    $m->mor_sexo ? ($sexoL[$m->mor_sexo] ?? $m->mor_sexo) : '',
+                                    $m->mor_estado_civil ? ($ecL[$m->mor_estado_civil] ?? $m->mor_estado_civil) : '',
                                     $escL[$m->mor_escolaridade] ?? $m->mor_escolaridade ?? '',
                                     $rendaL[$m->mor_renda_faixa] ?? $m->mor_renda_faixa ?? '',
                                     $trabL[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho ?? '',
                                     $m->mor_observacao ?? '',
                                 ])));
                         @endphp
-                        <tr class="bg-white/90 dark:bg-slate-900/40" data-search="{{ $search }}" x-show="!query || ($el.dataset.search && $el.dataset.search.includes(query.toLowerCase()))">
+                        <tr class="bg-white/90 dark:bg-slate-900/40" data-search="{{ $search }}" x-show="!query || (normalize($el.dataset.search).includes(normalize(query)))">
                             <td class="whitespace-nowrap px-3 py-2.5 font-mono text-xs text-slate-800 dark:text-slate-200">#{{ $m->mor_id }}</td>
                             <td class="max-w-[12rem] truncate px-3 py-2.5 text-slate-900 dark:text-slate-100" title="{{ $m->mor_nome }}">{{ $m->mor_nome ?: __('N/D') }}</td>
                             <td class="whitespace-nowrap px-3 py-2.5 text-slate-800 dark:text-slate-200">{{ $m->mor_data_nascimento?->format('d/m/Y') ?? __('N/D') }}</td>

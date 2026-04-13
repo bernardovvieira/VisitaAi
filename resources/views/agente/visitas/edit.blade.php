@@ -81,13 +81,24 @@
                         <ul x-show="open" @click.away="open = false" x-cloak class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow max-h-60 overflow-auto"
                             x-transition>
                             <template x-for="local in locais.filter(l => {
-                                const q = (search || '').toLowerCase();
+                                const normalize = (value) => (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                const q = normalize(search);
                                 if (!q) return true;
-                                const end = (l.loc_endereco || '').toLowerCase();
-                                const bairro = (l.loc_bairro || '').toLowerCase();
-                                const cidade = (l.loc_cidade || '').toLowerCase();
-                                const cod = String(l.loc_codigo_unico || '');
-                                return end.includes(q) || bairro.includes(q) || cidade.includes(q) || cod.includes(q);
+                                const fields = [
+                                    l.loc_endereco,
+                                    l.loc_numero,
+                                    l.loc_complemento,
+                                    l.loc_bairro,
+                                    l.loc_cidade,
+                                    l.loc_estado,
+                                    l.loc_pais,
+                                    l.loc_cep,
+                                    l.loc_codigo_unico,
+                                    l.loc_categoria,
+                                    l.loc_responsavel_nome,
+                                    l.loc_lado,
+                                ];
+                                return fields.some(field => normalize(field).includes(q));
                             })" :key="local.loc_id">
                                 <li>
                                     <button type="button"

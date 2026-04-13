@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Support\SmartSearch;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,8 @@ class UserController extends Controller
 
         if (request()->filled('search')) {
             $search = trim(request('search'));
-            $busca = strtolower($search);
+            $busca = mb_strtolower($search);
+            $terms = SmartSearch::terms($search);
 
             // Busca por perfil: gestor, ACE (agente_endemias), ACS (agente_saude), conformidade MS (Lei 11.350/2006).
             $perfis = null;
@@ -60,9 +62,15 @@ class UserController extends Controller
                 }
             }
 
-            $query->where(function ($q) use ($search, $perfis) {
-                $q->where('use_nome', 'like', "%{$search}%")
-                    ->orWhere('use_email', 'like', "%{$search}%");
+            $query->where(function ($q) use ($terms, $perfis) {
+                foreach ($terms as $term) {
+                    $like = '%'.$term.'%';
+                    $q->orWhereRaw('LOWER(COALESCE(use_nome, "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('use_nome').' LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(use_email, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(use_cpf, "")) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(use_id AS CHAR) LIKE ?', [$like]);
+                }
 
                 if ($perfis !== null) {
                     $q->orWhereIn('use_perfil', $perfis);

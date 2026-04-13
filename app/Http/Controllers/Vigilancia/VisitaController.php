@@ -10,11 +10,13 @@ use App\Models\Local;
 use App\Models\User;
 use App\Models\Visita;
 use App\Services\Vigilancia\SugestaoDoencasService;
+use App\Support\SmartSearch;
 use App\Support\VisitaOcupantesObservacao;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -49,19 +51,60 @@ class VisitaController extends Controller
         }
 
         $busca = trim((string) $request->input('busca'));
+        $buscaLower = mb_strtolower($busca);
+        $terms = SmartSearch::terms($busca);
 
         $query = Visita::with(['local', 'doencas', 'usuario']);
 
         if ($busca !== '') {
-            $query->where(function ($q) use ($busca) {
-                $q->whereHas('local', fn ($q) => $q->where('loc_endereco', 'like', "%$busca%"))
-                    ->orWhereHas('local', fn ($q) => $q->where('loc_codigo_unico', '=', $busca))
-                    ->orWhereHas('local', fn ($q) => $q->where('loc_responsavel_nome', 'like', "%$busca%"))
-                    ->orWhereHas('usuario', fn ($q) => $q->where('use_nome', 'like', "%$busca%"))
-                    ->orWhereHas('doencas', fn ($q) => $q->where('doe_nome', 'like', "%$busca%"))
-                    ->orWhere('vis_atividade', 'like', "%$busca%");
+            $query->where(function ($q) use ($terms, $buscaLower, $busca) {
+                foreach ($terms as $term) {
+                    $like = '%'.$term.'%';
+                    $q->orWhereHas('local', function ($localQuery) use ($like) {
+                        $localQuery->whereRaw('LOWER(COALESCE(loc_endereco, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_numero, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_complemento, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_bairro, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_cidade, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_estado, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_pais, "")) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(COALESCE(loc_responsavel_nome, "")) LIKE ?', [$like])
+                            ->orWhereRaw(SmartSearch::foldExpr('loc_responsavel_nome').' LIKE ?', [$like])
+                            ->orWhereRaw('CAST(loc_cep AS CHAR) LIKE ?', [$like])
+                            ->orWhereRaw('CAST(loc_codigo_unico AS CHAR) LIKE ?', [$like]);
+                    })
+                        ->orWhereHas('local.moradores', function ($moradoresQuery) use ($like) {
+                            $moradoresQuery->whereRaw('LOWER(COALESCE(mor_nome, "")) LIKE ?', [$like])
+                                ->orWhereRaw(SmartSearch::foldExpr('mor_nome').' LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(mor_profissao, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(mor_observacao, "")) LIKE ?', [$like])
+                                ->orWhereRaw('CAST(mor_id AS CHAR) LIKE ?', [$like]);
+                        })
+                        ->orWhereHas('local.socioeconomico', function ($socioQuery) use ($like) {
+                            $socioQuery->whereRaw('LOWER(COALESCE(lse_proprietario_nome, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_proprietario_endereco, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_proprietario_telefone, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_telefone_contato, "")) LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(lse_observacoes_imovel, "")) LIKE ?', [$like]);
+                        })
+                        ->orWhereHas('usuario', function ($usuarioQuery) use ($like) {
+                            $usuarioQuery->whereRaw('LOWER(COALESCE(use_nome, "")) LIKE ?', [$like])
+                                ->orWhereRaw(SmartSearch::foldExpr('use_nome').' LIKE ?', [$like])
+                                ->orWhereRaw('LOWER(COALESCE(use_email, "")) LIKE ?', [$like])
+                                ->orWhereRaw('CAST(use_id AS CHAR) LIKE ?', [$like]);
+                        })
+                        ->orWhereHas('doencas', function ($doencaQuery) use ($like) {
+                            $doencaQuery->whereRaw('LOWER(COALESCE(doe_nome, "")) LIKE ?', [$like])
+                                ->orWhereRaw(SmartSearch::foldExpr('doe_nome').' LIKE ?', [$like])
+                                ->orWhereRaw('CAST(doe_id AS CHAR) LIKE ?', [$like]);
+                        })
+                        ->orWhereRaw('LOWER(COALESCE(vis_observacoes, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(CAST(vis_ocupantes_observacoes AS CHAR), "")) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(vis_data AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(vis_ciclo AS CHAR) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(vis_atividade AS CHAR) LIKE ?', [$like]);
+                }
 
-                $buscaLower = mb_strtolower($busca);
                 if (str_starts_with($buscaLower, 'pendente')) {
                     $q->orWhere('vis_pendencias', true);
                 }
@@ -413,7 +456,7 @@ class VisitaController extends Controller
         } catch (AuthorizationException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            \Log::error('syncStore: '.$e->getMessage(), ['exception' => $e]);
+            Log::error('syncStore: '.$e->getMessage(), ['exception' => $e]);
 
             return response()->json([
                 'sincronizados' => 0,

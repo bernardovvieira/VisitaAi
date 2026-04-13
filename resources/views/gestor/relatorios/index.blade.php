@@ -136,9 +136,10 @@
                         search: '',
                         options: [],
                         selected: [],
+                        normalize(value) { return (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); },
                         get filtered() {
-                            const q = (this.search || '').toLowerCase();
-                            return this.options.filter(o => (o.label || '').toLowerCase().includes(q));
+                            const q = this.normalize(this.search);
+                            return this.options.filter(o => this.normalize(o.label).includes(q));
                         },
                         toggle(opt) {
                             if (this.selected.some(s => s.id === opt.id)) {
@@ -211,9 +212,10 @@
                         selected: [],
                         emptyBairroCadastrado: @js(__('Nenhum bairro cadastrado nos locais.')),
                         emptyBairroBusca: @js(__('Nenhum bairro encontrado para a busca.')),
+                        normalize(value) { return (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); },
                         get filtered() {
-                            const q = this.search.toLowerCase();
-                            return this.options.filter(o => o.toLowerCase().includes(q));
+                            const q = this.normalize(this.search);
+                            return this.options.filter(o => this.normalize(o).includes(q));
                         },
                         toggle(opt) {
                             if (this.selected.includes(opt)) {

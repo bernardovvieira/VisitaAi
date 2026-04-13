@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Gestor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Log;
+use App\Support\SmartSearch;
 use Illuminate\Http\Request;
 
 class LogController extends Controller
@@ -13,13 +14,23 @@ class LogController extends Controller
         $query = Log::with('usuario')->orderByDesc('log_data');
 
         $search = trim((string) $request->input('search'));
+        $terms = SmartSearch::terms($search);
         if ($search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('usuario', fn ($u) => $u->where('use_nome', 'like', "%{$search}%")->orWhere('use_email', 'like', "%{$search}%"))
-                    ->orWhere('log_acao', 'like', "%{$search}%")
-                    ->orWhere('log_entidade', 'like', "%{$search}%")
-                    ->orWhere('log_descricao', 'like', "%{$search}%")
-                    ->orWhere('log_ip', 'like', "%{$search}%");
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $like = '%'.$term.'%';
+                    $q->orWhereHas('usuario', fn ($u) => $u
+                        ->whereRaw('LOWER(COALESCE(use_nome, "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('use_nome').' LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(use_email, "")) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(use_id AS CHAR) LIKE ?', [$like]))
+                        ->orWhereRaw('LOWER(COALESCE(log_acao, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(log_entidade, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(log_descricao, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(log_ip, "")) LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(log_user_agent, "")) LIKE ?', [$like])
+                        ->orWhereRaw('CAST(log_id AS CHAR) LIKE ?', [$like]);
+                }
             });
         }
 

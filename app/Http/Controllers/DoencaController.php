@@ -6,6 +6,7 @@ use App\Helpers\LogHelper;
 use App\Http\Requests\DoencaRequest;
 use App\Models\Doenca;
 use App\Models\User;
+use App\Support\SmartSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,15 +21,23 @@ class DoencaController extends Controller
         $user = Auth::user();
 
         $search = trim((string) $request->input('search'));
+        $terms = SmartSearch::terms($search);
 
         $query = Doenca::query();
         if ($search !== '') {
-            $term = '%'.$search.'%';
-            $query->where(function ($q) use ($term) {
-                $q->where('doe_nome', 'like', $term)
-                    ->orWhere('doe_sintomas', 'like', $term)
-                    ->orWhere('doe_transmissao', 'like', $term)
-                    ->orWhere('doe_medidas_controle', 'like', $term);
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $like = '%'.$term.'%';
+                    $q->orWhereRaw('LOWER(COALESCE(doe_nome, "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('doe_nome').' LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(CAST(doe_sintomas AS CHAR), "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('CAST(doe_sintomas AS CHAR)').' LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(CAST(doe_transmissao AS CHAR), "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('CAST(doe_transmissao AS CHAR)').' LIKE ?', [$like])
+                        ->orWhereRaw('LOWER(COALESCE(CAST(doe_medidas_controle AS CHAR), "")) LIKE ?', [$like])
+                        ->orWhereRaw(SmartSearch::foldExpr('CAST(doe_medidas_controle AS CHAR)').' LIKE ?', [$like])
+                        ->orWhereRaw('CAST(doe_id AS CHAR) LIKE ?', [$like]);
+                }
             });
         }
         $doencas = $query->paginate(10)->appends(['search' => $search]);

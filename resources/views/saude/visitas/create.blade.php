@@ -142,13 +142,24 @@
                                 <li class="px-2 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-600">{{ __('Locais cadastrados') }}</li>
                             </template>
                             <template x-for="local in locais.filter(l => {
-                                const q = (search || '').toLowerCase();
+                                const normalize = (value) => (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                const q = normalize(search);
                                 if (!q) return true;
-                                const end = (l.loc_endereco || '').toLowerCase();
-                                const bairro = (l.loc_bairro || '').toLowerCase();
-                                const cidade = (l.loc_cidade || '').toLowerCase();
-                                const cod = String(l.loc_codigo_unico || '');
-                                return end.includes(q) || bairro.includes(q) || cidade.includes(q) || cod.includes(q);
+                                const fields = [
+                                    l.loc_endereco,
+                                    l.loc_numero,
+                                    l.loc_complemento,
+                                    l.loc_bairro,
+                                    l.loc_cidade,
+                                    l.loc_estado,
+                                    l.loc_pais,
+                                    l.loc_cep,
+                                    l.loc_codigo_unico,
+                                    l.loc_categoria,
+                                    l.loc_responsavel_nome,
+                                    l.loc_lado,
+                                ];
+                                return fields.some(field => normalize(field).includes(q));
                             })" :key="local.loc_id">
                                 <li>
                                     <button type="button" @click="selectedId = Number(local.loc_id); selectedDraftId = ''; search = window.__visitaFormatLocalLine(local); open = false"
