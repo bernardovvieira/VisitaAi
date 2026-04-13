@@ -685,26 +685,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        const canvasBairros = document.getElementById('graficoBairros');
-        const canvasDoencas = document.getElementById('graficoDoencas');
-        const canvasDias = document.getElementById('graficoDias');
-        const canvasTratamentos = document.getElementById('graficoTratamentos');
-
-        const base64Bairros = canvasBairros && !canvasBairros.classList.contains('hidden') ? canvasBairros.toDataURL('image/png') : '';
-        const base64Doencas = canvasDoencas && !canvasDoencas.classList.contains('hidden') ? canvasDoencas.toDataURL('image/png') : '';
-        const base64Mapa = await new Promise(resolve => {
-            if (!mapaCalor || typeof leafletImage !== 'function') {
-                return resolve('');
-            }
-            leafletImage(mapaCalor, function(err, canvas) {
-                if (err || !canvas) {
-                    console.error(MAP_ERROR_MESSAGE, err);
-                    return resolve("");
-                }
-                resolve(canvas.toDataURL("image/png"));
-            });
-        });
-
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '{{ route("gestor.relatorios.pdf") }}';
@@ -741,15 +721,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (tipoRelatorio === 'individual') {
             localIds.forEach(function(id) { addField('local_id[]', id); });
         }
-
-        // Imagens em base64
-        addField('graficoBairrosBase64', base64Bairros);
-        addField('graficoDoencasBase64', base64Doencas);
-        addField('mapaCalorBase64', base64Mapa);
-        addField('graficoZonasBase64', '');
-        addField('graficoDiasBase64', canvasDias && !canvasDias.classList.contains('hidden') ? canvasDias.toDataURL('image/png') : '');
-        addField('graficoInspBase64', '');
-        addField('graficoTratamentosBase64', canvasTratamentos && !canvasTratamentos.classList.contains('hidden') ? canvasTratamentos.toDataURL('image/png') : '');
 
         document.body.appendChild(form);
         form.submit();

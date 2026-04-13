@@ -172,7 +172,7 @@
     <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
         <div class="border-b border-slate-200/80 pb-3 dark:border-slate-700/70">
             <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
-                {{ __('Ocupantes') }} * <em class="text-sm font-medium italic text-slate-600 dark:text-slate-400">{{ __('presentes nesta visita') }}</em>
+                {{ __('Ocupantes') }} <span class="ml-1 text-xs font-normal italic text-slate-500 dark:text-slate-500">{{ __('presentes nesta visita') }}</span>
             </h2>
         </div>
         <ul class="space-y-3">
