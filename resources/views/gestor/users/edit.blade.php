@@ -32,89 +32,48 @@
                 $errorFields = array_unique($errors->keys());
                 $labels = array_map(fn ($k) => $fieldLabels[$k] ?? $k, $errorFields);
             @endphp
-            <div class="rounded-lg bg-red-600 px-4 py-3 text-sm text-white dark:bg-red-700" role="alert">
-                <p class="font-medium">{{ __('Corrija os erros nos campos indicados abaixo.') }}</p>
-                @if (count($labels) > 0)
-                    <p class="mt-1 opacity-90">{{ __('Campos com erro:') }} {{ implode(', ', $labels) }}.</p>
-                @endif
-            </div>
+            <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="count($labels) > 0 ? __('Campos com erro: :labels.', ['labels' => implode(', ', $labels)]) : null" />
         @endif
 
         <form method="POST" action="{{ route('gestor.users.update', $user) }}" class="space-y-6" id="user-edit-form">
             @csrf
             @method('PATCH')
 
-            <!-- Nome -->
-            <div>
-                <label for="use_nome" class="v-toolbar-label">Nome <span class="text-red-500">*</span></label>
-                <input type="text" id="use_nome" name="use_nome" value="{{ old('use_nome', $user->use_nome) }}" 
-                       required autofocus
-                       class="v-input mt-1 @error('use_nome') border-red-500 dark:border-red-400 border @enderror">
-                <x-input-error :messages="$errors->get('use_nome')" class="mt-1" />
-            </div>
+            <x-form-field name="use_nome" :label="__('Nome')" :required="true">
+                <x-text-input id="use_nome" name="use_nome" type="text" value="{{ old('use_nome', $user->use_nome) }}" required autofocus />
+            </x-form-field>
 
-            <!-- CPF (somente leitura) -->
-            <div>
-                <label for="cpf_mascarado" class="v-toolbar-label">CPF <span class="text-red-500">*</span></label>
-                <input type="text"
-                       id="cpf_mascarado"
-                       name="cpf_mascarado"
-                       value="{{ old('cpf_mascarado', preg_replace('/\d(?=(?:.*\d){2})/', '*', $user->use_cpf)) }}" 
-                       readonly
-                       class="v-input mt-1">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Não é possível alterar o CPF. Caso precise, entre em contato com a Bitwise Technologies (suporte).</p>
-            </div>
+            <x-form-field name="cpf_mascarado" :label="__('CPF')" :required="true" :help="__('Não é possível alterar o CPF. Caso precise, entre em contato com a Bitwise Technologies (suporte).')">
+                <x-text-input id="cpf_mascarado" name="cpf_mascarado" type="text" value="{{ old('cpf_mascarado', preg_replace('/\d(?=(?:.*\d){2})/', '*', $user->use_cpf)) }}" readonly />
+            </x-form-field>
 
-            <!-- Email -->
-            <div>
-                <label for="use_email" class="v-toolbar-label">E-mail <span class="text-red-500">*</span></label>
-                <input type="email" id="use_email" name="use_email" value="{{ old('use_email', $user->use_email) }}"
-                       required
-                       class="v-input mt-1 @error('use_email') border-red-500 dark:border-red-400 border @enderror">
-                <x-input-error :messages="$errors->get('use_email')" class="mt-1" />
-            </div>
+            <x-form-field name="use_email" :label="__('E-mail')" :required="true">
+                <x-text-input id="use_email" name="use_email" type="email" value="{{ old('use_email', $user->use_email) }}" required />
+            </x-form-field>
 
-            <!-- Perfil -->
-            <div>
-                <label for="use_perfil" class="v-toolbar-label">Perfil <span class="text-red-500">*</span></label>
-                <select id="use_perfil" name="use_perfil"
-                        class="v-select mt-1 @error('use_perfil') border-red-500 dark:border-red-400 border @enderror" required>
+            <x-form-field name="use_perfil" :label="__('Perfil')" :required="true">
+                <select id="use_perfil" name="use_perfil" class="v-select mt-1" required>
                     <option value="gestor" {{ old('use_perfil', $user->use_perfil) == 'gestor' ? 'selected' : '' }}>{{ \App\Models\User::perfilLabel('gestor') }}</option>
                     <option value="agente_endemias" {{ old('use_perfil', $user->use_perfil) == 'agente_endemias' ? 'selected' : '' }}>{{ \App\Models\User::perfilLabel('agente_endemias') }}</option>
                     <option value="agente_saude" {{ old('use_perfil', $user->use_perfil) == 'agente_saude' ? 'selected' : '' }}>{{ \App\Models\User::perfilLabel('agente_saude') }}</option>
                 </select>
-                <x-input-error :messages="$errors->get('use_perfil')" class="mt-1" />
-            </div>
+            </x-form-field>
 
-            <!-- Data Cadastro -->
-            <div>
-                <label for="data_cadastro_display" class="v-toolbar-label">Data de Cadastro</label>
-                <input type="text" id="data_cadastro_display" value="{{ $user->use_data_criacao->format('d/m/Y') }}" 
-                       readonly
-                       class="v-input mt-1 cursor-default border-slate-200/80 bg-slate-100 focus:ring-0 dark:border-slate-600 dark:bg-slate-900/80">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Data em que o usuário se cadastrou.</p>
-            </div>
+            <x-form-field name="data_cadastro_display" :label="__('Data de Cadastro')" :help="__('Data em que o usuário se cadastrou.')">
+                <x-text-input id="data_cadastro_display" type="text" value="{{ $user->use_data_criacao->format('d/m/Y') }}" readonly class="cursor-default border-slate-200/80 bg-slate-100 focus:ring-0 dark:border-slate-600 dark:bg-slate-900/80" />
+            </x-form-field>
 
-            <!-- Nova Senha -->
-            <div>
-                <label for="use_senha" class="v-toolbar-label">Nova Senha</label>
-                <input type="password" id="use_senha" name="use_senha" autocomplete="new-password"
-                       class="v-input mt-1 @error('use_senha') border border-red-500 dark:border-red-400 @enderror">
-                <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
+            <x-form-field name="use_senha" :label="__('Nova Senha')" :help="__('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !). Deixe em branco se não quiser alterar a senha atual.')">
+                <x-text-input id="use_senha" name="use_senha" type="password" autocomplete="new-password" />
+                <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600" role="presentation" aria-hidden="true">
                     <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !). Deixe em branco se não quiser alterar a senha atual.</p>
-                <x-input-error :messages="$errors->get('use_senha')" class="mt-1" />
-            </div>
+            </x-form-field>
 
-            <!-- Confirmar Nova Senha -->
-            <div>
-                <label for="use_senha_confirmation" class="v-toolbar-label">Confirmar Nova Senha</label>
-                <input type="password" id="use_senha_confirmation" name="use_senha_confirmation" autocomplete="new-password"
-                       class="v-input mt-1 @error('use_senha_confirmation') border-red-500 dark:border-red-400 border @enderror">
-                <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
-                <x-input-error :messages="$errors->get('use_senha_confirmation')" class="mt-1" />
-            </div>
+            <x-form-field name="use_senha_confirmation" :label="__('Confirmar Nova Senha')">
+                <x-text-input id="use_senha_confirmation" name="use_senha_confirmation" type="password" autocomplete="new-password" />
+                <p id="password-match-feedback" class="mt-1 hidden text-sm" aria-live="polite"></p>
+            </x-form-field>
 
             <div class="flex justify-end">
                 <x-primary-button type="submit" id="user-edit-btn">{{ __('Salvar alterações') }}</x-primary-button>

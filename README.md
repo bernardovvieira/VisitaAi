@@ -26,6 +26,14 @@ Toda a documentação funcional, arquitetural e de testes deste repositório est
 
 ## Arquitetura de Produto e Mensagem
 
+## Atualizações recentes (abril/2026)
+
+- Padronização ampla de formulários Blade com componentes reutilizáveis: `x-form-field` e `x-empty-state`.
+- Contratos de exportação de indicadores de ocupantes ajustados para CSV textual (`text/csv`), com rótulos de interface alinhados.
+- Bloco de alto risco de locais (mapa/CEP/geolocalização) fechado em `create` e `edit`, removendo handler inline de geolocalização e mantendo paridade de IDs usados por scripts.
+- Bloco socioeconômico ampliado com confrontantes e total de banheiros calculado automaticamente (cliente e persistência).
+- Regressão rápida completa executada com sucesso via `php artisan test`.
+
 ### Objetivo do produto
 Visita Aí é uma plataforma municipal para organizar operação territorial e transformar dados de campo em indicadores para decisão, gestão e transparência.
 
@@ -190,9 +198,9 @@ O `phpunit.xml` configura **SQLite em memória** para que `php artisan test` rod
 ### Resumo
 Existe uma suíte abrangente de testes de integração para fluxos realistas do sistema com múltiplos usuários e operações.
 
-Status atual:
-- 84 testes passando
-- 285 asserções
+Status de referência (abril/2026, comando `php artisan test`):
+- 109 testes passando
+- 441 asserções
 
 Arquivo principal:
 - `tests/Feature/CompleteSystemWorkflowIntegrationTest.php`

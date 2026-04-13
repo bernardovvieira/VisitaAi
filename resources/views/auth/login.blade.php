@@ -15,23 +15,18 @@
         @csrf
 
         {{-- CPF ou E-mail --}}
-        <div class="mb-5">
-            <x-input-label for="use_email">{{ __('CPF ou E-mail') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="use_email" :label="__('CPF ou E-mail')" :required="true" class="mb-5">
             <x-text-input id="use_email"
-                        name="use_email"
-                        type="text"
-                        :value="old('use_email')"
-                        required autofocus
-                        class="block w-full mt-1 @error('use_email') border-red-500 @enderror"
-                        autocomplete="username" />
-            <x-input-error :messages="$errors->get('use_email')" />
+                          name="use_email"
+                          type="text"
+                          :value="old('use_email')"
+                          required autofocus
+                          autocomplete="username" />
             <div id="use_email_format_error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></div>
-        </div>
+        </x-form-field>
 
         {{-- Senha --}}
-        <div class="mb-5" id="password-toggle-wrap">
-            <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
-
+        <x-form-field name="password" :label="__('Senha')" :required="true" class="mb-5" id="password-toggle-wrap">
             <div class="relative mt-1">
                 <input
                     type="password"
@@ -39,7 +34,7 @@
                     name="password"
                     required
                     autocomplete="current-password"
-                    class="v-input pr-10 @error('password') border-red-500 dark:border-red-500/60 @enderror"
+                    class="v-input pr-10"
                 />
 
                 <button
@@ -60,9 +55,7 @@
                     </svg>
                 </button>
             </div>
-
-            <x-input-error :messages="$errors->get('password')" />
-        </div>
+        </x-form-field>
 
         {{-- Botões --}}
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
@@ -96,7 +89,7 @@
                 input.type = isPassword ? 'text' : 'password';
                 iconShow.classList.toggle('hidden', isPassword);
                 iconHide.classList.toggle('hidden', !isPassword);
-                btn.setAttribute('aria-label', isPassword ? @json(__('Ocultar senha')) : @json(__('Mostrar senha')));
+                btn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
             });
         }
     })();

@@ -34,16 +34,9 @@
             </x-ui.disclosure>
         </x-slot>
     </x-page-header>
-
     <x-section-card class="space-y-6 dark:bg-gray-800">
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+            <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
         @endif
 
         <form method="POST" action="{{ route('saude.visitas.store') }}" class="space-y-6"
@@ -56,17 +49,12 @@
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">{{ __('Dados básicos') }}</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="vis_data" class="v-toolbar-label">{{ __('Data da visita') }} <span class="text-red-500">*</span></label>
-                        <input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required
-                            class="v-input mt-1">
-                    </div>
-                    <div>
-                        <label for="vis_ciclo" class="v-toolbar-label">{{ __('Ciclo/ano') }} <span class="text-red-500">*</span></label>
-                        <input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required
-                            class="v-input mt-1"
-                            placeholder="{{ __('mm/aa') }}">
-                    </div>
+                    <x-form-field name="vis_data" :label="__('Data da visita')" :required="true">
+                        <x-text-input type="date" name="vis_data" id="vis_data" value="{{ old('vis_data', now()->toDateString()) }}" required />
+                    </x-form-field>
+                    <x-form-field name="vis_ciclo" :label="__('Ciclo/ano')" :required="true">
+                        <x-text-input type="text" name="vis_ciclo" id="vis_ciclo" value="{{ old('vis_ciclo') }}" required placeholder="{{ __('mm/aa') }}" />
+                    </x-form-field>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {{ __('O ciclo deve ser informado no formato mm/aa, por exemplo, :exemplo para a primeira referência do ano de :ano.', ['exemplo' => '"01/'.now()->format('y').'"', 'ano' => (string) now()->year]) }}
@@ -120,7 +108,7 @@
                         });
                     ">
 
-                    <label for="fk_local_id" class="v-toolbar-label">{{ __('Local visitado') }} <span class="text-red-500">*</span></label>
+                    <x-input-label for="fk_local_id" :value="__('Local visitado')" class="mb-2" />
                     <div class="relative mt-1">
                         <input type="text" x-model="search" @click="limparSelecao" x-ref="input" placeholder="{{ __('Buscar local...') }}" required
                                 class="v-input">
@@ -206,32 +194,26 @@
 
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">{{ __('Atividades') }}</legend>
-                <div>
-                    <label for="vis_atividade" class="v-toolbar-label">{{ __('Atividade') }} <span class="text-red-500">*</span></label>
-                    @php $at7 = config('ms_terminologia.atividades_pncd.7', ['codigo' => '7-LIRAa', 'nome' => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)']); @endphp
-                    <select id="vis_atividade" name="vis_atividade" required
-                            class="v-select mt-1">
+                @php $at7 = config('ms_terminologia.atividades_pncd.7', ['codigo' => '7-LIRAa', 'nome' => 'LIRAa (Levantamento de Índice Rápido para Aedes aegypti)']); @endphp
+                <x-form-field name="vis_atividade" :label="__('Atividade')" :required="true" :help="__('O perfil ACS permite registrar a atividade LIRAa conforme Diretriz Nacional para Atuação Integrada dos ACE e ACS no Território (MS).')">
+                    <select id="vis_atividade" name="vis_atividade" required class="v-select mt-1">
                         <option value="7" selected>{{ $at7['codigo'] }} · {{ __($at7['nome']) }}</option>
                     </select>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {{ __('O perfil ACS permite registrar a atividade LIRAa conforme Diretriz Nacional para Atuação Integrada dos ACE e ACS no Território (MS).') }}
-                    </p>
-                </div>
+                </x-form-field>
             </fieldset>
 
             {{-- Tipo da visita --}}
-            <div class="grid grid-cols-1 sm:grid-cols-1 gap-4">
-                <div>
-                    <label for="vis_visita_tipo" class="v-toolbar-label">{{ __('Tipo da visita') }}</label>
-                    <select name="vis_visita_tipo" id="vis_visita_tipo"
-                            class="v-select mt-1">
+            <fieldset class="space-y-3">
+                <legend class="v-section-title mb-2">{{ __('Tipo da visita') }}</legend>
+                <x-form-field name="vis_visita_tipo" :label="__('Tipo da visita')">
+                    <select name="vis_visita_tipo" id="vis_visita_tipo" class="v-select mt-1">
                         <option value="">{{ __('Selecione…') }}</option>
                         @foreach(config('ms_terminologia.visita_tipo') as $tipoVal => $tipoConf)
                             <option value="{{ $tipoVal }}" {{ old('vis_visita_tipo') == $tipoVal ? 'selected' : '' }}>{{ __($tipoConf['label']) }}</option>
                         @endforeach
                     </select>
-                </div>
-            </div>
+                </x-form-field>
+            </fieldset>
 
             {{-- Depósitos Inspecionados --}}
             <fieldset class="space-y-3">
@@ -262,16 +244,16 @@
                     </div>
                 </div>
                 <div>
-                    <label for="vis_depositos_eliminados" class="v-toolbar-label">{{ __('Depósitos eliminados') }}</label>
-                    <input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados') }}"
-                           class="v-input mt-1">
+                    <x-form-field name="vis_depositos_eliminados" :label="__('Depósitos eliminados')">
+                        <x-text-input type="number" name="vis_depositos_eliminados" id="vis_depositos_eliminados" min="0" value="{{ old('vis_depositos_eliminados') }}" />
+                    </x-form-field>
                 </div>
             </fieldset>
             
             {{-- Tubitos e amostra --}}
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">{{ __('Coleta de amostra') }}</legend>
-                <div class="flex items-center mt-6">
+                <div class="flex items-center pt-4">
                     <input type="checkbox" name="vis_coleta_amostra" id="vis_coleta_amostra" value="1" {{ old('vis_coleta_amostra') ? 'checked' : '' }}
                         class="mr-2 text-blue-600 dark:text-blue-400">
                     <label for="vis_coleta_amostra" class="text-sm text-gray-700 dark:text-gray-300">{{ __('Houve coleta de amostra?') }}</label>
@@ -280,22 +262,16 @@
                     {{ __('Se marcado, informe as amostras e a quantidade de tubitos usados.') }}
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="vis_amos_inicial" class="v-toolbar-label">{{ __('Número de amostra inicial') }}</label>
-                        <input type="number" name="vis_amos_inicial" id="vis_amos_inicial" min="0" value="{{ old('vis_amos_inicial') }}" disabled
-                            class="v-input mt-1">
-                    </div>
-                    <div>
-                        <label for="vis_amos_final" class="v-toolbar-label">{{ __('Número de amostra final') }}</label>
-                        <input type="number" name="vis_amos_final" id="vis_amos_final" min="0" value="{{ old('vis_amos_final') }}" disabled
-                            class="v-input mt-1">
-                    </div>
+                    <x-form-field name="vis_amos_inicial" :label="__('Número de amostra inicial')">
+                        <x-text-input type="number" name="vis_amos_inicial" id="vis_amos_inicial" min="0" value="{{ old('vis_amos_inicial') }}" disabled />
+                    </x-form-field>
+                    <x-form-field name="vis_amos_final" :label="__('Número de amostra final')">
+                        <x-text-input type="number" name="vis_amos_final" id="vis_amos_final" min="0" value="{{ old('vis_amos_final') }}" disabled />
+                    </x-form-field>
                 </div>
-                <div>
-                    <label for="vis_qtd_tubitos" class="v-toolbar-label">{{ __('Quantidade de tubitos utilizados') }}</label>
-                    <input type="number" name="vis_qtd_tubitos" id="vis_qtd_tubitos" min="0" value="{{ old('vis_qtd_tubitos') }}" disabled
-                        class="v-input mt-1">
-                </div>
+                <x-form-field name="vis_qtd_tubitos" :label="__('Quantidade de tubitos utilizados')">
+                    <x-text-input type="number" name="vis_qtd_tubitos" id="vis_qtd_tubitos" min="0" value="{{ old('vis_qtd_tubitos') }}" disabled />
+                </x-form-field>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {{ __('Se a coleta de amostra for realizada, informe os números de amostra inicial e final, além da quantidade de tubitos utilizados.') }}
                 </p>
@@ -305,7 +281,7 @@
             <div x-data="{ exibirTratamentos: {{ old('tratamentos') ? 'true' : 'false' }}, tratamentos: {{ old('tratamentos', '[]') }} }"
                  x-init="window.addEventListener('visita-apply-draft-tratamentos', function(e) { tratamentos = (e.detail && Array.isArray(e.detail)) ? e.detail : []; exibirTratamentos = tratamentos.length > 0; })"
                  class="space-y-4">
-                <label class="v-toolbar-label">{{ __('Tratamentos') }}</label>
+                <x-input-label :value="__('Tratamentos')" class="mb-2" />
 
                 <div x-show="tratamentos.length === 0" class="p-4 bg-gray-50 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 rounded">
                     {{ __('Nenhum tratamento foi informado. Adicione se necessário.') }}
@@ -465,25 +441,20 @@
 
             {{-- Pendências --}}
             <div class="space-y-3">
-                <label class="v-toolbar-label">{{ __('Pendências') }}</label>
-                <div class="flex items-center" style="padding-top: 1rem;">
+                <x-input-label :value="__('Pendências')" class="mb-2" />
+                <div class="flex items-center pt-4">
                     <input type="checkbox" name="vis_pendencias" id="vis_pendencias" value="1" {{ old('vis_pendencias') ? 'checked' : '' }}
                            class="mr-2 text-blue-600 dark:text-blue-400">
                     <label for="vis_pendencias" class="text-sm text-gray-700 dark:text-gray-300">{{ __('Houve alguma pendência na visita?') }}</label>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" style="padding-bottom: 1rem;">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 pb-4">
                     {{ __('Se marcado, você pode informar as pendências no campo de observações abaixo.') }}
                 </p>
-
-            {{-- Observações --}}
-            <div>
-                <label for="vis_observacoes" class="v-toolbar-label">{{ __('Observações') }}</label>
-                <textarea name="vis_observacoes" id="vis_observacoes" rows="5"
-                          class="v-input mt-1">{{ old('vis_observacoes') }}</textarea>
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {{ __('Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.') }}
-            </p>
+
+            <x-form-field name="vis_observacoes" :label="__('Observações')" :help="__('Utilize este campo para registrar observações adicionais sobre a visita, como condições encontradas, dificuldades enfrentadas ou recomendações.')">
+                <textarea name="vis_observacoes" id="vis_observacoes" rows="5" class="v-input mt-1">{{ old('vis_observacoes') }}</textarea>
+            </x-form-field>
 
             <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
                 <p class="text-sm text-gray-600 dark:text-gray-400">

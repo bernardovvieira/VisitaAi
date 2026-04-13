@@ -26,15 +26,16 @@
         <div class="v-list-toolbar">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div class="min-w-0 flex-1 space-y-2">
-                    <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                               data-live-url="{{ route('gestor.locais.index') }}" data-live-param="search"
-                               data-live-loading-id="search-loading-gestor-locais"
-                               placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
-                               class="v-input" />
-                        <span id="search-loading-gestor-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
-                    </div>
+                    <x-form-field name="search" :label="__('Busca inteligente')">
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                                   data-live-url="{{ route('gestor.locais.index') }}" data-live-param="search"
+                                   data-live-loading-id="search-loading-gestor-locais"
+                                   placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
+                                   class="v-input" />
+                            <span id="search-loading-gestor-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+                        </div>
+                    </x-form-field>
                 </div>
             </div>
         </div>
@@ -106,13 +107,12 @@
                     @empty
                         <tr>
                             <td colspan="9" class="!p-0">
-                                <div class="v-empty-state px-4">
-                                    <div class="v-empty-state__icon" aria-hidden="true">
-                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0" />
-                                    </div>
-                                    <p class="v-empty-state__title">{{ __('Nenhum local cadastrado.') }}</p>
-                                    <p class="v-empty-state__text">{{ __('Os locais aparecerão aqui quando os profissionais (ACE/ACS) os cadastrarem.') }}</p>
-                                </div>
+                                <x-empty-state
+                                    :title="__('Nenhum local cadastrado.')"
+                                    :description="__('Os locais aparecerão aqui quando os profissionais (ACE/ACS) os cadastrarem.')"
+                                    icon="heroicon-o-map-pin"
+                                    class="border-0 bg-transparent px-4"
+                                />
                             </td>
                         </tr>
                     @endforelse

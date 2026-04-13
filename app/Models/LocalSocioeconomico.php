@@ -161,6 +161,22 @@ class LocalSocioeconomico extends Model
             $out[$col] = is_string($v) ? trim($v) : $v;
         }
 
+        if (
+            array_key_exists('lse_banheiro_dentro', $out)
+            || array_key_exists('lse_banheiro_fora', $out)
+            || array_key_exists('lse_num_banheiros', $out)
+        ) {
+            $hasDentro = array_key_exists('lse_banheiro_dentro', $out) && $out['lse_banheiro_dentro'] !== null;
+            $hasFora = array_key_exists('lse_banheiro_fora', $out) && $out['lse_banheiro_fora'] !== null;
+            if ($hasDentro || $hasFora) {
+                $dentro = is_numeric($out['lse_banheiro_dentro'] ?? null) ? (int) $out['lse_banheiro_dentro'] : 0;
+                $fora = is_numeric($out['lse_banheiro_fora'] ?? null) ? (int) $out['lse_banheiro_fora'] : 0;
+                $out['lse_num_banheiros'] = $dentro + $fora;
+            } else {
+                $out['lse_num_banheiros'] = null;
+            }
+        }
+
         return $out;
     }
 

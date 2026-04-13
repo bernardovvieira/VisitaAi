@@ -7,7 +7,7 @@
 @section('content')
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Doenças')]]" />
-    <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Doenças')">
+    <x-page-header :eyebrow="__('Cadastros municipais')" :title="__('Doenças monitoradas')">
         <x-slot name="actions">
             <a href="{{ route('gestor.doencas.create') }}"
                class="v-btn-compact v-btn-compact--blue">
@@ -23,15 +23,16 @@
     <x-flash-alerts />
 
     <x-section-card class="v-card--muted">
-        <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-        <div class="mt-1 flex items-center gap-2">
-            <input type="text" name="search" id="search" value="{{ old('search', request('search')) }}"
-                   data-live-url="{{ route('gestor.doencas.index') }}" data-live-param="search"
-                   data-live-loading-id="search-loading-doencas"
-                   placeholder="{{ __('Nome, sintomas, transmissão ou medidas…') }}"
-                   class="v-input" />
-            <span id="search-loading-doencas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
-        </div>
+        <x-form-field name="search" :label="__('Busca inteligente')">
+            <div class="flex items-center gap-2">
+                <input type="text" name="search" id="search" value="{{ old('search', request('search')) }}"
+                       data-live-url="{{ route('gestor.doencas.index') }}" data-live-param="search"
+                       data-live-loading-id="search-loading-doencas"
+                       placeholder="{{ __('Nome, sintomas, transmissão ou medidas…') }}"
+                       class="v-input" />
+                <span id="search-loading-doencas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+            </div>
+        </x-form-field>
     </x-section-card>
 
     <x-section-card class="v-card--flush overflow-hidden">
@@ -83,7 +84,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                onclick="return confirm(@json(__('Tem certeza que deseja excluir esta doença? Esta ação não pode ser desfeita.')))"
+                                            data-confirm-message="{{ __('Tem certeza que deseja excluir esta doença? Esta ação não pode ser desfeita.') }}"
                                                 class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
                                                 title="{{ __('Excluir') }}"
                                                 aria-label="{{ __('Excluir doença') }}">
@@ -96,17 +97,17 @@
                     @empty
                         <tr>
                             <td colspan="6" class="!p-0">
-                                <div class="v-empty-state px-4">
-                                    <div class="v-empty-state__icon" aria-hidden="true">
-                                        <x-heroicon-o-beaker class="h-7 w-7 shrink-0" />
-                                    </div>
-                                    <p class="v-empty-state__title">{{ __('Nenhuma doença cadastrada no município.') }}</p>
-                                    <p class="v-empty-state__text">{{ __('Cadastre as doenças monitoradas para orientar ACE e ACS em campo.') }}</p>
+                                <x-empty-state
+                                    :title="__('Nenhuma doença cadastrada no município.')"
+                                    :description="__('Cadastre as doenças monitoradas para orientar ACE e ACS em campo.')"
+                                    icon="heroicon-o-beaker"
+                                    class="border-0 bg-transparent px-4"
+                                >
                                     <a href="{{ route('gestor.doencas.create') }}" class="v-btn-compact v-btn-compact--blue mt-5">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Cadastrar doença') }}
                                     </a>
-                                </div>
+                                </x-empty-state>
                             </td>
                         </tr>
                     @endforelse
@@ -116,4 +117,17 @@
         <x-pagination-relatorio :paginator="$doencas" item-label="doenças" />
     </x-section-card>
 </div>
+<script>
+(function () {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
+})();
+</script>
 @endsection

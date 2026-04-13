@@ -28,13 +28,7 @@
 
     <x-section-card class="space-y-4">
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+            <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
         @endif
 
         <form method="POST" action="{{ route('agente.locais.update', $local) }}" class="space-y-6" id="form_local">
@@ -44,25 +38,21 @@
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">Características Principais</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="loc_tipo" class="v-toolbar-label">Tipo de Imóvel <span class="text-red-500">*</span></label>
-                        <select id="loc_tipo" name="loc_tipo" required
-                                class="v-select mt-1">
+                    <x-form-field name="loc_tipo" :label="__('Tipo de Imóvel')" :required="true">
+                        <select id="loc_tipo" name="loc_tipo" required class="v-select mt-1">
                             <option value="" disabled>Selecione o tipo de imóvel</option>
                             <option value="R" {{ old('loc_tipo', $local->loc_tipo ?? '') == 'R' ? 'selected' : '' }}>Residencial (R)</option>
                             <option value="C" {{ old('loc_tipo', $local->loc_tipo ?? '') == 'C' ? 'selected' : '' }}>Comercial (C)</option>
                             <option value="T" {{ old('loc_tipo', $local->loc_tipo ?? '') == 'T' ? 'selected' : '' }}>Terreno Baldio (T)</option>
                         </select>
-                    </div>
-                    <div>
-                        <label for="loc_zona" class="v-toolbar-label">Zona <span class="text-red-500">*</span></label>
-                        <select id="loc_zona" name="loc_zona" required
-                                class="v-select mt-1">
+                    </x-form-field>
+                    <x-form-field name="loc_zona" :label="__('Zona')" :required="true">
+                        <select id="loc_zona" name="loc_zona" required class="v-select mt-1">
                             <option value="" disabled>Selecione a zona</option>
                             <option value="U" {{ old('loc_zona', $local->loc_zona ?? '') == 'U' ? 'selected' : '' }}>Urbana (U)</option>
                             <option value="R" {{ old('loc_zona', $local->loc_zona ?? '') == 'R' ? 'selected' : '' }}>Rural (R)</option>
                         </select>
-                    </div>
+                    </x-form-field>
                 </div>
             </fieldset>
 
@@ -70,7 +60,7 @@
                 <legend class="v-section-title mb-2">Endereço</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div id="wrap_loc_cep">
-                        <label for="loc_cep" class="v-toolbar-label">CEP <span class="text-red-500">*</span></label>
+                        <x-input-label for="loc_cep" :value="__('CEP')" :required="true" />
                         <input id="loc_cep" name="loc_cep" type="text" maxlength="9" required value="{{ old('loc_cep', $local->loc_cep ?? '') }}"
                             class="v-input mt-1 cep"
                             data-cep-permitido="{{ $cepPermitido ?? '' }}"
@@ -78,12 +68,12 @@
                         <p id="loc_cep_erro" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden" role="alert"></p>
                     </div>
                     <div>
-                        <label for="loc_endereco" class="v-toolbar-label">Logradouro <span class="text-red-500">*</span></label>
+                        <x-input-label for="loc_endereco" :value="__('Logradouro')" :required="true" />
                         <input id="loc_endereco" name="loc_endereco" type="text" required value="{{ old('loc_endereco', $local->loc_endereco ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="loc_numero" class="v-toolbar-label">Número</label>
+                        <x-input-label for="loc_numero" :value="__('Número')" />
                         <input id="loc_numero" name="loc_numero" type="number" value="{{ old('loc_numero', $local->loc_numero ?? '') }}"
                             class="v-input mt-1">
                     </div>
@@ -91,12 +81,12 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="loc_bairro" class="v-toolbar-label">Bairro/Localidade <span class="text-red-500">*</span></label>
+                        <x-input-label for="loc_bairro" :value="__('Bairro/Localidade')" :required="true" />
                         <input id="loc_bairro" name="loc_bairro" type="text" required value="{{ old('loc_bairro', $local->loc_bairro ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="loc_complemento" class="v-toolbar-label">Complemento</label>
+                        <x-input-label for="loc_complemento" :value="__('Complemento')" />
                         <input id="loc_complemento" name="loc_complemento" type="text" value="{{ old('loc_complemento', $local->loc_complemento ?? '') }}"
                             class="v-input mt-1">
                     </div>
@@ -114,12 +104,12 @@
                 <legend class="v-section-title mb-2">Complementos</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="loc_codigo" class="v-toolbar-label">Código da Localidade <span class="text-red-500">*</span></label>
+                        <x-input-label for="loc_codigo" :value="__('Código da Localidade')" :required="true" />
                         <input id="loc_codigo" name="loc_codigo" type="number" required value="{{ old('loc_codigo', $local->loc_codigo ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="loc_categoria" class="v-toolbar-label">Categoria da Localidade</label>
+                        <x-input-label for="loc_categoria" :value="__('Categoria da Localidade')" />
                         <input id="loc_categoria" name="loc_categoria" type="text" value="{{ old('loc_categoria', $local->loc_categoria ?? '') }}"
                             class="v-input mt-1">
                     </div>
@@ -127,17 +117,17 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                        <label for="loc_quarteirao" class="v-toolbar-label">Quarteirão</label>
+                        <x-input-label for="loc_quarteirao" :value="__('Quarteirão')" />
                         <input id="loc_quarteirao" name="loc_quarteirao" type="number" value="{{ old('loc_quarteirao', $local->loc_quarteirao ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="loc_sequencia" class="v-toolbar-label">Sequência</label>
+                        <x-input-label for="loc_sequencia" :value="__('Sequência')" />
                         <input id="loc_sequencia" name="loc_sequencia" type="number" value="{{ old('loc_sequencia', $local->loc_sequencia ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="loc_lado" class="v-toolbar-label">Lado</label>
+                        <x-input-label for="loc_lado" :value="__('Lado')" />
                         <input id="loc_lado" name="loc_lado" type="number" value="{{ old('loc_lado', $local->loc_lado ?? '') }}"
                             class="v-input mt-1">
                     </div>
@@ -148,17 +138,17 @@
                 <legend class="v-section-title mb-2">Geolocalização</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                     <div>
-                        <label for="loc_latitude" class="v-toolbar-label">Latitude <span class="text-red-500">*</span></label>
+                        <x-input-label for="loc_latitude" :value="__('Latitude')" :required="true" />
                         <input id="loc_latitude" name="loc_latitude" type="text" required value="{{ old('loc_latitude', $local->loc_latitude ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div>
-                        <label for="loc_longitude" class="v-toolbar-label">Longitude <span class="text-red-500">*</span></label>
+                        <x-input-label for="loc_longitude" :value="__('Longitude')" :required="true" />
                         <input id="loc_longitude" name="loc_longitude" type="text" required value="{{ old('loc_longitude', $local->loc_longitude ?? '') }}"
                             class="v-input mt-1">
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" id="btn-minha-localizacao" onclick="obterMinhaLocalizacao()"
+                        <button type="button" id="btn-minha-localizacao" data-geolocate-button="1"
                                 class="v-btn-primary w-full">
                             Minha Localização
                         </button>
@@ -221,6 +211,21 @@
 var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="40"><path fill="#2563eb" stroke="#fff" stroke-width="1.5" d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0z"/><circle fill="#fff" cx="12" cy="8.5" r="2.8"/></svg>';
 
 document.addEventListener('DOMContentLoaded', function() {
+    var localFieldIds = [
+        'loc_cep',
+        'loc_endereco',
+        'loc_numero',
+        'loc_bairro',
+        'loc_cidade',
+        'loc_estado',
+        'loc_pais',
+        'loc_latitude',
+        'loc_longitude',
+        'btn-minha-localizacao',
+        'map'
+    ];
+    window.VisitaLocalFieldIds = localFieldIds.slice();
+
     var cepInput = document.getElementById('loc_cep');
     var cepPermitido = (cepInput && cepInput.getAttribute('data-cep-permitido')) || '';
     cepPermitido = (cepPermitido || '').trim();
@@ -506,6 +511,13 @@ document.addEventListener('DOMContentLoaded', function() {
         updateMapOfflineAviso();
         document.addEventListener('visita-connection-change', updateMapOfflineAviso);
         window.addEventListener('visita-connection-change', updateMapOfflineAviso);
+    }
+
+    var geoBtn = document.querySelector('[data-geolocate-button="1"]');
+    if (geoBtn) {
+        geoBtn.addEventListener('click', function() {
+            obterMinhaLocalizacao();
+        });
     }
 });
 

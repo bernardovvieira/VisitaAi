@@ -8,84 +8,65 @@
         @method($formMethod)
     @endif
 
-    <div>
-        <label for="doe_nome" class="v-toolbar-label">
-            Nome <span class="text-red-500">*</span>
-        </label>
-        <input id="doe_nome" name="doe_nome" type="text"
-               value="{{ old('doe_nome', $isEdit ? $doenca->doe_nome : '') }}"
-               required autofocus
-               class="v-input mt-1">
-        @error('doe_nome')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-    </div>
+    <x-form-field name="doe_nome" :label="__('Nome')" :required="true">
+        <x-text-input id="doe_nome" name="doe_nome" type="text" value="{{ old('doe_nome', $isEdit ? $doenca->doe_nome : '') }}" required autofocus />
+    </x-form-field>
 
     <div class="rounded-xl border border-amber-200/90 bg-amber-50/55 p-4 dark:border-amber-800/45 dark:bg-amber-950/25">
-        <label class="v-toolbar-label mb-2">
-            Sintomas <span class="text-red-500">*</span>
-        </label>
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-            @foreach($optionsSintomas as $opt)
-                <label class="inline-flex items-center space-x-2">
-                    <input
-                        type="checkbox"
-                        name="doe_sintomas[]"
-                        value="{{ $opt }}"
-                        {{ in_array($opt, old('doe_sintomas', $isEdit ? $doenca->doe_sintomas : [])) ? 'checked' : '' }}
-                        class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
-                    />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ $opt }}</span>
-                </label>
-            @endforeach
-        </div>
-        @error('doe_sintomas')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+        <x-form-field name="doe_sintomas" :label="__('Sintomas')" :required="true" :messages="$errors->get('doe_sintomas')">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                @foreach($optionsSintomas as $opt)
+                    <label class="inline-flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="doe_sintomas[]"
+                            value="{{ $opt }}"
+                            {{ in_array($opt, old('doe_sintomas', $isEdit ? $doenca->doe_sintomas : [])) ? 'checked' : '' }}
+                            class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
+                        />
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $opt }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </x-form-field>
     </div>
 
     <div class="rounded-xl border border-sky-200/90 bg-sky-50/55 p-4 dark:border-sky-800/45 dark:bg-sky-950/25">
-        <label class="v-toolbar-label mb-2">
-            Modos de Transmissão <span class="text-red-500">*</span>
-        </label>
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-            @foreach($optionsTransmissao as $opt)
-                <label class="inline-flex items-center space-x-2">
-                    <input
-                        type="checkbox"
-                        name="doe_transmissao[]"
-                        value="{{ $opt }}"
-                        {{ in_array($opt, old('doe_transmissao', $isEdit ? $doenca->doe_transmissao : [])) ? 'checked' : '' }}
-                        class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
-                    />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ $opt }}</span>
-                </label>
-            @endforeach
-        </div>
-        @error('doe_transmissao')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+        <x-form-field name="doe_transmissao" :label="__('Modos de Transmissão')" :required="true" :messages="$errors->get('doe_transmissao')">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                @foreach($optionsTransmissao as $opt)
+                    <label class="inline-flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="doe_transmissao[]"
+                            value="{{ $opt }}"
+                            {{ in_array($opt, old('doe_transmissao', $isEdit ? $doenca->doe_transmissao : [])) ? 'checked' : '' }}
+                            class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
+                        />
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $opt }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </x-form-field>
     </div>
 
     <div class="rounded-xl border border-violet-200/90 bg-violet-50/55 p-4 dark:border-violet-800/45 dark:bg-violet-950/25">
-        <label class="v-toolbar-label mb-2">
-            Medidas de Controle <span class="text-red-500">*</span>
-        </label>
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-            @foreach($optionsMedidas as $opt)
-                <label class="inline-flex items-center space-x-2">
-                    <input
-                        type="checkbox"
-                        name="doe_medidas_controle[]"
-                        value="{{ $opt }}"
-                        {{ in_array($opt, old('doe_medidas_controle', $isEdit ? $doenca->doe_medidas_controle : [])) ? 'checked' : '' }}
-                        class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
-                    />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ $opt }}</span>
-                </label>
-            @endforeach
-        </div>
-        @error('doe_medidas_controle')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+        <x-form-field name="doe_medidas_controle" :label="__('Medidas de Controle')" :required="true" :messages="$errors->get('doe_medidas_controle')">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                @foreach($optionsMedidas as $opt)
+                    <label class="inline-flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="doe_medidas_controle[]"
+                            value="{{ $opt }}"
+                            {{ in_array($opt, old('doe_medidas_controle', $isEdit ? $doenca->doe_medidas_controle : [])) ? 'checked' : '' }}
+                            class="form-checkbox h-4 w-4 text-blue-600 dark:text-blue-400"
+                        />
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $opt }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </x-form-field>
     </div>
 
     <div class="flex justify-end">
@@ -97,12 +78,13 @@
 
 <script>
 (function(){
-    var form = document.getElementById(@json($formId));
-    var btn = document.getElementById(@json($submitId));
+    var script = document.currentScript;
+    var form = document.getElementById(script.dataset.formId || '');
+    var btn = document.getElementById(script.dataset.submitId || '');
     if (form && btn) {
         form.addEventListener('submit', function(){
             btn.disabled = true;
-            btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>{{ __('Salvando…') }}';
+            btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Salvando…';
         });
     }
 })();

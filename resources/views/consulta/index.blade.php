@@ -27,34 +27,26 @@
     {{-- Busca por código --}}
     <form action="{{ route('consulta.codigo') }}" method="GET" id="consulta-codigo-form"
           class="v-card v-stack">
-        <label for="codigo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Digite o <strong>código único do imóvel</strong> fornecido pelo agente <span class="text-red-500">*</span>
-        </label>
-        <div class="flex gap-4 flex-col md:flex-row">
-            <input
-                type="text"
-                id="codigo"
-                name="codigo"
-                value="{{ old('codigo') }}"
-                placeholder="Ex: 12345678 (apenas números)"
-                required
-                inputmode="numeric"
-                pattern="[0-9]{8}"
-                minlength="8"
-                maxlength="8"
-                aria-describedby="codigo-ajuda"
-                class="v-input w-full">
+        <x-form-field name="codigo" :label="__('Digite o código único do imóvel fornecido pelo agente')" :required="true" :help="__('O código único é um identificador exclusivo para cada imóvel (apenas números), fornecido pelo agente durante a visita.')">
+            <div class="flex flex-col gap-4 md:flex-row">
+                <input
+                    type="text"
+                    id="codigo"
+                    name="codigo"
+                    value="{{ old('codigo') }}"
+                    placeholder="Ex: 12345678 (apenas números)"
+                    required
+                    inputmode="numeric"
+                    pattern="[0-9]{8}"
+                    minlength="8"
+                    maxlength="8"
+                    class="v-input w-full">
                 <button type="submit" id="consulta-codigo-btn"
-                    class="v-btn-primary px-4 py-2 inline-flex items-center justify-center min-w-[120px]">
-                Consultar
-            </button>
-        </div>
-        @error('codigo')
-            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-        @enderror
-        <p id="codigo-ajuda" class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            O código único é um identificador exclusivo para cada imóvel (apenas números), fornecido pelo agente durante a visita.
-        </p>
+                    class="v-btn-primary inline-flex min-w-[120px] items-center justify-center px-4 py-2">
+                    Consultar
+                </button>
+            </div>
+        </x-form-field>
         <p class="text-sm text-gray-500 dark:text-gray-400">
             {{ __('Código do imóvel') }}
         </p>
@@ -87,10 +79,12 @@
         </p>
 
         @if($doencas->isEmpty())
-            <div class="v-empty-state rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-600 dark:bg-slate-800/50">
-                <p class="v-empty-state__title">Nenhuma doença cadastrada no momento</p>
-                <p class="v-empty-state__text">As informações serão exibidas aqui quando o gestor municipal cadastrar as doenças monitoradas.</p>
-            </div>
+            <x-empty-state
+                title="Nenhuma doença cadastrada no momento"
+                description="As informações serão exibidas aqui quando o gestor municipal cadastrar as doenças monitoradas."
+                icon="heroicon-o-beaker"
+                class="border-slate-200 bg-slate-50 dark:border-slate-600 dark:bg-slate-800/50"
+            />
         @else
             <div class="v-table-wrap rounded-lg border border-slate-200/90 dark:border-slate-700/80">
                 <table class="v-data-table">

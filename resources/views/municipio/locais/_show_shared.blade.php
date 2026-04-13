@@ -190,18 +190,32 @@
                     ],
                 ],
                 [
-                    'titulo' => __('3. Proprietário e contato'),
+                    'titulo' => __('3. Proprietário e posse'),
                     'itens' => [
+                        [__('Situação posse'), SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse)],
+                        [__('Posse da área'), SE::opcao('posse_area_opcoes', $socio->lse_posse_area)],
+                        [__('Escritura'), SE::opcao('escritura_opcoes', $socio->lse_escritura)],
                         [__('Nome proprietário'), $socio->lse_proprietario_nome],
                         [__('Telefone proprietário'), $socio->lse_proprietario_telefone],
                         [__('Endereço proprietário'), $socio->lse_proprietario_endereco],
                     ],
                 ],
                 [
+                    'titulo' => __('Confrontantes e banheiros'),
+                    'itens' => [
+                        [__('Vizinho frente'), $socio->lse_viz_frente],
+                        [__('Vizinho fundos'), $socio->lse_viz_fundos],
+                        [__('Vizinho direita'), $socio->lse_viz_direita],
+                        [__('Vizinho esquerda'), $socio->lse_viz_esquerda],
+                        [__('Banheiros total'), $socio->lse_num_banheiros],
+                        [__('Banheiros dentro'), $socio->lse_banheiro_dentro],
+                        [__('Banheiros fora'), $socio->lse_banheiro_fora],
+                    ],
+                ],
+                [
                     'titulo' => $t['imovel_caracteristicas'] ?? __('5. Características do imóvel'),
                     'itens' => [
                         [__('Uso'), SE::opcao('uso_imovel_socio_opcoes', $socio->lse_uso_imovel)],
-                        [__('Posse'), SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse)],
                         [__('Material'), SE::opcao('material_predominante_opcoes', $socio->lse_material_predominante)],
                         [__('Condição edificação'), SE::opcao('condicao_edificacao_opcoes', $socio->lse_condicao_edificacao)],
                         [__('Cômodos'), $socio->lse_num_comodos],
@@ -218,8 +232,6 @@
                         [__('Tipo implantação'), SE::opcao('tipo_implantacao_opcoes', $socio->lse_tipo_implantacao)],
                         [__('Posição lote'), SE::opcao('posicao_lote_opcoes', $socio->lse_posicao_lote)],
                         [__('Pavimentos'), $socio->lse_num_pavimentos],
-                        [__('Banheiros dentro'), $socio->lse_banheiro_dentro],
-                        [__('Banheiros fora'), $socio->lse_banheiro_fora],
                         [__('Banheiro compartilha'), SE::opcao('sim_nao_curto_opcoes', $socio->lse_banheiro_compartilha)],
                         [__('Acesso imóvel'), SE::opcao('acesso_imovel_opcoes', $socio->lse_acesso_imovel)],
                         [__('Entrada para'), SE::opcao('entrada_para_opcoes', $socio->lse_entrada_para)],
@@ -239,7 +251,6 @@
                     'titulo' => $t['terreno'] ?? __('8. Terreno e tempo de residência'),
                     'itens' => [
                         [__('Situação terreno'), SE::opcao('situacao_terreno_opcoes', $socio->lse_situacao_terreno)],
-                        [__('Posse da área'), SE::opcao('posse_area_opcoes', $socio->lse_posse_area)],
                         [__('Tempo residência'), $socio->lse_tempo_residencia_texto],
                     ],
                 ],

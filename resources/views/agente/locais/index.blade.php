@@ -47,8 +47,7 @@
     <x-section-card class="v-card--flush overflow-hidden">
         <div class="v-list-toolbar">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div class="min-w-0 flex-1 space-y-2">
-                    <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
+                <x-form-field name="search" :label="__('Busca inteligente')" class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
                         <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
                                data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
@@ -57,7 +56,7 @@
                                class="v-input" />
                         <span id="search-loading-locais" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
                     </div>
-                </div>
+                </x-form-field>
             </div>
         </div>
         <div class="v-table-meta">
@@ -144,7 +143,7 @@
                                     <form method="POST" action="{{ route('agente.locais.destroy', $local) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm(@json(__('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.')))"
+                                        <button type="submit" data-confirm-message="{{ __('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.') }}"
                                                 class="v-btn-icon-danger"
                                                 title="{{ __('Excluir') }}"
                                                 aria-label="{{ __('Excluir local') }}">
@@ -158,17 +157,17 @@
                     @empty
                         <tr>
                             <td colspan="9" class="!p-0">
-                                <div class="v-empty-state px-4">
-                                    <div class="v-empty-state__icon" aria-hidden="true">
-                                        <x-heroicon-o-map-pin class="h-7 w-7 shrink-0" />
-                                    </div>
-                                    <p class="v-empty-state__title">{{ __('Nenhum local cadastrado.') }}</p>
-                                    <p class="v-empty-state__text">{{ __('Crie o primeiro local para iniciar os registros de campo.') }}</p>
+                                <x-empty-state
+                                    :title="__('Nenhum local cadastrado.')"
+                                    :description="__('Crie o primeiro local para iniciar os registros de campo.')"
+                                    icon="heroicon-o-map-pin"
+                                    class="border-0 bg-transparent px-4"
+                                >
                                     <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Novo local') }}
                                     </a>
-                                </div>
+                                </x-empty-state>
                             </td>
                         </tr>
                     @endforelse
@@ -189,6 +188,16 @@
 </div>
 <script>
 (function() {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
+
     var alertEl = document.getElementById('locais-offline-pending-alert');
     var msgEl = document.getElementById('locais-offline-pending-alert-msg');
     if (!alertEl || !msgEl) return;

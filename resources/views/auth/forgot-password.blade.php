@@ -20,8 +20,7 @@
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="email" :label="__('E-mail')" :required="true">
             <x-text-input
                 id="email"
                 class="block mt-1 w-full"
@@ -31,8 +30,7 @@
                 required
                 autofocus
             />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        </x-form-field>
 
         <div class="mt-5 flex items-center justify-between gap-3">
             <a href="{{ route('login') }}" class="text-sm font-medium text-slate-700 underline hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/35 rounded-sm">

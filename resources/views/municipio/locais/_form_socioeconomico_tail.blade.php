@@ -82,6 +82,35 @@
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('5.1 Confrontantes e banheiros') }}</span>
+    </x-slot>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho frente') }}</label>
+            <input type="text" name="socio[viz_frente]" value="{{ $sv('viz_frente') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho fundos') }}</label>
+            <input type="text" name="socio[viz_fundos]" value="{{ $sv('viz_fundos') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho direita') }}</label>
+            <input type="text" name="socio[viz_direita]" value="{{ $sv('viz_direita') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho esquerda') }}</label>
+            <input type="text" name="socio[viz_esquerda]" value="{{ $sv('viz_esquerda') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div class="sm:col-span-2 rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/30">
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Total de banheiros') }}</label>
+            <input type="number" name="socio[num_banheiros]" id="socio_num_banheiros" value="{{ $sv('num_banheiros') }}" class="v-input mt-1 w-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200" min="0" readonly>
+            <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{{ __('Calculado automaticamente a partir de banheiros dentro e fora.') }}</p>
+        </div>
+    </div>
+</x-ui.disclosure>
+
+<x-ui.disclosure variant="muted-card-simple" :open="false">
+    <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('6. Cadastro físico') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -115,11 +144,11 @@
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiros: dentro') }}</label>
-            <input type="number" name="socio[banheiro_dentro]" value="{{ $sv('banheiro_dentro') }}" class="v-input mt-1 w-full" min="0">
+            <input type="number" name="socio[banheiro_dentro]" id="socio_banheiro_dentro" value="{{ $sv('banheiro_dentro') }}" class="v-input mt-1 w-full" min="0">
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiros: fora') }}</label>
-            <input type="number" name="socio[banheiro_fora]" value="{{ $sv('banheiro_fora') }}" class="v-input mt-1 w-full" min="0">
+            <input type="number" name="socio[banheiro_fora]" id="socio_banheiro_fora" value="{{ $sv('banheiro_fora') }}" class="v-input mt-1 w-full" min="0">
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiro compartilha com outra família') }}</label>
@@ -147,6 +176,34 @@
         </div>
     </div>
 </x-ui.disclosure>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var inputDentro = document.getElementById('socio_banheiro_dentro');
+    var inputFora = document.getElementById('socio_banheiro_fora');
+    var inputTotal = document.getElementById('socio_num_banheiros');
+    if (!inputDentro || !inputFora || !inputTotal) {
+        return;
+    }
+
+    var syncTotalBanheiros = function () {
+        var dentro = parseInt(inputDentro.value || '0', 10);
+        var fora = parseInt(inputFora.value || '0', 10);
+        var total = 0;
+        if (!Number.isNaN(dentro)) {
+            total += dentro;
+        }
+        if (!Number.isNaN(fora)) {
+            total += fora;
+        }
+        inputTotal.value = total > 0 ? String(total) : '';
+    };
+
+    inputDentro.addEventListener('input', syncTotalBanheiros);
+    inputFora.addEventListener('input', syncTotalBanheiros);
+    syncTotalBanheiros();
+});
+</script>
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">

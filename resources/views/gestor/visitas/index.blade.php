@@ -49,9 +49,8 @@
     @endif
 
         <x-section-card class="v-card--flush overflow-hidden">
-        <div class="v-list-toolbar">
-            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-            <div class="mt-1 flex items-center gap-2">
+        <x-form-field name="busca" :label="__('Busca inteligente')" class="v-list-toolbar">
+            <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                        data-live-url="{{ route('gestor.visitas.index') }}" data-live-param="busca"
                        data-live-loading-id="search-loading-gestor-visitas"
@@ -59,7 +58,7 @@
                        class="v-input" />
                 <span id="search-loading-gestor-visitas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-        </div>
+        </x-form-field>
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total :item.', ['atual' => $visitas->count(), 'total' => $visitas->total(), 'item' => $visitas->total() === 1 ? __('visita') : __('visitas')]) }}
@@ -137,16 +136,16 @@
                     @empty
                         <tr>
                             <td colspan="7" class="!p-0">
-                                <div class="v-empty-state px-4 py-10">
-                                    <div class="v-empty-state__icon" aria-hidden="true">
-                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0" />
-                                    </div>
-                                    <p class="v-empty-state__title">{{ __('Nenhuma visita registrada.') }}</p>
-                                    <p class="v-empty-state__text">{{ __('As visitas aparecem aqui quando ACE ou ACS as registrarem.') }}</p>
+                                <x-empty-state
+                                    :title="__('Nenhuma visita registrada.')"
+                                    :description="__('As visitas aparecem aqui quando ACE ou ACS as registrarem.')"
+                                    icon="heroicon-o-clipboard-document-list"
+                                    class="border-0 bg-transparent px-4 py-10"
+                                >
                                     <a href="{{ route('gestor.locais.index') }}" class="v-btn-compact v-btn-compact--slate mt-5">
                                         {{ __('Ver locais cadastrados') }}
                                     </a>
-                                </div>
+                                </x-empty-state>
                             </td>
                         </tr>
                     @endforelse

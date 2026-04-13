@@ -56,8 +56,8 @@
         <div class="v-list-toolbar !p-3 sm:!p-4">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <form method="get" class="min-w-0 flex-1">
-                    <label for="ocupantes-q" class="v-toolbar-label">{{ __('Pesquisar ocupantes') }}</label>
-                    <div class="flex items-center gap-2">
+                    <x-form-field name="ocupantes-q" :label="__('Pesquisar ocupantes')">
+                        <div class="flex items-center gap-2">
                         <input id="ocupantes-q" name="q" type="text" value="{{ $search ?? '' }}"
                                data-live-url="{{ route($profile . '.locais.moradores.index', $local) }}"
                                data-live-param="q"
@@ -67,7 +67,8 @@
                         @if(filled($search ?? ''))
                             <a href="{{ route($profile . '.locais.moradores.index', $local) }}" class="v-btn-compact v-btn-compact--ghost">{{ __('Limpar') }}</a>
                         @endif
-                    </div>
+                        </div>
+                    </x-form-field>
                 </form>
             </div>
         </div>
@@ -117,10 +118,11 @@
                                        aria-label="{{ __('Editar ocupante') }}">
                                         <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
                                     </a>
-                                    <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline" onsubmit="return confirm(@js(__('Excluir este registro de ocupante?')));">
+                                    <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline">
                                         @csrf
                                         @method('delete')
                                         <button type="submit"
+                                                data-confirm-message="{{ __('Excluir este registro de ocupante?') }}"
                                                 class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
                                                 title="{{ __('Excluir') }}"
                                                 aria-label="{{ __('Excluir ocupante') }}">
@@ -133,7 +135,11 @@
                     @empty
                         <tr>
                             <td colspan="8" class="!p-0">
-                                <div class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('Nenhum ocupante registrado neste imóvel.') }}</div>
+                                <x-empty-state
+                                    :title="__('Nenhum ocupante registrado neste imóvel.')"
+                                    icon="heroicon-o-user-group"
+                                    class="border-0 bg-transparent px-4 py-10"
+                                />
                             </td>
                         </tr>
                     @endforelse
@@ -177,4 +183,18 @@
         </x-section-card>
     @endif
 </div>
+
+<script>
+(function () {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
+})();
+</script>
 @endsection

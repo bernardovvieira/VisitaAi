@@ -15,15 +15,16 @@
     <x-flash-alerts />
 
     <x-section-card class="v-card--muted">
-        <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-        <div class="mt-1 flex items-center gap-2">
-            <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                   data-live-url="{{ route('gestor.logs.index') }}" data-live-param="search"
-                   data-live-loading-id="search-loading-logs"
-                   placeholder="{{ __('Usuário, ação, entidade, descrição ou IP…') }}"
-                   class="v-input" />
-            <span id="search-loading-logs" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
-        </div>
+        <x-form-field name="search" :label="__('Busca inteligente')">
+            <div class="flex items-center gap-2">
+                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                       data-live-url="{{ route('gestor.logs.index') }}" data-live-param="search"
+                       data-live-loading-id="search-loading-logs"
+                       placeholder="{{ __('Usuário, ação, entidade, descrição ou IP…') }}"
+                       class="v-input" />
+                <span id="search-loading-logs" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
+            </div>
+        </x-form-field>
     </x-section-card>
 
     <x-section-card class="v-card--flush overflow-hidden">
@@ -69,13 +70,12 @@
                     @empty
                         <tr>
                             <td colspan="6" class="!p-0">
-                                <div class="v-empty-state px-4">
-                                    <div class="v-empty-state__icon" aria-hidden="true">
-                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0" />
-                                    </div>
-                                    <p class="v-empty-state__title">{{ __('Nenhum registro de auditoria encontrado.') }}</p>
-                                    <p class="v-empty-state__text">{{ __('Ajuste os termos de busca ou volte mais tarde.') }}</p>
-                                </div>
+                                <x-empty-state
+                                    :title="__('Nenhum registro de auditoria encontrado.')"
+                                    :description="__('Ajuste os termos de busca ou volte mais tarde.')"
+                                    icon="heroicon-o-clipboard-document-list"
+                                    class="border-0 bg-transparent px-4"
+                                />
                             </td>
                         </tr>
                     @endforelse

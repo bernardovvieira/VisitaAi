@@ -56,7 +56,8 @@
                             <td class="align-middle text-center">
                                 <form method="POST" action="{{ route('gestor.approve', $u) }}" class="inline-flex items-center justify-center">
                                     @csrf
-                                    <button type="submit" onclick="return confirm('Tem certeza que deseja aprovar este usuário?')"
+                                    <button type="submit"
+                                        data-confirm-message="{{ __('Tem certeza que deseja aprovar este usuário?') }}"
                                         class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-transparent bg-emerald-600 text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/45 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
                                         title="{{ __('Aprovar usuário') }}"
                                         aria-label="{{ __('Aprovar usuário') }}">
@@ -81,4 +82,17 @@
     </x-section-card>
 
 </div>
+<script>
+(function () {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
+})();
+</script>
 @endsection

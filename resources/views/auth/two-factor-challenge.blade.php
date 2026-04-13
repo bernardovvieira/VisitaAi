@@ -7,19 +7,12 @@
             {{ __('Digite o código de 6 dígitos gerado pelo seu aplicativo autenticador.') }}
         </p>
 
-        @if ($errors->any())
-            <div class="v-alert v-alert--error mb-4 text-left" role="alert">
-                <p class="text-sm font-medium">{{ $errors->first() }}</p>
-            </div>
-        @endif
-
         <form method="POST"
               action="{{ route('two-factor.login.store') }}"
               id="two-factor-form"
               data-label-verifying="{{ __('Verificando…') }}">
             @csrf
-            <div class="mb-4">
-                <x-input-label for="code">{{ __('Código') }} <span class="text-red-500">*</span></x-input-label>
+            <x-form-field name="code" :label="__('Código')" :required="true">
                 <input type="text"
                        id="code"
                        name="code"
@@ -28,10 +21,10 @@
                        maxlength="6"
                        autocomplete="one-time-code"
                        placeholder="000000"
-                       class="v-input mt-1 block w-full"
+                       class="v-input block w-full"
                        required
                        autofocus>
-            </div>
+            </x-form-field>
             <div class="mt-6 flex flex-wrap gap-3">
                 <a href="{{ route('login') }}" class="v-btn-secondary inline-flex items-center justify-center px-4 py-2.5 text-[13px] font-semibold">
                     {{ __('Voltar ao login') }}

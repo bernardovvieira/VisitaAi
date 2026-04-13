@@ -80,9 +80,8 @@
         @endif
 
         <x-section-card class="v-card--flush overflow-hidden">
-        <div class="v-list-toolbar">
-            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-            <div class="mt-1 flex items-center gap-2">
+        <x-form-field name="busca" :label="__('Busca inteligente')" class="v-list-toolbar">
+            <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                        data-live-url="{{ route('agente.visitas.index') }}" data-live-param="busca"
                        data-live-loading-id="search-loading"
@@ -90,7 +89,7 @@
                        class="v-input" />
                 <span id="search-loading" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-        </div>
+        </x-form-field>
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total :item.', ['atual' => $visitas->count(), 'total' => $visitas->total(), 'item' => $visitas->total() === 1 ? __('visita') : __('visitas')]) }}
@@ -171,7 +170,8 @@
                                     <form method="POST" action="{{ route('agente.visitas.destroy', $visita) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir esta visita? Esta ação não pode ser desfeita.')"
+                                        <button type="submit"
+                                                data-confirm-message="{{ __('Tem certeza que deseja excluir esta visita? Esta ação não pode ser desfeita.') }}"
                                                 class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
                                                 title="{{ __('Excluir') }}" aria-label="{{ __('Excluir visita') }}">
                                             <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
@@ -184,17 +184,17 @@
                     @empty
                         <tr>
                             <td colspan="7" class="p-10 text-center">
-                                <div class="mx-auto flex max-w-md flex-col items-center">
-                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                                        <x-heroicon-o-clipboard-document-list class="h-7 w-7 shrink-0 text-slate-400" />
-                                    </div>
-                                    <p class="font-medium text-slate-700 dark:text-slate-200">{{ __('Nenhuma visita registrada.') }}</p>
-                                    <p class="mt-1 text-sm text-slate-500">{{ __('Registre a primeira visita para começar.') }}</p>
+                                <x-empty-state
+                                    :title="__('Nenhuma visita registrada.')"
+                                    :description="__('Registre a primeira visita para começar.')"
+                                    icon="heroicon-o-clipboard-document-list"
+                                    class="border-0 bg-transparent px-0 py-0"
+                                >
                                     <a href="{{ route('agente.visitas.create') }}" class="v-btn-compact v-btn-compact--blue mt-5">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Nova visita') }}
                                     </a>
-                                </div>
+                                </x-empty-state>
                             </td>
                         </tr>
                     @endforelse
@@ -234,6 +234,19 @@
     document.addEventListener('visita-connection-change', function(e) { if (!e.detail.online) updateOfflinePendingAlert(); else alertEl.classList.add('hidden'); });
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { setTimeout(updateOfflinePendingAlert, 300); });
     else setTimeout(updateOfflinePendingAlert, 300);
+})();
+</script>
+<script>
+(function () {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
 })();
 </script>
 @endsection

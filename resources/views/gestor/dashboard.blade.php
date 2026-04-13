@@ -154,7 +154,7 @@
                 <p class="text-2xl font-extrabold tabular-nums tracking-tight text-slate-900 dark:text-slate-50">{{ $totalOcupantesVisitaAi }}</p>
             </div>
             @if($ocupantesPorBairroTop->isNotEmpty())
-                <p class="v-toolbar-label mb-2">{{ config('visitaai_municipio.ocupantes.painel_gestor_bairros') }}</p>
+                <x-input-label :value="config('visitaai_municipio.ocupantes.painel_gestor_bairros')" class="mb-2" />
                 <div class="v-table-wrap rounded-xl border border-slate-200/80 dark:border-slate-600">
                     <table class="v-data-table">
                         <thead>

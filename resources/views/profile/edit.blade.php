@@ -59,33 +59,20 @@
                 @csrf
                 @method('patch')
 
-                <div>
-                    <label for="name" class="v-toolbar-label">{{ __('Nome') }} <span class="text-red-500">*</span></label>
-                    <input id="name" name="name" type="text"
-                        value="{{ old('name', Auth::user()->use_nome) }}"
-                        class="v-input mt-1"
-                        required>
-                    @error('name')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
+                <x-form-field name="name" :label="__('Nome')" :required="true">
+                    <x-text-input id="name" name="name" type="text" value="{{ old('name', Auth::user()->use_nome) }}" required autofocus />
+                </x-form-field>
 
-                <div>
-                    <label for="email" class="v-toolbar-label">{{ __('E-mail') }} <span class="text-red-500">*</span></label>
-                    <input id="email" name="email" type="email" autocapitalize="off"
-                        value="{{ old('email', Auth::user()->use_email) }}"
-                        class="v-input mt-1"
-                        required>
-                    @error('email')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
+                <x-form-field name="email" :label="__('E-mail')" :required="true">
+                    <x-text-input id="email" name="email" type="email" autocapitalize="off" value="{{ old('email', Auth::user()->use_email) }}" required />
+                </x-form-field>
 
-                <div>
-                    <label for="tema" class="v-toolbar-label">{{ __('Preferência de tema') }} <span class="text-red-500">*</span></label>
+                <x-form-field name="tema" :label="__('Preferência de tema')" :required="true" :help="__('Define o tema ao fazer login. Ao criar a conta, o padrão é modo claro.')">
                     <select id="tema" name="tema" class="v-select mt-1">
                         <option value="light" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'light' ? 'selected' : '' }}>{{ __('Modo claro') }}</option>
                         <option value="dark" {{ old('tema', Auth::user()->use_tema ?? 'light') === 'dark' ? 'selected' : '' }}>{{ __('Modo escuro') }}</option>
                     </select>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('Define o tema ao fazer login. Ao criar a conta, o padrão é modo claro.') }}</p>
-                    @error('tema')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
+                </x-form-field>
 
                 <div class="flex justify-end">
                     <x-primary-button type="submit" id="profile-update-btn" class="!px-3 !py-1.5 !text-xs">{{ __('Aplicar alterações') }}</x-primary-button>
@@ -115,7 +102,7 @@
                     p.setAttribute('d', 'M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z');
                     svg.appendChild(p);
                     sp.appendChild(svg);
-                    sp.appendChild(document.createTextNode(@json(__('Salvando…'))));
+                    sp.appendChild(document.createTextNode('Salvando…'));
                     btn.appendChild(sp);
                 });
             })();
@@ -136,8 +123,8 @@
             @php $user = Auth::user(); @endphp
             @if(method_exists($user, 'hasEnabledTwoFactorAuthentication') && $user->hasEnabledTwoFactorAuthentication())
                 <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">{{ __('2FA ativado para esta conta.') }}</p>
-                <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
-                   onclick="return confirm(@json(__('Tem certeza que deseja desativar a autenticação em dois fatores?')));"
+                     <a href="{{ route('password.confirm') }}?return_action=disable_2fa"
+                         data-confirm-message="{{ __('Tem certeza que deseja desativar a autenticação em dois fatores?') }}"
                    class="v-btn-danger !px-3 !py-1.5 !text-xs">
                     {{ __('Desativar autenticação em dois fatores') }}
                 </a>
@@ -184,4 +171,17 @@
         </div>
     </x-section-card>
 </div>
+<script>
+(function () {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
+})();
+</script>
 @endsection

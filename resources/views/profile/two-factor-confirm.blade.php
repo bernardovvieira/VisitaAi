@@ -22,7 +22,7 @@
 
         {{-- Chave manual --}}
         <div>
-            <label class="v-toolbar-label">Chave manual</label>
+            <x-input-label :value="__('Chave manual')" class="mb-1" />
             <div class="mt-1 flex gap-2">
                 <input type="text"
                        value="{{ $secretKeyFormatted }}"
@@ -41,7 +41,7 @@
 
         {{-- QR code (gerado em 192x192px; container no mesmo tamanho para não cortar) --}}
         <div>
-            <label class="v-toolbar-label mb-1">QR code</label>
+            <x-input-label :value="__('QR code')" class="mb-1" />
             <div class="p-4 rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 inline-block">
                 <div class="w-[192px] h-[192px] flex items-center justify-center [&>svg]:shrink-0 [&>svg]:block">
                     {!! $qrCodeSvg !!}
@@ -52,8 +52,7 @@
         {{-- Código e botões --}}
         <form method="POST" action="{{ url(route('two-factor.confirm')) }}" class="space-y-4">
             @csrf
-            <div>
-                <label for="code" class="v-toolbar-label">Código do autenticador <span class="text-red-500">*</span></label>
+            <x-form-field name="code" :label="__('Código do autenticador')" :required="true" :messages="$errors->confirmTwoFactorAuthentication->get('code')">
                 <input type="text"
                        id="code"
                        name="code"
@@ -64,10 +63,7 @@
                        placeholder="000000"
                        class="v-input mt-1 max-w-xs"
                        required>
-                @error('code', 'confirmTwoFactorAuthentication')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
+            </x-form-field>
             <div class="flex flex-wrap gap-3">
                 <button type="submit"
                         class="v-btn-slate !px-2.5 !py-1 !text-xs">

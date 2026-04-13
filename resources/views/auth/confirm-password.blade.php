@@ -23,18 +23,14 @@
             @if(request('return_action'))
                 <input type="hidden" name="return_action" value="{{ request('return_action') }}">
             @endif
-            <div>
-                <label for="password" class="v-toolbar-label">{{ __('Senha') }} <span class="text-red-500">*</span></label>
+            <x-form-field name="password" :label="__('Senha')" required>
                 <input id="password"
                        type="password"
                        name="password"
                        required
                        autocomplete="current-password"
-                       class="v-input mt-1 max-w-xs">
-                @error('password')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
+                       class="v-input">
+            </x-form-field>
             <div class="flex flex-wrap gap-3">
                 <a href="{{ route('dashboard') }}"
                    class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40">

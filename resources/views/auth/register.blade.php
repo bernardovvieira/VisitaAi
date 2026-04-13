@@ -39,68 +39,50 @@
         @csrf
 
         {{-- Nome --}}
-        <div class="mb-4">
-            <x-input-label for="nome">{{ __('Nome') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="nome" :label="__('Nome')" :required="true" class="mb-4">
             <x-text-input id="nome"
-                        class="block mt-1 w-full @error('nome') border-red-500 dark:border-red-400 @enderror"
-                        type="text"
-                        name="nome"
-                        :value="old('nome')"
-                        required autofocus />
-            <x-input-error :messages="$errors->get('nome')" class="mt-2" />
-        </div>
+                          type="text"
+                          name="nome"
+                          :value="old('nome')"
+                          required autofocus />
+        </x-form-field>
 
         {{-- CPF --}}
-        <div class="mb-4">
-            <x-input-label for="cpf">{{ __('CPF') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="cpf" :label="__('CPF')" :required="true" class="mb-4">
             <x-text-input id="cpf"
-                        class="block mt-1 w-full @error('cpf') border-red-500 dark:border-red-400 @enderror"
-                        type="text"
-                        name="cpf"
-                        :value="old('cpf')"
-                        required
-                        inputmode="numeric"
-                        pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
-                        title="{{ __('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).') }}" />
+                          type="text"
+                          name="cpf"
+                          :value="old('cpf')"
+                          required
+                          inputmode="numeric"
+                          pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                          title="{{ __('O CPF deve estar no formato XXX.XXX.XXX-XX (com pontos e traço).') }}" />
             <p id="cpf-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
-            <x-input-error :messages="$errors->get('cpf')" class="mt-2" />
-        </div>
+        </x-form-field>
 
         {{-- E-mail --}}
-        <div class="mb-4">
-            <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="email" :label="__('E-mail')" :required="true" class="mb-4">
             <x-text-input id="email" name="email" type="email"
-                          :value="old('email')" required autocapitalize="off"
-                          class="block w-full mt-1
-                                 @error('email') border-red-500 dark:border-red-400 @enderror" />
-            <x-input-error :messages="$errors->get('email')" />
-        </div>
+                          :value="old('email')" required autocapitalize="off" />
+        </x-form-field>
 
         {{-- Senha --}}
-        <div class="mb-4">
-            <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="password" :label="__('Senha')" :required="true" class="mb-4">
             <x-text-input id="password" name="password" type="password"
-                          required autocomplete="new-password"
-                          class="block w-full mt-1
-                                 @error('password') border-red-500 dark:border-red-400 @enderror" />
+                          required autocomplete="new-password" />
             {{-- Barra: vermelha ao digitar, amarela no meio, verde quando todos os requisitos ok --}}
-            <div class="mt-2 h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden" role="presentation" aria-hidden="true">
+            <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-600" role="presentation" aria-hidden="true">
                 <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
             </div>
             <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).') }}</p>
-            <x-input-error :messages="$errors->get('password')" />
-        </div>
+        </x-form-field>
 
         {{-- Confirmar Senha --}}
-        <div class="mb-6">
-            <x-input-label for="password_confirmation">{{ __('Confirmar Senha') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="password_confirmation" :label="__('Confirmar Senha')" :required="true" class="mb-6">
             <x-text-input id="password_confirmation" name="password_confirmation"
-                          type="password" required autocomplete="new-password"
-                          class="block w-full mt-1
-                                 @error('password_confirmation') border-red-500 dark:border-red-400 @enderror" />
+                          type="password" required autocomplete="new-password" />
             <p id="password-match-feedback" class="mt-1 text-sm hidden" aria-live="polite"></p>
-            <x-input-error :messages="$errors->get('password_confirmation')" />
-        </div>
+        </x-form-field>
 
         <x-primary-button id="register-submit-btn" class="w-full justify-center">{{ __('Registrar') }}</x-primary-button>
     </form>

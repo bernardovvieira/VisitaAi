@@ -14,15 +14,12 @@
     </x-page-header>
 
   <x-section-card>
-    <div class="flex flex-col sm:flex-row sm:items-end gap-4">
-      <div class="flex-1">
-        <label for="search" class="v-toolbar-label mb-1">Busca inteligente</label>
-        <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-               data-live-url="{{ route('agente.doencas.index') }}" data-live-param="search"
-               placeholder="Nome, sintomas, transmissão ou medidas..."
-               class="v-input">
-      </div>
-    </div>
+    <x-form-field name="search" :label="'Busca inteligente'">
+      <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+             data-live-url="{{ route('agente.doencas.index') }}" data-live-param="search"
+             placeholder="Nome, sintomas, transmissão ou medidas..."
+             class="v-input">
+    </x-form-field>
   </x-section-card>
 
   <!-- bring the summary inside the same styled section -->
@@ -74,7 +71,12 @@
           @empty
             <tr>
               <td colspan="6" class="!p-0">
-                <div class="px-4 py-8 text-center text-sm text-slate-600 dark:text-slate-400">Nenhuma doença monitorada disponível.</div>
+                <x-empty-state
+                  :title="__('Nenhuma doença monitorada disponível.')"
+                  :description="__('Verifique os termos de busca ou retorne em outro momento.')"
+                  icon="heroicon-o-beaker"
+                  class="border-0 bg-transparent px-4 py-8"
+                />
               </td>
             </tr>
           @endforelse

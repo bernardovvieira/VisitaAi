@@ -14,8 +14,7 @@
 
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-        <div class="mb-4">
-            <x-input-label for="email">{{ __('E-mail') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="email" :label="__('E-mail')" :required="true" class="mb-4">
             <x-text-input
                 id="email"
                 class="block mt-1 w-full"
@@ -26,11 +25,9 @@
                 readonly
                 autocomplete="username"
             />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        </x-form-field>
 
-        <div class="mb-4">
-            <x-input-label for="password">{{ __('Senha') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="password" :label="__('Senha')" :required="true" class="mb-4">
             <x-text-input
                 id="password"
                 class="block mt-1 w-full"
@@ -44,11 +41,9 @@
                 <div id="password-strength-bar" class="h-full rounded-full bg-red-500 transition-all duration-300 ease-out" style="width: 0%"></div>
             </div>
             <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('Mínimo 8 caracteres, com letras, números e pelo menos um caractere especial (ex.: @, #, $, !).') }}</p>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        </x-form-field>
 
-        <div class="mb-6">
-            <x-input-label for="password_confirmation">{{ __('Confirmar Senha') }} <span class="text-red-500">*</span></x-input-label>
+        <x-form-field name="password_confirmation" :label="__('Confirmar Senha')" :required="true" class="mb-6">
             <x-text-input
                 id="password_confirmation"
                 class="block mt-1 w-full"
@@ -58,8 +53,7 @@
                 autocomplete="new-password"
             />
             <p id="password-match-feedback" class="mt-1 hidden text-sm" aria-live="polite"></p>
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+        </x-form-field>
 
         <div class="flex items-center justify-end">
             <x-primary-button id="reset-password-submit-btn">

@@ -20,17 +20,18 @@
     </x-section-card>
 
     <x-section-card class="v-card--muted">
-        <label for="search" class="v-toolbar-label mb-2">{{ __('Busca inteligente') }}</label>
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
-            <div class="min-w-0 flex-1">
-                <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                       data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
-                       data-live-loading-id="search-loading-users"
-                       placeholder="{{ __('Buscar por nome, e-mail ou perfil (ex.: ACE, ACS, gestor)…') }}"
-                       class="v-input w-full">
+        <x-form-field name="search" :label="__('Busca inteligente')">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
+                <div class="min-w-0 flex-1">
+                    <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
+                           data-live-url="{{ route('gestor.users.index') }}" data-live-param="search"
+                           data-live-loading-id="search-loading-users"
+                           placeholder="{{ __('Buscar por nome, e-mail ou perfil (ex.: ACE, ACS, gestor)…') }}"
+                           class="v-input w-full">
+                </div>
+                <span id="search-loading-users" class="hidden text-sm text-slate-500 dark:text-slate-400 sm:pb-2" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-            <span id="search-loading-users" class="hidden text-sm text-slate-500 dark:text-slate-400 sm:pb-2" aria-live="polite">{{ __('Buscando…') }}</span>
-        </div>
+        </x-form-field>
     </x-section-card>
 
     <x-section-card class="v-card--flush overflow-hidden">
@@ -106,8 +107,8 @@
                                         <form method="POST" action="{{ route('gestor.users.destroy', $usuario) }}" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                    onclick="return confirm(@json(__('Tem certeza que deseja anonimizar este usuário? Esta ação não pode ser desfeita.')))"
+                                                <button type="submit"
+                                                    data-confirm-message="{{ __('Tem certeza que deseja anonimizar este usuário? Esta ação não pode ser desfeita.') }}"
                                                     class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200/90 bg-red-50/90 text-red-700 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
                                                     title="{{ __('Anonimizar usuário') }}"
                                                     aria-label="{{ __('Anonimizar usuário') }}">
@@ -121,13 +122,12 @@
                     @empty
                         <tr>
                             <td colspan="8" class="px-4 py-12 text-center sm:px-5">
-                                <div class="mx-auto flex max-w-sm flex-col items-center justify-center">
-                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                                        <x-heroicon-o-user-group class="h-7 w-7 shrink-0 text-slate-400 dark:text-slate-500" />
-                                    </div>
-                                    <p class="font-medium text-slate-700 dark:text-slate-300">{{ __('Nenhum usuário cadastrado.') }}</p>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('Novos perfis entram pelo registro na tela de login.') }}</p>
-                                </div>
+                                <x-empty-state
+                                    :title="__('Nenhum usuário cadastrado.')"
+                                    :description="__('Novos perfis entram pelo registro na tela de login.')"
+                                    icon="heroicon-o-user-group"
+                                    class="border-0 bg-transparent px-0 py-0"
+                                />
                             </td>
                         </tr>
                     @endforelse
@@ -150,4 +150,17 @@
         </a>
     </x-section-card>
 </div>
+<script>
+(function () {
+    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            var message = element.dataset.confirmMessage || '';
+            if (!message || confirm(message)) {
+                return;
+            }
+            event.preventDefault();
+        });
+    });
+})();
+</script>
 @endsection

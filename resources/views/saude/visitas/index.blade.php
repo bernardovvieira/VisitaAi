@@ -82,9 +82,8 @@
         @endif
 
         <x-section-card class="v-card--flush overflow-hidden">
-        <div class="v-list-toolbar">
-            <label for="search" class="v-toolbar-label">{{ __('Busca inteligente') }}</label>
-            <div class="mt-1 flex items-center gap-2">
+        <x-form-field name="busca" :label="__('Busca inteligente')" class="v-list-toolbar">
+            <div class="flex items-center gap-2">
                 <input type="text" id="search" name="busca" value="{{ old('busca', request('busca')) }}"
                        data-live-url="{{ route('saude.visitas.index') }}" data-live-param="busca"
                        data-live-loading-id="search-loading-saude-visitas"
@@ -92,7 +91,7 @@
                        class="v-input" />
                 <span id="search-loading-saude-visitas" class="hidden shrink-0 text-xs text-slate-500 dark:text-slate-400" aria-live="polite">{{ __('Buscando…') }}</span>
             </div>
-        </div>
+        </x-form-field>
         <div class="v-table-meta">
             <span>
                 {{ __('Exibindo :atual de :total :item.', ['atual' => $visitas->count(), 'total' => $visitas->total(), 'item' => $visitas->total() === 1 ? __('visita') : __('visitas')]) }}

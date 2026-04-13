@@ -268,18 +268,18 @@
                 </div>
                 <input type="hidden" x-bind:name="'ocupantes[' + idx + '][mor_id]'" x-bind:value="row.mor_id != null && row.mor_id !== '' ? row.mor_id : ''">
                 <fieldset class="space-y-3">
-                    <legend class="v-toolbar-label">{{ __('Dados pessoais') }}</legend>
+                    <legend class="v-section-title">{{ __('Dados pessoais') }}</legend>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="v-toolbar-label">{{ __('Nome') }}</label>
+                            <x-input-label :value="__('Nome')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_nome]'" x-model="row.mor_nome" class="v-input mt-1 w-full" maxlength="255">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Data de nascimento') }}</label>
+                            <x-input-label :value="__('Data de nascimento')" />
                             <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_data_nascimento]'" x-model="row.mor_data_nascimento" class="v-input mt-1 w-full">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Sexo') }}</label>
+                            <x-input-label :value="__('Sexo')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_sexo]'" x-model="row.mor_sexo" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(sexoOpts)" :key="k">
@@ -288,7 +288,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Estado civil') }}</label>
+                            <x-input-label :value="__('Estado civil')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_estado_civil]'" x-model="row.mor_estado_civil" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(ecOpts)" :key="k">
@@ -300,10 +300,10 @@
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-toolbar-label">{{ __('Vínculo familiar e contato') }}</legend>
+                    <legend class="v-section-title">{{ __('Vínculo familiar e contato') }}</legend>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="v-toolbar-label">{{ __('Referência familiar (titular)') }}</label>
+                            <x-input-label :value="__('Referência familiar (titular)')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_referencia_familiar]'"
                                     x-model="row.mor_referencia_familiar"
                                     @change="if (String(row.mor_referencia_familiar) !== '0') row.mor_parentesco = ''; enforceSingleTitular(idx)"
@@ -315,7 +315,7 @@
                             <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Defina apenas uma pessoa como referência familiar.') }}</p>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Parentesco com o titular') }}</label>
+                            <x-input-label :value="__('Parentesco com o titular')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_parentesco]'"
                                     x-model="row.mor_parentesco"
                                     x-bind:disabled="String(row.mor_referencia_familiar) !== '0'"
@@ -327,33 +327,33 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Telefone') }}</label>
+                            <x-input-label :value="__('Telefone')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_telefone]'" x-model="row.mor_telefone" class="v-input mt-1 w-full" maxlength="40">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Naturalidade') }}</label>
+                            <x-input-label :value="__('Naturalidade')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_naturalidade]'" x-model="row.mor_naturalidade" class="v-input mt-1 w-full" maxlength="150" placeholder="{{ __('Cidade/UF') }}">
                         </div>
                     </div>
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-toolbar-label">{{ __('Documentos') }}</legend>
+                    <legend class="v-section-title">{{ __('Documentos') }}</legend>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="v-toolbar-label">{{ __('CPF') }}</label>
+                            <x-input-label :value="__('CPF')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_cpf]'" x-model="row.mor_cpf" class="v-input mt-1 w-full" maxlength="20">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('RG: número') }}</label>
+                            <x-input-label :value="__('RG: número')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_rg_numero]'" x-model="row.mor_rg_numero" class="v-input mt-1 w-full" maxlength="45">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('RG: órgão') }}</label>
+                            <x-input-label :value="__('RG: órgão')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_rg_orgao]'" x-model="row.mor_rg_orgao" class="v-input mt-1 w-full" maxlength="60">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('RG: expedição') }}</label>
+                            <x-input-label :value="__('RG: expedição')" />
                             <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_rg_expedicao]'" x-model="row.mor_rg_expedicao" class="v-input mt-1 w-full">
                         </div>
                         <div class="sm:col-span-2" x-data="{
@@ -361,7 +361,7 @@
                             openPicker() { this.$refs.documentoPessoal.click(); },
                             updateName(event) { this.fileName = event.target.files && event.target.files.length ? event.target.files[0].name : ''; }
                         }">
-                            <label class="v-toolbar-label">{{ __('Documento pessoal') }}</label>
+                            <x-input-label :value="__('Documento pessoal')" />
                             <input type="file"
                                    x-ref="documentoPessoal"
                                    x-bind:name="'ocupantes[' + idx + '][mor_documento_pessoal]'"
@@ -389,10 +389,10 @@
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-toolbar-label">{{ __('Perfil socioeconômico') }}</legend>
+                    <legend class="v-section-title">{{ __('Perfil socioeconômico') }}</legend>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="v-toolbar-label">{{ __('Escolaridade') }}</label>
+                            <x-input-label :value="__('Escolaridade')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_escolaridade]'" x-model="row.mor_escolaridade" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(esc)" :key="k">
@@ -401,7 +401,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Cor ou raça') }}</label>
+                            <x-input-label :value="__('Cor ou raça')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_cor_raca]'" x-model="row.mor_cor_raca" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(corOpts)" :key="k">
@@ -410,11 +410,11 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Profissão / ocupação declarada') }}</label>
+                            <x-input-label :value="__('Profissão / ocupação declarada')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_profissao]'" x-model="row.mor_profissao" class="v-input mt-1 w-full" maxlength="150">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Situação no trabalho') }}</label>
+                            <x-input-label :value="__('Situação no trabalho')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_situacao_trabalho]'" x-model="row.mor_situacao_trabalho" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(trabOpts)" :key="k">
@@ -423,7 +423,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Faixa de renda (salário mínimo)') }}</label>
+                            <x-input-label :value="__('Faixa de renda (salário mínimo)')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_renda_faixa]'" x-model="row.mor_renda_faixa" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(rendaOpts)" :key="k">
@@ -432,7 +432,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Renda formal / informal (pessoa)') }}</label>
+                            <x-input-label :value="__('Renda formal / informal (pessoa)')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_renda_formal_informal]'" x-model="row.mor_renda_formal_informal" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <template x-for="[k, label] in Object.entries(rfiOpts)" :key="k">
@@ -441,11 +441,11 @@
                             </select>
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Tempo com cônjuge / união') }}</label>
+                            <x-input-label :value="__('Tempo com cônjuge / união')" />
                             <input type="text" x-bind:name="'ocupantes[' + idx + '][mor_tempo_uniao_conjuge]'" x-model="row.mor_tempo_uniao_conjuge" class="v-input mt-1 w-full" maxlength="120">
                         </div>
                         <div>
-                            <label class="v-toolbar-label">{{ __('Ajudou na compra/construção do imóvel') }}</label>
+                            <x-input-label :value="__('Ajudou na compra/construção do imóvel')" />
                             <select x-bind:name="'ocupantes[' + idx + '][mor_ajuda_compra_imovel]'" x-model="row.mor_ajuda_compra_imovel" class="v-select mt-1 w-full">
                                 <option value="">{{ __('Selecionar') }}</option>
                                 <option value="sim">{{ __('Sim') }}</option>
@@ -456,7 +456,7 @@
                 </fieldset>
 
                 <div>
-                    <label class="v-toolbar-label">{{ __('Observações') }}</label>
+                    <x-input-label :value="__('Observações')" />
                     <textarea x-bind:name="'ocupantes[' + idx + '][mor_observacao]'" x-model="row.mor_observacao" rows="2" class="v-input mt-1 w-full"></textarea>
                 </div>
                 </div>

@@ -80,20 +80,18 @@
 
     @if($sem_visitas ?? false)
         <x-section-card class="v-card--tight shadow-md shadow-slate-200/20 dark:shadow-none">
-            <div class="v-empty-state py-12">
-                <div class="v-empty-state__icon h-20 w-20" aria-hidden="true">
-                    <x-heroicon-o-document-text class="h-10 w-10 shrink-0" />
-                </div>
-                <p class="v-empty-state__title text-lg">{{ __('Nenhuma visita cadastrada') }}</p>
-                <p class="v-empty-state__text max-w-md">
-                    {{ __('Não há visitas no sistema. Relatórios, indicadores e PDF ficam disponíveis após o cadastro de visitas pelos profissionais de campo.') }}
-                </p>
+            <x-empty-state
+                :title="__('Nenhuma visita cadastrada')"
+                :description="__('Não há visitas no sistema. Relatórios, indicadores e PDF ficam disponíveis após o cadastro de visitas pelos profissionais de campo.')"
+                icon="heroicon-o-document-text"
+                class="border-0 bg-transparent py-12"
+            >
                 <p class="mt-2 text-xs text-slate-500 dark:text-slate-500">{{ __('Inclui perfis ACE e ACS.') }}</p>
                 <a href="{{ route('gestor.visitas.index') }}" class="v-btn-compact v-btn-compact--blue mt-6">
                     <x-heroicon-o-eye class="h-4 w-4 shrink-0" aria-hidden="true" />
                     {{ __('Ir para visitas') }}
                 </a>
-            </div>
+            </x-empty-state>
         </x-section-card>
     @else
     <div class="space-y-4">
@@ -106,7 +104,7 @@
             <form method="GET" x-ref="formulario" @@submit.prevent="filtrosAplicados = true; $nextTick(() => $refs.formulario.submit())"
                   class="space-y-4">
                 <div class="max-w-md">
-                    <label class="v-toolbar-label mb-1 block">{{ __('Tipo') }} <span class="text-red-500">*</span></label>
+                    <x-input-label :value="__('Tipo')" :required="true" class="mb-1 block" />
                     <select name="tipo_relatorio" x-model="tipo" class="v-select w-full">
                         <option value="completo" {{ request('tipo_relatorio', 'completo') === 'completo' ? 'selected' : '' }}>{{ __('Completo') }}</option>
                         <option value="diario">{{ __('Diário') }}</option>
@@ -115,17 +113,17 @@
                     </select>
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak class="max-w-md">
-                    <label class="v-toolbar-label mb-1 block">{{ __('Data') }} <span class="text-red-500">*</span></label>
+                    <x-input-label :value="__('Data')" :required="true" class="mb-1 block" />
                     <input type="date" name="data_unica" value="{{ request('data_unica') }}" @@change="filtrosAlterados = true" class="v-input w-full" />
                 </div>
                 <template x-if="tipo === 'semanal'">
                     <div class="grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="v-toolbar-label mb-1 block">{{ __('Início') }} <span class="text-red-500">*</span></label>
+                            <x-input-label :value="__('Início')" :required="true" class="mb-1 block" />
                             <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" @@change="filtrosAlterados = true" class="v-input w-full" />
                         </div>
                         <div>
-                            <label class="v-toolbar-label mb-1 block">{{ __('Fim') }} <span class="text-red-500">*</span></label>
+                            <x-input-label :value="__('Fim')" :required="true" class="mb-1 block" />
                             <input type="date" name="data_fim" value="{{ request('data_fim') }}" @@change="filtrosAlterados = true" class="v-input w-full" />
                         </div>
                     </div>
@@ -174,7 +172,7 @@
                         }, (array) request('local_id', [])))
                     )) }}"
                     @@click.outside="open = false">
-                    <label class="v-toolbar-label mb-1 block">{{ __('Locais') }} <span class="text-red-500">*</span></label>
+                    <x-input-label :value="__('Locais')" :required="true" class="mb-1 block" />
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5">
                             <template x-for="item in selected" :key="item.id">
@@ -243,7 +241,7 @@
                     data-options="{{ e(json_encode($bairros ?? [])) }}"
                     data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
                     @@click.outside="open = false">
-                    <label class="v-toolbar-label mb-1 block">{{ __('Bairros') }}</label>
+                    <x-input-label :value="__('Bairros')" class="mb-1 block" />
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">
@@ -364,13 +362,12 @@
 
         <div class="v-list-toolbar mb-4">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                <div class="min-w-0 flex-1">
-                    <label for="imoveis-periodo-search" class="v-toolbar-label">{{ __('Pesquisar imóveis no período') }}</label>
+                <x-form-field name="imoveis-periodo-search" :label="__('Pesquisar imóveis no período')" class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
                         <input id="imoveis-periodo-search" type="text" x-model.debounce.150ms="search" class="v-input" placeholder="{{ __('Código, endereço, bairro, ocupantes ou ficha…') }}">
                         <button type="button" class="v-btn-compact v-btn-compact--ghost shrink-0" x-show="search" x-cloak @click="search = ''">{{ __('Limpar') }}</button>
                     </div>
-                </div>
+                </x-form-field>
             </div>
         </div>
 
@@ -581,10 +578,17 @@
         'indefinida' => __('Indefinida'),
     ];
 @endphp
+<div id="relatorios-data"
+     class="hidden"
+     data-rel-i18n="{{ e(json_encode($relatoriosI18nCharts)) }}"
+    data-map-error-message="{{ __('Erro ao capturar o mapa:') }}"
+     data-visitas="{{ e(json_encode($visitasParaGraficos ?? [])) }}"></div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const REL_I18N = @json($relatoriosI18nCharts);
-    const visitas = @json($visitasParaGraficos ?? []);
+    const relDataEl = document.getElementById('relatorios-data');
+    const REL_I18N = relDataEl ? JSON.parse(relDataEl.dataset.relI18n || '{}') : {};
+    const MAP_ERROR_MESSAGE = relDataEl ? (relDataEl.dataset.mapErrorMessage || 'Erro ao capturar o mapa:') : 'Erro ao capturar o mapa:';
+    const visitas = relDataEl ? JSON.parse(relDataEl.dataset.visitas || '[]') : [];
 
     const contagemPorBairro = {};
     const contagemPorDoenca = {};
@@ -731,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             leafletImage(mapaCalor, function(err, canvas) {
                 if (err || !canvas) {
-                    console.error(@json(__('Erro ao capturar o mapa:')), err);
+                    console.error(MAP_ERROR_MESSAGE, err);
                     return resolve("");
                 }
                 resolve(canvas.toDataURL("image/png"));

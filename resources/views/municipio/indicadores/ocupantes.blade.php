@@ -68,7 +68,7 @@
             <a href="{{ route('gestor.indicadores.ocupantes.export') }}"
                   class="v-btn-export v-btn-export--sheet no-underline">
                 <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Exportar Excel') }}
+                {{ (string) ($cfgInd['botao_export_csv'] ?? __('Exportar CSV')) }}
             </a>
         </x-slot:actions>
         <x-slot:lead>

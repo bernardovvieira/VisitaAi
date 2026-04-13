@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Municipio;
 
-use App\Exports\OcupantesIndicadoresExport;
-use App\Exports\OcupantesCadastroExportOnly;
 use App\Http\Controllers\Controller;
 use App\Services\Municipio\IndicadoresOcupantesMunicipioService;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class IndicadoresOcupantesController extends Controller
@@ -34,18 +31,30 @@ class IndicadoresOcupantesController extends Controller
     {
         $this->authorize('isGestor');
 
-        $filename = 'indicadores_ocupantes_'.now()->format('Y-m-d_His').'.xlsx';
+        $csv = $indicadores->exportCsvGestor();
+        $filename = 'indicadores_ocupantes_'.now()->format('Y-m-d_His').'.csv';
 
-        return Excel::download(new OcupantesIndicadoresExport(), $filename);
+        return new StreamedResponse(function () use ($csv): void {
+            echo $csv;
+        }, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
     }
 
     public function exportCadastroOcupantesCsv(IndicadoresOcupantesMunicipioService $indicadores)
     {
         $this->authorize('isGestor');
 
-        $filename = 'cadastro_socioeconomico_ocupantes_'.now()->format('Y-m-d_His').'.xlsx';
+        $csv = $indicadores->exportCadastroOcupantesCsvGestor();
+        $filename = 'cadastro_socioeconomico_ocupantes_'.now()->format('Y-m-d_His').'.csv';
 
-        return Excel::download(new OcupantesCadastroExportOnly(), $filename);
+        return new StreamedResponse(function () use ($csv): void {
+            echo $csv;
+        }, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
     }
 
     public function exportCadastroOcupantesPdf(IndicadoresOcupantesMunicipioService $indicadores)

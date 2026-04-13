@@ -37,10 +37,9 @@
         <div x-data="{ query: '', normalize(value) { return (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } }" class="mt-4 space-y-3">
             <div class="v-list-toolbar !p-3 sm:!p-4">
                 <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                    <div class="min-w-0 flex-1">
-                        <label for="moradores-search-local" class="v-toolbar-label">{{ __('Pesquisar ocupantes') }}</label>
+                    <x-form-field name="moradores-search-local" :label="__('Pesquisar ocupantes')" class="min-w-0 flex-1">
                         <input id="moradores-search-local" type="text" x-model="query" class="v-input" placeholder="{{ __('Nome, escolaridade, renda, trabalho...') }}">
-                    </div>
+                    </x-form-field>
                 </div>
             </div>
 
