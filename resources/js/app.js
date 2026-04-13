@@ -2,7 +2,19 @@ import './bootstrap';
 import './theme';
 import './offline';
 
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import 'leaflet.heat';
+import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import leafletImage from 'leaflet-image';
+
 import Alpine from 'alpinejs';
+
+window.Chart = Chart;
+window.ChartDataLabels = ChartDataLabels;
+window.L = L;
+window.leafletImage = leafletImage;
 
 window.Alpine = Alpine;
 

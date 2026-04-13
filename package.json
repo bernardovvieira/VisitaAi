@@ -29,6 +29,7 @@
     "dependencies": {
         "html2canvas": "^1.4.1",
         "leaflet": "^1.9.4",
+        "leaflet.heat": "^0.2.0",
         "select2-tailwindcss-theme": "^1.2.4"
     }
 }

@@ -562,14 +562,6 @@
 
 {{-- Scripts (apenas quando há visitas; estado vazio não carrega gráficos/mapa) --}}
 @if(!($sem_visitas ?? false))
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-<script src="https://unpkg.com/leaflet-image/leaflet-image.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 @php
     $relatoriosI18nCharts = [
         'visitas' => __('Visitas'),
