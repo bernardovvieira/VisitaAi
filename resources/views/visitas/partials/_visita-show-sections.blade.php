@@ -171,7 +171,9 @@
 @if(count($obsOcup) > 0)
     <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
         <div class="border-b border-slate-200/80 pb-3 dark:border-slate-700/70">
-            <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ __('Ocupantes (nesta visita)') }}</h2>
+            <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                {{ __('Ocupantes') }} <em class="font-medium italic">{{ __('presentes nesta visita') }}</em>
+            </h2>
         </div>
         <ul class="space-y-3">
             @foreach($obsOcup as $mid => $txt)
