@@ -34,17 +34,17 @@
             return false;
         }
     }"
-    x-init="
-        var p = new URLSearchParams(window.location.search);
-        appliedParams = {
+    x-init="(() => {
+        const p = new URLSearchParams(window.location.search);
+        this.appliedParams = {
             data_unica: p.get('data_unica') || '',
             data_inicio: p.get('data_inicio') || '',
             data_fim: p.get('data_fim') || '',
             local_ids: p.getAll('local_id[]') || []
         };
-        filtrosAplicados = p.toString() !== '';
-        $watch('tipo', function() { filtrosAplicados = false; filtrosAlterados = true; });
-    "
+        this.filtrosAplicados = p.toString() !== '';
+        this.$watch('tipo', () => { this.filtrosAplicados = false; this.filtrosAlterados = true; });
+    })()"
     @@filtro-alterado.window="filtrosAlterados = true">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Relatórios')]]" />
     <x-page-header :eyebrow="__('Inteligência municipal')" :title="__('Relatórios')">
