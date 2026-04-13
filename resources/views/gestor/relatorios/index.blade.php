@@ -12,12 +12,12 @@
     </div>
 </div>
 
-<div id="relatorios-dados"
-    data-locais-select='@json($locaisParaSelectArray ?? [])'
-    data-local-selected-ids='@json(array_values(array_map("intval", (array) request("local_id", []))))'
-    data-bairros='@json($bairros ?? [])'
-    data-bairro-selected='@json(array_values((array) request("bairro", [])))'
-    class="hidden"></div>
+<script type="application/json" id="relatorios-dados-json">{!! json_encode([
+    'locaisSelect' => $locaisParaSelectArray ?? [],
+    'localSelectedIds' => array_values(array_map('intval', (array) request('local_id', []))),
+    'bairros' => $bairros ?? [],
+    'bairroSelected' => array_values((array) request('bairro', [])),
+]) !!}</script>
 
 <div class="v-page v-page--wide v-page--loose"
     x-data="{
@@ -72,7 +72,7 @@
                         } gerarBase64Graficos();"
                         class="v-btn-export v-btn-export--pdf">
                         <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                        {{ __('Gerar tabela no estilo PNCD') }}
+                        {{ __('Gerar relatório técnico de visitas') }}
                     </button>
                 </div>
             </x-slot>
@@ -155,11 +155,12 @@
                         },
                         isSelected(id) { return this.selected.some(s => s.id === id); },
                         init() {
-                            const dados = document.getElementById('relatorios-dados');
-                            const locais = dados ? JSON.parse(dados.dataset.locaisSelect || '[]') : [];
-                            const ids = dados ? JSON.parse(dados.dataset.localSelectedIds || '[]') : [];
-                            this.options = Array.isArray(locais) ? locais : [];
-                            this.selected = (Array.isArray(ids) ? ids : []).map((id) => {
+                            const dadosEl = document.getElementById('relatorios-dados-json');
+                            const dados = dadosEl ? JSON.parse(dadosEl.textContent || '{}') : {};
+                            const locais = Array.isArray(dados.locaisSelect) ? dados.locaisSelect : [];
+                            const ids = Array.isArray(dados.localSelectedIds) ? dados.localSelectedIds : [];
+                            this.options = locais;
+                            this.selected = ids.map((id) => {
                                 const item = this.options.find((option) => Number(option.id) === Number(id));
                                 return item ? item : { id: Number(id), label: 'Local #' + id };
                             });
@@ -218,11 +219,10 @@
                             this.$dispatch('filtro-alterado');
                         },
                         init() {
-                            const dados = document.getElementById('relatorios-dados');
-                            const bairros = dados ? JSON.parse(dados.dataset.bairros || '[]') : [];
-                            const selecionados = dados ? JSON.parse(dados.dataset.bairroSelected || '[]') : [];
-                            this.options = Array.isArray(bairros) ? bairros : [];
-                            this.selected = Array.isArray(selecionados) ? selecionados : [];
+                            const dadosEl = document.getElementById('relatorios-dados-json');
+                            const dados = dadosEl ? JSON.parse(dadosEl.textContent || '{}') : {};
+                            this.options = Array.isArray(dados.bairros) ? dados.bairros : [];
+                            this.selected = Array.isArray(dados.bairroSelected) ? dados.bairroSelected : [];
                         }
                     }"
                     @@click.outside="open = false">
@@ -555,11 +555,15 @@
         'indefinida' => __('Indefinida'),
     ];
 @endphp
+<script type="application/json" id="relatorios-i18n-json">{!! json_encode($relatoriosI18nCharts) !!}</script>
+<script type="application/json" id="relatorios-visitas-json">{!! json_encode($visitasParaGraficos ?? []) !!}</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const REL_I18N = {!! json_encode($relatoriosI18nCharts) !!};
-    const MAP_ERROR_MESSAGE = {!! json_encode(__('Erro ao capturar o mapa:')) !!};
-    const visitas = {!! json_encode($visitasParaGraficos ?? []) !!};
+    const relI18nEl = document.getElementById('relatorios-i18n-json');
+    const visitasEl = document.getElementById('relatorios-visitas-json');
+    const REL_I18N = relI18nEl ? JSON.parse(relI18nEl.textContent || '{}') : {};
+    const MAP_ERROR_MESSAGE = 'Erro ao capturar o mapa:';
+    const visitas = visitasEl ? JSON.parse(visitasEl.textContent || '[]') : [];
 
     const contagemPorBairro = {};
     const contagemPorDoenca = {};

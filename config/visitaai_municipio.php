@@ -146,7 +146,7 @@ return [
         'minimo_celula_cruzamento' => 5,
         'menu' => 'Indicadores',
         'titulo_pagina' => 'Indicadores',
-        'subtitulo' => 'Resumo dos ocupantes cadastrados no Visita Aí: território (bairro do imóvel), idade, sexo, estado civil, parentesco, escolaridade, renda (faixa e formal/informal), cor/raça, trabalho e titular/referência familiar; sempre em agregados.',
+        'subtitulo' => 'Panorama agregado dos ocupantes cadastrados no Visita Aí, com recortes por território (bairro do imóvel), idade, sexo, estado civil, parentesco, escolaridade, renda (faixa e formal/informal), cor/raça, trabalho e titular/referência familiar.',
         'subtitulo_detalhe' => 'Agregados com minimização e boas práticas de privacidade (art. 6º da LGPD). Exportação CSV restrita ao gestor; uso institucional com aviso de legislação federal (LGPD, LAI) no arquivo e nesta página.',
         'aviso' => 'Panorama a partir dos registros internos. Não substitui relatórios oficiais, e-SUS ou obrigações de informação à União, estados ou distrito federal quando aplicáveis.',
         'aviso_privacidade' => 'Supressão de totais em bairros ou células com poucos registros reduz risco de reidentificação (art. 6º da LGPD; orientações gerais da ANPD sobre governança em dados). O CSV exportado contém detalhamento estatístico: classificar como informação para gestão interna, nos termos da LAI e da LGPD.',
