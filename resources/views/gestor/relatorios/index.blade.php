@@ -150,27 +150,16 @@
                         isSelected(id) { return this.selected.some(s => s.id === id); }
                     }"
                     x-init="
-                        (function(){
-                            var decode = function(s) {
-                                if (!s || !s.includes('&')) return s || '[]';
-                                var d = document.createElement('div');
-                                d.innerHTML = s;
-                                return d.textContent || d.innerText || s;
-                            };
-                            options = JSON.parse(decode($el.getAttribute('data-local-options')) || '[]');
-                            var sel = JSON.parse(decode($el.getAttribute('data-local-selected')) || '[]');
-                            selected = Array.isArray(sel) ? sel : [];
-                        })();
+                        options = {!! json_encode($locaisParaSelectArray ?? []) !!};
+                        selected = {!! json_encode(
+                            array_values(array_map(function($id) use ($locaisParaSelectArray) {
+                                $id = (int) $id;
+                                $arr = $locaisParaSelectArray ?? [];
+                                $item = collect($arr)->firstWhere('id', $id);
+                                return ['id' => $id, 'label' => $item ? ($item['label'] ?? 'Local #'.$id) : 'Local #'.$id];
+                            }, (array) request('local_id', [])))
+                        ) !!};
                     "
-                    data-local-options="{{ e(json_encode($locaisParaSelectArray ?? [])) }}"
-                    data-local-selected="{{ e(json_encode(
-                        array_values(array_map(function($id) use ($locaisParaSelectArray) {
-                            $id = (int) $id;
-                            $arr = $locaisParaSelectArray ?? [];
-                            $item = collect($arr)->firstWhere('id', $id);
-                            return ['id' => $id, 'label' => $item ? ($item['label'] ?? 'Local #'.$id) : 'Local #'.$id];
-                        }, (array) request('local_id', [])))
-                    )) }}"
                     @@click.outside="open = false">
                     <x-input-label :value="__('Locais')" :required="true" class="mb-1 block" />
                     <div class="relative">
@@ -225,21 +214,9 @@
                         }
                     }"
                     x-init="
-                        (function(){
-                            var decode = function(s) {
-                                if (!s || !s.includes('&')) return s || '[]';
-                                var d = document.createElement('div');
-                                d.innerHTML = s;
-                                return d.textContent || d.innerText || s;
-                            };
-                            var rawOpts = $el.getAttribute('data-options');
-                            var rawSel = $el.getAttribute('data-selected');
-                            options = JSON.parse(decode(rawOpts) || '[]');
-                            selected = JSON.parse(decode(rawSel) || '[]');
-                        })();
+                        options = {!! json_encode($bairros ?? []) !!};
+                        selected = {!! json_encode(array_values((array) request('bairro', []))) !!};
                     "
-                    data-options="{{ e(json_encode($bairros ?? [])) }}"
-                    data-selected="{{ e(json_encode(array_values((array) request('bairro', [])))) }}"
                     @@click.outside="open = false">
                     <x-input-label :value="__('Bairros')" class="mb-1 block" />
                     <div class="relative">
@@ -570,17 +547,11 @@
         'indefinida' => __('Indefinida'),
     ];
 @endphp
-<div id="relatorios-data"
-     class="hidden"
-     data-rel-i18n="{{ e(json_encode($relatoriosI18nCharts)) }}"
-    data-map-error-message="{{ __('Erro ao capturar o mapa:') }}"
-     data-visitas="{{ e(json_encode($visitasParaGraficos ?? [])) }}"></div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const relDataEl = document.getElementById('relatorios-data');
-    const REL_I18N = relDataEl ? JSON.parse(relDataEl.dataset.relI18n || '{}') : {};
-    const MAP_ERROR_MESSAGE = relDataEl ? (relDataEl.dataset.mapErrorMessage || 'Erro ao capturar o mapa:') : 'Erro ao capturar o mapa:';
-    const visitas = relDataEl ? JSON.parse(relDataEl.dataset.visitas || '[]') : [];
+    const REL_I18N = {!! json_encode($relatoriosI18nCharts) !!};
+    const MAP_ERROR_MESSAGE = {!! json_encode(__('Erro ao capturar o mapa:')) !!};
+    const visitas = {!! json_encode($visitasParaGraficos ?? []) !!};
 
     const contagemPorBairro = {};
     const contagemPorDoenca = {};
