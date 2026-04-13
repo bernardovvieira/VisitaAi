@@ -14,23 +14,23 @@
     </x-slot>
   </x-page-header>
 
-  <div class="grid gap-4 lg:grid-cols-2">
-    <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
+  <div class="grid gap-4 lg:grid-cols-3">
+    <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50 lg:col-span-3">
       <div class="border-b border-slate-200/80 pb-3 dark:border-slate-700/70">
         <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ __('Registro') }}</h2>
       </div>
-      <dl class="grid grid-cols-1 gap-x-6 gap-y-4 text-sm text-slate-700 dark:text-slate-300 sm:grid-cols-2">
+      <dl class="grid grid-cols-1 gap-x-6 gap-y-4 text-sm text-slate-700 dark:text-slate-300 sm:grid-cols-3">
         <div>
           <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('ID do registro') }}</dt>
           <dd class="mt-1 text-slate-900 dark:text-slate-100">#{{ $doenca->doe_id }}</dd>
         </div>
         <div>
           <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Criado em') }}</dt>
-          <dd class="mt-1 text-slate-900 dark:text-slate-100">{{ $doenca->created_at->format('d/m/Y H:i') }}</dd>
+          <dd class="mt-1 italic text-slate-900 dark:text-slate-100">{{ $doenca->created_at->format('d/m/Y H:i') }}</dd>
         </div>
         <div>
           <dt class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Atualizado em') }}</dt>
-          <dd class="mt-1 text-slate-900 dark:text-slate-100">{{ $doenca->updated_at->format('d/m/Y H:i') }}</dd>
+          <dd class="mt-1 italic text-slate-900 dark:text-slate-100">{{ $doenca->updated_at->format('d/m/Y H:i') }}</dd>
         </div>
       </dl>
     </x-section-card>
@@ -65,7 +65,7 @@
       @endif
     </x-section-card>
 
-    <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50 lg:col-span-2">
+    <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
       <div class="border-b border-slate-200/80 pb-3 dark:border-slate-700/70">
         <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ __('Medidas de controle') }}</h2>
       </div>
