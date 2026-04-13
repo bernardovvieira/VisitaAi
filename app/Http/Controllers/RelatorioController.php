@@ -319,46 +319,6 @@ class RelatorioController extends Controller
             return redirect()->route('gestor.relatorios.index')->with('error', __('Nenhuma visita encontrada para os critérios selecionados. Não foi possível gerar o PDF.'));
         }
 
-        $base64Keys = [
-            'graficoBairrosBase64', 'graficoDoencasBase64', 'mapaCalorBase64',
-            'graficoZonasBase64', 'graficoDiasBase64', 'graficoInspBase64', 'graficoTratamentosBase64',
-        ];
-        $maxBase64Len = 2800000; // ~2MB só do payload base64
-        $sanitizedBase64 = [];
-        foreach ($base64Keys as $key) {
-            $val = $request->input($key);
-            if ($val === null || $val === '') {
-                $sanitizedBase64[$key] = null;
-
-                continue;
-            }
-            $val = (string) $val;
-            $payload = $val;
-            if (str_starts_with($val, 'data:image/')) {
-                $comma = strpos($val, ',');
-                if ($comma === false) {
-                    $sanitizedBase64[$key] = null;
-
-                    continue;
-                }
-                $payload = substr($val, $comma + 1);
-            }
-            if (strlen($payload) > $maxBase64Len || ! preg_match('/^[A-Za-z0-9+\/=]+$/', $payload)) {
-                $sanitizedBase64[$key] = null;
-
-                continue;
-            }
-            $sanitizedBase64[$key] = str_starts_with($val, 'data:image/') ? $val : 'data:image/png;base64,'.$payload;
-        }
-
-        $graficoBairrosBase64 = $sanitizedBase64['graficoBairrosBase64'];
-        $graficoDoencasBase64 = $sanitizedBase64['graficoDoencasBase64'];
-        $mapaCalorBase64 = $sanitizedBase64['mapaCalorBase64'];
-        $graficoZonasBase64 = $sanitizedBase64['graficoZonasBase64'];
-        $graficoDiasBase64 = $sanitizedBase64['graficoDiasBase64'];
-        $graficoInspBase64 = $sanitizedBase64['graficoInspBase64'];
-        $graficoTratamentosBase64 = $sanitizedBase64['graficoTratamentosBase64'];
-
         $gestorNome = Auth::user()->use_nome ?? __('Gestor');
 
         $titulo = match ($tipo) {
@@ -399,13 +359,6 @@ class RelatorioController extends Controller
 
         return Pdf::loadView('gestor.relatorios.pdf', compact(
             'visitas',
-            'graficoBairrosBase64',
-            'graficoDoencasBase64',
-            'mapaCalorBase64',
-            'graficoZonasBase64',
-            'graficoDiasBase64',
-            'graficoInspBase64',
-            'graficoTratamentosBase64',
             'gestorNome',
             'data_inicio',
             'data_fim',

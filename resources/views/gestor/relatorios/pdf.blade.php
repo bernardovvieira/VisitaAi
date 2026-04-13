@@ -119,33 +119,6 @@
     </table>
   </div>
 
-  @php
-    $graficosPdf = array_values(array_filter([
-      $graficoBairrosBase64 ?? null,
-      $graficoDoencasBase64 ?? null,
-      $mapaCalorBase64 ?? null,
-      $graficoDiasBase64 ?? null,
-      $graficoTratamentosBase64 ?? null,
-    ]));
-  @endphp
-  @if(count($graficosPdf) > 0)
-  <div class="titulo-secao">{{ __('Análise visual') }}</div>
-  <table style="width:100%; border-collapse:collapse; margin-bottom:12px; table-layout:fixed;">
-    @foreach(array_chunk($graficosPdf, 2) as $par)
-    <tr>
-      @foreach($par as $src)
-      <td style="width:50%; vertical-align:top; padding:4px 6px 10px 0; border:none;">
-        <img src="{{ $src }}" alt="" style="width:100%; max-height:150px; object-fit:contain;" />
-      </td>
-      @endforeach
-      @if(count($par) === 1)
-      <td style="width:50%; border:none;"></td>
-      @endif
-    </tr>
-    @endforeach
-  </table>
-  @endif
-
   <div class="titulo-secao">{{ __('Vigilância Entomológica e Controle Vetorial') }}</div>
   <table class="tabela-principal">
     <thead>

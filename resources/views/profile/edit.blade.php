@@ -140,36 +140,6 @@
         @endif
     </x-section-card>
 
-    <!-- Texto de Informação -->
-    <x-section-card class="v-card--muted text-sm text-slate-900 dark:text-slate-100" role="alert">
-        <h4 class="mb-2 text-base font-semibold">{{ __('Informações importantes') }}</h4>
-        <ul class="list-inside list-disc space-y-2">
-            <li>{{ __('Algumas informações são gerenciadas pelo sistema e não podem ser alteradas diretamente. Se necessário, entre em contato com a Bitwise Technologies (suporte).') }}</li>
-            <li>{{ __('Para alterar sua senha, utilize a opção “Esqueci minha senha” na tela de login.') }}</li>
-            <li>{!! __('A gestão de permissões de acesso é realizada apenas por :g no menu :u.', ['g' => '<strong>'.e(__('Gestores')).'</strong>', 'u' => '“'.e(__('Usuários')).'”']) !!}</li>
-        </ul>
-    </x-section-card>
-
-    {{-- Card: Anonimizar Conta --}}
-    <x-section-card class="space-y-4 dark:bg-gray-800">
-        <h3 class="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-            <x-heroicon-o-shield-exclamation class="mr-2 h-5 w-5 shrink-0 text-red-500" />
-            {{ __('Anonimizar conta') }}
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400">
-            {{ __('A anonimização da conta remove permanentemente seus dados pessoais, como nome e e-mail, tornando-os irreversíveis. Você não poderá mais acessar sua conta após essa ação.') }}
-        </p>
-        <div class="flex justify-end">
-            @if(auth()->user()->isAgente())
-                <p class="mr-2 text-sm text-red-600">{{ __('Apenas gestores podem realizar essa ação.') }}</p>
-            @elseif(auth()->user()->isGestor())
-                <a href="{{ route('gestor.users.index') }}"
-                   class="v-btn-danger !px-3 !py-1.5 !text-xs">
-                    {{ __('Ir para usuários') }}
-                </a>
-            @endif
-        </div>
-    </x-section-card>
 </div>
 <script>
 (function () {
