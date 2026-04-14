@@ -82,14 +82,21 @@
                 <th style="width:12%">{{ __('Nasc.') }}</th>
                 <th style="width:25%">{{ __('Escolaridade • Renda • Trabalho') }}</th>
             </tr>
-        </thead>
-        <tbody>
-            @forelse($local->moradores as $m)
-                <tr>
-                    <td>
-                        <strong>{{ $m->mor_nome ?? '-' }}</strong>
-                        @if($m->mor_profissao)
-                            <div class="small">{{ $m->mor_profissao }}</div>
+
+            <!-- Document description: shown once, directly under the Imóvel code -->
+            <div style="box-sizing:border-box; padding:0 20px 8px 20px; font-size:8pt; color:#666; font-family: DejaVu Sans, sans-serif; line-height:1.2; text-align:justify; text-justify:inter-word;">
+                <div style="width:100%; display:block;">
+                    Este cadastro reúne as informações coletadas na entrevista sobre o domicílio e seus ocupantes. Os dados pessoais incluídos neste arquivo são tratados em conformidade com a Lei Geral de Proteção de Dados (LGPD) e devem ser mantidos sob medidas adequadas de segurança.
+                </div>
+            </div>
+
+            <!-- Footer placeholder: server-side drawing will add texts -->
+            <div class="footer">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:9pt; color:#555;">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
                         @endif
                             @if($m->mor_cpf || $m->mor_rg_numero)
                                 <div class="small" style="margin-top:4px;">
