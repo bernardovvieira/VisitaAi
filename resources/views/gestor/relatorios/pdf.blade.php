@@ -34,7 +34,6 @@
       border-top: 1px solid #ccc;
       padding-top: 4px;
     }
-    .page-number:after { content: "{{ str_replace('"', '\\"', __('PDF rodapé rótulo página')) }}\00a0" counter(page); }
     main { padding-top: 5px; }
     .bloco-ident {
       border: 1px solid #999;
@@ -95,7 +94,6 @@
 </header>
 
 <footer>
-  <div class="page-number"></div>
   {{ __('Terminologia e atividades conforme Diretrizes Nacionais para Prevenção e Controle das Arboviroses Urbanas (Vigilância Entomológica e Controle Vetorial) | Ministério da Saúde.') }}@if(strtoupper($uf ?? '') === 'RS') {{ __('No âmbito estadual, em conformidade com a SES-RS e o CEVS.') }}@endif<br>
   {{ __('Documento gerado por :sub (:app) em :data.', ['sub' => $nomeSistemaSub, 'app' => $brand, 'data' => now()->format('d/m/Y H:i')]) }}
 </footer>

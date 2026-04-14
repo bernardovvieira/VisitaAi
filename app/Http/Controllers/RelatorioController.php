@@ -12,7 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 class RelatorioController extends Controller
 {
@@ -251,11 +253,15 @@ class RelatorioController extends Controller
         $bairroPdf = $request->input('bairro');
         $bairrosPdf = is_array($bairroPdf) ? array_filter($bairroPdf) : ($bairroPdf !== null && $bairroPdf !== '' ? [$bairroPdf] : []);
 
+        // Carrega apenas relações essenciais para o PDF
         $query = Visita::with([
-            'local' => fn ($q) => $q->withCount('moradores')->with('socioeconomico'),
-            'doencas',
-            'usuario',
-            'tratamentos',
+            'local' => function ($q) {
+                $q->select('loc_id','loc_cidade','loc_estado','loc_bairro','loc_endereco','loc_numero','loc_complemento','loc_codigo_unico','loc_tipo','loc_zona','loc_quarteirao','loc_sequencia','loc_lado');
+                $q->withCount('moradores')->with('socioeconomico');
+            },
+            'doencas:doencas.doe_id,doe_nome',
+            'usuario:use_id,use_nome',
+            'tratamentos:trat_id,fk_visita_id,trat_forma,trat_tipo,qtd_gramas,qtd_depositos_tratados,qtd_cargas',
         ]);
         $localIdsPermitidos = $this->aplicarEscopoGestorEmVisitas($query);
 
@@ -276,7 +282,19 @@ class RelatorioController extends Controller
                     $q->whereIn('loc_bairro', $bairrosPdf);
                 });
             }
-            $visitas = $query->orderBy('vis_data', 'desc')->get();
+            // Carrega visitas em chunks para não estourar memória
+            $visitas = collect();
+            $data_inicio = null;
+            $data_fim = null;
+            $query->orderBy('vis_data', 'desc')->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
+                $visitas = $visitas->concat($chunk);
+                $min = $chunk->min('vis_data');
+                $max = $chunk->max('vis_data');
+                if ($data_inicio === null || ($min && $min < $data_inicio)) $data_inicio = $min;
+                if ($data_fim === null || ($max && $max > $data_fim)) $data_fim = $max;
+            });
+            $data_inicio = $data_inicio ?? now()->toDateString();
+            $data_fim = $data_fim ?? now()->toDateString();
             $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
             $data_fim = $visitas->max('vis_data') ?? now()->toDateString();
         } else {
@@ -357,16 +375,42 @@ class RelatorioController extends Controller
 
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
 
-        return Pdf::loadView('gestor.relatorios.pdf', compact(
-            'visitas',
-            'gestorNome',
-            'data_inicio',
-            'data_fim',
-            'bairrosPdf',
-            'titulo',
-            'tipo',
-            'imoveisComplementoResumo',
-        ))->setPaper('a4', 'landscape')->stream('relatorio-visitas.pdf');
+        try {
+            $pdf = Pdf::loadView('gestor.relatorios.pdf', compact(
+                'visitas',
+                'gestorNome',
+                'data_inicio',
+                'data_fim',
+                'bairrosPdf',
+                'titulo',
+                'tipo',
+                'imoveisComplementoResumo',
+            ));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isPhpEnabled' => false,
+                'isRemoteEnabled' => false,
+            ]);
+            return $pdf->stream('relatorio-visitas.pdf');
+        } catch (Throwable $e) {
+            Log::error('Falha ao gerar PDF de relatorios', [
+                'erro' => $e->getMessage(),
+                'tipo_relatorio' => $tipo,
+                'data_inicio' => $data_inicio,
+                'data_fim' => $data_fim,
+                'bairros' => $bairrosPdf,
+                'total_visitas' => $visitas->count(),
+                'gestor_id' => Auth::id(),
+            ]);
+
+            report($e);
+
+            return redirect()->route('gestor.relatorios.index')->with(
+                'error',
+                __('Não foi possível gerar o PDF no momento. Tente novamente em instantes.')
+            );
+        }
     }
 
     /**
