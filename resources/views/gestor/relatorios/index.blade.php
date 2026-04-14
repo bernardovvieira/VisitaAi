@@ -251,12 +251,7 @@
                             </template>
                             <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" x-text="options.length === 0 ? emptyBairroCadastrado : emptyBairroBusca"></div>
                         </div>
-                        <template x-if="tipo === 'completo'">
-                            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400" style="font-size:13px;">
-                                <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>
-                                {{ __('O PDF do relatório completo está limitado às últimas 50 visitas para evitar travamentos.') }}
-                            </div>
-                        </template>
+                        
                     </div>
                     <template x-for="val in selected" :key="val">
                         <input type="hidden" :name="'bairro[]'" :value="val">
