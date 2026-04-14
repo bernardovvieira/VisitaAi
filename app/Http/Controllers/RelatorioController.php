@@ -282,17 +282,27 @@ class RelatorioController extends Controller
                     $q->whereIn('loc_bairro', $bairrosPdf);
                 });
             }
-            // Carrega visitas em chunks para não estourar memória
+            // Limita o relatório completo para as últimas 200 visitas
             $visitas = collect();
             $data_inicio = null;
             $data_fim = null;
-            $query->orderBy('vis_data', 'desc')->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
-                $visitas = $visitas->concat($chunk);
-                $min = $chunk->min('vis_data');
-                $max = $chunk->max('vis_data');
-                if ($data_inicio === null || ($min && $min < $data_inicio)) $data_inicio = $min;
-                if ($data_fim === null || ($max && $max > $data_fim)) $data_fim = $max;
-            });
+            if ($tipo === 'completo') {
+                $query->orderBy('vis_data', 'desc')->limit(200)->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
+                    $visitas = $visitas->concat($chunk);
+                    $min = $chunk->min('vis_data');
+                    $max = $chunk->max('vis_data');
+                    if ($data_inicio === null || ($min && $min < $data_inicio)) $data_inicio = $min;
+                    if ($data_fim === null || ($max && $max > $data_fim)) $data_fim = $max;
+                });
+            } else {
+                $query->orderBy('vis_data', 'desc')->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
+                    $visitas = $visitas->concat($chunk);
+                    $min = $chunk->min('vis_data');
+                    $max = $chunk->max('vis_data');
+                    if ($data_inicio === null || ($min && $min < $data_inicio)) $data_inicio = $min;
+                    if ($data_fim === null || ($max && $max > $data_fim)) $data_fim = $max;
+                });
+            }
             $data_inicio = $data_inicio ?? now()->toDateString();
             $data_fim = $data_fim ?? now()->toDateString();
             $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
