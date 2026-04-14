@@ -16,9 +16,11 @@
     $t = config('visitaai_socioeconomico.secao_titulos', []);
 @endphp
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<div x-data="{ activeSection: null }">
+
+<x-ui.disclosure variant="muted-card-simple" :open="activeSection === 'imovel'">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('5. Características do imóvel e cadastro físico') }}</span>
+        <span role="button" tabindex="0" @click="activeSection = activeSection === 'imovel' ? null : 'imovel'" @keydown.enter="activeSection = activeSection === 'imovel' ? null : 'imovel'" class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('5. Características do imóvel e cadastro físico') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -165,6 +167,8 @@
     </div>
 </x-ui.disclosure>
 
+</div>
+
 <script>
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
@@ -267,9 +271,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="activeSection === 'infraestrutura'">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['infraestrutura'] ?? __('7. Infraestrutura e serviços') }}</span>
+        <span role="button" tabindex="0" @click="activeSection = activeSection === 'infraestrutura' ? null : 'infraestrutura'" @keydown.enter="activeSection = activeSection === 'infraestrutura' ? null : 'infraestrutura'" class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['infraestrutura'] ?? __('7. Infraestrutura e serviços') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         @foreach([
@@ -291,9 +295,9 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="activeSection === 'terreno'">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['terreno'] ?? __('8. Terreno e tempo de residência') }}</span>
+        <span role="button" tabindex="0" @click="activeSection = activeSection === 'terreno' ? null : 'terreno'" @keydown.enter="activeSection = activeSection === 'terreno' ? null : 'terreno'" class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['terreno'] ?? __('8. Terreno e tempo de residência') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -319,9 +323,9 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="activeSection === 'historico'">
     <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['historico'] ?? __('9. Histórico da posse') }}</span>
+        <span role="button" tabindex="0" @click="activeSection = activeSection === 'historico' ? null : 'historico'" @keydown.enter="activeSection = activeSection === 'historico' ? null : 'historico'" class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['historico'] ?? __('9. Histórico da posse') }}</span>
     </x-slot>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
