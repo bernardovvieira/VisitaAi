@@ -363,22 +363,38 @@ class RelatorioController extends Controller
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
 
         try {
-            $pdf = Pdf::loadView('gestor.relatorios.pdf', compact(
-                'visitas',
-                'gestorNome',
-                'data_inicio',
-                'data_fim',
-                'bairrosPdf',
-                'titulo',
-                'tipo',
-                'imoveisComplementoResumo',
-            ));
-            $pdf->setPaper('a4', 'landscape');
-            $pdf->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isPhpEnabled' => false,
-                'isRemoteEnabled' => false,
+            // Carrega apenas dados essenciais para o PDF
+            $visitasEssenciais = $visitas->map(function ($v) {
+                return [
+                    'vis_id' => $v->vis_id,
+                    'vis_data' => $v->vis_data,
+                    'local' => $v->local ? [
+                        'loc_bairro' => $v->local->loc_bairro,
+                        'loc_endereco' => $v->local->loc_endereco,
+                        'loc_numero' => $v->local->loc_numero,
+                    ] : null,
+                    'usuario' => $v->usuario ? $v->usuario->use_nome : null,
+                    'doencas' => $v->doencas->pluck('doe_nome')->all(),
+                    'tratamentos' => $v->tratamentos->map(fn ($t) => [
+                        'trat_forma' => $t->trat_forma,
+                        'trat_tipo' => $t->trat_tipo,
+                        'qtd_gramas' => $t->qtd_gramas,
+                        'qtd_depositos_tratados' => $t->qtd_depositos_tratados,
+                        'qtd_cargas' => $t->qtd_cargas,
+                    ])->all(),
+                ];
+            });
+            $pdf = Pdf::loadView('gestor.relatorios.pdf', [
+                'visitas' => $visitasEssenciais,
+                'gestorNome' => $gestorNome,
+                'data_inicio' => $data_inicio,
+                'data_fim' => $data_fim,
+                'bairrosPdf' => $bairrosPdf,
+                'titulo' => $titulo,
+                'tipo' => $tipo,
+                'imoveisComplementoResumo' => $imoveisComplementoResumo,
             ]);
+            $pdf->setPaper('a4', 'landscape');
             return $pdf->stream('relatorio-visitas.pdf');
         } catch (Throwable $e) {
             Log::error('Falha ao gerar PDF de relatorios', [
