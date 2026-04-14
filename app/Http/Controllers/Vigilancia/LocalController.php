@@ -496,7 +496,17 @@ class LocalController extends Controller
             $leftText = 'Bitwise Technologies - Soluções digitais para eficiência e inovação';
             $pageText = 'Página {PAGE_NUM} / {PAGE_COUNT}';
 
-            $w = $fontMetrics->getTextWidth($pageText, $font, 8);
+            // Compute a realistic width for the page text by replacing placeholders
+            $pageCount = null;
+            if (method_exists($canvas, 'get_page_count')) {
+                $pageCount = $canvas->get_page_count();
+            } elseif (method_exists($dom, 'get_page_count')) {
+                $pageCount = $dom->get_page_count();
+            }
+            $samplePageNum = $pageCount ?: 1;
+            $sampleText = str_replace(['{PAGE_NUM}', '{PAGE_COUNT}'], [(string) $samplePageNum, (string) ($pageCount ?: $samplePageNum)], $pageText);
+            $w = $fontMetrics->getTextWidth($sampleText, $font, 8);
+
             // place page number aligned to the content box right edge (respecting CSS margins)
             $innerGutter = 6; // small inner gutter in points from the content edge
             $x = $width - $rightMargin - $innerGutter - $w;
