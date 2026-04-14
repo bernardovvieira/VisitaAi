@@ -370,10 +370,15 @@ class RelatorioController extends Controller
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
 
         try {
-            // Aumenta temporariamente o limite de memória para tentativas de geração de PDF
-            @ini_set('memory_limit', '512M');
-            // Passa a coleção original de visitas (com relações carregadas)
-            $pdf = Pdf::loadView('gestor.relatorios.pdf', [
+            // Prefer wkhtmltopdf (external binary) if available because DOMPDF can explode memory on large HTML.
+            $wkPath = null;
+            try {
+                $wkPath = trim((string) shell_exec('command -v wkhtmltopdf 2>/dev/null')) ?: null;
+            } catch (Throwable $_) {
+                $wkPath = null;
+            }
+
+            $viewData = [
                 'visitas' => $visitas,
                 'gestorNome' => $gestorNome,
                 'data_inicio' => $data_inicio,
@@ -382,7 +387,37 @@ class RelatorioController extends Controller
                 'titulo' => $titulo,
                 'tipo' => $tipo,
                 'imoveisComplementoResumo' => $imoveisComplementoResumo,
-            ]);
+            ];
+
+            if ($wkPath) {
+                $html = view('gestor.relatorios.pdf', $viewData)->render();
+                $tmpDir = sys_get_temp_dir();
+                $htmlFile = $tmpDir.DIRECTORY_SEPARATOR.'relatorio_'.uniqid().'.html';
+                $pdfFile = $tmpDir.DIRECTORY_SEPARATOR.'relatorio_'.uniqid().'.pdf';
+                file_put_contents($htmlFile, $html);
+
+                $cmd = escapeshellcmd($wkPath).' --page-size A4 --orientation Landscape '.escapeshellarg($htmlFile).' '.escapeshellarg($pdfFile).' 2>&1';
+                exec($cmd, $out, $code);
+
+                if ($code === 0 && file_exists($pdfFile)) {
+                    $contents = file_get_contents($pdfFile);
+                    // cleanup
+                    @unlink($htmlFile);
+                    @unlink($pdfFile);
+
+                    return response($contents, 200, [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'inline; filename="relatorio-visitas.pdf"',
+                    ]);
+                }
+                // If wkhtmltopdf failed, cleanup and fall back to DomPDF
+                @unlink($htmlFile);
+                @unlink($pdfFile);
+            }
+
+            // Fallback to DomPDF
+            @ini_set('memory_limit', '512M');
+            $pdf = Pdf::loadView('gestor.relatorios.pdf', $viewData);
             $pdf->setPaper('a4', 'landscape');
             return $pdf->stream('relatorio-visitas.pdf');
         } catch (Throwable $e) {
