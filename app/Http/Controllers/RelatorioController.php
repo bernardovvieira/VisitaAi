@@ -397,16 +397,37 @@ class RelatorioController extends Controller
             $pdf->setPaper('a4', 'landscape');
             return $pdf->stream('relatorio-visitas.pdf');
         } catch (Throwable $e) {
-            Log::error('Falha ao gerar PDF de relatorios', [
-                'erro' => $e->getMessage(),
+            $msg = (string) $e->getMessage();
+            $memoryPatterns = ['allowed memory', 'out of memory', 'memory exhausted', 'cannot allocate memory'];
+            $isMemoryError = false;
+            foreach ($memoryPatterns as $pat) {
+                if (stripos($msg, $pat) !== false) {
+                    $isMemoryError = true;
+                    break;
+                }
+            }
+
+            $context = [
+                'erro' => $msg,
                 'tipo_relatorio' => $tipo,
                 'data_inicio' => $data_inicio,
                 'data_fim' => $data_fim,
                 'bairros' => $bairrosPdf,
                 'total_visitas' => $visitas->count(),
                 'gestor_id' => Auth::id(),
-            ]);
+            ];
 
+            if ($isMemoryError) {
+                Log::critical('Falha por falta de memória ao gerar PDF de relatorios', $context);
+                report($e);
+
+                return redirect()->route('gestor.relatorios.index')->with(
+                    'error',
+                    __('Não foi possível gerar o PDF devido à falta de memória. Tente reduzir o período ou aplicar filtros mais restritos (por exemplo relatório individual).')
+                );
+            }
+
+            Log::error('Falha ao gerar PDF de relatorios', $context);
             report($e);
 
             return redirect()->route('gestor.relatorios.index')->with(

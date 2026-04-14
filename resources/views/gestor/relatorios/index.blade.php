@@ -258,31 +258,6 @@
                             </div>
                         </template>
                     </div>
-                    <div class="relative">
-                        <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
-                            <template x-for="val in selected" :key="val">
-                                <span class="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-sm text-slate-800 dark:bg-slate-800/90 dark:text-slate-200">
-                                    <span x-text="val"></span>
-                                    <button type="button" @@click.stop="selected = selected.filter(s => s !== val); $dispatch('filtro-alterado')" class="leading-none hover:text-slate-950 dark:hover:text-white" aria-label="{{ __('Remover') }}">×</button>
-                                </span>
-                            </template>
-                            <input x-show="open" x-model="search" @@click.stop type="text" placeholder="{{ __('Buscar bairro...') }}" class="flex-1 min-w-[120px] bg-transparent border-0 p-0 text-sm placeholder-gray-500 focus:ring-0 focus:outline-none"
-                                   @@keydown.escape="open = false">
-                            <span x-show="!open && selected.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">{{ __('Selecione um ou mais bairros...') }}</span>
-                        </div>
-                        <div x-show="open" x-transition
-                             class="absolute z-20 w-full mt-1 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 max-h-52 overflow-y-auto">
-                            <template x-for="opt in filtered" :key="opt">
-                                <div @@click="toggle(opt)" role="option" :aria-selected="selected.includes(opt)"
-                                     class="v-list-item-hover flex cursor-pointer items-center justify-between px-3 py-2 text-sm"
-                                     :class="{ 'bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100': selected.includes(opt) }">
-                                    <span x-text="opt"></span>
-                                    <span x-show="selected.includes(opt)" class="text-slate-600 dark:text-slate-300">✓</span>
-                                </div>
-                            </template>
-                            <div x-show="filtered.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400" x-text="options.length === 0 ? emptyBairroCadastrado : emptyBairroBusca"></div>
-                        </div>
-                    </div>
                     <template x-for="val in selected" :key="val">
                         <input type="hidden" :name="'bairro[]'" :value="val">
                     </template>
