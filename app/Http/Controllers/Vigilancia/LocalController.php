@@ -516,14 +516,6 @@ class LocalController extends Controller
             try {
                 $canvas->page_text($leftMargin, $y, $leftText, $font, 8, [0,0,0]);
                 $canvas->page_text($x, $y, $pageText, $font, 8, [0,0,0]);
-
-                // Optional visual debug markers: set DOMPDF_FOOTER_DEBUG=true in .env
-                if (env('DOMPDF_FOOTER_DEBUG', true)) {
-                    // mark left content edge (L), right content edge (R) and computed page number X (P)
-                    $canvas->page_text($leftMargin, $y - 8, 'L', $font, 6, [1,0,0]);
-                    $canvas->page_text($width - $rightMargin, $y - 8, 'R', $font, 6, [1,0,0]);
-                    $canvas->page_text($x, $y - 8, 'P', $font, 6, [0,0,1]);
-                }
             } catch (\Throwable $e) {
                 // swallow — footer drawing should not break PDF generation
             }
