@@ -20,6 +20,13 @@
         </x-slot>
     </x-page-header>
 
+    <div class="flex gap-2 mt-2 mb-4">
+        <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
+            <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
+            {{ __('Ficha socioeconômica') }}
+        </a>
+    </div>
+
     @include('municipio.locais._show_shared', [
         'local' => $local,
         'qrCodeBase64' => $qrCodeBase64,

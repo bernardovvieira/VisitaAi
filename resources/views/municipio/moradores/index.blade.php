@@ -36,10 +36,6 @@
                 <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                 {{ __('Cadastrar ocupante') }}
             </a>
-            <a href="{{ $fichaLocalUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
-                <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Ficha socioeconômica') }}
-            </a>
         </div>
     </div>
 
