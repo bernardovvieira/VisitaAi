@@ -485,8 +485,11 @@ class LocalController extends Controller
             }
 
             // Align footers to page margins used in CSS: @page { margin: 100px 20px 70px 20px }
-            $leftMargin = 20; // match CSS left margin
-            $rightMargin = 20; // match CSS right margin
+            // CSS uses px; dompdf canvas uses points. Convert px -> pt (1px = 72/96 pt)
+            $pxToPt = 72.0 / 96.0;
+            $cssSideMarginPx = 20; // as used in the Blade @page rule
+            $leftMargin = $cssSideMarginPx * $pxToPt;
+            $rightMargin = $cssSideMarginPx * $pxToPt;
 
             // Vertical position for footer baseline (adjust as needed)
             $y = $height - 28;
@@ -494,9 +497,9 @@ class LocalController extends Controller
             $pageText = 'Página {PAGE_NUM} / {PAGE_COUNT}';
 
             $w = $fontMetrics->getTextWidth($pageText, $font, 8);
-            // place page number very close to the page right edge (small inner gutter)
-            $innerGutter = 8; // distance from physical page edge
-            $x = $width - $w - $innerGutter;
+            // place page number aligned to the content box right edge (respecting CSS margins)
+            $innerGutter = 6; // small inner gutter in points from the content edge
+            $x = $width - $rightMargin - $innerGutter - $w;
 
             // Draw footer texts aligned to page margins
             try {
