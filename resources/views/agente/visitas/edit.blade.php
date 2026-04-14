@@ -19,6 +19,20 @@
         </x-slot>
     </x-page-header>
 
+    <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <x-heroicon-o-wifi class="h-5 w-5 text-sky-500 dark:text-sky-400" aria-hidden="true" />
+            <h3 class="text-sm font-semibold">{{ __('Modo offline e envio depois') }}</h3>
+        </div>
+        <p class="text-sm text-slate-700 dark:text-slate-300"><strong>{{ __('Sem internet?') }}</strong>
+            {{ __('Use o botão :btn no final do formulário. A visita fica salva no seu aparelho e pode ser enviada depois em :menu.', [
+                'btn' => __('Guardar no dispositivo para enviar depois'),
+                'menu' => __('Enviar visitas salvas no dispositivo'),
+            ]) }}</p>
+        <p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">{{ __('Antes de ir a campo:') }}</span>
+            {{ __('Abra a tela de registrar visita pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
+    </x-section-card>
+
     <x-section-card class="space-y-6 dark:bg-gray-800">
         @if ($errors->any())
             <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
