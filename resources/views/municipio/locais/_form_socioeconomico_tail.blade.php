@@ -69,7 +69,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="sm:col-span-2">
+        <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Área livre / quintal (detalhe)') }}</label>
             <input type="text" name="socio[area_livre]" value="{{ $sv('area_livre') }}" class="v-input mt-1 w-full" maxlength="255">
         </div>
