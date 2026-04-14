@@ -117,11 +117,6 @@
                         <option value="semanal">{{ __('Por período') }}</option>
                         <option value="individual">{{ __('Individual') }}</option>
                     </select>
-                    <template x-if="tipo === 'completo'">
-                        <div class="alert alert-warning" style="background:#fffbe6;border:1px solid #ffe58f;color:#ad8b00;padding:8px 14px;margin:12px 0 0 0;font-size:13px;">
-                            {{ __('Atenção: o PDF do relatório completo está limitado às últimas 200 visitas para evitar travamentos. Refine os filtros para exportar outros períodos.') }}
-                        </div>
-                    </template>
                 </div>
                 <div x-show="tipo === 'diario'" x-cloak class="max-w-md">
                     <x-input-label :value="__('Data')" :required="true" class="mb-1 block" />
@@ -232,6 +227,12 @@
                     }"
                     @@click.outside="open = false">
                     <x-input-label :value="__('Bairros')" class="mb-1 block" />
+                                        <!-- Alert moved below bairros filter -->
+                                        <template x-if="tipo === 'completo'">
+                                            <x-ui.alert type="warning" class="w-full mt-2">
+                                                {{ __('Atenção: o PDF do relatório completo está limitado às últimas 100 visitas para evitar travamentos. Refine os filtros para exportar outros períodos.') }}
+                                            </x-ui.alert>
+                                        </template>
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
                             <template x-for="val in selected" :key="val">

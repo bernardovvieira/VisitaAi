@@ -275,25 +275,27 @@ class RelatorioController extends Controller
         if ($tipo === 'individual' && empty($localIdsPdf)) {
             return redirect()->route('gestor.relatorios.index')->with('error', __('Selecione ao menos um local para o relatório individual.'));
         }
-        if ($tipo === 'individual' && ! empty($localIdsPdf)) {
-            $query->whereIn('fk_local_id', $localIdsPdf);
-            if (! empty($bairrosPdf)) {
-                $query->whereHas('local', function ($q) use ($bairrosPdf) {
-                    $q->whereIn('loc_bairro', $bairrosPdf);
-                });
+        if ($tipo === 'individual' && ! empty($localIds)) {
+            $query->whereIn('fk_local_id', $localIds);
+        } elseif ($tipo === 'diario' && $request->filled('data_unica')) {
+            $query->whereDate('vis_data', $request->data_unica);
+        } elseif ($tipo === 'semanal') {
+            if ($request->filled('data_inicio')) {
+                $query->whereDate('vis_data', '>=', $request->data_inicio);
             }
-            // Limita o relatório completo para as últimas 200 visitas
-            $visitas = collect();
-            $data_inicio = null;
-            $data_fim = null;
-            if ($tipo === 'completo') {
-                $query->orderBy('vis_data', 'desc')->limit(200)->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
-                    $visitas = $visitas->concat($chunk);
-                    $min = $chunk->min('vis_data');
-                    $max = $chunk->max('vis_data');
-                    if ($data_inicio === null || ($min && $min < $data_inicio)) $data_inicio = $min;
-                    if ($data_fim === null || ($max && $max > $data_fim)) $data_fim = $max;
-                });
+            if ($request->filled('data_fim')) {
+                $query->whereDate('vis_data', '<=', $request->data_fim);
+            }
+        } elseif ($tipo === 'completo') {
+            if ($request->filled('data_inicio')) {
+                $query->whereDate('vis_data', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $query->whereDate('vis_data', '<=', $request->data_fim);
+            }
+            // Limit to last 100 visits for 'completo' report
+            $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(100);
+        }
             } else {
                 $query->orderBy('vis_data', 'desc')->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
                     $visitas = $visitas->concat($chunk);
