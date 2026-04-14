@@ -47,7 +47,7 @@
 </div>
  
 <!-- Document description: shown once, directly under the Imóvel code -->
-<div style="box-sizing:border-box; padding:0 10px 8px 10px; font-size:8pt; color:#666; font-family: DejaVu Sans, sans-serif; line-height:1.2; text-align:justify; text-justify:inter-word;">
+<div style="box-sizing:border-box; padding:0 7px 8px 7px; font-size:8pt; color:#666; font-family: DejaVu Sans, sans-serif; line-height:1.2; text-align:justify; text-justify:inter-word;">
     <div style="width:100%; display:block;">
         Este cadastro reúne as informações coletadas na entrevista sobre o domicílio e seus ocupantes. Os dados pessoais incluídos neste arquivo são tratados em conformidade com a Lei Geral de Proteção de Dados (LGPD) e devem ser mantidos sob medidas adequadas de segurança.
     </div>
