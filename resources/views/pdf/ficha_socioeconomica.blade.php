@@ -26,15 +26,19 @@
         /* Make the occupants table more compact to avoid horizontal overflow */
         .panel table tbody td { vertical-align: top; }
         .center { text-align: center; }
-    </style>
-    /* Reserve space for header/footer and keep content separated from header */
-        @page { margin: 90px 20px 70px 20px; }
+
+        /* Reserve space for header/footer and keep content separated from header
+           Dompdf repeats fixed-position elements on each page when margins reserve space.
+           Use a negative top for the fixed header so it sits in the page margin. */
+        @page { margin: 100px 20px 70px 20px; }
+        .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; border-bottom: 1px solid #ccc; }
+        .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; }
     </style>
 </head>
 <body>
 
 <!-- Header (fixed) -->
-<div class="header" style="position: fixed; top: 0; left: 0; right: 0; height: 70px; padding: 10px 12px; border-bottom: 1px solid #ccc;">
+<div class="header">
     <div style="display:flex; align-items:center; font-size:10pt;">
         <div style="flex:0 0 140px; font-weight:700;">Visita Aí</div>
         <div style="flex:1; text-align:center; font-size:9pt; color:#555;">Ficha Socioeconômica — Código: {{ $local->loc_codigo_unico }}</div>
@@ -43,19 +47,24 @@
 </div>
 
 <!-- Footer placeholder (dompdf will draw text using PHP script for accurate page numbers) -->
-<div class="footer" style="position: fixed; bottom: 0; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; font-size:9pt; color:#555;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+<div class="footer">
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:9pt; color:#555;">
         <div>Bitwise Technologies</div>
-        <div> <!-- page numbers rendered by dompdf script --> </div>
+        <div><!-- page numbers rendered by dompdf script --></div>
     </div>
 </div>
 
 <script type="text/php">
     if (isset($pdf)) {
         $font = $fontMetrics->getFont('DejaVuSans', 'normal');
-        $y = $pdf->get_height() - 35; // position above footer border
+        // place left footer text and centered page number
+        $y = $pdf->get_height() - 28; // slightly above bottom to account for footer border
         $pdf->page_text(40, $y, 'Bitwise Technologies', $font, 8, array(0,0,0));
-        $pdf->page_text($pdf->get_width() - 120, $y, 'Página {PAGE_NUM} / {PAGE_COUNT}', $font, 8, array(0,0,0));
+        // center page number
+        $text = 'Página {PAGE_NUM} / {PAGE_COUNT}';
+        $w = $fontMetrics->get_text_width($text, $font, 8);
+        $x = ($pdf->get_width() - $w) / 2;
+        $pdf->page_text($x, $y, $text, $font, 8, array(0,0,0));
     }
 </script>
 

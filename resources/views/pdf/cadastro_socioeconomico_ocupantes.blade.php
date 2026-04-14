@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ __('Cadastro socioeconômico de ocupantes') }}</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 9pt; color: #111; }
         h1 { font-size: 13pt; margin: 0 0 6px 0; }
@@ -15,6 +12,14 @@
         .small { font-size: 8pt; }
         .page-break { page-break-after: always; }
         .renda { font-weight: 700; color: #111; }
+
+        /* Reserve space for header/footer and keep content separated from header
+           Dompdf repeats fixed-position elements on each page when margins reserve space.
+           Use a negative top for the fixed header so it sits in the page margin. */
+        @page { margin: 100px 20px 70px 20px; }
+        .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; border-bottom: 1px solid #ccc; }
+        .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; }
+    </style>
     </style>
     /* Reserve space for header/footer and keep content separated from header
        Dompdf repeats fixed-position elements on each page when margins reserve space.
