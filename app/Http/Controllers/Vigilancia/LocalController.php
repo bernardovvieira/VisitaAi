@@ -508,7 +508,8 @@ class LocalController extends Controller
             $w = $fontMetrics->getTextWidth($sampleText, $font, 8);
 
             // place page number aligned to the content box right edge (respecting CSS margins)
-            $innerGutter = 6; // small inner gutter in points from the content edge
+            // small inner gutter in points from the content edge; allow override via .env
+            $innerGutter = (float) env('DOMPDF_FOOTER_INNER_GUTTER', 2);
             $x = $width - $rightMargin - $innerGutter - $w;
 
             // Draw footer texts aligned to page margins
