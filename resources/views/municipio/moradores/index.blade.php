@@ -82,7 +82,9 @@
                         <th scope="col">{{ __('Renda') }}</th>
                         <th scope="col">{{ __('Cor/raça') }}</th>
                         <th scope="col">{{ __('Trabalho') }}</th>
-                        <th scope="col" class="text-right">{{ __('Ações') }}</th>
+                            @if($profile === 'agente')
+                                <th scope="col" class="text-right">{{ __('Ações') }}</th>
+                            @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -166,29 +168,29 @@
                                         <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400">#{{ $midInt }}</span>
                                         @if(filled($nomeMor))
                                             <span class="font-medium">: {{ $nomeMor }}</span>
-                                        @endif
-                                        <span class="block mt-0.5 whitespace-pre-wrap text-xs">{{ $texto }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </x-ui.disclosure>
-                    </li>
-                @endforeach
-            </ul>
-        </x-section-card>
-    @endif
-</div>
-
-<script>
-(function () {
-    document.querySelectorAll('[data-confirm-message]').forEach(function (element) {
-        element.addEventListener('click', function (event) {
-            var message = element.dataset.confirmMessage || '';
-            if (!message || confirm(message)) {
-                return;
-            }
-            event.preventDefault();
-        });
+                            @if($profile === 'agente')
+                                <td class="text-right whitespace-nowrap">
+                                    <div class="inline-flex justify-end gap-1.5">
+                                        <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
+                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                           title="{{ __('Editar') }}"
+                                           aria-label="{{ __('Editar ocupante') }}">
+                                            <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
+                                        </a>
+                                        <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit"
+                                                    data-confirm-message="{{ __('Excluir este registro de ocupante?') }}"
+                                                    class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+                                                    title="{{ __('Excluir') }}"
+                                                    aria-label="{{ __('Excluir ocupante') }}">
+                                                <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            @endif
     });
 })();
 </script>
