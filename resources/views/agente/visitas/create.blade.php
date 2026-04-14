@@ -32,17 +32,6 @@
                 <p class="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
                     {{ __('Salve a visita no dispositivo quando estiver sem internet e finalize o envio na sincronização quando houver conexão.') }}
                 </p>
-                <p class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                    <strong>{{ __('Sem internet?') }}</strong>
-                    {{ __('Use o botão :btn no final do formulário. A visita fica salva no seu aparelho e pode ser enviada depois em :menu.', [
-                        'btn' => __('Guardar no dispositivo para enviar depois'),
-                        'menu' => __('Enviar visitas salvas no dispositivo'),
-                    ]) }}
-                </p>
-                <p class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                    <span class="font-semibold">{{ __('Antes de ir a campo:') }}</span>
-                    {{ __('Abra a tela de registrar visita pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}
-                </p>
             </div>
         </div>
     </x-section-card>
