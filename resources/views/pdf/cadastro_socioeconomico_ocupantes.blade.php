@@ -58,6 +58,8 @@
         $w = $fontMetrics->getTextWidth($text, $font, 8);
         $x = $pdf->get_width() - $w - 40; // 40pt right padding
         $pdf->page_text($x, $y, $text, $font, 8, array(0,0,0));
+        // debug: render a short visible marker if this script runs
+        $pdf->page_text(40, $y - 12, 'DEBUG: page_text executed', $font, 6, array(1,0,0));
     }
 </script>
 
