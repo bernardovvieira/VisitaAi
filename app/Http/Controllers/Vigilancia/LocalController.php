@@ -452,7 +452,7 @@ class LocalController extends Controller
         if (method_exists($dom, 'getCanvas')) {
             $canvas = $dom->getCanvas();
         } elseif (method_exists($dom, 'get_canvas')) {
-            $canvas = $dom->get_canvas();
+            $canvas = $dom->getCanvas();
         }
         $fontMetrics = null;
         if (method_exists($dom, 'getFontMetrics')) {
@@ -489,7 +489,7 @@ class LocalController extends Controller
             $pxToPt = 72.0 / 96.0;
             $cssSideMarginPx = 20; // as used in the Blade @page rule
             $leftMargin = 20 * $pxToPt;
-            $rightMargin = 15 * $pxToPt;
+            $rightMargin = 17 * $pxToPt;
 
             // Vertical position for footer baseline (adjust as needed)
             $y = $height - 28;
