@@ -443,6 +443,63 @@ class LocalController extends Controller
             'titulos' => config('visitaai_socioeconomico.secao_titulos', []),
         ])->setPaper('a4', 'portrait');
 
+        // Render first so we can draw footer and page numbers server-side
+        $pdf->render();
+
+        // Try to obtain dompdf canvas and font metrics (handle different method namings)
+        $dom = $pdf->getDomPDF();
+        $canvas = null;
+        if (method_exists($dom, 'getCanvas')) {
+            $canvas = $dom->getCanvas();
+        } elseif (method_exists($dom, 'get_canvas')) {
+            $canvas = $dom->get_canvas();
+        }
+        $fontMetrics = null;
+        if (method_exists($dom, 'getFontMetrics')) {
+            $fontMetrics = $dom->getFontMetrics();
+        } elseif (method_exists($dom, 'get_font_metrics')) {
+            $fontMetrics = $dom->get_font_metrics();
+        }
+
+        if ($canvas && $fontMetrics) {
+            try {
+                $font = $fontMetrics->getFont('dejavu sans', 'normal');
+            } catch (\Throwable $e) {
+                $font = $fontMetrics->getFont(null, 'normal');
+            }
+
+            // determine canvas dimensions with fallbacks
+            if (method_exists($canvas, 'get_width')) {
+                $width = $canvas->get_width();
+            } elseif (method_exists($canvas, 'getWidth')) {
+                $width = $canvas->getWidth();
+            } else {
+                $width = 595; // A4 approx fallback
+            }
+            if (method_exists($canvas, 'get_height')) {
+                $height = $canvas->get_height();
+            } elseif (method_exists($canvas, 'getHeight')) {
+                $height = $canvas->getHeight();
+            } else {
+                $height = 842; // A4 approx fallback
+            }
+
+            $y = $height - 20;
+            $leftText = 'Bitwise Technologies - Soluções digitais para eficiência e inovação';
+            $pageText = 'Página {PAGE_NUM} / {PAGE_COUNT}';
+
+            $w = $fontMetrics->getTextWidth($pageText, $font, 8);
+            $x = $width - $w - 40;
+
+            // Draw footer texts
+            try {
+                $canvas->page_text(40, $y, $leftText, $font, 8, [0,0,0]);
+                $canvas->page_text($x, $y, $pageText, $font, 8, [0,0,0]);
+            } catch (\Throwable $e) {
+                // swallow — footer drawing should not break PDF generation
+            }
+        }
+
         $safeCode = preg_replace('/\D/', '', (string) $local->loc_codigo_unico) ?: 'imovel';
 
         return $pdf->download('ficha-socioeconomica-'.$safeCode.'.pdf');
