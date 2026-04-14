@@ -29,12 +29,9 @@
 
 <!-- Header (fixed) -->
 <div class="header">
-    <div style="display:flex; align-items:center; font-size:10pt;">
-        <div style="flex:1; text-align:center;">
-            <div style="font-size:11pt; font-weight:700; color:#111;">VISITA Aí - CADASTRO SOCIOECONÔMICO</div>
-            <div style="border-top:1px solid #ccc; margin-top:6px; width:100%;"></div>
-        </div>
-        <div style="flex:0 0 140px;"></div>
+    <div style="position:relative; font-size:10pt;">
+        <div style="text-align:center; font-size:11pt; font-weight:700; color:#111; border-bottom:1px solid #ccc; padding-bottom:6px;">CADASTRO SOCIOECONÔMICO</div>
+        <div style="position:absolute; top:6px; right:12px; font-size:9pt; color:rgba(0,0,0,0.45); font-weight:600; font-family: DejaVu Sans, sans-serif;">Imóvel #{{ $loc->loc_codigo_unico ?? ($local->loc_codigo_unico ?? '') }}</div>
     </div>
 </div>
 
@@ -48,7 +45,7 @@
 
 <script type="text/php">
     if (isset($pdf)) {
-        $font = $fontMetrics->getFont('DejaVu Sans', 'normal');
+        $font = $fontMetrics->getFont('dejavu sans', 'normal');
         if (! $font) {
             $font = $fontMetrics->getFont(null, 'normal');
         }
@@ -56,7 +53,7 @@
         $y = $pdf->get_height() - 28; // slightly above bottom to account for footer area
         $pdf->page_text(40, $y, 'Bitwise Technologies - Soluções digitais para eficiência e inovação', $font, 8, array(0,0,0));
         $text = 'Página {PAGE_NUM} / {PAGE_COUNT}';
-        $w = $fontMetrics->get_text_width($text, $font, 8);
+        $w = $fontMetrics->getTextWidth($text, $font, 8);
         $x = $pdf->get_width() - $w - 40; // 40pt right padding
         $pdf->page_text($x, $y, $text, $font, 8, array(0,0,0));
     }
