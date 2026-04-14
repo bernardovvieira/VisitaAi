@@ -488,8 +488,8 @@ class LocalController extends Controller
             // CSS uses px; dompdf canvas uses points. Convert px -> pt (1px = 72/96 pt)
             $pxToPt = 72.0 / 96.0;
             $cssSideMarginPx = 20; // as used in the Blade @page rule
-            $leftMargin = $cssSideMarginPx * $pxToPt;
-            $rightMargin = $cssSideMarginPx * $pxToPt;
+            $leftMargin = 20 * $pxToPt;
+            $rightMargin = 15 * $pxToPt;
 
             // Vertical position for footer baseline (adjust as needed)
             $y = $height - 28;
