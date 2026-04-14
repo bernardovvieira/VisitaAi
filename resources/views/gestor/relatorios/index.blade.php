@@ -229,9 +229,9 @@
                     <x-input-label :value="__('Bairros')" class="mb-1 block" />
                                         <!-- Alert moved below bairros filter -->
                                         <template x-if="tipo === 'completo'">
-                                            <div class="v-alert v-alert--warning w-full mt-2" role="alert">
-                                                <span class="font-semibold">{{ __('Atenção:') }}</span>
-                                                {{ __('O PDF do relatório completo está limitado às últimas 100 visitas para evitar travamentos. Refine os filtros para exportar outros períodos.') }}
+                                            <div class="flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-300 mt-1" style="font-size:13px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.054 0 1.658-1.14 1.105-2.045l-6.928-11.99c-.526-.91-1.846-.91-2.372 0l-6.928 11.99c-.553.905.051 2.045 1.105 2.045z"/></svg>
+                                                <span>{{ __('O PDF do relatório completo está limitado às últimas 100 visitas para evitar travamentos.') }}</span>
                                             </div>
                                         </template>
                     <div class="relative">
