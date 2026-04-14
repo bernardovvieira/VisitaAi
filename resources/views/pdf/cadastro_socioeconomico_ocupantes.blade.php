@@ -50,8 +50,19 @@
     @endphp
 
     <div class="content" style="margin-top:12px;">
-    <p class="muted">{{ config('app.name') }} · {{ __('Código do imóvel') }}: <strong>{{ $local->loc_codigo_unico }}</strong></p>
-    <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
+        <div style="position:relative; font-size:10pt;">
+            <div style="text-align:right; font-size:9pt; color:rgba(0,0,0,0.45); font-weight:600; font-family: DejaVu Sans, sans-serif;"><span style="font-weight:600;">#{{ $local->loc_codigo_unico }}</span></div>
+        </div>
+
+        <!-- Document description (per-local) -->
+        <div style="box-sizing:border-box; padding:0 5px 8px 5px; font-size:8pt; color:#666; font-family: DejaVu Sans, sans-serif; line-height:1.2; text-align:justify; text-justify:inter-word;">
+            <div style="width:100%; display:block;">
+                Este cadastro reúne as informações coletadas na entrevista sobre o domicílio e seus ocupantes. Os dados pessoais incluídos neste arquivo são tratados em conformidade com a Lei Geral de Proteção de Dados (LGPD) e devem ser mantidos sob medidas adequadas de segurança.
+            </div>
+        </div>
+
+        <p class="muted">{{ config('app.name') }} · {{ __('Código do imóvel') }}: <strong>{{ $local->loc_codigo_unico }}</strong></p>
+        <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
         <p class="small">{{ __('Tipo / zona') }}: {{ SE::opcao('tipo_local_opcoes', $local->loc_tipo) ?? $local->loc_tipo ?? '-' }} / {{ SE::opcao('zona_opcoes', $local->loc_zona) ?? $local->loc_zona ?? '-' }}</p>
     <table>
         <tr><th>{{ __('Data da entrevista') }}</th><td>{{ $s?->lse_data_entrevista?->format('d/m/Y') ?? '-' }}</td></tr>
@@ -83,20 +94,6 @@
                 <th style="width:25%">{{ __('Escolaridade • Renda • Trabalho') }}</th>
             </tr>
 
-            <!-- Document description: shown once, directly under the Imóvel code -->
-            <div style="box-sizing:border-box; padding:0 20px 8px 20px; font-size:8pt; color:#666; font-family: DejaVu Sans, sans-serif; line-height:1.2; text-align:justify; text-justify:inter-word;">
-                <div style="width:100%; display:block;">
-                    Este cadastro reúne as informações coletadas na entrevista sobre o domicílio e seus ocupantes. Os dados pessoais incluídos neste arquivo são tratados em conformidade com a Lei Geral de Proteção de Dados (LGPD) e devem ser mantidos sob medidas adequadas de segurança.
-                </div>
-            </div>
-
-            <!-- Footer placeholder: server-side drawing will add texts -->
-            <div class="footer">
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:9pt; color:#555;">
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
                         @endif
                             @if($m->mor_cpf || $m->mor_rg_numero)
                                 <div class="small" style="margin-top:4px;">
