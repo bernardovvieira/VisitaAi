@@ -218,29 +218,7 @@ class MoradorController extends Controller
 
     public function fichaSocioeconomicaPdf(Local $local, Morador $morador)
     {
-        $this->authorize('view', $local);
-        $this->authorize('view', $morador);
-
-        if ((int) $morador->fk_local_id !== (int) $local->loc_id) {
-            abort(404);
-        }
-
-        $local->loadMissing(['socioeconomico']);
-
-        $pdf = Pdf::loadView('pdf.ficha_socioeconomica', [
-            'local' => $local,
-            'socio' => $local->socioeconomico,
-            'moradores' => collect([$morador]),
-            'moradorSelecionado' => $morador,
-            'titulos' => config('visitaai_socioeconomico.secao_titulos', []),
-        ])->setPaper('a4', 'portrait');
-
-        $safeCode = preg_replace('/\D/', '', (string) $local->loc_codigo_unico) ?: 'imovel';
-        $safeMorador = preg_replace('/[^a-z0-9]+/i', '-', (string) ($morador->mor_nome ?? 'morador'));
-        $safeMorador = trim($safeMorador ?? '', '-');
-        $safeMorador = $safeMorador !== '' ? $safeMorador : 'morador';
-
-        return $pdf->download('ficha-socioeconomica-'.$safeCode.'-'.$safeMorador.'.pdf');
+        // individual ficha generation removed — use LocalController::fichaSocioeconomicaPdf instead
     }
 
     public function downloadDocumentoPessoal(Local $local, Morador $morador)

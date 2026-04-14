@@ -15,10 +15,7 @@
     <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $cfg['painel_sensivel_gestor_titulo'] ?? '' }}</h2>
         @if(! empty($fichaPdfUrl))
-            <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
-                <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Baixar ficha socioeconômica') }}
-            </a>
+                            {{-- ficha individual removida; use a ficha do imóvel via menu principal --}}
         @endif
     </div>
     @if(filled(trim((string) ($cfg['painel_sensivel_gestor_texto'] ?? ''))))

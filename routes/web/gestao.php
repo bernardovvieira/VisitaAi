@@ -35,9 +35,7 @@ Route::middleware(['can:isGestor', 'require.primary.local'])->prefix('gestor')->
         ->name('locais.ficha-socioeconomica-pdf')
         ->middleware(['can:view,local', 'throttle:30,1']);
 
-    Route::get('locais/{local}/moradores/{morador}/ficha-socioeconomica.pdf', [MoradorController::class, 'fichaSocioeconomicaPdf'])
-        ->name('locais.moradores.ficha-socioeconomica-pdf')
-        ->middleware(['can:view,local', 'can:view,morador', 'throttle:30,1']);
+    // Individual morador ficha removed — use imóvel ficha instead
 
     Route::get('locais/{local}/moradores/{morador}/documento-pessoal', [MoradorController::class, 'downloadDocumentoPessoal'])
         ->name('locais.moradores.documento-pessoal')

@@ -122,11 +122,7 @@ class SocioeconomicoExportTest extends TestCase
             'lse_data_entrevista' => now()->toDateString(),
         ]);
 
-        $response = $this->actingAs($gestor)
-            ->get(route('gestor.locais.moradores.ficha-socioeconomica-pdf', [$local, $morador]));
-
-        $response->assertOk();
-        $response->assertHeader('content-type', 'application/pdf');
+        $this->markTestSkipped('Individual morador ficha removed.');
     }
 
     #[Test]
@@ -143,11 +139,7 @@ class SocioeconomicoExportTest extends TestCase
             'lse_data_entrevista' => now()->toDateString(),
         ]);
 
-        $response = $this->actingAs($agente)
-            ->get(route('agente.locais.moradores.ficha-socioeconomica-pdf', [$local, $morador]));
-
-        $response->assertOk();
-        $response->assertHeader('content-type', 'application/pdf');
+        $this->markTestSkipped('Individual morador ficha removed.');
     }
 
     #[Test]
@@ -171,9 +163,7 @@ class SocioeconomicoExportTest extends TestCase
             'lse_data_entrevista' => now()->toDateString(),
         ]);
 
-        $response = $this->getJson(route('gestor.locais.moradores.ficha-socioeconomica-pdf', [$local, $morador]));
-
-        $response->assertUnauthorized();
+        $this->markTestSkipped('Individual morador ficha removed.');
     }
 
     #[Test]
@@ -193,12 +183,7 @@ class SocioeconomicoExportTest extends TestCase
             'lse_data_entrevista' => now()->toDateString(),
         ]);
 
-        $response = $this->actingAs($gestor)
-            ->get(route('gestor.locais.moradores.ficha-socioeconomica-pdf', [$local, $morador]));
-        
-        $response->assertOk();
-        $response->assertHeader('content-type', 'application/pdf');
-        // PDF é gerado com sucesso
+        $this->markTestSkipped('Individual morador ficha removed.');
     }
 
     #[Test]

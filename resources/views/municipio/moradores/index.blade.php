@@ -104,12 +104,7 @@
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
                             <td class="text-right whitespace-nowrap">
                                 <div class="inline-flex justify-end gap-1.5">
-                                    <a href="{{ route($profile . '.locais.moradores.ficha-socioeconomica-pdf', [$local, $m]) }}"
-                                       class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                                       title="{{ __('Baixar ficha socioeconômica') }}"
-                                       aria-label="{{ __('Baixar ficha socioeconômica') }}">
-                                        <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" />
-                                    </a>
+                                    {{-- individual ficha removed: use imóvel ficha export instead --}}
                                     @if($profile === 'agente')
                                         <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
                                            class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
