@@ -494,9 +494,9 @@ class LocalController extends Controller
             $pageText = 'Página {PAGE_NUM} / {PAGE_COUNT}';
 
             $w = $fontMetrics->getTextWidth($pageText, $font, 8);
-            // compute X relative to the content box (page width minus margins)
-            $contentWidth = $width - $leftMargin - $rightMargin;
-            $x = $leftMargin + ($contentWidth - $w) - 2; // small -2pt tweak for visual alignment
+            // place page number very close to the page right edge (small inner gutter)
+            $innerGutter = 8; // distance from physical page edge
+            $x = $width - $w - $innerGutter;
 
             // Draw footer texts aligned to page margins
             try {
