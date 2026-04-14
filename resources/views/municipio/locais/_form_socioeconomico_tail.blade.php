@@ -167,8 +167,6 @@
     </div>
 </x-ui.disclosure>
 
-</div>
-
 <script>
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
@@ -243,6 +241,7 @@
     </div>
 </x-ui.disclosure>
 
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var inputDentro = document.getElementById('socio_banheiro_dentro');
