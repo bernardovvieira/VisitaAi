@@ -39,9 +39,12 @@
 
 <!-- Header (fixed) -->
 <div class="header">
-    <div style="display:flex; align-items:center; font-size:10pt;">
-        <div style="flex:0 0 140px; font-weight:700;">Visita Aí</div>
-        <div style="flex:1; text-align:center; font-size:9pt; color:#555;">Ficha Socioeconômica — Código: {{ $local->loc_codigo_unico }}</div>
+    <div style="display:flex; align-items:flex-end; font-size:10pt;">
+        <div style="flex:0 0 200px; font-size:9pt; color:#333; font-weight:600;">Imóvel #{{ $local->loc_codigo_unico }}</div>
+        <div style="flex:1; text-align:center;">
+            <div style="font-size:11pt; font-weight:700; color:#111;">VISITA Aí - CADASTRO SOCIOECONÔMICO</div>
+            <div style="border-top:1px solid #ccc; margin-top:6px; width:100%;"></div>
+        </div>
         <div style="flex:0 0 140px;"></div>
     </div>
 </div>
@@ -49,21 +52,20 @@
 <!-- Footer placeholder (dompdf will draw text using PHP script for accurate page numbers) -->
 <div class="footer">
     <div style="display:flex; justify-content:space-between; align-items:center; font-size:9pt; color:#555;">
-        <div>Bitwise Technologies</div>
+        <div>Bitwise Technologies - Soluções digitais para eficiência e inovação</div>
         <div><!-- page numbers rendered by dompdf script --></div>
     </div>
 </div>
 
 <script type="text/php">
     if (isset($pdf)) {
-        $font = $fontMetrics->getFont('DejaVuSans', 'normal');
-        // place left footer text and centered page number
+        $font = $fontMetrics->getFont('DejaVu Sans', 'normal');
+        // place left footer text and right-aligned page number
         $y = $pdf->get_height() - 28; // slightly above bottom to account for footer border
-        $pdf->page_text(40, $y, 'Bitwise Technologies', $font, 8, array(0,0,0));
-        // center page number
+        $pdf->page_text(40, $y, 'Bitwise Technologies - Soluções digitais para eficiência e inovação', $font, 8, array(0,0,0));
         $text = 'Página {PAGE_NUM} / {PAGE_COUNT}';
         $w = $fontMetrics->get_text_width($text, $font, 8);
-        $x = ($pdf->get_width() - $w) / 2;
+        $x = $pdf->get_width() - $w - 40; // 40pt right padding
         $pdf->page_text($x, $y, $text, $font, 8, array(0,0,0));
     }
 </script>
@@ -277,7 +279,7 @@
     </table>
 </div>
 
-<p class="muted center">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}. {{ __('Gerado por Visita Aí.') }} {{ __('Os dados pessoais contidos neste documento são tratados conforme a LGPD e devem ser mantidos em segurança.') }}</p>
+<p class="muted center">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}. {{ __('Os dados pessoais contidos neste documento são tratados conforme a LGPD e devem ser mantidos em segurança.') }}</p>
 </div>
 </body>
 </html>
