@@ -93,14 +93,22 @@
                 <th style="width:12%">{{ __('Nasc.') }}</th>
                 <th style="width:25%">{{ __('Escolaridade • Renda • Trabalho') }}</th>
             </tr>
-
+        </thead>
+        <tbody>
+            @php $moradoresPdf = $local->moradores ?? [] @endphp
+            @forelse($moradoresPdf as $m)
+                <tr>
+                    <td>
+                        <strong>{{ $m->mor_nome ?? '-' }}</strong>
+                        @if($m->mor_profissao)
+                            <div class="small">{{ $m->mor_profissao }}</div>
                         @endif
-                            @if($m->mor_cpf || $m->mor_rg_numero)
-                                <div class="small" style="margin-top:4px;">
-                                    @if($m->mor_cpf) <div>CPF: {{ $m->mor_cpf }}</div> @endif
-                                    @if($m->mor_rg_numero) <div>RG: {{ $m->mor_rg_numero }} @if($m->mor_rg_orgao) ({{ $m->mor_rg_orgao }}) @endif @if($m->mor_rg_expedicao) — {{ $m->mor_rg_expedicao?->format('d/m/Y') }}@endif</div> @endif
-                                </div>
-                            @endif
+                        @if($m->mor_cpf || $m->mor_rg_numero)
+                            <div class="small" style="margin-top:4px;">
+                                @if($m->mor_cpf) <div>CPF: {{ $m->mor_cpf }}</div> @endif
+                                @if($m->mor_rg_numero) <div>RG: {{ $m->mor_rg_numero }} @if($m->mor_rg_orgao) ({{ $m->mor_rg_orgao }}) @endif @if($m->mor_rg_expedicao) — {{ $m->mor_rg_expedicao?->format('d/m/Y') }}@endif</div> @endif
+                            </div>
+                        @endif
                     </td>
                     <td class="center">{{ $m->mor_referencia_familiar ? '★' : '-' }}</td>
                     <td>{{ SE::opcao('parentesco_opcoes', $m->mor_parentesco) }}</td>

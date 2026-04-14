@@ -135,11 +135,7 @@ class IndicadoresOcupantesController extends Controller
                 $canvas->page_text($leftMargin, $y, $leftText, $font, 8, [0,0,0]);
                 $canvas->page_text($x, $y, $pageText, $font, 8, [0,0,0]);
 
-                if (env('DOMPDF_FOOTER_DEBUG', true)) {
-                    $canvas->page_text($leftMargin, $y - 8, 'L', $font, 6, [1,0,0]);
-                    $canvas->page_text($width - $rightMargin, $y - 8, 'R', $font, 6, [1,0,0]);
-                    $canvas->page_text($x, $y - 8, 'P', $font, 6, [0,0,1]);
-                }
+                // no visual debug markers in production
             } catch (\Throwable $e) {
                 // ignore drawing errors
             }
