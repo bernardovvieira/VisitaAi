@@ -261,7 +261,7 @@ class RelatorioController extends Controller
             },
             'doencas:doencas.doe_id,doe_nome',
             'usuario:use_id,use_nome',
-            'tratamentos:trat_id,fk_visita_id,trat_forma,trat_tipo,qtd_gramas,qtd_depositos_tratados,qtd_cargas',
+            'tratamentos:id,fk_visita_id,trat_forma,trat_tipo,qtd_gramas,qtd_depositos_tratados,qtd_cargas',
         ]);
         $localIdsPermitidos = $this->aplicarEscopoGestorEmVisitas($query);
 
