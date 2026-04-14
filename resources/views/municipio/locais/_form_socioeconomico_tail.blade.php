@@ -27,72 +27,145 @@
                 @foreach(config('visitaai_socioeconomico.uso_imovel_socio_opcoes', []) as $k => $lab)
                     <option value="{{ $k }}" @selected($sv('uso_imovel') === $k)>{{ $lab }}</option>
                 @endforeach
-    
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipologia') }}</label>
-                        <select name="socio[tipologia]" class="v-select mt-1 w-full">
-                            @foreach(config('visitaai_socioeconomico.tipologia_opcoes', []) as $k => $lab)
-                                <option value="{{ $k }}" @selected($sv('tipologia') === $k)>{{ $lab }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipo / implantação') }}</label>
-                        <select name="socio[tipo_implantacao]" class="v-select mt-1 w-full">
-                            @foreach(config('visitaai_socioeconomico.tipo_implantacao_opcoes', []) as $k => $lab)
-                                <option value="{{ $k }}" @selected($sv('tipo_implantacao') === $k)>{{ $lab }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Posição no lote') }}</label>
-                        <select name="socio[posicao_lote]" class="v-select mt-1 w-full">
-                            @foreach(config('visitaai_socioeconomico.posicao_lote_opcoes', []) as $k => $lab)
-                                <option value="{{ $k }}" @selected($sv('posicao_lote') === $k)>{{ $lab }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de pavimentos') }}</label>
-                        <input type="number" name="socio[num_pavimentos]" value="{{ $sv('num_pavimentos') }}" class="v-input mt-1 w-full" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiros: dentro') }}</label>
-                        <input type="number" name="socio[banheiro_dentro]" id="socio_banheiro_dentro" value="{{ $sv('banheiro_dentro') }}" class="v-input mt-1 w-full" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiros: fora') }}</label>
-                        <input type="number" name="socio[banheiro_fora]" id="socio_banheiro_fora" value="{{ $sv('banheiro_fora') }}" class="v-input mt-1 w-full" min="0">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiro compartilha com outra família') }}</label>
-                        <select name="socio[banheiro_compartilha]" class="v-select mt-1 w-full">
-                            <option value="">{{ __('Não informado') }}</option>
-                            <option value="1" @selected($sv('banheiro_compartilha') === '1' || $sv('banheiro_compartilha') === true || $sv('banheiro_compartilha') === 1)>{{ __('Sim') }}</option>
-                            <option value="0" @selected($sv('banheiro_compartilha') === '0' || $sv('banheiro_compartilha') === false || $sv('banheiro_compartilha') === 0)>{{ __('Não') }}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Acesso ao imóvel') }}</label>
-                        <select name="socio[acesso_imovel]" class="v-select mt-1 w-full">
-                            @foreach(config('visitaai_socioeconomico.acesso_imovel_opcoes', []) as $k => $lab)
-                                <option value="{{ $k }}" @selected($sv('acesso_imovel') === $k)>{{ $lab }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Entrada da casa voltada para') }}</label>
-                        <select name="socio[entrada_para]" class="v-select mt-1 w-full">
-                            @foreach(config('visitaai_socioeconomico.entrada_para_opcoes', []) as $k => $lab)
-                                <option value="{{ $k }}" @selected($sv('entrada_para') === $k)>{{ $lab }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Situação da posse') }}</label>
+            <select name="socio[situacao_posse]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.situacao_posse_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('situacao_posse') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Material predominante') }}</label>
+            <select name="socio[material_predominante]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.material_predominante_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('material_predominante') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Condição da edificação') }}</label>
+            <select name="socio[condicao_edificacao]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.condicao_edificacao_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('condicao_edificacao') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de cômodos') }}</label>
+            <input type="number" name="socio[num_comodos]" value="{{ $sv('num_comodos') }}" class="v-input mt-1 w-full" min="0">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de quartos') }}</label>
+            <input type="number" name="socio[num_quartos]" value="{{ $sv('num_quartos') }}" class="v-input mt-1 w-full" min="0">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Área externa / quintal') }}</label>
+            <select name="socio[area_externa]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.area_externa_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('area_externa') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Área livre / quintal (detalhe)') }}</label>
+            <input type="text" name="socio[area_livre]" value="{{ $sv('area_livre') }}" class="v-input mt-1 w-full" maxlength="255">
+        </div>
+        <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Observações do imóvel') }}</label>
+            <textarea name="socio[observacoes_imovel]" rows="2" class="v-input mt-1 w-full">{{ $sv('observacoes_imovel') }}</textarea>
+        </div>
 
-        <script>
+        <!-- Confrontantes -->
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho frente') }}</label>
+            <input type="text" name="socio[viz_frente]" value="{{ $sv('viz_frente') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho fundos') }}</label>
+            <input type="text" name="socio[viz_fundos]" value="{{ $sv('viz_fundos') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho direita') }}</label>
+            <input type="text" name="socio[viz_direita]" value="{{ $sv('viz_direita') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho esquerda') }}</label>
+            <input type="text" name="socio[viz_esquerda]" value="{{ $sv('viz_esquerda') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
+        </div>
+
+        <!-- Cadastro físico (moved into same card) -->
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipologia') }}</label>
+            <select name="socio[tipologia]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.tipologia_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('tipologia') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipo / implantação') }}</label>
+            <select name="socio[tipo_implantacao]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.tipo_implantacao_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('tipo_implantacao') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Posição no lote') }}</label>
+            <select name="socio[posicao_lote]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.posicao_lote_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('posicao_lote') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Nº de pavimentos') }}</label>
+            <input type="number" name="socio[num_pavimentos]" value="{{ $sv('num_pavimentos') }}" class="v-input mt-1 w-full" min="0">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiros: dentro') }}</label>
+            <input type="number" name="socio[banheiro_dentro]" id="socio_banheiro_dentro" value="{{ $sv('banheiro_dentro') }}" class="v-input mt-1 w-full" min="0">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiros: fora') }}</label>
+            <input type="number" name="socio[banheiro_fora]" id="socio_banheiro_fora" value="{{ $sv('banheiro_fora') }}" class="v-input mt-1 w-full" min="0">
+        </div>
+        <div class="sm:col-span-2 rounded-md border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/30">
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Total de banheiros') }}</label>
+            <input type="number" name="socio[num_banheiros]" id="socio_num_banheiros" value="{{ $sv('num_banheiros') }}" class="v-input mt-1 w-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200" min="0" readonly>
+            <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{{ __('Calculado automaticamente a partir de banheiros dentro e fora.') }}</p>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Banheiro compartilha com outra família') }}</label>
+            <select name="socio[banheiro_compartilha]" class="v-select mt-1 w-full">
+                <option value="">{{ __('Não informado') }}</option>
+                <option value="1" @selected($sv('banheiro_compartilha') === '1' || $sv('banheiro_compartilha') === true || $sv('banheiro_compartilha') === 1)>{{ __('Sim') }}</option>
+                <option value="0" @selected($sv('banheiro_compartilha') === '0' || $sv('banheiro_compartilha') === false || $sv('banheiro_compartilha') === 0)>{{ __('Não') }}</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Acesso ao imóvel') }}</label>
+            <select name="socio[acesso_imovel]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.acesso_imovel_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('acesso_imovel') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Entrada da casa voltada para') }}</label>
+            <select name="socio[entrada_para]" class="v-select mt-1 w-full">
+                @foreach(config('visitaai_socioeconomico.entrada_para_opcoes', []) as $k => $lab)
+                    <option value="{{ $k }}" @selected($sv('entrada_para') === $k)>{{ $lab }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</x-ui.disclosure>
+
+<script>
 <x-ui.disclosure variant="muted-card-simple" :open="false">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('6. Cadastro físico') }}</span>
