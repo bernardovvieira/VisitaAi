@@ -79,6 +79,11 @@
 @endphp
 
 <x-ui.disclosure variant="muted-card-simple" :open="false">
+    <style>
+        summary .ocupante-chevron { display: inline-block; transform-origin: center; transition: transform .15s ease-in-out; margin-right: .5rem; }
+        details[open] summary .ocupante-chevron { transform: rotate(90deg); }
+        summary .ocupante-chevron { transform: rotate(0deg); }
+    </style>
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('4. Composição familiar e ocupantes') }}</span>
     </x-slot>
@@ -256,6 +261,9 @@
                 <summary class="cursor-pointer list-none font-semibold text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
                     <div class="flex items-center justify-between gap-2">
                         <span class="inline-flex items-center gap-2 text-xs">
+                            <svg class="ocupante-chevron w-3 h-3 text-slate-500 dark:text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.21 14.21a1 1 0 01-1.42-1.42L10.17 8 5.79 3.62a1 1 0 011.42-1.42l5 5a1 1 0 010 1.42l-5 5z" clip-rule="evenodd" />
+                            </svg>
                             <span x-text="row.mor_id ? '{{ __('Ocupante') }} #' + row.mor_id : '{{ __('Novo ocupante') }}'"></span>
                             <span x-show="String(row.mor_referencia_familiar) === '1'" class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">{{ __('Titular') }}</span>
                         </span>
