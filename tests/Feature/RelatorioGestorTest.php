@@ -107,6 +107,9 @@ class RelatorioGestorTest extends TestCase
             'vis_pendencias' => false,
         ]);
 
+        // Make exceptions surface in the test to catch regressions
+        $this->withoutExceptionHandling();
+
         // Teste a export em PDF
         $response = $this->actingAs($gestor)
             ->post(route('gestor.relatorios.pdf'), [

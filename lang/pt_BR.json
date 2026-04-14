@@ -324,7 +324,7 @@
     "Exibindo :first a :last de :total :item.": "Exibindo :first a :last de :total :item.",
     "Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.": "Existem imóveis com a mesma coordenada (latitude e longitude) cadastrada. Revise os locais para evitar duplicidade.",
     "Expandir menu": "Expandir menu",
-    "Exportar CSV": "Exportar CSV",
+    "Exportar CSV": "Exportar CSV de dados consolidados",
     "Faixa de renda (referência salário mínimo)": "Faixa de renda (referência salário mínimo)",
     "Faixa etária": "Faixa etária",
     "Falha: :message": "Falha: :message",
