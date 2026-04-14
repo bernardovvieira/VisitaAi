@@ -484,16 +484,21 @@ class LocalController extends Controller
                 $height = 842; // A4 approx fallback
             }
 
-            $y = $height - 20;
+            // Align footers to page margins used in CSS: @page { margin: 100px 20px 70px 20px }
+            $leftMargin = 20; // match CSS left margin
+            $rightMargin = 20; // match CSS right margin
+
+            // Vertical position for footer baseline (adjust as needed)
+            $y = $height - 28;
             $leftText = 'Bitwise Technologies - Soluções digitais para eficiência e inovação';
             $pageText = 'Página {PAGE_NUM} / {PAGE_COUNT}';
 
             $w = $fontMetrics->getTextWidth($pageText, $font, 8);
-            $x = $width - $w - 40;
+            $x = $width - $w - $rightMargin;
 
-            // Draw footer texts
+            // Draw footer texts aligned to page margins
             try {
-                $canvas->page_text(40, $y, $leftText, $font, 8, [0,0,0]);
+                $canvas->page_text($leftMargin, $y, $leftText, $font, 8, [0,0,0]);
                 $canvas->page_text($x, $y, $pageText, $font, 8, [0,0,0]);
             } catch (\Throwable $e) {
                 // swallow — footer drawing should not break PDF generation

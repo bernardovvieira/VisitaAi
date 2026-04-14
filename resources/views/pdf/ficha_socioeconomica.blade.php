@@ -42,7 +42,7 @@
     <div style="position:relative; font-size:10pt;">
         <div style="text-align:center; font-size:11pt; font-weight:700; color:#111; border-bottom:1px solid #ccc; padding-bottom:6px;">CADASTRO SOCIOECONÔMICO</div>
         <div style="height:18px;"></div>
-        <div style="text-align:right; font-size:9pt; color:rgba(0,0,0,0.45); font-weight:600; font-family: DejaVu Sans, sans-serif;">Imóvel #{{ $local->loc_codigo_unico }}</div>
+        <div style="text-align:right; font-size:9pt; color:rgba(0,0,0,0.45); font-weight:600; font-family: DejaVu Sans, sans-serif;"><span style="font-family: DejaVu Sans, sans-serif; font-weight:600;">Imóvel #{{ $local->loc_codigo_unico }}</span></div>
     </div>
 </div>
 
