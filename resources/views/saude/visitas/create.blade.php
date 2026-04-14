@@ -14,9 +14,9 @@
     @include('visitas.partials._form-js-strings')
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Visitas'), 'url' => route('saude.visitas.index')], ['label' => __('Cadastrar')]]" />
 
-    <x-page-header :eyebrow="__('Levantamento LIRAa')" :title="__('Registrar visita')">
+    <x-page-header :eyebrow="__('Registro em campo')" :title="__('Registrar visita')">
         <x-slot name="lead">
-            <p class="text-sm">{{ __('Preencha os dados da visita.') }}</p>
+            <p class="text-sm">{{ __('Preencha os dados da visita e dos tratamentos.') }}</p>
             <div class="mt-3 rounded-lg border border-sky-200/70 bg-gradient-to-br from-sky-50/90 to-white p-3 dark:border-sky-900/40 dark:from-slate-900/70 dark:to-slate-900/40">
                 <h3 class="text-sm font-semibold mb-1">{{ __('Modo offline e envio depois') }}</h3>
                 <p class="text-sm text-slate-700 dark:text-slate-300"><strong>{{ __('Sem internet?') }}</strong>
