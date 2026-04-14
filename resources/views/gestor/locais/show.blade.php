@@ -21,7 +21,7 @@
         </x-slot>
     </x-page-header>
 
-    <div class="flex gap-2 mt-2 mb-4">
+    <div class="flex shrink-0 items-center gap-2 self-start">
         <a href="{{ $fichaPdfUrl }}" class="v-btn-export v-btn-export--pdf inline-flex no-underline">
             <x-heroicon-o-document-arrow-down class="h-4 w-4 shrink-0" aria-hidden="true" />
             {{ __('Ficha socioeconômica') }}
