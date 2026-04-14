@@ -7,7 +7,6 @@
 <x-section-card class="space-y-5">
     <div class="flex items-center justify-between gap-3">
         <h2 class="v-section-title">{{ __('Local visitado') }}</h2>
-        <span class="inline-flex rounded-full bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-blue-700 dark:bg-blue-500/15 dark:text-blue-300">#{{ $visita->local->loc_codigo_unico }}</span>
     </div>
     <div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <div class="space-y-5 xl:col-span-2">
