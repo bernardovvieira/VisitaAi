@@ -6,6 +6,7 @@
 @section('content')
 @php
     $numeroLead = $local->loc_numero !== null && $local->loc_numero !== '' ? $local->loc_numero : __('S/N');
+    $fichaPdfUrl = $fichaPdfUrl ?? route('gestor.locais.ficha-socioeconomica-pdf', $local);
 @endphp
 <div class="v-page">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('gestor.locais.index')], ['label' => __('Visualizar')]]" />
