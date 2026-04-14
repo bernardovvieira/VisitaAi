@@ -229,9 +229,10 @@
                     <x-input-label :value="__('Bairros')" class="mb-1 block" />
                                         <!-- Alert moved below bairros filter -->
                                         <template x-if="tipo === 'completo'">
-                                            <x-ui.alert type="warning" class="w-full mt-2">
-                                                {{ __('Atenção: o PDF do relatório completo está limitado às últimas 100 visitas para evitar travamentos. Refine os filtros para exportar outros períodos.') }}
-                                            </x-ui.alert>
+                                            <div class="v-alert v-alert--warning w-full mt-2" role="alert">
+                                                <span class="font-semibold">{{ __('Atenção:') }}</span>
+                                                {{ __('O PDF do relatório completo está limitado às últimas 100 visitas para evitar travamentos. Refine os filtros para exportar outros períodos.') }}
+                                            </div>
                                         </template>
                     <div class="relative">
                         <div @@click="open = !open" class="v-input flex min-h-[2.5rem] cursor-pointer flex-wrap items-center gap-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:ring-offset-0">
