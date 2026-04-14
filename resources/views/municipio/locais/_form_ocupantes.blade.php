@@ -257,7 +257,7 @@
             <div x-effect="syncSocioFromRows()"></div>
 
         <template x-for="(row, idx) in rows" :key="idx">
-            <details x-data="{ open: !row.mor_id }" x-bind:open="open" @toggle="open = $event.target.open" class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-600 dark:bg-slate-900/30">
+            <details x-data="{ open: false }" x-bind:open="open" @toggle="open = $event.target.open" class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-600 dark:bg-slate-900/30">
                 <summary :aria-expanded="open" class="cursor-pointer list-none font-semibold text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
                     <div class="flex items-center justify-between gap-2">
                         <span class="inline-flex items-center gap-2 text-xs">
