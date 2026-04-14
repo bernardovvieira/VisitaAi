@@ -378,6 +378,14 @@ class RelatorioController extends Controller
                 $wkPath = null;
             }
 
+            if (! $wkPath) {
+                Log::warning('wkhtmltopdf não encontrado — usando fallback para DomPDF', [
+                    'gestor_id' => Auth::id(),
+                    'tipo_relatorio' => $tipo,
+                    'total_visitas' => $visitas->count(),
+                ]);
+            }
+
             $viewData = [
                 'visitas' => $visitas,
                 'gestorNome' => $gestorNome,
@@ -410,7 +418,16 @@ class RelatorioController extends Controller
                         'Content-Disposition' => 'inline; filename="relatorio-visitas.pdf"',
                     ]);
                 }
-                // If wkhtmltopdf failed, cleanup and fall back to DomPDF
+                // If wkhtmltopdf failed, log details, cleanup and fall back to DomPDF
+                Log::warning('wkhtmltopdf retornou erro — fallback para DomPDF', [
+                    'wkhtmltopdf_path' => $wkPath,
+                    'cmd' => $cmd,
+                    'exit_code' => $code,
+                    'output' => is_array($out) ? implode("\n", $out) : (string) $out,
+                    'gestor_id' => Auth::id(),
+                    'tipo_relatorio' => $tipo,
+                    'total_visitas' => $visitas->count(),
+                ]);
                 @unlink($htmlFile);
                 @unlink($pdfFile);
             }
