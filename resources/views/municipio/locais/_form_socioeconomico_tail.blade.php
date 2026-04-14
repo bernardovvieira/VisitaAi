@@ -16,7 +16,7 @@
     $t = config('visitaai_socioeconomico.secao_titulos', []);
 @endphp
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('5. Características do imóvel e cadastro físico') }}</span>
     </x-slot>
@@ -165,8 +165,7 @@
     </div>
 </x-ui.disclosure>
 
-<script>
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['cadastro_fisico'] ?? __('6. Cadastro físico') }}</span>
     </x-slot>
@@ -267,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['infraestrutura'] ?? __('7. Infraestrutura e serviços') }}</span>
     </x-slot>
@@ -291,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['terreno'] ?? __('8. Terreno e tempo de residência') }}</span>
     </x-slot>
@@ -319,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['historico'] ?? __('9. Histórico da posse') }}</span>
     </x-slot>

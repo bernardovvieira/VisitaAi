@@ -17,6 +17,8 @@
     $disc = 'border-t border-gray-200 pt-6 mt-2 dark:border-gray-600';
 @endphp
 
+@include('municipio.locais._script_disclosure_accordion_once')
+
 <x-ui.callout variant="amber" class="v-alert-erp border-amber-200/60 dark:border-amber-900/40 mb-4" role="alert">
     <p class="text-sm text-amber-900/90 dark:text-amber-200/90">{{ __('Ficha socioeconômica complementar ao cadastro territorial e às obrigações de sistemas oficiais (ex.: CadÚnico, e-SUS). Informe apenas o necessário (minimização, LGPD). CPF/RG são opcionais e sensíveis.') }}</p>
 </x-ui.callout>
@@ -29,7 +31,7 @@
 <input type="hidden" name="socio[principal_fonte_renda]" value="{{ $sv('principal_fonte_renda') }}" data-autofill-from-ocupantes="1">
 <input type="hidden" name="socio[qtd_contribuintes]" value="{{ $sv('qtd_contribuintes') }}" data-autofill-from-ocupantes="1">
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['entrevista'] ?? __('1. Entrevista e domicílio') }}</span>
     </x-slot>
@@ -49,7 +51,7 @@
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['economia'] ?? __('2. Economia do grupo familiar') }}</span>
     </x-slot>
@@ -69,7 +71,7 @@
     </div>
 </x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['proprietario'] ?? __('3. Proprietário (se aluguel / cedido)') }}</span>
     </x-slot>

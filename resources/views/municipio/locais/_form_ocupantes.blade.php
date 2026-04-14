@@ -78,11 +78,11 @@
     }
 @endphp
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
+@include('municipio.locais._script_disclosure_accordion_once')
+
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
     <style>
-        summary .ocupante-chevron { display: inline-block; transform-origin: center; transition: transform .15s ease-in-out; margin-right: .5rem; }
-        details[open] summary .ocupante-chevron { transform: rotate(90deg); }
-        summary .ocupante-chevron { transform: rotate(0deg); }
+        .ocupante-chevron { display: inline-block; transform-origin: center; transition: transform .15s ease-in-out; margin-right: .5rem; }
     </style>
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('4. Composição familiar e ocupantes') }}</span>
@@ -119,8 +119,11 @@
             acima_5_sm: 6
         },
         trabalhoContribui: ['empregado', 'autonomo', 'aposentado', 'outro'],
+        openOcupanteIdx: null,
         init() {
             this.syncSocioFromRows();
+            var firstNew = this.rows.findIndex(function (r) { return r && !r.mor_id; });
+            this.openOcupanteIdx = firstNew >= 0 ? firstNew : null;
         },
         hasValue(v) {
             return !(v === null || v === undefined || (typeof v === 'string' && v.trim() === ''));
@@ -235,6 +238,7 @@
         },
         addRow() {
             this.rows.push(JSON.parse(JSON.stringify(this.emptyRow)));
+            this.openOcupanteIdx = this.rows.length - 1;
         },
         enforceSingleTitular(idx) {
             var selected = this.rows[idx] || null;
@@ -249,6 +253,11 @@
         },
         removeRow(i) {
             if (this.rows[i] && !this.rows[i].mor_id) {
+                if (this.openOcupanteIdx === i) {
+                    this.openOcupanteIdx = null;
+                } else if (this.openOcupanteIdx !== null && this.openOcupanteIdx > i) {
+                    this.openOcupanteIdx--;
+                }
                 this.rows.splice(i, 1);
                 if (this.rows.length === 0) this.addRow();
             }
@@ -257,11 +266,13 @@
             <div x-effect="syncSocioFromRows()"></div>
 
         <template x-for="(row, idx) in rows" :key="idx">
-            <details x-data="{ open: !row.mor_id }" x-bind:open="open" @toggle="open = $event.target.open" class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-600 dark:bg-slate-900/30">
-                <summary :aria-expanded="open" class="cursor-pointer list-none font-semibold text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
+            <details class="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-600 dark:bg-slate-900/30"
+                     :open="openOcupanteIdx === idx"
+                     @toggle="if ($event.target.open) { openOcupanteIdx = idx } else if (openOcupanteIdx === idx) { openOcupanteIdx = null }">
+                <summary :aria-expanded="openOcupanteIdx === idx" class="cursor-pointer list-none font-semibold text-slate-700 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
                     <div class="flex items-center justify-between gap-2">
                         <span class="inline-flex items-center gap-2 text-xs">
-                            <svg :class="open ? 'ocupante-chevron rotate-90 w-3 h-3 text-slate-500 dark:text-slate-400' : 'ocupante-chevron w-3 h-3 text-slate-500 dark:text-slate-400'" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg :class="openOcupanteIdx === idx ? 'ocupante-chevron rotate-90 w-3 h-3 text-slate-500 dark:text-slate-400' : 'ocupante-chevron w-3 h-3 text-slate-500 dark:text-slate-400'" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M7.21 14.21a1 1 0 01-1.42-1.42L10.17 8 5.79 3.62a1 1 0 011.42-1.42l5 5a1 1 0 010 1.42l-5 5z" clip-rule="evenodd" />
                             </svg>
                             <span x-text="row.mor_id ? '{{ __('Ocupante') }} #' + row.mor_id : '{{ __('Novo ocupante') }}'"></span>

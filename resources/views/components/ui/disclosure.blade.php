@@ -9,6 +9,8 @@
 --}}
 @props([
     'variant' => 'lead',
+    /** Quando preenchido, fecha outros <details> do mesmo grupo ao abrir um (acordeão). */
+    'accordionGroup' => null,
 ])
 
 @php
@@ -76,7 +78,7 @@
     };
 @endphp
 
-<details {{ $attributes->merge(['class' => $cfg['wrap']]) }}>
+<details {{ $attributes->merge(['class' => $cfg['wrap']]) }} @if(filled($accordionGroup)) data-disclosure-accordion="{{ $accordionGroup }}" @endif>
     <summary class="{{ $cfg['summary'] }}">
         {{ $summary }}
     </summary>
