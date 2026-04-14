@@ -163,7 +163,7 @@ return [
         'legenda_cruzamento' => 'Cada célula é a quantidade de ocupantes na combinação de escolaridade (linha) e faixa de renda (coluna). Células com poucos casos são ocultas pelo mesmo critério de privacidade das tabelas por bairro.',
         'titulo_secao_cor_raca' => 'Cor ou raça (autodeclarada)',
         'titulo_secao_situacao_trabalho' => 'Situação no trabalho',
-        'botao_export_csv' => 'Exportar CSV',
+        'botao_export_csv' => 'Exportar CSV de dados consolidados',
         'botao_export_cadastro_ocupantes_csv' => 'Exportar cadastro de ocupantes (CSV)',
         'botao_export_cadastro_ocupantes_pdf' => 'Exportar cadastro de ocupantes (PDF)',
         'export_csv_aviso' => 'Arquivo exclusivo para uso interno da administração pública municipal. Contém matriz escolaridade × renda sem supressão por célula (dado institucional sensível). Não trafegar por canais não oficiais. Fundamentos: Constituição Federal; Lei nº 8.080/1990; Lei nº 13.709/2018 (arts. 6º, 7º, 18, 46 a 49); Lei nº 12.527/2011 quando couber. O CSV inclui seção de aviso legal federal.',
