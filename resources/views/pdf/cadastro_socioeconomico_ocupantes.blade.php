@@ -60,7 +60,8 @@
     <p class="muted">{{ config('app.name') }} · {{ __('Código do imóvel') }}: <strong>{{ $local->loc_codigo_unico }}</strong></p>
     <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
 
-    <h2>{{ $titulos['entrevista'] ?? '1. Entrevista e domicílio' }}</h2>
+        <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
+        <p class="small">{{ __('Tipo / zona') }}: {{ SE::opcao('tipo_local_opcoes', $local->loc_tipo) ?? $local->loc_tipo ?? '-' }} / {{ SE::opcao('zona_opcoes', $local->loc_zona) ?? $local->loc_zona ?? '-' }}</p>
     <table>
         <tr><th>{{ __('Data da entrevista') }}</th><td>{{ $s?->lse_data_entrevista?->format('d/m/Y') ?? '-' }}</td></tr>
         <tr><th>{{ __('Telefone de contato') }}</th><td>{{ $s?->lse_telefone_contato ?? '-' }}</td></tr>
@@ -99,7 +100,14 @@
                         @if($m->mor_profissao)
                             <div class="small">{{ $m->mor_profissao }}</div>
                         @endif
+                            @if($m->mor_cpf || $m->mor_rg_numero)
+                                <div class="small" style="margin-top:4px;">
+                                    @if($m->mor_cpf) <div>CPF: {{ $m->mor_cpf }}</div> @endif
+                                    @if($m->mor_rg_numero) <div>RG: {{ $m->mor_rg_numero }} @if($m->mor_rg_orgao) ({{ $m->mor_rg_orgao }}) @endif @if($m->mor_rg_expedicao) — {{ $m->mor_rg_expedicao?->format('d/m/Y') }}@endif</div> @endif
+                                </div>
+                            @endif
                     </td>
+                        <p class="small" style="margin-top: 10px;">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}. {{ __('Gerado por Visita Aí.') }} {{ __('Os dados pessoais contidos neste documento são tratados conforme a LGPD e devem ser mantidos em segurança.') }}</p>
                     <td class="center">{{ $m->mor_referencia_familiar ? '★' : '-' }}</td>
                     <td>{{ SE::opcao('parentesco_opcoes', $m->mor_parentesco) }}</td>
                     <td>{{ SE::opcao('sexo_opcoes', $m->mor_sexo) }}</td>

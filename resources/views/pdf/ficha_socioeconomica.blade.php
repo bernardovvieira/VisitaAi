@@ -78,7 +78,13 @@
         </div>
         <div class="cell">
             <table class="compact">
-                <tr><th>{{ __('Tipo / zona') }}</th><td>{{ $local->loc_tipo ?? '-' }} / {{ $local->loc_zona ?? '-' }}</td></tr>
+                <tr><th>{{ __('Tipo / zona') }}</th>
+                    <td>
+                        {{ SE::opcao('tipo_local_opcoes', $local->loc_tipo) ?? $local->loc_tipo ?? '-' }}
+                        /
+                        {{ SE::opcao('zona_opcoes', $local->loc_zona) ?? $local->loc_zona ?? '-' }}
+                    </td>
+                </tr>
                 <tr><th>{{ __('Latitude / longitude') }}</th><td>{{ $local->loc_latitude ?? '-' }} / {{ $local->loc_longitude ?? '-' }}</td></tr>
                 <tr><th>{{ __('Código localidade') }}</th><td>{{ $local->loc_codigo ?? '-' }}</td></tr>
                 <tr><th>{{ __('Categoria / quarteirão') }}</th><td>{{ $local->loc_categoria ?? '-' }} / {{ $local->loc_quarteirao ?? '-' }}</td></tr>
@@ -163,6 +169,12 @@
                         @if($m->mor_profissao)
                             <div class="small">{{ $m->mor_profissao }}</div>
                         @endif
+                        @if($m->mor_cpf || $m->mor_rg_numero)
+                            <div class="small" style="margin-top:4px;">
+                                @if($m->mor_cpf) <div>CPF: {{ $m->mor_cpf }}</div> @endif
+                                @if($m->mor_rg_numero) <div>RG: {{ $m->mor_rg_numero }} @if($m->mor_rg_orgao) ({{ $m->mor_rg_orgao }}) @endif @if($m->mor_rg_expedicao) — {{ $m->mor_rg_expedicao?->format('d/m/Y') }}@endif</div> @endif
+                            </div>
+                        @endif
                     </td>
                     <td class="center">{{ $m->mor_referencia_familiar ? '★' : '-' }}</td>
                     <td>{{ SE::opcao('parentesco_opcoes', $m->mor_parentesco) }}</td>
@@ -179,7 +191,7 @@
             @endforelse
         </tbody>
     </table>
-    <p class="small">{{ __('Documentos (RG/CPF) foram omitidos do PDF por padrão; constam no sistema quando informados.') }}</p>
+    {{-- Identificação: incluída no registro individual do ocupante acima. --}}
 </div>
 
 <div class="panel section">
@@ -256,7 +268,7 @@
     </table>
 </div>
 
-<p class="muted center">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}. {{ __('Gerado por Visita Aí.') }}</p>
+<p class="muted center">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}. {{ __('Gerado por Visita Aí.') }} {{ __('Os dados pessoais contidos neste documento são tratados conforme a LGPD e devem ser mantidos em segurança.') }}</p>
 </div>
 </body>
 </html>
