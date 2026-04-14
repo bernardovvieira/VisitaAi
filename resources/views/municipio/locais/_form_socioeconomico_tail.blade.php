@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </select>
         </div>
         <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('IPTU: desde / observação') }}</label>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('IPTU: desde quando é pago') }}</label>
             <input type="number" name="socio[iptu_desde]" value="{{ $sv('iptu_desde') }}" class="v-input mt-1 w-full" min="1900" max="2100" step="1" placeholder="{{ __('Ex.: 2020') }}">
         </div>
         <div>
