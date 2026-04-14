@@ -40,12 +40,11 @@
 <!-- Header (fixed) -->
 <div class="header">
     <div style="display:flex; align-items:flex-end; font-size:10pt;">
-        <div style="flex:0 0 200px; font-size:9pt; color:#333; font-weight:600;">Imóvel #{{ $local->loc_codigo_unico }}</div>
         <div style="flex:1; text-align:center;">
             <div style="font-size:11pt; font-weight:700; color:#111;">VISITA Aí - CADASTRO SOCIOECONÔMICO</div>
             <div style="border-top:1px solid #ccc; margin-top:6px; width:100%;"></div>
         </div>
-        <div style="flex:0 0 140px;"></div>
+        <div style="flex:0 0 200px; font-size:9pt; color:rgba(0,0,0,0.45); font-weight:600; text-align:right;">Imóvel #{{ $local->loc_codigo_unico }}</div>
     </div>
 </div>
 
@@ -76,7 +75,6 @@
     $moradoresPdf = $moradores ?? $local->moradores;
 @endphp
 <div class="content" style="margin-top:12px;">
-<h1>{{ __('CADASTRO SOCIOECONÔMICO') }}</h1>
 <div class="panel">
     <div class="grid-2">
         <div class="cell">

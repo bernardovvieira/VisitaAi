@@ -36,7 +36,6 @@
 <!-- Header (fixed) -->
 <div class="header">
     <div style="display:flex; align-items:center; font-size:10pt;">
-        <div style="flex:0 0 140px; font-size:9pt; color:#333; font-weight:600;">Imóvel #codigo_aqui</div>
         <div style="flex:1; text-align:center;">
             <div style="font-size:11pt; font-weight:700; color:#111;">VISITA Aí - CADASTRO SOCIOECONÔMICO</div>
             <div style="border-top:1px solid #ccc; margin-top:6px; width:100%;"></div>
@@ -72,7 +71,6 @@
     @endphp
 
     <div class="content" style="margin-top:12px;">
-    <h1>{{ __('CADASTRO SOCIOECONÔMICO') }}</h1>
     <p class="muted">{{ config('app.name') }} · {{ __('Código do imóvel') }}: <strong>{{ $local->loc_codigo_unico }}</strong></p>
     <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
 
