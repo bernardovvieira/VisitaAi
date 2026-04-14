@@ -56,7 +56,6 @@ class RelatorioController extends Controller
 
         $request->validate([
             'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
-            'limite_visitas' => ['nullable', 'integer', 'min:1', 'max:500'],
             'local_id' => ['nullable'],
             'local_id.*' => ['integer', 'exists:locais,loc_id'],
             'data_unica' => ['nullable', 'date'],
@@ -266,8 +265,7 @@ class RelatorioController extends Controller
         ]);
         $localIdsPermitidos = $this->aplicarEscopoGestorEmVisitas($query);
 
-        // Forçar limite a 1 visita diretamente na query (modo de teste rápido)
-        $query->limit(1);
+        // Nenhuma limitação forçada aqui — o padrão é retornar conforme filtros.
 
         $localIdsSolicitados = array_values(array_filter(array_map('intval', (array) $request->input('local_id', []))));
         $localIdsPdf = array_values(array_intersect($localIdsSolicitados, $localIdsPermitidos));
@@ -313,11 +311,8 @@ class RelatorioController extends Controller
                 $query->whereDate('vis_data', '<=', $request->data_fim);
                 $data_fim = $request->data_fim;
             }
-            // Limit to last 50 visits for 'completo' report (can be overridden by request param `limite_visitas`)
-            $limite = $request->input('limite_visitas');
-            $limite = is_numeric($limite) ? max(1, (int) $limite) : 50;
-            $limite = min($limite, 500);
-            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take($limite)->get();
+            // Limit to last 50 visits for 'completo' report
+            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(50)->get();
             $data_inicio = $data_inicio ?? $visitas->min('vis_data');
             $data_fim = $data_fim ?? $visitas->max('vis_data');
         } else {
@@ -370,6 +365,16 @@ class RelatorioController extends Controller
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
 
         try {
+            // Log start and environment info for debugging
+            Log::info('Iniciando geração de PDF', [
+                'gestor_id' => Auth::id(),
+                'tipo_relatorio' => $tipo,
+                'total_visitas' => $visitas->count(),
+                'env' => app()->environment(),
+                'memory_limit' => ini_get('memory_limit'),
+                'memory_usage' => memory_get_usage(),
+            ]);
+
             // Prefer wkhtmltopdf (external binary) if available because DOMPDF can explode memory on large HTML.
             $wkPath = null;
             try {
@@ -427,6 +432,8 @@ class RelatorioController extends Controller
                     'gestor_id' => Auth::id(),
                     'tipo_relatorio' => $tipo,
                     'total_visitas' => $visitas->count(),
+                    'memory_usage' => memory_get_usage(),
+                    'memory_peak' => memory_get_peak_usage(),
                 ]);
                 @unlink($htmlFile);
                 @unlink($pdfFile);
