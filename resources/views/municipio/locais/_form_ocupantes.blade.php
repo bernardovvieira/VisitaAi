@@ -236,6 +236,8 @@
         },
         addRow() {
             this.rows.push(JSON.parse(JSON.stringify(this.emptyRow)));
+            // open the newly added row
+            this.activeOcupante = this.rows.length - 1;
         },
         enforceSingleTitular(idx) {
             var selected = this.rows[idx] || null;
@@ -251,7 +253,16 @@
         removeRow(i) {
             if (this.rows[i] && !this.rows[i].mor_id) {
                 this.rows.splice(i, 1);
-                if (this.rows.length === 0) this.addRow();
+                if (this.rows.length === 0) {
+                    this.addRow();
+                    return;
+                }
+                // adjust activeOcupante after removal
+                if (this.activeOcupante === i) {
+                    this.activeOcupante = this.rows.length > 0 ? Math.min(i, this.rows.length - 1) : null;
+                } else if (this.activeOcupante > i) {
+                    this.activeOcupante = this.activeOcupante - 1;
+                }
             }
         }
     }" class="space-y-4">
