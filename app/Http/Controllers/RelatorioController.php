@@ -275,27 +275,49 @@ class RelatorioController extends Controller
         if ($tipo === 'individual' && empty($localIdsPdf)) {
             return redirect()->route('gestor.relatorios.index')->with('error', __('Selecione ao menos um local para o relatório individual.'));
         }
+
+        // Inicializa variáveis
+        $data_inicio = null;
+        $data_fim = null;
+
         if ($tipo === 'individual' && ! empty($localIds)) {
             $query->whereIn('fk_local_id', $localIds);
+            $visitas = $query->orderBy('vis_data', 'desc')->get();
         } elseif ($tipo === 'diario' && $request->filled('data_unica')) {
             $query->whereDate('vis_data', $request->data_unica);
+            $visitas = $query->orderBy('vis_data', 'desc')->get();
+            $data_inicio = $data_fim = $request->data_unica;
         } elseif ($tipo === 'semanal') {
             if ($request->filled('data_inicio')) {
                 $query->whereDate('vis_data', '>=', $request->data_inicio);
+                $data_inicio = $request->data_inicio;
             }
             if ($request->filled('data_fim')) {
                 $query->whereDate('vis_data', '<=', $request->data_fim);
+                $data_fim = $request->data_fim;
             }
+            $visitas = $query->orderBy('vis_data', 'desc')->get();
+            // Se não veio do filtro, pega do resultado
+            $data_inicio = $data_inicio ?? $visitas->min('vis_data');
+            $data_fim = $data_fim ?? $visitas->max('vis_data');
         } elseif ($tipo === 'completo') {
-
             if ($request->filled('data_inicio')) {
                 $query->whereDate('vis_data', '>=', $request->data_inicio);
+                $data_inicio = $request->data_inicio;
             }
             if ($request->filled('data_fim')) {
                 $query->whereDate('vis_data', '<=', $request->data_fim);
+                $data_fim = $request->data_fim;
             }
             // Limit to last 100 visits for 'completo' report
-            $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(100);
+            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(100)->get();
+            $data_inicio = $data_inicio ?? $visitas->min('vis_data');
+            $data_fim = $data_fim ?? $visitas->max('vis_data');
+        } else {
+            // fallback
+            $visitas = $query->orderBy('vis_data', 'desc')->get();
+            $data_inicio = $visitas->min('vis_data');
+            $data_fim = $visitas->max('vis_data');
         }
 
         if ($visitas->isEmpty()) {
