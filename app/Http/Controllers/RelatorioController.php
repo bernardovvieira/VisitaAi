@@ -363,6 +363,8 @@ class RelatorioController extends Controller
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
 
         try {
+            // Aumenta temporariamente o limite de memória para tentativas de geração de PDF
+            @ini_set('memory_limit', '512M');
             // Passa a coleção original de visitas (com relações carregadas)
             $pdf = Pdf::loadView('gestor.relatorios.pdf', [
                 'visitas' => $visitas,
