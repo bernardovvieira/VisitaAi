@@ -42,13 +42,14 @@
     <div style="position:relative; font-size:10pt;">
         <div style="text-align:center; font-size:11pt; font-weight:700; color:#111; border-bottom:1px solid #ccc; padding-bottom:6px;">CADASTRO SOCIOECONÔMICO</div>
         <div style="height:8px;"></div>
-        <div style="text-align:right; font-size:8pt; color:#666; line-height:1.2; font-family: DejaVu Sans, sans-serif; margin-bottom:6px;">
-            Documento: Cadastro Socioeconômico — contém informações coletadas na entrevista sobre o domicílio e seus ocupantes. Os dados pessoais devem ser tratados conforme a LGPD e mantidos em segurança.
-        </div>
         <div style="text-align:right; font-size:9pt; color:rgba(0,0,0,0.45); font-weight:600; font-family: DejaVu Sans, sans-serif;"><span style="font-family: DejaVu Sans, sans-serif; font-weight:600;">Imóvel #{{ $local->loc_codigo_unico }}</span></div>
     </div>
 </div>
-
+ 
+<!-- Document description: shown once, directly under the Imóvel code -->
+<div style="margin:0 20px 8px 20px; font-size:8pt; color:#666; font-family: DejaVu Sans, sans-serif; line-height:1.2;">
+    Documento: Cadastro Socioeconômico — contém informações coletadas na entrevista sobre o domicílio e seus ocupantes. Os dados pessoais devem ser tratados conforme a LGPD e mantidos em segurança.
+</div>
 <!-- Footer placeholder: server-side drawing will add texts -->
 <div class="footer">
     <div style="display:flex; justify-content:space-between; align-items:center; font-size:9pt; color:#555;">

@@ -494,7 +494,9 @@ class LocalController extends Controller
             $pageText = 'Página {PAGE_NUM} / {PAGE_COUNT}';
 
             $w = $fontMetrics->getTextWidth($pageText, $font, 8);
-            $x = $width - $w - $rightMargin;
+            // small adjustment to better match the visual table edge in the template
+            $rightAdjust = 12;
+            $x = $width - $w - $rightMargin - $rightAdjust;
 
             // Draw footer texts aligned to page margins
             try {
