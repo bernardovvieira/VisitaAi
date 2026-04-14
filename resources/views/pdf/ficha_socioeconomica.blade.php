@@ -7,8 +7,11 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 9pt; color: #111; }
         h1 { font-size: 13pt; margin: 0 0 6px 0; text-align: center; }
         h2 { font-size: 10pt; margin: 0 0 6px 0; border-bottom: 1px solid #333; padding-bottom: 2px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #444; padding: 4px 6px; vertical-align: top; }
+        /* Use fixed table layout and force word wrapping so long values don't overflow the page */
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; word-wrap: break-word; overflow-wrap: break-word; }
+        /* Use overflow-wrap and allow aggressive breaks to avoid overflow for very long strings */
+        th, td { border: 1px solid #444; padding: 4px 6px; vertical-align: top; overflow-wrap: anywhere; word-wrap: break-word; white-space: normal; hyphens: auto; word-break: break-all; }
+        .renda { font-weight: 700; color: #111; }
         th { background: #f0f0f0; font-weight: bold; text-align: left; width: 30%; }
         .muted { color: #555; font-size: 8pt; }
         .small { font-size: 8pt; }
@@ -18,11 +21,44 @@
         .grid-2 .cell { display: table-cell; width: 50%; vertical-align: top; padding: 0 4px; }
         .grid-3 { display: table; width: 100%; table-layout: fixed; border-collapse: collapse; }
         .grid-3 .cell { display: table-cell; width: 33.3333%; vertical-align: top; padding: 0 4px; }
-        .compact th, .compact td { padding: 3px 5px; }
+        /* Compact tables use slightly smaller font and padding to fit more columns */
+        .compact th, .compact td { padding: 3px 5px; font-size: 8pt; }
+        /* Make the occupants table more compact to avoid horizontal overflow */
+        .panel table tbody td { vertical-align: top; }
         .center { text-align: center; }
+    </style>
+    /* Reserve space for header/footer */
+        @page { margin: 70px 20px 70px 20px; }
     </style>
 </head>
 <body>
+
+<!-- Header (fixed) -->
+<div class="header" style="position: fixed; top: 0; left: 0; right: 0; height: 56px; padding: 8px 12px; border-bottom: 1px solid #ccc;">
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10pt;">
+        <div style="font-weight:700;">Visita Aí</div>
+        <div style="font-size:9pt; color:#555;">Ficha Socioeconômica — Código: {{ $local->loc_codigo_unico }}</div>
+        <div style="font-size:9pt; color:#333;">Bitwise Technologies</div>
+    </div>
+</div>
+
+<!-- Footer placeholder (dompdf will draw text using PHP script for accurate page numbers) -->
+<div class="footer" style="position: fixed; bottom: 0; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; font-size:9pt; color:#555;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>Visita Aí — Bitwise Technologies</div>
+        <div> <!-- page numbers rendered by dompdf script --> </div>
+    </div>
+</div>
+
+<script type="text/php">
+    if (isset($pdf)) {
+        $font = $fontMetrics->getFont('DejaVuSans', 'normal');
+        $y = $pdf->get_height() - 35; // position above footer border
+        $pdf->page_text(40, $y, 'Visita Aí — Bitwise Technologies', $font, 8, array(0,0,0));
+        $pdf->page_text($pdf->get_width() - 120, $y, 'Página {PAGE_NUM} / {PAGE_COUNT}', $font, 8, array(0,0,0));
+    }
+</script>
+
 @php
     use App\Support\SocioeconomicoEtiquetas as SE;
     $s = $socio;
@@ -111,34 +147,35 @@
     <table class="compact">
         <thead>
             <tr>
-                <th>{{ __('Nome') }}</th>
-                <th>{{ __('Ref.') }}</th>
-                <th>{{ __('Parentesco') }}</th>
-                <th>{{ __('Sexo') }}</th>
-                <th>{{ __('Nasc.') }}</th>
-                <th>{{ __('Est. civil') }}</th>
-                <th>{{ __('Escolaridade') }}</th>
-                <th>{{ __('Profissão') }}</th>
-                <th>{{ __('Renda') }}</th>
-                <th>{{ __('Trabalho') }}</th>
+                <th style="width:35%">{{ __('Nome / Profissão') }}</th>
+                <th style="width:5%">{{ __('Ref.') }}</th>
+                <th style="width:15%">{{ __('Parentesco') }}</th>
+                <th style="width:8%">{{ __('Sexo') }}</th>
+                <th style="width:12%">{{ __('Nasc.') }}</th>
+                <th style="width:25%">{{ __('Escolaridade • Renda • Trabalho') }}</th>
             </tr>
         </thead>
         <tbody>
             @forelse($moradoresPdf as $m)
                 <tr>
-                    <td>{{ $m->mor_nome ?? '-' }}</td>
+                    <td>
+                        <strong>{{ $m->mor_nome ?? '-' }}</strong>
+                        @if($m->mor_profissao)
+                            <div class="small">{{ $m->mor_profissao }}</div>
+                        @endif
+                    </td>
                     <td class="center">{{ $m->mor_referencia_familiar ? '★' : '-' }}</td>
                     <td>{{ SE::opcao('parentesco_opcoes', $m->mor_parentesco) }}</td>
                     <td>{{ SE::opcao('sexo_opcoes', $m->mor_sexo) }}</td>
                     <td>{{ $m->mor_data_nascimento?->format('d/m/Y') ?? '-' }}</td>
-                    <td>{{ SE::opcao('estado_civil_opcoes', $m->mor_estado_civil) }}</td>
-                    <td>{{ SE::municipioEscolaridade($m->mor_escolaridade) }}</td>
-                    <td>{{ $m->mor_profissao ?? '-' }}</td>
-                    <td>{{ SE::municipioRenda($m->mor_renda_faixa) }}</td>
-                    <td>{{ SE::municipioTrabalho($m->mor_situacao_trabalho) }}</td>
+                    <td>
+                        {{ SE::municipioEscolaridade($m->mor_escolaridade) }}
+                        @if($m->mor_renda_faixa) • <span class="renda">{{ SE::municipioRenda($m->mor_renda_faixa) }}</span>@endif
+                        @if($m->mor_situacao_trabalho) • {{ SE::municipioTrabalho($m->mor_situacao_trabalho) }}@endif
+                    </td>
                 </tr>
             @empty
-                <tr><td colspan="10">{{ __('Nenhum morador cadastrado.') }}</td></tr>
+                <tr><td colspan="6">{{ __('Nenhum morador cadastrado.') }}</td></tr>
             @endforelse
         </tbody>
     </table>
