@@ -56,6 +56,7 @@ class RelatorioController extends Controller
 
         $request->validate([
             'tipo_relatorio' => ['nullable', 'string', 'in:completo,individual,diario,semanal'],
+            'limite_visitas' => ['nullable', 'integer', 'min:1', 'max:500'],
             'local_id' => ['nullable'],
             'local_id.*' => ['integer', 'exists:locais,loc_id'],
             'data_unica' => ['nullable', 'date'],
@@ -309,8 +310,11 @@ class RelatorioController extends Controller
                 $query->whereDate('vis_data', '<=', $request->data_fim);
                 $data_fim = $request->data_fim;
             }
-            // Limit to last 50 visits for 'completo' report
-            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(50)->get();
+            // Limit to last 50 visits for 'completo' report (can be overridden by request param `limite_visitas`)
+            $limite = $request->input('limite_visitas');
+            $limite = is_numeric($limite) ? max(1, (int) $limite) : 50;
+            $limite = min($limite, 500);
+            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take($limite)->get();
             $data_inicio = $data_inicio ?? $visitas->min('vis_data');
             $data_fim = $data_fim ?? $visitas->max('vis_data');
         } else {
