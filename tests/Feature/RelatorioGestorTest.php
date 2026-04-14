@@ -9,6 +9,7 @@ use App\Models\Visita;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RelatorioGestorTest extends TestCase
 {
@@ -117,5 +118,36 @@ class RelatorioGestorTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    #[Test]
+    public function relatorio_pdf_memory_error_is_handled(): void
+    {
+        $gestor = $this->gestorAprovado();
+        $local = Local::factory()->create();
+        $agente = User::factory()->create([
+            'fk_gestor_id' => $gestor->use_id,
+        ]);
+        Visita::create([
+            'fk_usuario_id' => $agente->getKey(),
+            'fk_local_id' => $local->getKey(),
+            'vis_data' => now()->toDateString(),
+            'vis_atividade' => '1',
+            'vis_pendencias' => false,
+        ]);
+
+        // Simula erro de memória lançado pela biblioteca de PDF
+        Pdf::shouldReceive('loadView')->once()->andThrow(new \ErrorException('Allowed memory size of 134217728 bytes exhausted'));
+
+        $response = $this->actingAs($gestor)
+            ->post(route('gestor.relatorios.pdf'), [
+                'data_inicio' => now()->subDays(30)->toDateString(),
+                'data_fim' => now()->toDateString(),
+                'bairros' => [],
+                'tipo_relatorio' => 'completo',
+            ]);
+
+        $response->assertRedirect(route('gestor.relatorios.index'));
+        $response->assertSessionHas('error', __('Não foi possível gerar o PDF devido à falta de memória. Tente reduzir o período ou aplicar filtros mais restritos (por exemplo relatório individual).'));
     }
 }

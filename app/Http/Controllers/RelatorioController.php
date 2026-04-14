@@ -363,29 +363,9 @@ class RelatorioController extends Controller
         $imoveisComplementoResumo = $this->complementoImoveisResumo($visitas);
 
         try {
-            // Carrega apenas dados essenciais para o PDF
-            $visitasEssenciais = $visitas->map(function ($v) {
-                return [
-                    'vis_id' => $v->vis_id,
-                    'vis_data' => $v->vis_data,
-                    'local' => $v->local ? [
-                        'loc_bairro' => $v->local->loc_bairro,
-                        'loc_endereco' => $v->local->loc_endereco,
-                        'loc_numero' => $v->local->loc_numero,
-                    ] : null,
-                    'usuario' => $v->usuario ? $v->usuario->use_nome : null,
-                    'doencas' => $v->doencas->pluck('doe_nome')->all(),
-                    'tratamentos' => $v->tratamentos->map(fn ($t) => [
-                        'trat_forma' => $t->trat_forma,
-                        'trat_tipo' => $t->trat_tipo,
-                        'qtd_gramas' => $t->qtd_gramas,
-                        'qtd_depositos_tratados' => $t->qtd_depositos_tratados,
-                        'qtd_cargas' => $t->qtd_cargas,
-                    ])->all(),
-                ];
-            });
+            // Passa a coleção original de visitas (com relações carregadas)
             $pdf = Pdf::loadView('gestor.relatorios.pdf', [
-                'visitas' => $visitasEssenciais,
+                'visitas' => $visitas,
                 'gestorNome' => $gestorNome,
                 'data_inicio' => $data_inicio,
                 'data_fim' => $data_fim,
