@@ -287,6 +287,7 @@ class RelatorioController extends Controller
                 $query->whereDate('vis_data', '<=', $request->data_fim);
             }
         } elseif ($tipo === 'completo') {
+
             if ($request->filled('data_inicio')) {
                 $query->whereDate('vis_data', '>=', $request->data_inicio);
             }
@@ -295,54 +296,6 @@ class RelatorioController extends Controller
             }
             // Limit to last 100 visits for 'completo' report
             $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(100);
-        }
-            } else {
-                $query->orderBy('vis_data', 'desc')->chunk(100, function ($chunk) use (&$visitas, &$data_inicio, &$data_fim) {
-                    $visitas = $visitas->concat($chunk);
-                    $min = $chunk->min('vis_data');
-                    $max = $chunk->max('vis_data');
-                    if ($data_inicio === null || ($min && $min < $data_inicio)) $data_inicio = $min;
-                    if ($data_fim === null || ($max && $max > $data_fim)) $data_fim = $max;
-                });
-            }
-            $data_inicio = $data_inicio ?? now()->toDateString();
-            $data_fim = $data_fim ?? now()->toDateString();
-            $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
-            $data_fim = $visitas->max('vis_data') ?? now()->toDateString();
-        } else {
-            $data_inicio = null;
-            $data_fim = null;
-
-            if ($tipo === 'diario' && $request->filled('data_unica')) {
-                $data_inicio = $data_fim = $request->data_unica;
-                $query->whereDate('vis_data', $data_inicio);
-            } elseif ($tipo === 'semanal') {
-                $data_inicio = $request->data_inicio;
-                $data_fim = $request->data_fim;
-                $query->whereBetween('vis_data', [$data_inicio, $data_fim]);
-            } else {
-                if ($request->filled('data_inicio')) {
-                    $query->whereDate('vis_data', '>=', $request->data_inicio);
-                }
-                if ($request->filled('data_fim')) {
-                    $query->whereDate('vis_data', '<=', $request->data_fim);
-                }
-            }
-
-            if (! empty($bairrosPdf)) {
-                $query->whereHas('local', function ($q) use ($bairrosPdf) {
-                    $q->whereIn('loc_bairro', $bairrosPdf);
-                });
-            }
-
-            $visitas = $query->orderBy('vis_data', 'desc')->get();
-
-            if ($data_inicio === null) {
-                $data_inicio = $visitas->min('vis_data') ?? now()->toDateString();
-            }
-            if ($data_fim === null) {
-                $data_fim = $visitas->max('vis_data') ?? now()->toDateString();
-            }
         }
 
         if ($visitas->isEmpty()) {
