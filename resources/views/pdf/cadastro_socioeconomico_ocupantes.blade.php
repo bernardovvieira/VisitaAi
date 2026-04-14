@@ -16,8 +16,8 @@
         .page-break { page-break-after: always; }
         .renda { font-weight: 700; color: #111; }
     </style>
-    /* Reserve space for header/footer */
-        @page { margin: 70px 20px 70px 20px; }
+    /* Reserve space for header/footer and keep content separated from header */
+        @page { margin: 90px 20px 70px 20px; }
 </head>
 <body>
 @php
@@ -25,18 +25,18 @@
 @endphp
 
 <!-- Header (fixed) -->
-<div class="header" style="position: fixed; top: 0; left: 0; right: 0; height: 56px; padding: 8px 12px; border-bottom: 1px solid #ccc;">
-    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10pt;">
-        <div style="font-weight:700;">Visita Aí</div>
-        <div style="font-size:9pt; color:#555;">Cadastro Socioeconômico — Lista de locais</div>
-        <div style="font-size:9pt; color:#333;">Bitwise Technologies</div>
+<div class="header" style="position: fixed; top: 0; left: 0; right: 0; height: 70px; padding: 10px 12px; border-bottom: 1px solid #ccc;">
+    <div style="display:flex; align-items:center; font-size:10pt;">
+        <div style="flex:0 0 140px; font-weight:700;">Visita Aí</div>
+        <div style="flex:1; text-align:center; font-size:9pt; color:#555;">Cadastro Socioeconômico — Lista de locais</div>
+        <div style="flex:0 0 140px;"></div>
     </div>
 </div>
 
 <!-- Footer placeholder (dompdf will draw text using PHP script for accurate page numbers) -->
 <div class="footer" style="position: fixed; bottom: 0; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; font-size:9pt; color:#555;">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>Visita Aí — Bitwise Technologies</div>
+        <div>Bitwise Technologies</div>
         <div> <!-- page numbers rendered by dompdf script --> </div>
     </div>
 </div>
@@ -45,7 +45,7 @@
     if (isset($pdf)) {
         $font = $fontMetrics->getFont('DejaVuSans', 'normal');
         $y = $pdf->get_height() - 35; // position above footer border
-        $pdf->page_text(40, $y, 'Visita Aí — Bitwise Technologies', $font, 8, array(0,0,0));
+        $pdf->page_text(40, $y, 'Bitwise Technologies', $font, 8, array(0,0,0));
         $pdf->page_text($pdf->get_width() - 120, $y, 'Página {PAGE_NUM} / {PAGE_COUNT}', $font, 8, array(0,0,0));
     }
 </script>
@@ -55,6 +55,7 @@
         $s = $local->socioeconomico;
     @endphp
 
+    <div class="content" style="margin-top:12px;">
     <h1>{{ __('CADASTRO SOCIOECONÔMICO') }}</h1>
     <p class="muted">{{ config('app.name') }} · {{ __('Código do imóvel') }}: <strong>{{ $local->loc_codigo_unico }}</strong></p>
     <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
@@ -116,7 +117,8 @@
     </table>
 
     <p class="small">{{ __('Documentos (RG/CPF) foram omitidos do PDF por padrão; constam no sistema quando informados.') }}</p>
-    <p class="muted" style="margin-top: 10px;">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}.</p>
+    <p class="muted" style="margin-top: 10px;">{{ __('Documento gerado pelo sistema em ') }}{{ now()->format('d/m/Y H:i') }}. {{ __('Gerado por Visita Aí.') }}</p>
+    </div>
 
     @if (! $loop->last)
         <div class="page-break"></div>
