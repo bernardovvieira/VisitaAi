@@ -27,12 +27,12 @@
         .panel table tbody td { vertical-align: top; }
         .center { text-align: center; }
 
-        /* Reserve space for header/footer and keep content separated from header
-           Dompdf repeats fixed-position elements on each page when margins reserve space.
-           Use a negative top for the fixed header so it sits in the page margin. */
-        @page { margin: 100px 20px 70px 20px; }
-        .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; border-bottom: 1px solid #ccc; }
-        .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; }
+          /* Reserve space for header/footer and keep content separated from header
+              Dompdf repeats fixed-position elements on each page when margins reserve space.
+              Use a negative top for the fixed header so it sits in the page margin. */
+          @page { margin: 100px 20px 70px 20px; }
+          .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; font-family: DejaVu Sans, sans-serif; }
+          .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; font-family: DejaVu Sans, sans-serif; }
     </style>
 </head>
 <body>
@@ -59,8 +59,11 @@
 <script type="text/php">
     if (isset($pdf)) {
         $font = $fontMetrics->getFont('DejaVu Sans', 'normal');
+        if (! $font) {
+            $font = $fontMetrics->getFont(null, 'normal');
+        }
         // place left footer text and right-aligned page number
-        $y = $pdf->get_height() - 28; // slightly above bottom to account for footer border
+        $y = $pdf->get_height() - 28; // slightly above bottom to account for footer area
         $pdf->page_text(40, $y, 'Bitwise Technologies - Soluções digitais para eficiência e inovação', $font, 8, array(0,0,0));
         $text = 'Página {PAGE_NUM} / {PAGE_COUNT}';
         $w = $fontMetrics->get_text_width($text, $font, 8);

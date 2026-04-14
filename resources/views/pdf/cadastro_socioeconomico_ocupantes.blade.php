@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <title>CADASTRO SOCIOECONÔMICO</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 9pt; color: #111; }
         h1 { font-size: 13pt; margin: 0 0 6px 0; }
@@ -13,20 +16,11 @@
         .page-break { page-break-after: always; }
         .renda { font-weight: 700; color: #111; }
 
-        /* Reserve space for header/footer and keep content separated from header
-           Dompdf repeats fixed-position elements on each page when margins reserve space.
-           Use a negative top for the fixed header so it sits in the page margin. */
+        /* Reserve space for header/footer and keep content separated from header */
         @page { margin: 100px 20px 70px 20px; }
-        .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; border-bottom: 1px solid #ccc; }
-        .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; }
+        .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; font-family: DejaVu Sans, sans-serif; }
+        .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; font-family: DejaVu Sans, sans-serif; }
     </style>
-    </style>
-    /* Reserve space for header/footer and keep content separated from header
-       Dompdf repeats fixed-position elements on each page when margins reserve space.
-       Use a negative top for the fixed header so it sits in the page margin. */
-        @page { margin: 100px 20px 70px 20px; }
-        .header { position: fixed; top: -90px; left: 0; right: 0; height: 80px; padding: 10px 12px; border-bottom: 1px solid #ccc; }
-        .footer { position: fixed; bottom: -40px; left: 0; right: 0; height: 48px; padding: 6px 12px; border-top: 1px solid #ccc; }
 </head>
 <body>
 @php
@@ -55,12 +49,15 @@
 <script type="text/php">
     if (isset($pdf)) {
         $font = $fontMetrics->getFont('DejaVu Sans', 'normal');
-        // place left footer text and centered page number
-        $y = $pdf->get_height() - 28; // slightly above bottom to account for footer border
+        if (! $font) {
+            $font = $fontMetrics->getFont(null, 'normal');
+        }
+        // place left footer text and right-aligned page number
+        $y = $pdf->get_height() - 28; // slightly above bottom to account for footer area
         $pdf->page_text(40, $y, 'Bitwise Technologies - Soluções digitais para eficiência e inovação', $font, 8, array(0,0,0));
         $text = 'Página {PAGE_NUM} / {PAGE_COUNT}';
         $w = $fontMetrics->get_text_width($text, $font, 8);
-        $x = ($pdf->get_width() - $w) / 2;
+        $x = $pdf->get_width() - $w - 40; // 40pt right padding
         $pdf->page_text($x, $y, $text, $font, 8, array(0,0,0));
     }
 </script>
@@ -73,8 +70,6 @@
     <div class="content" style="margin-top:12px;">
     <p class="muted">{{ config('app.name') }} · {{ __('Código do imóvel') }}: <strong>{{ $local->loc_codigo_unico }}</strong></p>
     <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
-
-        <p class="small">{{ $local->loc_endereco }}, {{ $local->loc_numero ?? 'S/N' }}, {{ $local->loc_bairro }}, {{ $local->loc_cidade }}/{{ $local->loc_estado }}, CEP {{ $local->loc_cep ?? '-' }}</p>
         <p class="small">{{ __('Tipo / zona') }}: {{ SE::opcao('tipo_local_opcoes', $local->loc_tipo) ?? $local->loc_tipo ?? '-' }} / {{ SE::opcao('zona_opcoes', $local->loc_zona) ?? $local->loc_zona ?? '-' }}</p>
     <table>
         <tr><th>{{ __('Data da entrevista') }}</th><td>{{ $s?->lse_data_entrevista?->format('d/m/Y') ?? '-' }}</td></tr>
