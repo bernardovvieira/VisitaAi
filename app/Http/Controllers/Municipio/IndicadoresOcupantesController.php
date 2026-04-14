@@ -106,11 +106,12 @@ class IndicadoresOcupantesController extends Controller
                 $height = 842;
             }
 
-            // CSS side margin in px; convert to pt
+            // Align footers to page margins used in CSS: @page { margin: 100px 20px 70px 20px }
+            // CSS uses px; dompdf canvas uses points. Convert px -> pt (1px = 72/96 pt)
             $pxToPt = 72.0 / 96.0;
-            $cssSideMarginPx = 20;
-            $leftMargin = $cssSideMarginPx * $pxToPt;
-            $rightMargin = $cssSideMarginPx * $pxToPt;
+            $cssSideMarginPx = 20; // as used in the Blade @page rule
+            $leftMargin = 20 * $pxToPt;
+            $rightMargin = 17 * $pxToPt;
 
             $y = $height - 28;
             $leftText = 'Bitwise Technologies - Soluções digitais para eficiência e inovação';
