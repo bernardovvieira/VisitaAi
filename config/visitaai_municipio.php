@@ -82,7 +82,7 @@ return [
     'ocupantes' => [
         'titulo_secao_local' => 'Ocupantes do imóvel',
         'titulo_listagem' => 'Ocupantes neste imóvel',
-        'botao_gerenciar' => 'Gerenciar ocupantes',
+        'botao_gerenciar' => 'Visualizar ocupantes',
         'disclaimer' => 'Dados operacionais vinculados a este imóvel. Tratamento conforme legislação federal (Constituição Federal; Lei nº 8.080/1990, SUS; Lei nº 13.709/2018, LGPD) e normas municipais. Informe apenas o necessário (princípio da minimização, art. 6º, III, LGPD).',
         'painel_gestor_titulo' => 'Ocupantes registrados',
         'painel_gestor_subtitulo' => '',
