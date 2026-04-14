@@ -270,6 +270,11 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
             'use_aprovado' => true,
         ]);
 
+        $agente = User::factory()->create([
+            'use_perfil' => 'agente_endemias',
+            'use_aprovado' => true,
+        ]);
+
         // Gestor pode acessar painel de gestão
         $this->actingAs($gestor)
             ->get(route('gestor.dashboard'))
@@ -341,8 +346,8 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
             'mor_renda_faixa' => 'ate_1_sm',
         ];
 
-        $response = $this->actingAs($gestor)
-            ->post(route('gestor.locais.moradores.store', $local), $moradorPayload);
+        $response = $this->actingAs($agente)
+            ->post(route('agente.locais.moradores.store', $local), $moradorPayload);
 
         $response->assertRedirect();
 
@@ -360,8 +365,8 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
             'mor_documento_pessoal' => $documentoFile,
         ];
 
-        $response = $this->actingAs($gestor)
-            ->patch(route('gestor.locais.moradores.update', [$local, $morador]), $atualizacao);
+        $response = $this->actingAs($agente)
+            ->patch(route('agente.locais.moradores.update', [$local, $morador]), $atualizacao);
 
         $response->assertRedirect();
 
@@ -374,6 +379,7 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
             $this->assertGreaterThan(0, $morador->mor_documento_pessoal_tamanho);
             
             // === FAZER DOWNLOAD DO DOCUMENTO ===
+            // Gestor should be able to download the document
             $response = $this->actingAs($gestor)
                 ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador]));
 

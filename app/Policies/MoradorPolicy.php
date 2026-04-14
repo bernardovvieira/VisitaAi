@@ -25,16 +25,16 @@ class MoradorPolicy
 
     public function create(User $user): bool
     {
-        return $user->isGestor() || $user->isAgenteEndemias();
+        return $user->isAgenteEndemias();
     }
 
     public function update(User $user, Morador $morador): bool
     {
-        return $user->isGestor() || $user->isAgenteEndemias();
+        return $user->isAgenteEndemias();
     }
 
     public function delete(User $user, Morador $morador): bool
     {
-        return $user->isGestor() || $user->isAgenteEndemias();
+        return $user->isAgenteEndemias();
     }
 }

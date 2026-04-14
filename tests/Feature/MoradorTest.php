@@ -38,18 +38,22 @@ class MoradorTest extends TestCase
     #[Test]
     public function gestor_pode_cadastrar_morador(): void
     {
-        $user = $this->gestorAprovado();
+        $agente = User::factory()->create([
+            'use_perfil' => 'agente_endemias',
+            'use_aprovado' => 1,
+        ]);
+
         $local = Local::factory()->create();
 
-        $response = $this->actingAs($user)
-            ->post(route('gestor.locais.moradores.store', $local), [
+        $response = $this->actingAs($agente)
+            ->post(route('agente.locais.moradores.store', $local), [
                 'mor_nome' => 'Fulano Teste',
                 'mor_data_nascimento' => '1990-05-20',
                 'mor_escolaridade' => 'medio_completo',
                 'mor_renda_faixa' => 'ate_1_sm',
             ]);
 
-        $response->assertRedirect(route('gestor.locais.moradores.index', $local));
+        $response->assertRedirect(route('agente.locais.moradores.index', $local));
         $this->assertDatabaseHas('moradores', [
             'fk_local_id' => $local->loc_id,
             'mor_nome' => 'Fulano Teste',
