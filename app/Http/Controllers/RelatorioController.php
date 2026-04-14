@@ -309,8 +309,8 @@ class RelatorioController extends Controller
                 $query->whereDate('vis_data', '<=', $request->data_fim);
                 $data_fim = $request->data_fim;
             }
-            // Limit to last 100 visits for 'completo' report
-            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(100)->get();
+            // Limit to last 50 visits for 'completo' report
+            $visitas = $query->orderBy('vis_data', 'desc')->orderBy('vis_id', 'desc')->take(50)->get();
             $data_inicio = $data_inicio ?? $visitas->min('vis_data');
             $data_fim = $data_fim ?? $visitas->max('vis_data');
         } else {
