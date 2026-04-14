@@ -77,14 +77,8 @@
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Observações do imóvel') }}</label>
             <textarea name="socio[observacoes_imovel]" rows="2" class="v-input mt-1 w-full">{{ $sv('observacoes_imovel') }}</textarea>
         </div>
-    </div>
-</x-ui.disclosure>
 
-<x-ui.disclosure variant="muted-card-simple" :open="false">
-    <x-slot name="summary">
-        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ __('5.1 Confrontantes e banheiros') }}</span>
-    </x-slot>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <!-- Confrontantes e banheiros (anteriormente 5.1) merged into section 5 -->
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Vizinho frente') }}</label>
             <input type="text" name="socio[viz_frente]" value="{{ $sv('viz_frente') }}" class="v-input mt-1 w-full" maxlength="180" placeholder="{{ __('Nome, referência ou imóvel') }}">
