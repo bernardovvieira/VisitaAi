@@ -266,6 +266,9 @@ class RelatorioController extends Controller
         ]);
         $localIdsPermitidos = $this->aplicarEscopoGestorEmVisitas($query);
 
+        // Forçar limite a 1 visita diretamente na query (modo de teste rápido)
+        $query->limit(1);
+
         $localIdsSolicitados = array_values(array_filter(array_map('intval', (array) $request->input('local_id', []))));
         $localIdsPdf = array_values(array_intersect($localIdsSolicitados, $localIdsPermitidos));
 
