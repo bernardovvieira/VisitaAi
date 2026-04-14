@@ -46,33 +46,13 @@
     </div>
 </div>
 
-<!-- Footer placeholder (dompdf will draw text using PHP script for accurate page numbers) -->
+<!-- Footer placeholder: server-side drawing will add texts -->
 <div class="footer">
     <div style="display:flex; justify-content:space-between; align-items:center; font-size:9pt; color:#555;">
-        <div>Bitwise Technologies - Soluções digitais para eficiência e inovação</div>
-        <div><!-- page numbers rendered by dompdf script --></div>
+        <div></div>
+        <div></div>
     </div>
 </div>
-
-<script type="text/php">
-    if (isset($pdf)) {
-        // debug log so you can see if dompdf executed this script in the PHP error log
-        @error_log('dompdf: running page_text script for ficha_socioeconomica ' . ($local->loc_codigo_unico ?? 'no-local'));
-        $font = $fontMetrics->getFont('dejavu sans', 'normal');
-        if (! $font) {
-            $font = $fontMetrics->getFont(null, 'normal');
-        }
-        // place left footer text and right-aligned page number (align to footer row)
-        $y = $pdf->get_height() - 20; // adjust vertical position to match footer row
-        $pdf->page_text(40, $y, 'Bitwise Technologies - Soluções digitais para eficiência e inovação', $font, 8, array(0,0,0));
-        $text = 'Página {PAGE_NUM} / {PAGE_COUNT}';
-        $w = $fontMetrics->getTextWidth($text, $font, 8);
-        $x = $pdf->get_width() - $w - 40; // 40pt right padding
-        $pdf->page_text($x, $y, $text, $font, 8, array(0,0,0));
-        // debug: render a short visible marker if this script runs
-        $pdf->page_text(40, $y - 12, 'DEBUG: page_text executed', $font, 6, array(1,0,0));
-    }
-</script>
 
 @php
     use App\Support\SocioeconomicoEtiquetas as SE;
