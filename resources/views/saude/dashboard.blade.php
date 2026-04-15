@@ -8,6 +8,7 @@
     $primeiroNome = strtok((string) Auth::user()->use_nome, ' ') ?: Auth::user()->use_nome;
     $uid = Auth::user()->use_id;
     $visitasRegistradas = \App\Models\Visita::where('fk_usuario_id', $uid)->where('vis_atividade', '7')->count();
+    $imoveisNoSistema = \App\Models\Local::count();
     $doencasCount = \App\Models\Doenca::count();
 @endphp
 
@@ -24,11 +25,16 @@
 
     <section class="v-dash-card" aria-labelledby="saude-resumo-heading">
         <h2 id="saude-resumo-heading" class="v-dash-card__title">{{ __('Resumo') }}</h2>
-        <div class="v-kpi-grid-agi mt-4">
+        <div class="v-kpi-grid-agi v-kpi-grid-agi--dense mt-4">
             <div class="v-kpi-card-agi">
                 <span class="v-kpi-card-agi__label">{{ __('Visitas registradas') }}</span>
                 <span class="v-kpi-card-agi__value">{{ $visitasRegistradas }}</span>
                 <span class="v-kpi-card-agi__hint">{{ __('Registradas por você') }}</span>
+            </div>
+            <div class="v-kpi-card-agi">
+                <span class="v-kpi-card-agi__label">{{ __('Imóveis no sistema') }}</span>
+                <span class="v-kpi-card-agi__value">{{ $imoveisNoSistema }}</span>
+                <span class="v-kpi-card-agi__hint">{{ __('Números consolidados do município.') }}</span>
             </div>
             <div class="v-kpi-card-agi">
                 <span class="v-kpi-card-agi__label">{{ __('Doenças monitoradas') }}</span>
