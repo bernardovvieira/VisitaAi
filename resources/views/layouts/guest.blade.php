@@ -15,35 +15,35 @@
             $routeName = request()->route()?->getName();
             $authMeta = match (true) {
                 in_array($routeName, ['login', 'login.store'], true) => [
-                    'title' => config('app.brand').' · '.__('Login'),
+                    'title' => config('app.name').' · '.__('Login'),
                     'desc' => __('Acesse o sistema Visita Aí com CPF ou e-mail. Área de gestores, ACE e ACS.'),
                 ],
                 $routeName === 'register' => [
-                    'title' => config('app.brand').' · '.__('Cadastro'),
+                    'title' => config('app.name').' · '.__('Cadastro'),
                     'desc' => __('Cadastre-se no Visita Aí para atuar como ACE (Agente de Combate às Endemias) ou ACS (Agente Comunitário de Saúde), conforme Lei 11.350/2006.'),
                 ],
                 $routeName === 'password.request' => [
-                    'title' => config('app.brand').' · '.__('Esqueci a Senha'),
+                    'title' => config('app.name').' · '.__('Esqueci a Senha'),
                     'desc' => __('Recupere o acesso ao sistema Visita Aí pelo e-mail.'),
                 ],
                 $routeName === 'password.reset' => [
-                    'title' => config('app.brand').' · '.__('Redefinir Senha'),
+                    'title' => config('app.name').' · '.__('Redefinir Senha'),
                     'desc' => __('Defina uma nova senha para sua conta no Visita Aí.'),
                 ],
                 $routeName === 'verification.notice' => [
-                    'title' => config('app.brand').' · '.__('Verificar E-mail'),
+                    'title' => config('app.name').' · '.__('Verificar E-mail'),
                     'desc' => __('Confirme seu e-mail para ativar sua conta no Visita Aí.'),
                 ],
                 in_array($routeName, ['two-factor.login', 'two-factor.login.store'], true) => [
-                    'title' => config('app.brand').' · '.__('Código de autenticação'),
+                    'title' => config('app.name').' · '.__('Código de autenticação'),
                     'desc' => __('Confirme o login com o código de 6 dígitos do aplicativo autenticador.'),
                 ],
                 $routeName === 'pendente' => [
-                    'title' => config('app.brand').' · '.__('Conta Pendente'),
+                    'title' => config('app.name').' · '.__('Conta Pendente'),
                     'desc' => __('Sua conta está aguardando aprovação do gestor municipal.'),
                 ],
                 default => [
-                    'title' => config('app.brand').' · '.__('Acesso'),
+                    'title' => config('app.name').' · '.__('Acesso'),
                     'desc' => __('Acesse o sistema Visita Aí. Painéis e indicadores municipais; operação em campo; transparência por código. Vigilância entomológica e PNCD quando o município adota.'),
                 ],
             };
@@ -66,7 +66,7 @@
         <meta property="og:image:width" content="1145">
         <meta property="og:image:height" content="722">
         <meta property="og:image:type" content="image/svg+xml">
-        <meta property="og:site_name" content="{{ config('app.brand') }}">
+        <meta property="og:site_name" content="Visita Aí">
         <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'pt_BR' }}">
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
@@ -83,8 +83,9 @@
             (function () {
                 var themeColorMeta = document.getElementById('theme-color-dynamic');
                 function applyThemeColor(on) {
-                    if (!themeColorMeta) return;
-                    themeColorMeta.setAttribute('content', on ? '#030712' : '#f8fafc');
+                    var color = on ? '#030712' : '#f8fafc';
+                    var metas = document.querySelectorAll('meta[name="theme-color"]');
+                    metas.forEach(function (m) { try { m.setAttribute('content', color); } catch (e) {} });
                 }
                 function applyDark(on) {
                     document.documentElement.classList.toggle('dark', !!on);

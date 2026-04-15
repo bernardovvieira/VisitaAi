@@ -14,7 +14,7 @@
 
         @php
             $ogTitle = trim((string) ($__env->yieldContent('og_title') ?? ''));
-            $ogTitle = $ogTitle ?: config('app.brand');
+            $ogTitle = $ogTitle ?: config('app.name');
             $ogDescription = trim((string) ($__env->yieldContent('og_description') ?? ''));
             $ogDescription = $ogDescription ?: __('Plataforma municipal: indicadores e painéis com abrangência ampla, alimentados por cadastro de imóveis e visitas de campo. Vigilância entomológica, LIRAa e PNCD são funções especializadas quando o município adota. Consulta pública por código, sem dados clínicos.');
             $ogImage = trim((string) ($__env->yieldContent('og_image') ?? ''));
@@ -37,7 +37,7 @@
         <meta property="og:image:width" content="1145">
         <meta property="og:image:height" content="722">
         <meta property="og:image:type" content="image/svg+xml">
-        <meta property="og:site_name" content="{{ config('app.brand') }}">
+        <meta property="og:site_name" content="Visita Aí">
         <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'pt_BR' }}">
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
@@ -75,8 +75,6 @@
                     $dashPath,
                     parse_url(route('saude.visitas.index'), PHP_URL_PATH),
                     parse_url(route('saude.visitas.create'), PHP_URL_PATH),
-                    parse_url(route('saude.locais.index'), PHP_URL_PATH),
-                    parse_url(route('saude.locais.create'), PHP_URL_PATH),
                 ];
             } elseif ($u->isGestor()) {
                 $visitaOfflineRedirect = route('dashboard');
@@ -106,8 +104,9 @@
             (function () {
                 var themeColorMeta = document.getElementById('theme-color-dynamic');
                 function applyThemeColor(on) {
-                    if (!themeColorMeta) return;
-                    themeColorMeta.setAttribute('content', on ? '#030712' : '#f8fafc');
+                    var color = on ? '#030712' : '#f8fafc';
+                    var metas = document.querySelectorAll('meta[name="theme-color"]');
+                    metas.forEach(function (m) { try { m.setAttribute('content', color); } catch (e) {} });
                 }
                 function applyDark(on) {
                     document.documentElement.classList.toggle('dark', !!on);
