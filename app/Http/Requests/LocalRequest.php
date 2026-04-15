@@ -139,7 +139,7 @@ class LocalRequest extends FormRequest
             ],
             'loc_tipo' => ['required', Rule::in(['R', 'C', 'T'])], // R-Residencial, C-Comercial, T-Terreno Baldio (conformidade PNCD)
             'loc_quarteirao' => ['nullable', 'string', 'max:50'],
-            'loc_endereco' => ['required', 'string', 'max:255', "unique:locais,loc_endereco,{$localId},loc_id"],
+            'loc_endereco' => ['required', 'string', 'max:255', Rule::unique('locais', 'loc_endereco')->ignore($localId, 'loc_id')],
             'loc_numero' => ['nullable', 'string', 'max:20'],
             'loc_bairro' => ['required', 'string', 'max:100'],
             'loc_cidade' => ['required', 'string', 'max:100'],
