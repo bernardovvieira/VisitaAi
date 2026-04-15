@@ -137,9 +137,10 @@
                 <legend class="v-section-title mb-2">Complementos</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <x-input-label for="loc_codigo" :value="__('Código da Localidade')" :required="true" />
+                        <x-input-label for="loc_codigo" :value="__('Código da Localidade (IBGE)')" :required="true" />
                         <input id="loc_codigo" name="loc_codigo" type="number" value="{{ old('loc_codigo') }}" required
                             class="v-input mt-1">
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Preenchido automaticamente pelo CEP com o código IBGE da localidade.') }}</p>
                     </div>
                     <div>
                         <x-input-label for="loc_categoria" :value="__('Categoria da Localidade')" />
@@ -435,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function clearCepAddressFields() {
-        var ids = ['loc_endereco', 'loc_bairro', 'loc_cidade', 'loc_estado', 'loc_pais'];
+        var ids = ['loc_endereco', 'loc_bairro', 'loc_cidade', 'loc_estado', 'loc_pais', 'loc_codigo'];
         ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
     }
     function applyCepData(data, msgEl, skipLogradouroBairro) {
@@ -460,6 +461,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var el = document.getElementById('loc_cidade'); if (el) el.value = data.localidade || '';
         el = document.getElementById('loc_estado'); if (el) el.value = data.uf || '';
         el = document.getElementById('loc_pais'); if (el) el.value = 'Brasil';
+        var codigoIbge = (data.ibge || '').toString().replace(/\D/g, '');
+        if (codigoIbge) {
+            el = document.getElementById('loc_codigo');
+            if (el) el.value = codigoIbge;
+        }
         var cepNorm = normCep((document.getElementById('loc_cep') && document.getElementById('loc_cep').value) || '');
         if (data.latitude != null && data.longitude != null && !isNaN(parseFloat(data.latitude)) && !isNaN(parseFloat(data.longitude))) {
             if (typeof window.setMapPosition === 'function') window.setMapPosition(parseFloat(data.latitude), parseFloat(data.longitude));

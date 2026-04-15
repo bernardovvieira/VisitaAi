@@ -87,8 +87,8 @@
                     /[^a-zA-Z0-9]/.test(val)
                 ].filter(Boolean).length;
                 bar.style.width = (n * 20) + '%';
-                bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-blue-500');
-                bar.classList.add(n >= 5 ? 'bg-blue-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
+                bar.classList.remove('bg-red-500', 'bg-amber-500', 'bg-emerald-500');
+                bar.classList.add(n >= 5 ? 'bg-emerald-500' : n >= 3 ? 'bg-amber-500' : 'bg-red-500');
             }
             pwd.addEventListener('input', updateStrength);
             pwd.addEventListener('change', updateStrength);
@@ -104,7 +104,7 @@
                 matchFeedback.classList.remove('hidden');
                 if (p === c) {
                     matchFeedback.textContent = msgOk || '';
-                    matchFeedback.className = 'mt-1 text-sm text-blue-600 dark:text-blue-400';
+                    matchFeedback.className = 'mt-1 text-sm text-emerald-600 dark:text-emerald-400';
                 } else {
                     matchFeedback.textContent = msgBad || '';
                     matchFeedback.className = 'mt-1 text-sm text-red-600 dark:text-red-400';
