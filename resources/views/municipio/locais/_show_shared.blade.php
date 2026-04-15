@@ -20,6 +20,13 @@
     };
     $numeroExibicao = $local->loc_numero !== null && $local->loc_numero !== '' ? $local->loc_numero : $sn;
     $socio = $local->socioeconomico;
+
+    $urlDocPosseImovel = null;
+    if ($local->loc_documento_posse_path) {
+        $urlDocPosseImovel = auth()->user()->isGestor()
+            ? route('gestor.locais.documento-posse', $local)
+            : route('agente.locais.documento-posse', $local);
+    }
 @endphp
 
 <x-section-card class="space-y-5">
@@ -90,22 +97,25 @@
                         @endif
                     </dd>
                 </div>
-                @if($local->loc_documento_posse_path)
-                    @php
-                        $urlDocPosse = auth()->user()->isGestor()
-                            ? route('gestor.locais.documento-posse', $local)
-                            : route('agente.locais.documento-posse', $local);
-                    @endphp
-                    <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
-                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Contrato / matrícula / escritura') }}</dt>
-                        <dd class="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-800 dark:text-slate-100">
-                            <span class="break-all">{{ $local->loc_documento_posse_nome ?: __('Documento anexado') }}</span>
-                            <a href="{{ $urlDocPosse }}" class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                                {{ __('Baixar') }}
-                            </a>
-                        </dd>
-                    </div>
-                @endif
+                <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Contrato, matrícula ou escritura') }}</dt>
+                    <dd class="mt-1 text-sm text-slate-800 dark:text-slate-100">
+                        @if($local->loc_documento_posse_path)
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
+                                <span class="break-all">{{ $local->loc_documento_posse_nome ?: __('Documento salvo') }}</span>
+                            </p>
+                            <div class="mt-2 flex flex-wrap items-center gap-2">
+                                <a href="{{ $urlDocPosseImovel }}"
+                                   class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                    {{ __('Baixar documento atual') }}
+                                </a>
+                            </div>
+                        @else
+                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Nenhum arquivo anexado.') }}</p>
+                        @endif
+                    </dd>
+                </div>
             </dl>
         </div>
 
@@ -156,10 +166,15 @@
 @php
     $t = config('visitaai_socioeconomico.secao_titulos', []);
 @endphp
-<x-section-card class="mt-5 space-y-4">
-    <h2 class="v-section-title">{{ __('Cadastro socioeconômico') }}</h2>
+<x-section-card class="mt-5 space-y-5">
+    <div>
+        <h2 class="v-section-title">{{ __('Cadastro socioeconômico') }}</h2>
+        <p class="mt-1.5 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            {{ __('Resumo e detalhes por secção da ficha complementar (entrevista, economia, imóvel, infraestrutura e histórico).') }}
+        </p>
+    </div>
     @if(! $socio)
-        <div class="rounded-lg border border-dashed border-slate-200/80 bg-slate-50/70 p-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
+        <div class="rounded-lg border border-dashed border-slate-200/80 bg-slate-50/70 p-5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
             {{ __('Nenhum cadastro socioeconômico foi informado para este imóvel.') }}
         </div>
     @else
@@ -217,6 +232,7 @@
                     'titulo' => $t['imovel_caracteristicas'] ?? __('5. Características do imóvel e cadastro físico'),
                     'itens' => [
                         [__('Uso'), SE::opcao('uso_imovel_socio_opcoes', $socio->lse_uso_imovel)],
+                        [__('Situação da posse'), SE::opcao('situacao_posse_opcoes', $socio->lse_situacao_posse)],
                         [__('Tipologia'), SE::opcao('tipologia_opcoes', $socio->lse_tipologia)],
                         [__('Tipo implantação'), SE::opcao('tipo_implantacao_opcoes', $socio->lse_tipo_implantacao)],
                         [__('Posição lote'), SE::opcao('posicao_lote_opcoes', $socio->lse_posicao_lote)],
@@ -279,26 +295,27 @@
             ];
         @endphp
 
-        <div class="rounded-xl border border-slate-200/80 bg-slate-50/60 p-3 dark:border-slate-700/80 dark:bg-slate-900/35">
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        <div class="rounded-xl border border-slate-200/90 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm dark:border-slate-700/90 dark:from-slate-900/50 dark:to-slate-900/30">
+            <p class="mb-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Resumo') }}</p>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 @foreach($resumoSocio as [$rotulo, $conteudo])
-                    <div class="rounded-lg border border-white/70 bg-white/90 px-3 py-2 shadow-sm dark:border-slate-700 dark:bg-slate-900/55">
+                    <div class="rounded-lg border border-slate-200/80 bg-white px-3.5 py-3 shadow-sm dark:border-slate-600 dark:bg-slate-900/70">
                         <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
-                        <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
+                        <dd class="mt-1.5 text-sm font-medium leading-snug text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
                     </div>
                 @endforeach
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             @foreach(array_slice($secoesSocio, 0, 2) as $sec)
-                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40">
-                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $sec['titulo'] }}</h4>
-                    <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
+                <div class="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/45">
+                    <h4 class="border-b border-slate-100 pb-2 text-sm font-semibold text-slate-800 dark:border-slate-700 dark:text-slate-200">{{ $sec['titulo'] }}</h4>
+                    <dl class="mt-3 space-y-3">
                         @foreach($sec['itens'] as [$rotulo, $conteudo])
-                            <div class="flex items-start justify-between gap-2">
-                                <dt class="text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
-                                <dd class="max-w-[12rem] break-words text-right text-slate-800 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
+                            <div>
+                                <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
+                                <dd class="mt-1 text-sm leading-relaxed text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
                             </div>
                         @endforeach
                     </dl>
@@ -306,20 +323,54 @@
             @endforeach
         </div>
 
-        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             @foreach(array_slice($secoesSocio, 2) as $sec)
-                <div class="rounded-lg border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-700/70 dark:bg-slate-900/40 {{ $sec['class'] ?? '' }}">
-                    <h4 class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ $sec['titulo'] }}</h4>
-                    <dl class="mt-2 grid grid-cols-1 gap-1.5 text-xs sm:grid-cols-2">
+                <div class="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/45 {{ $sec['class'] ?? '' }}">
+                    <h4 class="border-b border-slate-100 pb-2 text-sm font-semibold text-slate-800 dark:border-slate-700 dark:text-slate-200">{{ $sec['titulo'] }}</h4>
+                    <dl class="mt-3 space-y-3">
                         @foreach($sec['itens'] as [$rotulo, $conteudo])
-                            <div class="flex items-start justify-between gap-2">
-                                <dt class="text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
-                                <dd class="max-w-[12rem] break-words text-right text-slate-800 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
+                            <div>
+                                <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
+                                <dd class="mt-1 text-sm leading-relaxed text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
                             </div>
                         @endforeach
                     </dl>
                 </div>
             @endforeach
+        </div>
+    @endif
+</x-section-card>
+
+<x-section-card class="mt-5 space-y-4">
+    <div>
+        <h2 class="v-section-title">{{ __('Documentos anexados') }}</h2>
+        <p class="mt-1.5 text-sm text-slate-600 dark:text-slate-400">{{ __('Ficheiros enviados junto ao cadastro territorial deste imóvel.') }}</p>
+    </div>
+    @if($local->loc_documento_posse_path)
+        <ul class="space-y-3">
+            <li class="flex flex-col gap-3 rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm dark:border-slate-700/90 dark:bg-slate-900/50 sm:flex-row sm:items-center sm:justify-between">
+                <div class="min-w-0 flex-1">
+                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Contrato, matrícula ou escritura') }}</p>
+                    <p class="mt-1 break-all text-sm font-medium text-slate-900 dark:text-slate-100">{{ $local->loc_documento_posse_nome ?: __('Documento') }}</p>
+                    <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+                        @if($local->loc_documento_posse_mime)
+                            <span>{{ __('Tipo') }}: {{ $local->loc_documento_posse_mime }}</span>
+                        @endif
+                        @if($local->loc_documento_posse_tamanho)
+                            <span>{{ __('Tamanho') }}: {{ number_format(max(0, (int) $local->loc_documento_posse_tamanho) / 1024, 1, ',', ' ') }} KB</span>
+                        @endif
+                    </div>
+                </div>
+                <a href="{{ $urlDocPosseImovel }}"
+                   class="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
+                    <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {{ __('Baixar') }}
+                </a>
+            </li>
+        </ul>
+    @else
+        <div class="rounded-xl border border-dashed border-slate-200/90 bg-slate-50/70 p-5 text-center text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
+            {{ __('Nenhum documento de posse foi anexado a este imóvel.') }}
         </div>
     @endif
 </x-section-card>

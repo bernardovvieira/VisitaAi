@@ -10,9 +10,9 @@
     }
 @endphp
 
-<fieldset class="space-y-3">
-    <legend class="v-section-title mb-2">{{ __('Documento do imóvel (posse)') }}</legend>
-    <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('Contrato, matrícula ou escritura (opcional). Formatos: PDF ou imagem. Limite: 10 MB.') }}</p>
+<div class="space-y-2">
+    <p class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Contrato, matrícula ou escritura do imóvel') }}</p>
+    <p class="text-[11px] text-slate-500 dark:text-slate-400">{{ __('Opcional. PDF ou imagem. Limite: 10 MB.') }}</p>
 
     <div class="space-y-3 rounded-lg border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-700 dark:bg-slate-900/40"
          x-data="{
@@ -57,4 +57,4 @@
         <x-input-error :messages="$errors->get('loc_documento_posse')" class="mt-1" />
         <x-input-error :messages="$errors->get('remover_documento_posse')" class="mt-1" />
     </div>
-</fieldset>
+</div>

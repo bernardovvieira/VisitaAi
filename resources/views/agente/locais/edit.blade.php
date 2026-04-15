@@ -165,8 +165,6 @@
                 </div>
             </fieldset>
 
-            @include('municipio.locais._form_local_documento_posse', ['local' => $local])
-
     </x-section-card>
 
     <x-section-card class="space-y-4">

@@ -37,6 +37,9 @@
                 @endforeach
             </select>
         </div>
+        <div class="sm:col-span-2 border-t border-slate-200 pt-4 mt-1 dark:border-slate-600">
+            @include('municipio.locais._form_local_documento_posse', ['local' => $local ?? null])
+        </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipologia') }}</label>
             <select name="socio[tipologia]" class="v-select mt-1 w-full">
