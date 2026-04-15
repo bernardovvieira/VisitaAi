@@ -2,11 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Doenca;
 use App\Models\Local;
 use App\Models\Morador;
 use App\Models\User;
-use App\Models\Visita;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use PHPUnit\Framework\Attributes\Test;
@@ -270,11 +268,6 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
             'use_aprovado' => true,
         ]);
 
-        $agente = User::factory()->create([
-            'use_perfil' => 'agente_endemias',
-            'use_aprovado' => true,
-        ]);
-
         // Gestor pode acessar painel de gestão
         $this->actingAs($gestor)
             ->get(route('gestor.dashboard'))
@@ -338,6 +331,12 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
 
         $local = Local::factory()->create();
 
+        $agente = User::factory()->create([
+            'use_perfil' => 'agente_endemias',
+            'use_aprovado' => true,
+            'fk_gestor_id' => $gestor->use_id,
+        ]);
+
         // === CRIAR MORADOR ===
         $moradorPayload = [
             'mor_nome' => 'João Silva',
@@ -372,12 +371,12 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
 
         $morador->refresh();
         $this->assertEquals('João Silva Santos', $morador->mor_nome);
-        
+
         // Se houver documento anexado, deve estar salvo
         if ($morador->mor_documento_pessoal_path) {
             $this->assertNotEmpty($morador->mor_documento_pessoal_nome);
             $this->assertGreaterThan(0, $morador->mor_documento_pessoal_tamanho);
-            
+
             // === FAZER DOWNLOAD DO DOCUMENTO ===
             // Gestor should be able to download the document
             $response = $this->actingAs($gestor)
