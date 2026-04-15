@@ -143,18 +143,6 @@ class LocalRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) use ($localId) {
-                    $normalized = mb_strtolower(trim((string) $value), 'UTF-8');
-                    $q = Local::query()
-                        ->whereRaw('LOWER(TRIM(loc_endereco)) = ?', [$normalized]);
-                    if ($localId) {
-                        $q->where('loc_id', '!=', $localId);
-                    }
-                    $existing = $q->orderBy('loc_id')->first();
-                    if ($existing) {
-                        $fail(__('Este endereço já está em uso por outro registro (ID: :id).', ['id' => $existing->loc_id]));
-                    }
-                },
             ],
             'loc_numero' => ['nullable', 'string', 'max:20'],
             'loc_bairro' => ['required', 'string', 'max:100'],
@@ -213,6 +201,19 @@ class LocalRequest extends FormRequest
 
     public function withValidator($validator): void
     {
+        $validator->after(function ($validator) {
+            if (! $validator->errors()->hasAny(['loc_endereco', 'loc_numero', 'loc_bairro', 'loc_cidade', 'loc_estado'])) {
+                $excludeId = $this->editingLocalId();
+                $conflictId = $this->findConflictingLocalIdByEnderecoTerritorial($excludeId);
+                if ($conflictId !== null) {
+                    $validator->errors()->add(
+                        'loc_endereco',
+                        __('Já existe outro imóvel com o mesmo endereço (logradouro, número, bairro, cidade e UF). Registro em conflito: ID :id.', ['id' => $conflictId])
+                    );
+                }
+            }
+        });
+
         $validator->after(function ($validator) {
             $rewrite = function (string $key) use ($validator): void {
                 if (! $validator->errors()->has($key)) {
@@ -352,12 +353,71 @@ class LocalRequest extends FormRequest
      */
     private function editingLocalId(): ?int
     {
-        $param = $this->route('local');
+        $param = $this->route()?->parameter('local');
         if ($param instanceof Local) {
             return (int) $param->loc_id;
         }
         if (is_numeric($param)) {
             return (int) $param;
+        }
+        $path = (string) $this->path();
+        if (preg_match('#/locais/(\d+)(?:/|$|\?)#', $path, $m)) {
+            return (int) $m[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * Mesmo critério de número que o LocalController ao persistir (inteiro ou null).
+     */
+    private function normalizeLocNumeroInput(mixed $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        $s = is_string($value) ? trim($value) : (string) $value;
+        if ($s === '' || strtoupper($s) === 'N/A' || strtoupper($s) === 'S/N') {
+            return null;
+        }
+
+        return is_numeric($s) ? (int) $s : null;
+    }
+
+    /**
+     * Outro local com o mesmo endereço territorial (exclui o registro em edição).
+     */
+    private function findConflictingLocalIdByEnderecoTerritorial(?int $excludeLocId): ?int
+    {
+        $end = mb_strtolower(trim((string) $this->input('loc_endereco', '')), 'UTF-8');
+        $bairro = mb_strtolower(trim((string) $this->input('loc_bairro', '')), 'UTF-8');
+        $cidadeNorm = $this->normalizeStr(trim((string) $this->input('loc_cidade', '')));
+        $estado = strtoupper(trim((string) $this->input('loc_estado', '')));
+        $numero = $this->normalizeLocNumeroInput($this->input('loc_numero'));
+
+        if ($end === '' || $bairro === '' || $cidadeNorm === '' || $estado === '') {
+            return null;
+        }
+
+        $q = Local::query()
+            ->whereRaw('LOWER(TRIM(loc_endereco)) = ?', [$end])
+            ->whereRaw('LOWER(TRIM(loc_bairro)) = ?', [$bairro])
+            ->whereRaw('UPPER(TRIM(loc_estado)) = ?', [$estado]);
+
+        if ($excludeLocId) {
+            $q->where('loc_id', '!=', $excludeLocId);
+        }
+
+        foreach ($q->get(['loc_id', 'loc_cidade', 'loc_numero']) as $row) {
+            if ($this->normalizeStr((string) ($row->loc_cidade ?? '')) !== $cidadeNorm) {
+                continue;
+            }
+            $dbNum = $row->loc_numero !== null ? (int) $row->loc_numero : null;
+            if ($dbNum !== $numero) {
+                continue;
+            }
+
+            return (int) $row->loc_id;
         }
 
         return null;
