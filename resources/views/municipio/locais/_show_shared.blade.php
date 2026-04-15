@@ -166,15 +166,13 @@
 @php
     $t = config('visitaai_socioeconomico.secao_titulos', []);
 @endphp
-<x-section-card class="mt-5 space-y-5">
+<x-section-card class="mt-5 space-y-3">
     <div>
         <h2 class="v-section-title">{{ __('Cadastro socioeconômico') }}</h2>
-        <p class="mt-1.5 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-            {{ __('Resumo e detalhes por secção da ficha complementar (entrevista, economia, imóvel, infraestrutura e histórico).') }}
-        </p>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Abra cada bloco para ver o detalhe. O resumo abaixo reúne os principais indicadores.') }}</p>
     </div>
     @if(! $socio)
-        <div class="rounded-lg border border-dashed border-slate-200/80 bg-slate-50/70 p-5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
+        <div class="rounded-lg border border-dashed border-slate-200/80 bg-slate-50/70 p-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-400">
             {{ __('Nenhum cadastro socioeconômico foi informado para este imóvel.') }}
         </div>
     @else
@@ -295,47 +293,38 @@
             ];
         @endphp
 
-        <div class="rounded-xl border border-slate-200/90 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm dark:border-slate-700/90 dark:from-slate-900/50 dark:to-slate-900/30">
-            <p class="mb-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Resumo') }}</p>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div class="rounded-lg border border-slate-200/90 bg-slate-50/80 px-3 py-2.5 dark:border-slate-700/90 dark:bg-slate-900/40">
+            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Resumo') }}</p>
+            <div class="flex flex-wrap gap-x-3 gap-y-1.5 text-[11px] leading-tight text-slate-800 dark:text-slate-200">
                 @foreach($resumoSocio as [$rotulo, $conteudo])
-                    <div class="rounded-lg border border-slate-200/80 bg-white px-3.5 py-3 shadow-sm dark:border-slate-600 dark:bg-slate-900/70">
-                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
-                        <dd class="mt-1.5 text-sm font-medium leading-snug text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
-                    </div>
+                    <span class="inline-flex max-w-full items-baseline gap-1 rounded-md border border-slate-200/90 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-900/80">
+                        <span class="shrink-0 font-semibold text-slate-500 dark:text-slate-400">{{ $rotulo }}:</span>
+                        <span class="min-w-0 break-words font-medium">{{ $valor($conteudo) }}</span>
+                    </span>
                 @endforeach
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            @foreach(array_slice($secoesSocio, 0, 2) as $sec)
-                <div class="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/45">
-                    <h4 class="border-b border-slate-100 pb-2 text-sm font-semibold text-slate-800 dark:border-slate-700 dark:text-slate-200">{{ $sec['titulo'] }}</h4>
-                    <dl class="mt-3 space-y-3">
-                        @foreach($sec['itens'] as [$rotulo, $conteudo])
-                            <div>
-                                <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
-                                <dd class="mt-1 text-sm leading-relaxed text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
-                            </div>
-                        @endforeach
-                    </dl>
-                </div>
-            @endforeach
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            @foreach(array_slice($secoesSocio, 2) as $sec)
-                <div class="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/45 {{ $sec['class'] ?? '' }}">
-                    <h4 class="border-b border-slate-100 pb-2 text-sm font-semibold text-slate-800 dark:border-slate-700 dark:text-slate-200">{{ $sec['titulo'] }}</h4>
-                    <dl class="mt-3 space-y-3">
-                        @foreach($sec['itens'] as [$rotulo, $conteudo])
-                            <div>
-                                <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
-                                <dd class="mt-1 text-sm leading-relaxed text-slate-900 dark:text-slate-100">{{ $valor($conteudo) }}</dd>
-                            </div>
-                        @endforeach
-                    </dl>
-                </div>
+        <div class="space-y-1.5">
+            @foreach($secoesSocio as $sec)
+                <details class="group rounded-lg border border-slate-200/90 bg-white dark:border-slate-700/90 dark:bg-slate-900/50 {{ $sec['class'] ?? '' }}">
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2 text-xs font-semibold text-slate-800 marker:hidden dark:text-slate-200 [&::-webkit-details-marker]:hidden">
+                        <span class="min-w-0">{{ $sec['titulo'] }}</span>
+                        <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.24 4.5a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </summary>
+                    <div class="border-t border-slate-100 px-3 pb-2.5 pt-0 dark:border-slate-700/80">
+                        <dl class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                            @foreach($sec['itens'] as [$rotulo, $conteudo])
+                                <div class="grid grid-cols-1 gap-0.5 py-1.5 text-[11px] sm:grid-cols-[minmax(0,11rem)_minmax(0,1fr)] sm:gap-x-3 sm:py-1.5">
+                                    <dt class="font-medium text-slate-500 dark:text-slate-400">{{ $rotulo }}</dt>
+                                    <dd class="min-w-0 break-words text-slate-900 dark:text-slate-100 sm:text-right">{{ $valor($conteudo) }}</dd>
+                                </div>
+                            @endforeach
+                        </dl>
+                    </div>
+                </details>
             @endforeach
         </div>
     @endif
