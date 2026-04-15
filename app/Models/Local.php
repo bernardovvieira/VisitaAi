@@ -35,6 +35,10 @@ class Local extends Model
         'loc_codigo',
         'loc_codigo_unico',
         'loc_responsavel_nome',
+        'loc_documento_posse_path',
+        'loc_documento_posse_nome',
+        'loc_documento_posse_mime',
+        'loc_documento_posse_tamanho',
     ];
 
     public function visitas()

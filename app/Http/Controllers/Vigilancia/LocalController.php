@@ -216,6 +216,7 @@ class LocalController extends Controller
         unset($data['ocupantes']);
         $socio = array_key_exists('socio', $data) ? ($data['socio'] ?? []) : null;
         unset($data['socio']);
+        unset($data['loc_documento_posse'], $data['remover_documento_posse']);
 
         do {
             $codigo = mt_rand(10000000, 99999999);
@@ -225,6 +226,15 @@ class LocalController extends Controller
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
 
         $local = Local::create($data);
+        if ($request->hasFile('loc_documento_posse')) {
+            try {
+                $local->update($this->uploadLocDocumentoPosse($request->file('loc_documento_posse')));
+            } catch (\RuntimeException $e) {
+                throw ValidationException::withMessages([
+                    'loc_documento_posse' => [$e->getMessage()],
+                ]);
+            }
+        }
         $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : [], is_array($ocupantesFiles) ? $ocupantesFiles : []);
         if (is_array($socio)) {
             $this->persistSocioeconomicoNoLocal($local, $socio);
@@ -319,6 +329,26 @@ class LocalController extends Controller
         unset($data['ocupantes']);
         $socio = array_key_exists('socio', $data) ? ($data['socio'] ?? []) : null;
         unset($data['socio']);
+        unset($data['loc_documento_posse'], $data['remover_documento_posse']);
+
+        $removePosse = $request->boolean('remover_documento_posse');
+        if ($request->hasFile('loc_documento_posse')) {
+            try {
+                $data = array_merge($data, $this->uploadLocDocumentoPosse($request->file('loc_documento_posse')));
+                $this->deleteLocDocumentoPosse($local);
+            } catch (\RuntimeException $e) {
+                throw ValidationException::withMessages([
+                    'loc_documento_posse' => [$e->getMessage()],
+                ]);
+            }
+        } elseif ($removePosse) {
+            $this->deleteLocDocumentoPosse($local);
+            $data['loc_documento_posse_path'] = null;
+            $data['loc_documento_posse_nome'] = null;
+            $data['loc_documento_posse_mime'] = null;
+            $data['loc_documento_posse_tamanho'] = null;
+        }
+
         $data['loc_numero'] = $this->normalizeLocNumero($data['loc_numero'] ?? null);
         $local->update($data);
         $this->persistOcupantesNoLocal($local, is_array($ocupantes) ? $ocupantes : [], is_array($ocupantesFiles) ? $ocupantesFiles : []);
@@ -361,6 +391,7 @@ class LocalController extends Controller
 
         $descricao = $local->loc_endereco.', '.($local->loc_numero ?? 'S/N');
 
+        $this->deleteLocDocumentoPosse($local);
         $local->delete();
 
         LogHelper::registrar(
@@ -527,6 +558,28 @@ class LocalController extends Controller
         return $pdf->download('ficha-socioeconomica-'.$safeCode.'.pdf');
     }
 
+    public function downloadDocumentoPosse(Local $local)
+    {
+        $this->authorize('view', $local);
+
+        $path = str_replace('\\', '/', ltrim((string) ($local->loc_documento_posse_path ?? ''), '/'));
+        if ($path === '' || str_contains($path, '..') || ! str_starts_with($path, 'locais/documentos-posse/')) {
+            abort(404);
+        }
+
+        if (! Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+
+        $downloadName = (string) ($local->loc_documento_posse_nome ?: ('documento-posse-imovel-'.$local->loc_id));
+        $downloadName = trim((string) preg_replace('/[\r\n]+/', '', $downloadName));
+        if ($downloadName === '') {
+            $downloadName = 'documento-posse-imovel-'.$local->loc_id;
+        }
+
+        return response()->download(Storage::disk('local')->path($path), $downloadName);
+    }
+
     /**
      * @param  array<string, mixed>  $socio
      */
@@ -685,6 +738,32 @@ class LocalController extends Controller
     private function deleteDocumentoPessoal(Morador $morador): void
     {
         $path = (string) ($morador->mor_documento_pessoal_path ?? '');
+        if ($path !== '' && Storage::disk('local')->exists($path)) {
+            Storage::disk('local')->delete($path);
+        }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uploadLocDocumentoPosse(UploadedFile $file): array
+    {
+        $path = $file->store('locais/documentos-posse', 'local');
+        if ($path === false || $path === '') {
+            throw new \RuntimeException(__('Não foi possível gravar o documento do imóvel. Verifique permissões de armazenamento.'));
+        }
+
+        return [
+            'loc_documento_posse_path' => $path,
+            'loc_documento_posse_nome' => $file->getClientOriginalName(),
+            'loc_documento_posse_mime' => $file->getClientMimeType() ?: $file->getMimeType(),
+            'loc_documento_posse_tamanho' => $file->getSize(),
+        ];
+    }
+
+    private function deleteLocDocumentoPosse(Local $local): void
+    {
+        $path = (string) ($local->loc_documento_posse_path ?? '');
         if ($path !== '' && Storage::disk('local')->exists($path)) {
             Storage::disk('local')->delete($path);
         }

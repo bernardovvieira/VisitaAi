@@ -190,6 +190,10 @@
                 </x-form-field>
 
                 @if($morador->exists && $morador->mor_documento_pessoal_path)
+                    <p class="text-xs text-slate-700 dark:text-slate-200">
+                        <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
+                        <span class="break-all">{{ $morador->mor_documento_pessoal_nome ?: __('Documento salvo') }}</span>
+                    </p>
                     <div class="flex flex-wrap items-center gap-3 text-xs">
                         <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $morador]) }}"
                            class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">

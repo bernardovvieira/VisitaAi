@@ -90,6 +90,22 @@
                         @endif
                     </dd>
                 </div>
+                @if($local->loc_documento_posse_path)
+                    @php
+                        $urlDocPosse = auth()->user()->isGestor()
+                            ? route('gestor.locais.documento-posse', $local)
+                            : route('agente.locais.documento-posse', $local);
+                    @endphp
+                    <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
+                        <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Contrato / matrícula / escritura') }}</dt>
+                        <dd class="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-800 dark:text-slate-100">
+                            <span class="break-all">{{ $local->loc_documento_posse_nome ?: __('Documento anexado') }}</span>
+                            <a href="{{ $urlDocPosse }}" class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                {{ __('Baixar') }}
+                            </a>
+                        </dd>
+                    </div>
+                @endif
             </dl>
         </div>
 

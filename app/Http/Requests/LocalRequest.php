@@ -34,30 +34,42 @@ class LocalRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $all = $this->files->all();
-        if (! isset($all['ocupantes']) || ! is_array($all['ocupantes'])) {
-            return;
-        }
+        $touched = false;
 
-        foreach ($all['ocupantes'] as $i => $row) {
-            if (! is_array($row) || ! isset($row['mor_documento_pessoal'])) {
-                continue;
-            }
-            $f = $row['mor_documento_pessoal'];
-            if ($f instanceof SymfonyUploadedFile
-                && ! $f->isValid()
-                && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
-                unset($all['ocupantes'][$i]['mor_documento_pessoal']);
+        if (isset($all['loc_documento_posse']) && $all['loc_documento_posse'] instanceof SymfonyUploadedFile) {
+            $f = $all['loc_documento_posse'];
+            if (! $f->isValid() && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                unset($all['loc_documento_posse']);
+                $touched = true;
             }
         }
 
-        $this->files->replace($all);
-        $this->convertedFiles = null;
+        if (isset($all['ocupantes']) && is_array($all['ocupantes'])) {
+            foreach ($all['ocupantes'] as $i => $row) {
+                if (! is_array($row) || ! isset($row['mor_documento_pessoal'])) {
+                    continue;
+                }
+                $f = $row['mor_documento_pessoal'];
+                if ($f instanceof SymfonyUploadedFile
+                    && ! $f->isValid()
+                    && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                    unset($all['ocupantes'][$i]['mor_documento_pessoal']);
+                    $touched = true;
+                }
+            }
+        }
+
+        if ($touched) {
+            $this->files->replace($all);
+            $this->convertedFiles = null;
+        }
     }
 
     public function attributes(): array
     {
         return [
             'ocupantes.*.mor_documento_pessoal' => __('documento pessoal do ocupante'),
+            'loc_documento_posse' => __('contrato, matrícula ou escritura do imóvel'),
         ];
     }
 
@@ -66,6 +78,8 @@ class LocalRequest extends FormRequest
         return [
             'ocupantes.*.mor_documento_pessoal.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
             'ocupantes.*.mor_documento_pessoal.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
+            'loc_documento_posse.max' => __('O documento do imóvel não pode ter mais de 10 MB.'),
+            'loc_documento_posse.mimes' => __('O documento do imóvel tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
         ];
     }
 
@@ -141,6 +155,13 @@ class LocalRequest extends FormRequest
             'loc_codigo' => ['required', 'string'],
             'loc_codigo_unico' => ['nullable', 'string', 'max:255', "unique:locais,loc_codigo_unico,{$localId},loc_id"],
             'loc_responsavel_nome' => ['nullable', 'string', 'max:255'],
+            'loc_documento_posse' => [
+                'nullable',
+                'file',
+                'max:10240',
+                'mimes:pdf,jpeg,jpg,png,webp,heic,heif',
+            ],
+            'remover_documento_posse' => ['nullable', 'boolean'],
 
             'ocupantes' => ['nullable', 'array', 'max:30'],
             'ocupantes.*.mor_id' => ['nullable', 'integer'],
@@ -177,31 +198,36 @@ class LocalRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $ocupantes = $this->input('ocupantes', []);
-            if (! is_array($ocupantes)) {
-                return;
-            }
-            foreach (array_keys($ocupantes) as $i) {
-                $key = "ocupantes.$i.mor_documento_pessoal";
+            $rewrite = function (string $key) use ($validator): void {
                 if (! $validator->errors()->has($key)) {
-                    continue;
+                    return;
                 }
                 $f = $this->file($key);
                 if (! $f instanceof SymfonyUploadedFile || $f->isValid()) {
-                    continue;
+                    return;
                 }
                 $code = (int) $f->getError();
                 if ($code === UPLOAD_ERR_NO_FILE) {
                     $validator->errors()->forget($key);
 
-                    continue;
+                    return;
                 }
                 $msg = UploadErrorMessage::forPhpUploadError($code);
                 if ($msg === '') {
-                    continue;
+                    return;
                 }
                 $validator->errors()->forget($key);
                 $validator->errors()->add($key, $msg);
+            };
+
+            $rewrite('loc_documento_posse');
+
+            $ocupantes = $this->input('ocupantes', []);
+            if (! is_array($ocupantes)) {
+                return;
+            }
+            foreach (array_keys($ocupantes) as $i) {
+                $rewrite("ocupantes.$i.mor_documento_pessoal");
             }
         });
 

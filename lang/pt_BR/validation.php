@@ -119,6 +119,7 @@ return [
 
     'attributes' => [
         'mor_documento_pessoal' => 'documento pessoal',
+        'loc_documento_posse' => 'contrato, matrícula ou escritura do imóvel',
         'ocupantes.*.mor_documento_pessoal' => 'documento pessoal do ocupante',
         'password' => 'senha',
         'use_senha' => 'senha',
