@@ -281,10 +281,9 @@ Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL pr
 | **Uma app por cliente** | `php artisan migrate --force --no-interaction` |
 | **Demo / reset controlado** | `migrate` incremental; só `migrate:fresh` + seed se for política explícita dessa instância |
 
-**Primeira vez (nova instância):** rode uma vez manualmente, antes de ir para produção:
+**Primeira vez (nova instância):** rode migrações; crie o gestor municipal pela UI ou SQL conforme a política do município. Para ambiente de testes/demo com dados fictícios:
 ```bash
-php artisan migrate:fresh --force && php artisan db:seed --class=AdminBaseSeeder --force   # base/municípios
-php artisan migrate:fresh --force && php artisan db:seed --force                           # demo
+php artisan migrate:fresh --force && php artisan db:seed --force
 ```
 
 #### Nome da aplicação

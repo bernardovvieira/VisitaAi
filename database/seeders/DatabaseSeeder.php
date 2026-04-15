@@ -8,7 +8,6 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed completo para ambiente de testes/demo sem alterar logins existentes.
-     * Para instância base (produção), use: php artisan db:seed --class=AdminBaseSeeder
      */
     public function run(): void
     {
