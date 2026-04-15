@@ -22,6 +22,7 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -399,9 +400,23 @@ class LocalController extends Controller
         }
 
         $descricao = $local->loc_endereco.', '.($local->loc_numero ?? 'S/N');
+        try {
+            DB::transaction(function () use ($local) {
+                // Em bases legadas sem cascade confiável, remove o socioeconômico explicitamente.
+                $local->socioeconomico()->delete();
+                $local->delete();
+            });
+            $this->deleteLocDocumentoPosse($local);
+        } catch (\Throwable $e) {
+            Log::warning('Falha ao excluir local', [
+                'loc_id' => $local->loc_id,
+                'message' => $e->getMessage(),
+            ]);
 
-        $this->deleteLocDocumentoPosse($local);
-        $local->delete();
+            return redirect()
+                ->route(Auth::user()->locaisRouteProfile().'.locais.index')
+                ->with('error', __('Não foi possível excluir o local. Verifique se existem vínculos e tente novamente.'));
+        }
 
         LogHelper::registrar(
             'Exclusão de local',
