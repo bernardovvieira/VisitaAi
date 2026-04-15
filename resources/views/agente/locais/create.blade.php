@@ -5,8 +5,10 @@
 @section('og_description', __('Cadastro de imóvel para visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')
+@php($locaisRouteProfile = $locaisRouteProfile ?? auth()->user()->locaisRouteProfile())
+@php($offlineLocaisProfile = $offlineLocaisProfile ?? ($locaisRouteProfile === 'saude' ? 'saude' : 'agente'))
 <div class="v-page v-page--wide">
-    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Novo')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route($locaisRouteProfile.'.locais.index')], ['label' => __('Novo')]]" />
 
     @if($isPrimario ?? false)
     <x-section-card class="v-card--muted">
@@ -45,7 +47,7 @@
             <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
         @endif
 
-        <form method="POST" action="{{ route($storeRoute ?? 'agente.locais.store') }}" enctype="multipart/form-data" class="space-y-6" id="form_local"
+        <form method="POST" action="{{ route($storeRoute ?? $locaisRouteProfile.'.locais.store') }}" enctype="multipart/form-data" class="space-y-6" id="form_local"
             x-data="{ carregando: false }"
             x-on:submit="carregando = true">
 
@@ -305,8 +307,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             var btn = document.getElementById('btn-cadastrar-local');
             if (btn) btn.disabled = true;
-            window.VisitaOfflineSaveLocalDraft('agente', payload).then(function() {
-                var indexUrl = <?php echo json_encode(route('agente.locais.index')); ?>;
+            window.VisitaOfflineSaveLocalDraft(@json($offlineLocaisProfile), payload).then(function() {
+                var indexUrl = <?php echo json_encode(route($locaisRouteProfile.'.locais.index')); ?>;
                 setTimeout(function() { window.location.replace(indexUrl + '?guardada=1'); }, 100);
             }).catch(function() { if (btn) btn.disabled = false; });
             return false;

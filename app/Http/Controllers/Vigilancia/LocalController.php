@@ -136,7 +136,9 @@ class LocalController extends Controller
             ? 'agente.locais.index'
             : 'gestor.locais.index';
 
-        return view($view, compact('locais', 'search', 'coordenadasDuplicadas'));
+        $locaisRouteProfile = $user->locaisRouteProfile();
+
+        return view($view, compact('locais', 'search', 'coordenadasDuplicadas', 'locaisRouteProfile'));
     }
 
     public function show(Local $local)
@@ -185,8 +187,9 @@ class LocalController extends Controller
             $local->load(['moradores', 'socioeconomico']);
         }
         $moradorResumo = app(ResumoOcupantesMunicipioService::class)->resumoParaLocal($local);
+        $locaisRouteProfile = $user->locaisRouteProfile();
 
-        return view($view, compact('local', 'qrCodeBase64', 'qrCodeMime', 'moradorResumo'));
+        return view($view, compact('local', 'qrCodeBase64', 'qrCodeMime', 'moradorResumo', 'locaisRouteProfile'));
     }
 
     public function create()
@@ -202,10 +205,14 @@ class LocalController extends Controller
             $cidadeEstado = ['cidade' => $primario->loc_cidade, 'estado' => $primario->loc_estado];
             $cepsCadastrados = $this->buildCepsCadastrados($primario->loc_cidade, $primario->loc_estado);
         }
-        $storeRoute = Auth::user()->isGestor() ? 'gestor.locais.store' : 'agente.locais.store';
-        $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
+        $user = Auth::user();
+        $profile = $user->locaisRouteProfile();
+        $storeRoute = $profile.'.locais.store';
+        $indexRoute = $profile.'.locais.index';
+        $locaisRouteProfile = $profile;
+        $offlineLocaisProfile = $user->isAgenteSaude() ? 'saude' : 'agente';
 
-        return view('agente.locais.create', compact('cepPermitido', 'cidadeEstado', 'cepsCadastrados', 'isPrimario', 'storeRoute', 'indexRoute'));
+        return view('agente.locais.create', compact('cepPermitido', 'cidadeEstado', 'cepsCadastrados', 'isPrimario', 'storeRoute', 'indexRoute', 'locaisRouteProfile', 'offlineLocaisProfile'));
     }
 
     public function store(LocalRequest $request)
@@ -247,8 +254,9 @@ class LocalController extends Controller
             'Local cadastrado: '.$local->loc_endereco.', '.($local->loc_numero ?? 'S/N')
         );
 
-        $indexRoute = Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index';
-        $redirectRoute = (Auth::user()->isGestor() && Local::count() === 1)
+        $user = Auth::user();
+        $indexRoute = $user->locaisRouteProfile().'.locais.index';
+        $redirectRoute = ($user->isGestor() && Local::count() === 1)
             ? 'gestor.dashboard'
             : $indexRoute;
 
@@ -264,7 +272,7 @@ class LocalController extends Controller
 
         if ($local->isPrimary()) {
             return redirect()
-                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->route(Auth::user()->locaisRouteProfile().'.locais.index')
                 ->with('error', __('O local primário (primeiro cadastrado) não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.'));
         }
         $primario = Local::orderBy('loc_id')->first();
@@ -277,8 +285,9 @@ class LocalController extends Controller
         }
 
         $local->load(['moradores', 'socioeconomico']);
+        $locaisRouteProfile = Auth::user()->locaisRouteProfile();
 
-        return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado', 'cepsCadastrados'));
+        return view('agente.locais.edit', compact('local', 'cepPermitido', 'cidadeEstado', 'cepsCadastrados', 'locaisRouteProfile'));
     }
 
     /**
@@ -320,7 +329,7 @@ class LocalController extends Controller
 
         if ($local->isPrimary()) {
             return redirect()
-                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->route(Auth::user()->locaisRouteProfile().'.locais.index')
                 ->with('error', __('O local primário não pode ser editado pela interface. Para alterações, entre em contato com o suporte técnico.'));
         }
         $data = $request->validated();
@@ -364,7 +373,7 @@ class LocalController extends Controller
         );
 
         return redirect()
-            ->route('agente.locais.edit', $local)
+            ->route(Auth::user()->locaisRouteProfile().'.locais.edit', $local)
             ->with('success', __('Local atualizado com sucesso.'));
     }
 
@@ -374,18 +383,18 @@ class LocalController extends Controller
 
         if ($local->isPrimary()) {
             return redirect()
-                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->route(Auth::user()->locaisRouteProfile().'.locais.index')
                 ->with('error', __('O local primário (primeiro cadastrado) não pode ser excluído pela interface. Para exclusão ou alterações, entre em contato com o suporte técnico.'));
         }
         if ($local->moradores()->exists()) {
             return redirect()
-                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->route(Auth::user()->locaisRouteProfile().'.locais.index')
                 ->with('error', __('Erro: este local possui ocupantes registrados no Visita Aí e não pode ser excluído.'));
         }
 
         if ($local->visitas()->exists()) {
             return redirect()
-                ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+                ->route(Auth::user()->locaisRouteProfile().'.locais.index')
                 ->with('error', __('Erro: este local possui visitas cadastradas e não pode ser excluído.'));
         }
 
@@ -402,7 +411,7 @@ class LocalController extends Controller
         );
 
         return redirect()
-            ->route(Auth::user()->isGestor() ? 'gestor.locais.index' : 'agente.locais.index')
+            ->route(Auth::user()->locaisRouteProfile().'.locais.index')
             ->with('success', __('Local excluído com sucesso.'));
     }
 
@@ -413,7 +422,7 @@ class LocalController extends Controller
     public function syncStore(Request $request)
     {
         $user = Auth::user();
-        if (! $user->isAgenteEndemias() && ! $user->isGestor()) {
+        if (! $user->isAgenteEndemias() && ! $user->isAgenteSaude()) {
             return response()->json(['message' => __('Acesso negado.')], 403);
         }
         $this->authorize('create', Local::class);

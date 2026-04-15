@@ -61,7 +61,7 @@ class MoradorTest extends TestCase
     }
 
     #[Test]
-    public function acs_nao_acessa_gestao_de_ocupantes(): void
+    public function acs_nao_acessa_ocupantes_na_rota_do_gestor_mas_acessa_em_saude(): void
     {
         $acs = User::factory()->create([
             'use_perfil' => 'agente_saude',
@@ -74,8 +74,8 @@ class MoradorTest extends TestCase
             ->assertForbidden();
 
         $this->actingAs($acs)
-            ->get(url('/saude/locais/'.$local->loc_id.'/moradores'))
-            ->assertNotFound();
+            ->get(route('saude.locais.moradores.index', $local))
+            ->assertOk();
     }
 
     #[Test]

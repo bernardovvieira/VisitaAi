@@ -4,9 +4,7 @@
     $hasDoc = $local && $local->exists && $local->loc_documento_posse_path;
     $downloadUrl = null;
     if ($hasDoc) {
-        $downloadUrl = auth()->user()->isGestor()
-            ? route('gestor.locais.documento-posse', $local)
-            : route('agente.locais.documento-posse', $local);
+        $downloadUrl = route(auth()->user()->locaisRouteProfile().'.locais.documento-posse', $local);
     }
 @endphp
 

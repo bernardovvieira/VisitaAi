@@ -13,12 +13,12 @@
      ">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Visitas')]]" />
 
-    <x-page-header :eyebrow="__('Levantamento LIRAa')" :title="__('Minhas visitas')">
+    <x-page-header :eyebrow="__('Registros em território')" :title="__('Minhas visitas')">
         <x-slot name="actions">
             <a href="{{ route('saude.visitas.create') }}"
                class="v-btn-compact v-btn-compact--blue">
                 <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
-                {{ __('Nova visita LIRAa') }}
+                {{ __('Nova visita') }}
             </a>
             <span x-show="online" x-cloak>
                 <a href="{{ route('saude.visitas.sync') }}"
@@ -29,7 +29,7 @@
             </span>
         </x-slot>
         <x-slot name="lead">
-            <p>{{ __('Consulte, busque ou cadastre visitas LIRAa. Sem internet, guarde no dispositivo e envie depois pela sincronização.') }}</p>
+            <p>{{ __('Consulte, busque ou cadastre visitas no território. Sem internet, guarde no dispositivo e envie depois pela sincronização.') }}</p>
         </x-slot>
     </x-page-header>
 

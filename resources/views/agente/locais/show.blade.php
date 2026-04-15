@@ -5,13 +5,14 @@
 
 @section('content')
 @php
+    $locaisRouteProfile = $locaisRouteProfile ?? auth()->user()->locaisRouteProfile();
     $numeroLead = $local->loc_numero !== null && $local->loc_numero !== '' ? $local->loc_numero : __('S/N');
-    $fichaPdfUrl = auth()->user()->isAgenteEndemias()
-        ? route('agente.locais.ficha-socioeconomica-pdf', $local)
+    $fichaPdfUrl = auth()->user()->isAgente()
+        ? route($locaisRouteProfile.'.locais.ficha-socioeconomica-pdf', $local)
         : null;
 @endphp
 <div class="v-page v-page--wide">
-    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Visualizar')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route($locaisRouteProfile.'.locais.index')], ['label' => __('Visualizar')]]" />
 
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Imóvel cadastrado')">
         <x-slot name="lead">

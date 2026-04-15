@@ -75,6 +75,8 @@
                     $dashPath,
                     parse_url(route('saude.visitas.index'), PHP_URL_PATH),
                     parse_url(route('saude.visitas.create'), PHP_URL_PATH),
+                    parse_url(route('saude.locais.index'), PHP_URL_PATH),
+                    parse_url(route('saude.locais.create'), PHP_URL_PATH),
                 ];
             } elseif ($u->isGestor()) {
                 $visitaOfflineRedirect = route('dashboard');

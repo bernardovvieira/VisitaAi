@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Municipio\MoradorRequest;
 use App\Models\Local;
 use App\Models\Morador;
+use App\Models\User;
 use App\Support\SmartSearch;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,7 @@ class MoradorController extends Controller
 {
     private function routeProfile(): string
     {
-        /** @var \App\Models\User|null $u */
+        /** @var User|null $u */
         $u = Auth::user();
         if (! $u) {
             abort(403);
@@ -29,6 +29,9 @@ class MoradorController extends Controller
         }
         if ($u->isAgenteEndemias()) {
             return 'agente';
+        }
+        if ($u->isAgenteSaude()) {
+            return 'saude';
         }
         abort(403);
     }

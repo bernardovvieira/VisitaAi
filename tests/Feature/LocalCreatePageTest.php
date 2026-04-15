@@ -43,4 +43,21 @@ class LocalCreatePageTest extends TestCase
         $response->assertOk()
             ->assertSeeText('RG: expedição');
     }
+
+    #[Test]
+    public function agente_saude_pode_abrir_pagina_de_novo_local_quando_ja_existe_primario(): void
+    {
+        Local::factory()->create();
+
+        $acs = User::factory()->create([
+            'use_perfil' => 'agente_saude',
+            'use_aprovado' => 1,
+        ]);
+
+        $response = $this->actingAs($acs)
+            ->get(route('saude.locais.create'));
+
+        $response->assertOk()
+            ->assertSeeText('RG: expedição');
+    }
 }

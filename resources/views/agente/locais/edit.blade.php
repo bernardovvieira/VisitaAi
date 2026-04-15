@@ -5,8 +5,9 @@
 @section('og_description', __('Edição de endereço, CEP e localização do imóvel de visitação.'))
 
 @section('content')
+@php($locaisRouteProfile = $locaisRouteProfile ?? auth()->user()->locaisRouteProfile())
 <div class="v-page v-page--wide">
-    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route('agente.locais.index')], ['label' => __('Editar')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais'), 'url' => route($locaisRouteProfile.'.locais.index')], ['label' => __('Editar')]]" />
 
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Editar local')" />
 
@@ -33,7 +34,7 @@
             <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
         @endif
 
-        <form method="POST" action="{{ route('agente.locais.update', $local) }}" enctype="multipart/form-data" class="space-y-6" id="form_local">
+        <form method="POST" action="{{ route($locaisRouteProfile.'.locais.update', $local) }}" enctype="multipart/form-data" class="space-y-6" id="form_local">
             @csrf
             @method('PATCH')
 

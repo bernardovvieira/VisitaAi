@@ -71,6 +71,31 @@ Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->
 Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group(function () {
     Route::view('/dashboard', 'saude.dashboard')->name('dashboard');
 
+    Route::resource('locais', LocalController::class)
+        ->parameters(['locais' => 'local'])
+        ->except(['show'])
+        ->middleware('can:viewAny,App\Models\Local');
+
+    Route::get('locais/{local}/ficha-socioeconomica.pdf', [LocalController::class, 'fichaSocioeconomicaPdf'])
+        ->name('locais.ficha-socioeconomica-pdf')
+        ->middleware(['can:view,local', 'throttle:30,1']);
+
+    Route::get('locais/{local}/documento-posse', [LocalController::class, 'downloadDocumentoPosse'])
+        ->name('locais.documento-posse')
+        ->middleware(['can:view,local', 'throttle:30,1']);
+
+    Route::get('locais/{local}/moradores/{morador}/documento-pessoal', [MoradorController::class, 'downloadDocumentoPessoal'])
+        ->name('locais.moradores.documento-pessoal')
+        ->middleware(['can:view,local', 'can:view,morador', 'throttle:30,1']);
+
+    Route::get('locais/{local}', [LocalController::class, 'show'])
+        ->name('locais.show')
+        ->middleware('can:view,local');
+
+    Route::resource('locais.moradores', MoradorController::class)
+        ->parameters(['locais' => 'local', 'moradores' => 'morador'])
+        ->except(['show']);
+
     Route::resource('visitas', VisitaController::class)
         ->only(['index', 'create', 'store', 'show'])
         ->middleware('can:viewAny,App\Models\Visita');
@@ -78,6 +103,8 @@ Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group
     Route::get('sincronizar', [VisitaController::class, 'syncPage'])->name('sincronizar');
     Route::get('visitas-sync', fn () => redirect()->route('saude.sincronizar'))->name('visitas.sync');
     Route::post('visitas-sync', [VisitaController::class, 'syncStore'])->name('visitas.sync.submit')
+        ->middleware('throttle:60,1');
+    Route::post('locais-sync', [LocalController::class, 'syncStore'])->name('locais.sync.submit')
         ->middleware('throttle:60,1');
 
     Route::get('doencas', [DoencaController::class, 'index'])->name('doencas.index')

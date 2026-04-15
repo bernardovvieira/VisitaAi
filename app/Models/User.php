@@ -164,6 +164,21 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Prefixo do nome de rota para cadastro de locais (gestor.*, agente.* ou saude.*).
+     */
+    public function locaisRouteProfile(): string
+    {
+        if ($this->isGestor()) {
+            return 'gestor';
+        }
+        if ($this->isAgenteSaude()) {
+            return 'saude';
+        }
+
+        return 'agente';
+    }
+
+    /**
      * Rótulo exibido para cada perfil (único ponto de definição para a interface).
      * Conforme Lei 11.350/2006 e Diretrizes Nacionais ACE/ACS (MS).
      */

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', config('app.name') . ' · ' . __('Registrar visita'))
-@section('og_description', __('Formulário de registro de visita LIRAa (Levantamento de Índice Rápido para Aedes aegypti).'))
+@section('og_description', __('Formulário de registro de visita em território: imóvel, moradores e indicadores de campo.'))
 
 @section('head')
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -191,7 +191,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {{ __('Se o local visitado não estiver na lista, contate um :perfil para cadastrá-lo.', ['perfil' => \App\Helpers\MsTerminologia::perfilLabel('agente_endemias')]) }}
+                    {!! __('Se o local visitado não estiver na lista, você pode adicioná-lo na seção de :link.', ['link' => '<a href="'.e(route('saude.locais.create')).'" class="text-gray-800 hover:underline dark:text-gray-200">'.__('locais').'</a>']) !!}
                 </p>
             </fieldset>
 

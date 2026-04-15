@@ -4,6 +4,7 @@
 @section('og_description', __('Locais cadastrados para a operação de campo. Visualize, crie e edite registros territoriais.'))
 
 @section('content')
+@php($locaisRouteProfile = $locaisRouteProfile ?? auth()->user()->locaisRouteProfile())
 <div class="v-page v-page--wide v-page--dense">
     <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('dashboard')], ['label' => __('Locais')]]" />
 
@@ -15,7 +16,7 @@
         </x-page-header>
 
         <div class="flex shrink-0 justify-end lg:pt-1">
-            <a href="{{ route('agente.locais.create') }}"
+            <a href="{{ route($locaisRouteProfile.'.locais.create') }}"
                class="v-btn-compact v-btn-compact--blue">
                 <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                 {{ __('Novo local') }}
@@ -27,7 +28,7 @@
         <x-slot name="afterSuccess">
             @if(session('created_local_id'))
                 <div class="mt-2 flex flex-wrap gap-3">
-                    <a href="{{ route('agente.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver local cadastrado') }}</a>
+                    <a href="{{ route($locaisRouteProfile.'.locais.show', session('created_local_id')) }}" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">{{ __('Ver local cadastrado') }}</a>
                 </div>
             @endif
         </x-slot>
@@ -50,7 +51,7 @@
                 <x-form-field name="search" :label="__('Busca inteligente')" class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
                         <input type="text" id="search" name="search" value="{{ old('search', request('search')) }}"
-                               data-live-url="{{ route('agente.locais.index') }}" data-live-param="search"
+                               data-live-url="{{ route($locaisRouteProfile.'.locais.index') }}" data-live-param="search"
                                data-live-loading-id="search-loading-locais"
                                placeholder="{{ __('Endereço, bairro, código, tipo (residencial, comercial, terreno) ou zona (urbano, rural)…') }}"
                                class="v-input" />
@@ -127,20 +128,20 @@
                             <td class="tabular-nums text-xs text-slate-600 dark:text-slate-400">{{ $local->loc_latitude }}, {{ $local->loc_longitude }}</td>
                             <td class="text-center">
                                 <div class="flex flex-wrap items-center justify-center gap-1.5">
-                                    <a href="{{ route('agente.locais.show', $local) }}"
+                                    <a href="{{ route($locaisRouteProfile.'.locais.show', $local) }}"
                                        class="v-btn-icon-primary"
                                        title="{{ __('Visualizar') }}"
                                        aria-label="{{ __('Visualizar local') }}">
                                        <x-heroicon-o-eye class="h-4 w-4 shrink-0" />
                                     </a>
                                     @if(!$local->isPrimary())
-                                    <a href="{{ route('agente.locais.edit', $local) }}"
+                                    <a href="{{ route($locaisRouteProfile.'.locais.edit', $local) }}"
                                         class="v-btn-icon-slate"
                                         title="{{ __('Editar') }}"
                                         aria-label="{{ __('Editar local') }}">
                                         <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
                                     </a>
-                                    <form method="POST" action="{{ route('agente.locais.destroy', $local) }}" class="inline">
+                                    <form method="POST" action="{{ route($locaisRouteProfile.'.locais.destroy', $local) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" data-confirm-message="{{ __('Tem certeza que deseja excluir este local? Esta ação não pode ser desfeita.') }}"
@@ -163,7 +164,7 @@
                                     icon="heroicon-o-map-pin"
                                     class="border-0 bg-transparent px-4"
                                 >
-                                    <a href="{{ route('agente.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
+                                    <a href="{{ route($locaisRouteProfile.'.locais.create') }}" class="v-btn-compact v-btn-compact--blue mt-4">
                                         <x-heroicon-o-plus class="h-4 w-4 shrink-0" aria-hidden="true" />
                                         {{ __('Novo local') }}
                                     </a>
@@ -208,7 +209,7 @@
     function update() {
         if (isOnline()) { alertEl.classList.add('hidden'); return; }
         if (typeof window.VisitaOfflineGetLocalPendingCount !== 'function') return;
-        window.VisitaOfflineGetLocalPendingCount('agente').then(function(count) {
+        window.VisitaOfflineGetLocalPendingCount(@json($locaisRouteProfile === 'saude' ? 'saude' : 'agente')).then(function(count) {
             if (count > 0) {
                 msgEl.textContent = 'Você tem ' + count + (count === 1 ? ' local guardado' : ' locais guardados') + ' no dispositivo. Sincronize quando se reconectar.';
                 alertEl.classList.remove('hidden');

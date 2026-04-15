@@ -158,6 +158,14 @@
             </x-sidebar-link>
 
             <x-sidebar-nav-section :label="__('Especializações em saúde')" />
+            <div x-show="online" x-cloak>
+                <x-sidebar-link :href="route('saude.locais.index')"
+                                :active="request()->routeIs('saude.locais.*')"
+                                @click="if (window.innerWidth < 1024) sidebarOpen = false">
+                    <x-heroicon-o-map-pin class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
+                    <span class="truncate">{{ __('Locais') }}</span>
+                </x-sidebar-link>
+            </div>
             <x-sidebar-link :href="route('saude.visitas.index')"
                             :active="request()->routeIs('saude.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">

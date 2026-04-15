@@ -23,9 +23,7 @@
 
     $urlDocPosseImovel = null;
     if ($local->loc_documento_posse_path) {
-        $urlDocPosseImovel = auth()->user()->isGestor()
-            ? route('gestor.locais.documento-posse', $local)
-            : route('agente.locais.documento-posse', $local);
+        $urlDocPosseImovel = route(auth()->user()->locaisRouteProfile().'.locais.documento-posse', $local);
     }
 
     $mimePosse = strtolower(trim((string) ($local->loc_documento_posse_mime ?? '')));

@@ -284,7 +284,7 @@ class AllRoutesOperationsSmokeTest extends TestCase
             ];
         }
 
-        if ($name === 'agente.locais.sync.submit') {
+        if ($name === 'agente.locais.sync.submit' || $name === 'saude.locais.sync.submit') {
             return [
                 'locais' => [],
             ];
