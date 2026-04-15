@@ -97,7 +97,25 @@
                         @endif
                     </dd>
                 </div>
-                <!-- Contrato/matrícula/escritura removed from cadastro display; uploads shown in 'Documentos anexados' card -->
+                <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
+                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Contrato, matrícula ou escritura') }}</dt>
+                    <dd class="mt-1 text-sm text-slate-800 dark:text-slate-100">
+                        @if($local->loc_documento_posse_path)
+                            <p class="text-xs text-slate-600 dark:text-slate-300">
+                                <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
+                                <span class="break-all">{{ $local->loc_documento_posse_nome ?: __('Documento salvo') }}</span>
+                            </p>
+                            <div class="mt-2 flex flex-wrap items-center gap-2">
+                                <a href="{{ $urlDocPosseImovel }}"
+                                   class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                    {{ __('Baixar documento atual') }}
+                                </a>
+                            </div>
+                        @else
+                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Nenhum arquivo anexado.') }}</p>
+                        @endif
+                    </dd>
+                </div>
             </dl>
         </div>
 
