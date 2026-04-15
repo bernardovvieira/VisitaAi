@@ -139,7 +139,20 @@ class LocalRequest extends FormRequest
             ],
             'loc_tipo' => ['required', Rule::in(['R', 'C', 'T'])], // R-Residencial, C-Comercial, T-Terreno Baldio (conformidade PNCD)
             'loc_quarteirao' => ['nullable', 'string', 'max:50'],
-            'loc_endereco' => ['required', 'string', 'max:255', Rule::unique('locais', 'loc_endereco')->ignore($localId, 'loc_id')],
+            'loc_endereco' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($localId) {
+                    $normalized = mb_strtolower(trim((string) $value));
+                    $existing = Local::query()
+                        ->whereRaw('LOWER(TRIM(loc_endereco)) = ?', [$normalized])
+                        ->first();
+                    if ($existing && (! $localId || (int) $existing->loc_id !== (int) $localId)) {
+                        $fail(__('Este endereço já está em uso por outro registro (ID: :id).', ['id' => $existing->loc_id]));
+                    }
+                },
+            ],
             'loc_numero' => ['nullable', 'string', 'max:20'],
             'loc_bairro' => ['required', 'string', 'max:100'],
             'loc_cidade' => ['required', 'string', 'max:100'],
