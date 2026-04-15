@@ -12,7 +12,7 @@
 @section('content')
 <div class="v-page space-y-5">
     @include('visitas.partials._form-js-strings')
-    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Visitas'), 'url' => route('saude.visitas.index')], ['label' => __('Cadastrar')]]" />
+    <x-breadcrumbs :items="[['label' => __('Página Inicial'), 'url' => route('saude.dashboard')], ['label' => __('Minhas visitas'), 'url' => route('saude.visitas.index')], ['label' => __('Cadastrar')]]" />
 
     <x-page-header :eyebrow="__('Registro em campo')" :title="__('Registrar visita')">
         <x-slot name="lead">
@@ -22,19 +22,20 @@
 
     <x-flash-alerts />
 
-    <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
-        <div class="flex items-center gap-3">
-            <x-heroicon-o-wifi class="h-5 w-5 text-sky-500 dark:text-sky-400" aria-hidden="true" />
-            <h3 class="text-sm font-semibold">{{ __('Modo offline e envio depois') }}</h3>
+    <x-section-card class="v-card--tight v-card--muted border border-sky-200/70 bg-gradient-to-br from-sky-50/90 to-white dark:border-sky-900/40 dark:from-slate-900/70 dark:to-slate-900/40">
+        <div class="flex items-start gap-2.5">
+            <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">
+                <x-heroicon-o-wifi class="h-3.5 w-3.5" />
+            </span>
+            <div class="min-w-0">
+                <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    {{ __('Modo offline') }}
+                </h2>
+                <p class="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                    {{ __('Salve a visita no dispositivo quando estiver sem internet e finalize o envio na sincronização quando houver conexão.') }}
+                </p>
+            </div>
         </div>
-        <p class="text-sm text-slate-700 dark:text-slate-300"><strong>{{ __('Sem internet?') }}</strong>
-            {{ __('Use o botão :btn no final do formulário. A visita fica salva no seu aparelho. Quando tiver conexão, abra :menu e clique em :action para enviar todas de uma vez.', [
-                'btn' => __('Guardar no dispositivo para enviar depois'),
-                'menu' => __('Minhas visitas'),
-                'action' => __('Enviar visitas salvas no dispositivo'),
-            ]) }}</p>
-        <p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">{{ __('Antes de ir a campo:') }}</span>
-            {{ __('Abra a tela de registrar visita pelo menos uma vez com internet para ativar o funcionamento offline no dispositivo.') }}</p>
     </x-section-card>
 
     <x-section-card class="space-y-6 dark:bg-gray-800">
@@ -460,9 +461,7 @@
             </x-form-field>
 
             <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {!! __('O sistema detecta se você está com internet. Ao clicar no botão, a visita será :fragment ou guardada no dispositivo para enviar depois.', ['fragment' => '<span id="visita-online-desc">'.e(__('registrada na hora')).'</span>']) !!}
-                </p>
+                <span id="visita-online-desc" hidden aria-hidden="true"></span>
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="button" id="btn-registrar-visita"
                             class="v-btn-primary px-6 disabled:opacity-50 disabled:cursor-not-allowed">

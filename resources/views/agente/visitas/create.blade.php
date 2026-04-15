@@ -463,9 +463,7 @@
             </x-form-field>
 
             <div class="border-t border-gray-200 dark:border-gray-600 pt-6 space-y-3">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {!! __('O sistema detecta se você está com internet. Ao clicar no botão, a visita será :fragment ou guardada no dispositivo para enviar depois.', ['fragment' => '<span id="visita-online-desc">'.e(__('registrada na hora')).'</span>']) !!}
-                </p>
+                <span id="visita-online-desc" hidden aria-hidden="true"></span>
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="button" id="btn-registrar-visita"
                             class="v-btn-primary px-6 disabled:opacity-50 disabled:cursor-not-allowed">

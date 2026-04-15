@@ -170,7 +170,7 @@
                             :active="request()->routeIs('saude.visitas.*')"
                             @click="if (window.innerWidth < 1024) sidebarOpen = false">
                 <x-heroicon-o-clipboard-document-list class="h-4 w-4 shrink-0 opacity-80" aria-hidden="true" />
-                <span class="truncate">{{ __('Visitas') }}</span>
+                <span class="truncate">{{ __('Minhas visitas') }}</span>
             </x-sidebar-link>
             <div x-show="online" x-cloak>
                 <x-sidebar-link :href="route('saude.doencas.index')"
