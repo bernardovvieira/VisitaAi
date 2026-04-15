@@ -4,8 +4,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
         <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/svg+xml" href="{{ asset('images/visitaai.svg') }}">
@@ -83,7 +81,7 @@
             (function () {
                 var themeColorMeta = document.getElementById('theme-color-dynamic');
                 function applyThemeColor(on) {
-                    var color = on ? '#030712' : '#f8fafc';
+                    var color = '#f8fafc';
                     var metas = document.querySelectorAll('meta[name="theme-color"]');
                     metas.forEach(function (m) { try { m.setAttribute('content', color); } catch (e) {} });
                 }
@@ -124,7 +122,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-slate-900 dark:text-slate-100 bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+    <body class="font-sans antialiased text-slate-900 bg-white">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         <div class="auth-guest-layout flex min-h-screen flex-col items-center px-4 py-10 sm:justify-center sm:px-6 sm:py-14">
             <div class="flex flex-col items-center gap-3">

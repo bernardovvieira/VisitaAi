@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
     <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }} · {{ __('Página não encontrada') }}</title>
@@ -13,7 +11,7 @@
         (function () {
             var themeColorMeta = document.getElementById('theme-color-dynamic');
             function applyThemeColor(on) {
-                var color = on ? '#030712' : '#f8fafc';
+                var color = '#f8fafc';
                 var metas = document.querySelectorAll('meta[name="theme-color"]');
                 metas.forEach(function (m) { try { m.setAttribute('content', color); } catch (e) {} });
             }
@@ -52,7 +50,7 @@
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased text-gray-900 dark:text-gray-100">
+<body class="font-sans antialiased text-gray-900 bg-white">
     <a href="#error-main" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
     <div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-50/50 px-4 py-12 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <main id="error-main" tabindex="-1" class="w-full max-w-md text-center outline-none">
