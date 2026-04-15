@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#ffffff">
-    <meta name="theme-color" content="#ffffff" id="theme-color-dynamic">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
+    <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }} · {{ __('Página não encontrada') }}</title>
     <script>
         (function () {
             var themeColorMeta = document.getElementById('theme-color-dynamic');
             function applyThemeColor(on) {
-                var color = '#ffffff';
+                var color = on ? '#030712' : '#f8fafc';
                 var metas = document.querySelectorAll('meta[name="theme-color"]');
                 metas.forEach(function (m) { try { m.setAttribute('content', color); } catch (e) {} });
             }

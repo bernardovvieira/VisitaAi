@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#ffffff">
-        <meta name="theme-color" content="#ffffff" id="theme-color-dynamic">
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
+        <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="manifest" href="{{ asset('manifest.json') }}">
         <link rel="icon" type="image/svg+xml" href="{{ asset('images/visitaai.svg') }}">
@@ -104,7 +104,7 @@
             (function () {
                 var themeColorMeta = document.getElementById('theme-color-dynamic');
                 function applyThemeColor(on) {
-                    var color = '#ffffff';
+                    var color = on ? '#030712' : '#f8fafc';
                     var metas = document.querySelectorAll('meta[name="theme-color"]');
                     metas.forEach(function (m) { try { m.setAttribute('content', color); } catch (e) {} });
                 }
@@ -158,7 +158,7 @@
             .dark .responsive-nav-link-active { color: #93c5fd !important; background-color: rgba(59, 130, 246, 0.2) !important; }
         </style>
     </head>
-    <body class="font-sans antialiased text-[14px] leading-relaxed sm:text-[15px] bg-white">
+    <body class="font-sans antialiased text-[14px] leading-relaxed sm:text-[15px] {{ View::hasSection('public') ? 'bg-white' : 'bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900' }}">
         <a href="#main-content" class="visita-skip-link">{{ __('Ir para o conteúdo') }}</a>
         @if (View::hasSection('public'))
             <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/35 dark:from-gray-900 dark:via-gray-900 dark:to-slate-950">
