@@ -37,6 +37,11 @@
             @csrf
             @method('PATCH')
 
+            <div class="rounded-lg border border-slate-200/90 bg-slate-50/90 px-3 py-2.5 dark:border-slate-700/80 dark:bg-slate-900/45">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Código único do imóvel') }}</p>
+                <p class="mt-0.5 font-mono text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">#{{ $local->loc_codigo_unico }}</p>
+            </div>
+
             <fieldset class="space-y-3">
                 <legend class="v-section-title mb-2">Características Principais</legend>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

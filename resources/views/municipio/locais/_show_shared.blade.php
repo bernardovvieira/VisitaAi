@@ -27,6 +27,26 @@
             ? route('gestor.locais.documento-posse', $local)
             : route('agente.locais.documento-posse', $local);
     }
+
+    $mimePosse = strtolower(trim((string) ($local->loc_documento_posse_mime ?? '')));
+    $documentoPosseTipoLegivel = null;
+    $documentoPosseTituloTecnicoMime = null;
+    if ($mimePosse !== '') {
+        $documentoPosseTipoLegivel = match ($mimePosse) {
+            'application/pdf' => __('Documento PDF'),
+            'image/jpeg', 'image/jpg' => __('Imagem JPEG'),
+            'image/png' => __('Imagem PNG'),
+            'image/webp' => __('Imagem WebP'),
+            'image/heic', 'image/heif' => __('Imagem HEIC'),
+            'application/msword' => __('Documento Word'),
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => __('Documento Word (.docx)'),
+            default => null,
+        };
+        if ($documentoPosseTipoLegivel === null) {
+            $documentoPosseTipoLegivel = __('Ficheiro anexado');
+            $documentoPosseTituloTecnicoMime = (string) $local->loc_documento_posse_mime;
+        }
+    }
 @endphp
 
 <x-section-card class="space-y-5">
@@ -94,25 +114,6 @@
                         <span class="text-slate-500 dark:text-slate-400"> · </span>{{ __('CEP') }}: {{ $local->loc_cep }}
                         @if($local->loc_complemento)
                             <span class="text-slate-500 dark:text-slate-400"> · </span>{{ __('Complemento') }}: {{ $local->loc_complemento }}
-                        @endif
-                    </dd>
-                </div>
-                <div class="sm:col-span-3 border-t border-slate-200/80 pt-3 dark:border-slate-700/70">
-                    <dt class="font-medium text-slate-700 dark:text-slate-200">{{ __('Contrato, matrícula ou escritura') }}</dt>
-                    <dd class="mt-1 text-sm text-slate-800 dark:text-slate-100">
-                        @if($local->loc_documento_posse_path)
-                            <p class="text-xs text-slate-600 dark:text-slate-300">
-                                <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
-                                <span class="break-all">{{ $local->loc_documento_posse_nome ?: __('Documento salvo') }}</span>
-                            </p>
-                            <div class="mt-2 flex flex-wrap items-center gap-2">
-                                <a href="{{ $urlDocPosseImovel }}"
-                                   class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                                    {{ __('Baixar documento atual') }}
-                                </a>
-                            </div>
-                        @else
-                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Nenhum arquivo anexado.') }}</p>
                         @endif
                     </dd>
                 </div>
@@ -348,8 +349,8 @@
                     <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Contrato, matrícula ou escritura') }}</p>
                     <p class="mt-1 break-all text-sm font-medium text-slate-900 dark:text-slate-100">{{ $local->loc_documento_posse_nome ?: __('Documento') }}</p>
                     <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-                        @if($local->loc_documento_posse_mime)
-                            <span>{{ __('Tipo') }}: {{ $local->loc_documento_posse_mime }}</span>
+                        @if($documentoPosseTipoLegivel)
+                            <span @if($documentoPosseTituloTecnicoMime) title="{{ e($documentoPosseTituloTecnicoMime) }}" @endif>{{ __('Formato') }}: {{ $documentoPosseTipoLegivel }}</span>
                         @endif
                         @if($local->loc_documento_posse_tamanho)
                             <span>{{ __('Tamanho') }}: {{ number_format(max(0, (int) $local->loc_documento_posse_tamanho) / 1024, 1, ',', ' ') }} KB</span>
