@@ -122,8 +122,6 @@
         openOcupanteIdx: null,
         init() {
             this.syncSocioFromRows();
-            var firstNew = this.rows.findIndex(function (r) { return r && !r.mor_id; });
-            this.openOcupanteIdx = firstNew >= 0 ? firstNew : null;
         },
         hasValue(v) {
             return !(v === null || v === undefined || (typeof v === 'string' && v.trim() === ''));

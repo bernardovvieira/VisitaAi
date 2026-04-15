@@ -14,7 +14,6 @@
     $sv = fn (string $k) => old('socio.'.$k, $sf[$k] ?? '');
 
     $t = config('visitaai_socioeconomico.secao_titulos', []);
-    $disc = 'border-t border-gray-200 pt-6 mt-2 dark:border-gray-600';
 @endphp
 
 @include('municipio.locais._script_disclosure_accordion_once')
@@ -35,7 +34,7 @@
     <x-slot name="summary">
         <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['entrevista'] ?? __('1. Entrevista e domicílio') }}</span>
     </x-slot>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 {{ $disc }} border-0 pt-0 mt-0">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Data da entrevista') }}</label>
             <input type="date" name="socio[data_entrevista]" value="{{ $sv('data_entrevista') }}" class="v-input mt-1 w-full">

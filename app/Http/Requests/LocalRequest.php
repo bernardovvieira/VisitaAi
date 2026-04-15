@@ -6,6 +6,7 @@ use App\Http\Requests\Concerns\BuildsSocioeconomicoRules;
 use App\Models\Local;
 use App\Models\Morador;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
@@ -23,6 +24,32 @@ class LocalRequest extends FormRequest
         }
 
         return $user->can('create', Local::class);
+    }
+
+    /**
+     * Remove nested file slots with no selected file (UPLOAD_ERR_NO_FILE).
+     * Laravel's validator treats invalid UploadedFile as "uploaded" failure before nullable applies.
+     */
+    protected function prepareForValidation(): void
+    {
+        $all = $this->files->all();
+        if (! isset($all['ocupantes']) || ! is_array($all['ocupantes'])) {
+            return;
+        }
+
+        foreach ($all['ocupantes'] as $i => $row) {
+            if (! is_array($row) || ! isset($row['mor_documento_pessoal'])) {
+                continue;
+            }
+            $f = $row['mor_documento_pessoal'];
+            if ($f instanceof UploadedFile
+                && ! $f->isValid()
+                && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                unset($all['ocupantes'][$i]['mor_documento_pessoal']);
+            }
+        }
+
+        $this->files->replace($all);
     }
 
     public function rules()

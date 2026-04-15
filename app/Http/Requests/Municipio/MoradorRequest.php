@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Municipio;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\Rule;
 use App\Models\Local;
 use App\Models\Morador;
@@ -18,6 +19,15 @@ class MoradorRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $f = $this->file('mor_documento_pessoal');
+        if ($f instanceof UploadedFile
+            && ! $f->isValid()
+            && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+            $all = $this->files->all();
+            unset($all['mor_documento_pessoal']);
+            $this->files->replace($all);
+        }
+
         $this->merge([
             'mor_escolaridade' => $this->mor_escolaridade === '' ? null : $this->mor_escolaridade,
             'mor_renda_faixa' => $this->mor_renda_faixa === '' ? null : $this->mor_renda_faixa,

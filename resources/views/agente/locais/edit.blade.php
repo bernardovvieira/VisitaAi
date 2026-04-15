@@ -183,16 +183,6 @@
                 @include('municipio.locais._form_socioeconomico_tail', ['local' => $local])
             </div>
 
-            <x-section-card class="v-card--muted space-y-1">
-                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ __('Dados automáticos') }}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('Código único') }}: <span class="font-mono font-semibold text-gray-800 dark:text-gray-200">#{{ $local->loc_codigo_unico }}</span>
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ __('Este código é gerado automaticamente e não pode ser alterado.') }}
-                </p>
-            </x-section-card>
-
             <div class="flex justify-end">
                 <button type="submit" class="v-btn-primary px-6">
                     Salvar alterações
