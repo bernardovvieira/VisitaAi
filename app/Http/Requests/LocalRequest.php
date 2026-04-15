@@ -118,7 +118,12 @@ class LocalRequest extends FormRequest
             'ocupantes.*.mor_rg_orgao' => ['nullable', 'string', 'max:60'],
             'ocupantes.*.mor_rg_expedicao' => ['nullable', 'date'],
             'ocupantes.*.mor_cpf' => ['nullable', 'string', 'max:20'],
-            'ocupantes.*.mor_documento_pessoal' => ['nullable', 'file', 'max:10240', 'mimetypes:application/pdf,image/jpeg,image/png,image/webp,image/heic,image/heif'],
+            'ocupantes.*.mor_documento_pessoal' => [
+                'nullable',
+                'file',
+                'max:10240',
+                'mimes:pdf,jpeg,jpg,png,webp,heic,heif',
+            ],
             'ocupantes.*.mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
             'ocupantes.*.mor_ajuda_compra_imovel' => ['nullable', 'string', Rule::in(['sim', 'nao'])],
             'ocupantes.*.mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfiKeys)],

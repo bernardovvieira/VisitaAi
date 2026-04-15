@@ -45,7 +45,7 @@
             <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
         @endif
 
-        <form method="POST" action="{{ route($storeRoute ?? 'agente.locais.store') }}" class="space-y-6" id="form_local"
+        <form method="POST" action="{{ route($storeRoute ?? 'agente.locais.store') }}" enctype="multipart/form-data" class="space-y-6" id="form_local"
             x-data="{ carregando: false }"
             x-on:submit="carregando = true">
 

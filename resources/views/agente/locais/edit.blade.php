@@ -31,7 +31,7 @@
             <x-alert type="error" :title="__('Corrija os erros nos campos indicados abaixo.')" :message="implode(' ', $errors->all())" />
         @endif
 
-        <form method="POST" action="{{ route('agente.locais.update', $local) }}" class="space-y-6" id="form_local">
+        <form method="POST" action="{{ route('agente.locais.update', $local) }}" enctype="multipart/form-data" class="space-y-6" id="form_local">
             @csrf
             @method('PATCH')
 

@@ -168,8 +168,8 @@ class MoradorController extends Controller
         }
 
         if ($request->hasFile('mor_documento_pessoal')) {
-            $this->deleteDocumentoPessoal($morador);
             $data = array_merge($data, $this->uploadDocumentoPessoal($request->file('mor_documento_pessoal')));
+            $this->deleteDocumentoPessoal($morador);
         }
 
         $morador->update($data);
@@ -251,11 +251,14 @@ class MoradorController extends Controller
     private function uploadDocumentoPessoal(UploadedFile $file): array
     {
         $path = $file->store('moradores/documentos', 'local');
+        if ($path === false || $path === '') {
+            throw new \RuntimeException(__('Não foi possível gravar o documento pessoal. Verifique permissões de armazenamento.'));
+        }
 
         return [
             'mor_documento_pessoal_path' => $path,
             'mor_documento_pessoal_nome' => $file->getClientOriginalName(),
-            'mor_documento_pessoal_mime' => $file->getClientMimeType(),
+            'mor_documento_pessoal_mime' => $file->getClientMimeType() ?: $file->getMimeType(),
             'mor_documento_pessoal_tamanho' => $file->getSize(),
         ];
     }

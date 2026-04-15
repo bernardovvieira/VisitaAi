@@ -195,34 +195,28 @@
 </div>
 
 <div class="panel section">
-    <h2>{{ $titulos['imovel_caracteristicas'] ?? '4. Características do imóvel' }}</h2>
+    <h2>{{ $titulos['imovel_caracteristicas'] ?? '5. Características do imóvel e cadastro físico' }}</h2>
     <table class="compact">
         <tr><th>{{ __('Uso do imóvel') }}</th><td>{{ SE::opcao('uso_imovel_socio_opcoes', $s?->lse_uso_imovel) }}</td></tr>
         <tr><th>{{ __('Situação da posse') }}</th><td>{{ SE::opcao('situacao_posse_opcoes', $s?->lse_situacao_posse) }}</td></tr>
-        <tr><th>{{ __('Material predominante') }}</th><td>{{ SE::opcao('material_predominante_opcoes', $s?->lse_material_predominante) }}</td></tr>
-        <tr><th>{{ __('Condição da edificação') }}</th><td>{{ SE::opcao('condicao_edificacao_opcoes', $s?->lse_condicao_edificacao) }}</td></tr>
-        <tr><th>{{ __('Cômodos / quartos / banheiros') }}</th><td>{{ $s?->lse_num_comodos ?? '-' }} / {{ $s?->lse_num_quartos ?? '-' }} / {{ $s?->lse_num_banheiros ?? '-' }}</td></tr>
-        <tr><th>{{ __('Banheiros dentro / fora') }}</th><td>{{ $s?->lse_banheiro_dentro ?? '-' }} / {{ $s?->lse_banheiro_fora ?? '-' }}</td></tr>
-        <tr><th>{{ __('Área externa') }}</th><td>{{ SE::opcao('area_externa_opcoes', $s?->lse_area_externa) }}</td></tr>
-        <tr><th>{{ __('Área livre / quintal') }}</th><td>{{ $s?->lse_area_livre ?? '-' }}</td></tr>
-        <tr><th>{{ __('Observações') }}</th><td>{{ $s?->lse_observacoes_imovel ?? '-' }}</td></tr>
-    </table>
-</div>
-
-<div class="panel section">
-    <h2>{{ $titulos['cadastro_fisico'] ?? '5. Cadastro físico' }}</h2>
-    <table class="compact">
-        <tr><th>{{ __('Confrontante frente') }}</th><td>{{ $s?->lse_viz_frente ?? '-' }}</td></tr>
-        <tr><th>{{ __('Confrontante fundos') }}</th><td>{{ $s?->lse_viz_fundos ?? '-' }}</td></tr>
-        <tr><th>{{ __('Confrontante direita') }}</th><td>{{ $s?->lse_viz_direita ?? '-' }}</td></tr>
-        <tr><th>{{ __('Confrontante esquerda') }}</th><td>{{ $s?->lse_viz_esquerda ?? '-' }}</td></tr>
         <tr><th>{{ __('Tipologia') }}</th><td>{{ SE::opcao('tipologia_opcoes', $s?->lse_tipologia) }}</td></tr>
         <tr><th>{{ __('Tipo / implantação') }}</th><td>{{ SE::opcao('tipo_implantacao_opcoes', $s?->lse_tipo_implantacao) }}</td></tr>
         <tr><th>{{ __('Posição lote') }}</th><td>{{ SE::opcao('posicao_lote_opcoes', $s?->lse_posicao_lote) }}</td></tr>
         <tr><th>{{ __('Pavimentos') }}</th><td>{{ $s?->lse_num_pavimentos ?? '-' }}</td></tr>
+        <tr><th>{{ __('Material predominante') }}</th><td>{{ SE::opcao('material_predominante_opcoes', $s?->lse_material_predominante) }}</td></tr>
+        <tr><th>{{ __('Condição da edificação') }}</th><td>{{ SE::opcao('condicao_edificacao_opcoes', $s?->lse_condicao_edificacao) }}</td></tr>
+        <tr><th>{{ __('Cômodos / quartos / banheiros') }}</th><td>{{ $s?->lse_num_comodos ?? '-' }} / {{ $s?->lse_num_quartos ?? '-' }} / {{ $s?->lse_num_banheiros ?? '-' }}</td></tr>
+        <tr><th>{{ __('Banheiros dentro / fora') }}</th><td>{{ $s?->lse_banheiro_dentro ?? '-' }} / {{ $s?->lse_banheiro_fora ?? '-' }}</td></tr>
         <tr><th>{{ __('Banheiro compartilhado') }}</th><td>{{ SE::simNaoBool($s?->lse_banheiro_compartilha) }}</td></tr>
         <tr><th>{{ __('Acesso ao imóvel') }}</th><td>{{ SE::opcao('acesso_imovel_opcoes', $s?->lse_acesso_imovel) }}</td></tr>
         <tr><th>{{ __('Entrada para') }}</th><td>{{ SE::opcao('entrada_para_opcoes', $s?->lse_entrada_para) }}</td></tr>
+        <tr><th>{{ __('Área externa') }}</th><td>{{ SE::opcao('area_externa_opcoes', $s?->lse_area_externa) }}</td></tr>
+        <tr><th>{{ __('Área livre / quintal') }}</th><td>{{ $s?->lse_area_livre ?? '-' }}</td></tr>
+        <tr><th>{{ __('Confrontante frente') }}</th><td>{{ $s?->lse_viz_frente ?? '-' }}</td></tr>
+        <tr><th>{{ __('Confrontante fundos') }}</th><td>{{ $s?->lse_viz_fundos ?? '-' }}</td></tr>
+        <tr><th>{{ __('Confrontante direita') }}</th><td>{{ $s?->lse_viz_direita ?? '-' }}</td></tr>
+        <tr><th>{{ __('Confrontante esquerda') }}</th><td>{{ $s?->lse_viz_esquerda ?? '-' }}</td></tr>
+        <tr><th>{{ __('Observações') }}</th><td>{{ $s?->lse_observacoes_imovel ?? '-' }}</td></tr>
     </table>
 </div>
 
@@ -238,9 +232,10 @@
 </div>
 
 <div class="panel section">
-    <h2>{{ $titulos['terreno'] ?? '7. Terreno' }}</h2>
+    <h2>{{ $titulos['terreno'] ?? '7. Terreno e uso' }}</h2>
     <table class="compact">
         <tr><th>{{ __('Situação terreno') }}</th><td>{{ SE::opcao('situacao_terreno_opcoes', $s?->lse_situacao_terreno) }}</td></tr>
+        <tr><th>{{ __('Posse da área') }}</th><td>{{ SE::opcao('posse_area_opcoes', $s?->lse_posse_area) }}</td></tr>
         <tr><th>{{ __('Tempo de residência') }}</th><td>{{ $s?->lse_tempo_residencia_texto ?? '-' }}</td></tr>
     </table>
 </div>
@@ -256,7 +251,9 @@
         <tr><th>{{ __('Promessa compra') }}</th><td>{{ SE::opcao('sim_nao_curto_opcoes', $s?->lse_contrato_promessa) }}</td></tr>
         <tr><th>{{ __('Documento quitado') }}</th><td>{{ SE::opcao('sim_nao_curto_opcoes', $s?->lse_documento_quitado) }}</td></tr>
         <tr><th>{{ __('Sabe local vendedor') }}</th><td>{{ SE::opcao('sim_nao_curto_opcoes', $s?->lse_sabe_local_vendedor) }}</td></tr>
-        <tr><th>{{ __('IPTU') }}</th><td>{{ SE::opcao('sim_nao_curto_opcoes', $s?->lse_paga_iptu) }}@if($s?->lse_iptu_desde), {{ $s->lse_iptu_desde }}@endif</td></tr>
+        <tr><th>{{ __('Proprietário anterior (nome)') }}</th><td>{{ $s?->lse_proprietario_anterior_nome ?? '-' }}</td></tr>
+        <tr><th>{{ __('Proprietário anterior (doc.)') }}</th><td>{{ $s?->lse_proprietario_anterior_doc ?? '-' }}</td></tr>
+        <tr><th>{{ __('IPTU') }}</th><td>{{ SE::opcao('sim_nao_curto_opcoes', $s?->lse_paga_iptu) }}@if($s?->lse_iptu_desde), {{ __('desde') }} {{ $s->lse_iptu_desde }}@endif</td></tr>
         <tr><th>{{ __('Situação legal') }}</th><td>{{ $s?->lse_situacao_legal_obs ?? '-' }}</td></tr>
     </table>
 </div>

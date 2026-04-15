@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class LocalController extends Controller
 {
@@ -630,8 +631,15 @@ class LocalController extends Controller
                     continue;
                 }
                 if ($documentoPessoal) {
+                    try {
+                        $docPayload = $this->uploadDocumentoPessoal($documentoPessoal);
+                    } catch (\RuntimeException $e) {
+                        throw ValidationException::withMessages([
+                            "ocupantes.$index.mor_documento_pessoal" => [$e->getMessage()],
+                        ]);
+                    }
                     $this->deleteDocumentoPessoal($m);
-                    $payload = array_merge($payload, $this->uploadDocumentoPessoal($documentoPessoal));
+                    $payload = array_merge($payload, $docPayload);
                 }
                 $m->update($payload);
 
@@ -641,12 +649,18 @@ class LocalController extends Controller
             $vacuous = $nome === '' && $dn === null && $esc === null && $renda === null && $cor === null && $trab === null && $obs === null
                 && $sexo === null && $ec === null && $nat === null && $prof === null && $par === null && ! $ref && $tel === null
                 && $rgN === null && $rgO === null && $rgExp === null && $cpf === null && $tu === null && $aj === null && $rfi === null;
-            if ($vacuous) {
+            if ($vacuous && ! $documentoPessoal) {
                 continue;
             }
 
             if ($documentoPessoal) {
-                $payload = array_merge($payload, $this->uploadDocumentoPessoal($documentoPessoal));
+                try {
+                    $payload = array_merge($payload, $this->uploadDocumentoPessoal($documentoPessoal));
+                } catch (\RuntimeException $e) {
+                    throw ValidationException::withMessages([
+                        "ocupantes.$index.mor_documento_pessoal" => [$e->getMessage()],
+                    ]);
+                }
             }
 
             Morador::create(array_merge(['fk_local_id' => $local->loc_id], $payload));
@@ -656,11 +670,14 @@ class LocalController extends Controller
     private function uploadDocumentoPessoal(UploadedFile $file): array
     {
         $path = $file->store('moradores/documentos', 'local');
+        if ($path === false || $path === '') {
+            throw new \RuntimeException(__('Não foi possível gravar o documento pessoal. Verifique permissões de armazenamento.'));
+        }
 
         return [
             'mor_documento_pessoal_path' => $path,
             'mor_documento_pessoal_nome' => $file->getClientOriginalName(),
-            'mor_documento_pessoal_mime' => $file->getClientMimeType(),
+            'mor_documento_pessoal_mime' => $file->getClientMimeType() ?: $file->getMimeType(),
             'mor_documento_pessoal_tamanho' => $file->getSize(),
         ];
     }
