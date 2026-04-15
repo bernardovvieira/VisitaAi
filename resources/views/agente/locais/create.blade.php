@@ -1,7 +1,7 @@
 <!-- resources/views/agente/locais/create.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . (($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')))
+@section('og_title', config('app.brand') . ' · ' . (($isPrimario ?? false) ? __('Novo local de referência') : __('Novo local')))
 @section('og_description', __('Cadastro de imóvel para visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')

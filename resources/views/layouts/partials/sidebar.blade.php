@@ -23,11 +23,11 @@
            @click="if (window.innerWidth < 1024) sidebarOpen = false"
            class="sidebar-header-brand flex max-w-full flex-row items-center gap-2.5 rounded-lg px-2 py-1 outline-none ring-blue-500/40 focus-visible:ring-2 lg:gap-2">
               <img src="{{ asset('images/visitaai.svg') }}"
-                 alt="{{ __('Visita Aí') }}"
+                 alt="{{ config('app.brand') }}"
                  width="28"
                  height="28"
                  class="h-7 w-auto shrink-0 object-contain lg:h-7" />
-            <span class="sidebar-brand-text whitespace-nowrap text-sm font-semibold leading-snug tracking-tight text-white">{{ __('Visita Aí') }}</span>
+            <span class="sidebar-brand-text whitespace-nowrap text-sm font-semibold leading-snug tracking-tight text-white">{{ config('app.brand') }}</span>
         </a>
         <button type="button"
                 class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 lg:hidden"
@@ -195,7 +195,7 @@
 
     <div class="sidebar-footer-meta shrink-0 border-t border-white/[0.06] px-3 py-3 text-center">
         <p class="text-[10px] leading-relaxed text-slate-500">
-            © {{ $copyrightYears }} Visita Aí · Bitwise Technologies
+            © {{ $copyrightYears }} {{ config('app.brand') }} · Bitwise Technologies
         </p>
         <p class="mt-1 text-[10px] leading-relaxed text-slate-500/90">
             {{ __('Todos os direitos reservados.') }}

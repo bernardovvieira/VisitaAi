@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Configurar autenticador'))
+@section('og_title', config('app.brand') . ' · ' . __('Configurar autenticador'))
 @section('og_description', __('Escaneie o QR code ou use a chave manual e confirme com o código de 6 dígitos.'))
 
 @section('content')

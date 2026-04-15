@@ -70,7 +70,7 @@ return [
     */
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'bitwiseoficial@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', config('app.name')),
+        'name' => env('MAIL_FROM_NAME', config('app.brand')),
     ],
 
 ];

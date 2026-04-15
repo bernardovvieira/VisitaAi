@@ -3,7 +3,7 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.name') . ' — Resultado da Consulta')
+@section('og_title', config('app.brand') . ' · ' . __('Resultado da consulta'))
 @section('og_description', isset($local) ? 'Consulta pública municipal com histórico de visitas do imóvel em ' . $local->loc_cidade . '/' . $local->loc_estado . '.' : 'Consulte o histórico de visitas do imóvel usando o código da placa.')
 
 @section('content')
@@ -12,7 +12,7 @@
     {{-- Cabeçalho --}}
     <header class="v-page-header pt-8">
         <div class="flex items-center gap-3 mb-4">
-            <img src="{{ asset('images/visitaai.svg') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
+            <img src="{{ asset('images/visitaai.svg') }}" alt="{{ config('app.brand') }}" class="h-12 w-auto" />
             <h1 class="v-page-title">Resultado da Consulta</h1>
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -25,7 +25,7 @@
             </button>
             <button type="button" id="btn-compartilhar" aria-label="Compartilhar link"
                     data-url="{{ url()->current() }}"
-                    data-title="{{ config('app.name') }} — Resultado da Consulta"
+                    data-title="{{ config('app.brand') }} · {{ __('Resultado da consulta') }}"
                 class="v-btn-secondary inline-flex items-center gap-1.5 px-4 py-2">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />

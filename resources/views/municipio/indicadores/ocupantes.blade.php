@@ -51,7 +51,7 @@
     ];
 @endphp
 
-@section('og_title', config('app.name') . ' · ' . ($cfgInd['titulo_pagina'] ?? __('Indicadores')))
+@section('og_title', config('app.brand') . ' · ' . ($cfgInd['titulo_pagina'] ?? __('Indicadores')))
 @section('og_description', filled($__ogIndicadores) ? $__ogIndicadores : __('Painel agregado de ocupantes no Visita Aí: bairro do imóvel, faixas etárias, perfil sociodemográfico e economia declarada, com critérios de privacidade e uso institucional.'))
 
 @section('content')

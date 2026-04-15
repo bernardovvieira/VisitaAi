@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Editar usuário'))
+@section('og_title', config('app.brand') . ' · ' . __('Editar usuário'))
 @section('og_description', __('Atualização de dados e permissões do usuário municipal.'))
 
 @section('content')

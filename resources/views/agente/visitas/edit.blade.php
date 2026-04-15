@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Editar visita'))
+@section('og_title', config('app.brand') . ' · ' . __('Editar visita'))
 @section('og_description', __('Atualize dados da visita registrada: local, data, tratamentos e doenças monitoradas.'))
 
 @section('head')

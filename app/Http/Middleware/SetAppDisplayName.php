@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Define o nome da aplicação para exibição: Visita Aí - {prefixo}. Indicadores municipais, operação em campo e transparência.
+ * Define o nome longo da instância em config('app.name'): {APP_BRAND} - {prefixo}. Indicadores municipais, operação em campo e transparência.
  * - APP_NAME=Base ou APP_INSTANCE_TYPE=base → Base
  * - APP_NAME=Demo ou APP_INSTANCE_TYPE=demo → Demo
  * - Local com cidade cadastrada → loc_cidade do primeiro Local
@@ -22,7 +22,8 @@ class SetAppDisplayName
     public function handle(Request $request, Closure $next): Response
     {
         $prefixo = $this->resolvePrefixo();
-        config(['app.name' => 'Visita Aí - '.$prefixo.self::SUFIXO]);
+        $brand = (string) config('app.brand');
+        config(['app.name' => $brand.' - '.$prefixo.self::SUFIXO]);
 
         return $next($request);
     }

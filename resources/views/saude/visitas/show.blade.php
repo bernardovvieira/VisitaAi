@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Detalhes da visita'))
+@section('og_title', config('app.brand') . ' · ' . __('Detalhes da visita'))
 @section('og_description', __('Informações completas da visita registrada no sistema.'))
 
 @section('content')

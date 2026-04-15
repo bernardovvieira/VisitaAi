@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Auditoria'))
+@section('og_title', config('app.brand') . ' · ' . __('Auditoria'))
 @section('og_description', __('Registros de auditoria. Histórico de ações realizadas pelos usuários no sistema.'))
 
 @section('content')

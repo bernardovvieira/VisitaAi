@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Locais'))
+@section('og_title', config('app.brand') . ' · ' . __('Locais'))
 @section('og_description', __('Locais cadastrados para a operação de campo. Visualize, crie e edite registros territoriais.'))
 
 @section('content')

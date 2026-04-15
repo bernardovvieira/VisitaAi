@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . $doenca->doe_nome)
+@section('og_title', config('app.brand') . ' · ' . $doenca->doe_nome)
 @section('og_description', __('Detalhes da doença monitorada: sintomas e registro municipal.'))
 
 @section('content')

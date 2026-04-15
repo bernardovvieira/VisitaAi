@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Registrar visita'))
+@section('og_title', config('app.brand') . ' · ' . __('Registrar visita'))
 @section('og_description', __('Formulário de registro de visita em território: imóvel, moradores e indicadores de campo.'))
 
 @section('head')

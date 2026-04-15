@@ -8,7 +8,7 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030712">
     <meta name="theme-color" content="#f8fafc" id="theme-color-dynamic">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }} · {{ __('Página não encontrada') }}</title>
+    <title>{{ config('app.brand') }} · {{ __('Página não encontrada') }}</title>
     <script>
         (function () {
             var themeColorMeta = document.getElementById('theme-color-dynamic');

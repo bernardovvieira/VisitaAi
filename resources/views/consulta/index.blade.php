@@ -3,7 +3,7 @@
 @section('public')
 @endsection
 
-@section('og_title', config('app.name') . ' — Consulta Pública')
+@section('og_title', config('app.brand') . ' · ' . __('Consulta pública'))
 @section('og_description', 'Consulta pública municipal para histórico de visitas, com acesso rápido por código da placa do imóvel.')
 
 @section('content')
@@ -12,7 +12,7 @@
     {{-- Cabeçalho --}}
     <header class="v-page-header pt-8">
         <div class="flex items-center gap-3">
-            <img src="{{ asset('images/visitaai.svg') }}" alt="{{ config('app.name') }}" class="h-12 w-auto" />
+            <img src="{{ asset('images/visitaai.svg') }}" alt="{{ config('app.brand') }}" class="h-12 w-auto" />
             <h1 class="v-page-title">Consulta Pública</h1>
         </div>
         <p class="v-page-lead mt-2">Consulte o histórico público de visitas por código do imóvel.</p>

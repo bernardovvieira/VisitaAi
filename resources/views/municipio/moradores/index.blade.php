@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . config('visitaai_municipio.ocupantes.titulo_listagem'))
+@section('og_title', config('app.brand') . ' · ' . config('visitaai_municipio.ocupantes.titulo_listagem'))
 @section('og_description', __('Lista de ocupantes do imóvel para uso municipal e indicadores agregados.'))
 
 @section('content')

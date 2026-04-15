@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Visitas'))
+@section('og_title', config('app.brand') . ' · ' . __('Visitas'))
 @section('og_description', __('Visitas registradas no campo. Visualize, busque, edite ou exclua registros da sua rotina.'))
 
 @section('content')

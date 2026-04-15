@@ -1,7 +1,7 @@
 <!-- resources/views/gestor/locais/index.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Locais'))
+@section('og_title', config('app.brand') . ' · ' . __('Locais'))
 @section('og_description', __('Locais cadastrados pelos profissionais de campo (ACE/ACS). Consulte endereços, códigos e coordenadas da base territorial.'))
 
 @section('content')

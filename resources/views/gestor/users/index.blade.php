@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Usuários'))
+@section('og_title', config('app.brand') . ' · ' . __('Usuários'))
 @section('og_description', __('Gestão de usuários cadastrados no sistema.'))
 
 @section('content')

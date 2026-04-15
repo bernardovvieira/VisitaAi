@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Editar ocupante'))
+@section('og_title', config('app.brand') . ' · ' . __('Editar ocupante'))
 @section('og_description', __('Atualizar dados do ocupante no imóvel.'))
 
 @section('content')

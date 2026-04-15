@@ -1,7 +1,7 @@
 <!-- resources/views/agente/doencas/index.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Doenças'))
+@section('og_title', config('app.brand') . ' · ' . __('Doenças'))
 @section('og_description', __('Doenças monitoradas. Consulte as doenças que você pode registrar nas visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Visitas'))
+@section('og_title', config('app.brand') . ' · ' . __('Visitas'))
 @section('og_description', __('Visitas registradas pelos profissionais de campo. Acompanhe e consulte os registros operacionais.'))
 
 @section('content')

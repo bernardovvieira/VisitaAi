@@ -1,7 +1,7 @@
 <!-- resources/views/agente/locais/edit.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Editar local'))
+@section('og_title', config('app.brand') . ' · ' . __('Editar local'))
 @section('og_description', __('Edição de endereço, CEP e localização do imóvel de visitação.'))
 
 @section('content')

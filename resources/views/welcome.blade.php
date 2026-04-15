@@ -6,7 +6,7 @@
 @section('public_full_bleed')
 @endsection
 
-@section('og_title', config('app.name'))
+@section('og_title', config('app.brand'))
 @section('og_description', 'Plataforma municipal para operação territorial, indicadores e transparência. Acesso para gestores, ACE, ACS e consulta pública por código do imóvel.')
 
 @section('content')

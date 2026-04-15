@@ -1,7 +1,7 @@
 <!-- resources/views/gestor/doencas/index.blade.php -->
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Doenças'))
+@section('og_title', config('app.brand') . ' · ' . __('Doenças'))
 @section('og_description', __('Doenças monitoradas no município. Visualize, edite e cadastre doenças para as visitas de vigilância entomológica e controle vetorial.'))
 
 @section('content')

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Registrar visita'))
+@section('og_title', config('app.brand') . ' · ' . __('Registrar visita'))
 @section('og_description', __('Registro em campo de visita de vigilância entomológica e controle vetorial.'))
 
 @section('head')

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Painel do gestor'))
+@section('og_title', config('app.brand') . ' · ' . __('Painel do gestor'))
 @section('og_description', __('Painel do gestor municipal com visão consolidada da operação territorial, indicadores e relatórios.'))
 
 @section('content')

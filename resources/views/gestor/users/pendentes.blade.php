@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Usuários pendentes'))
+@section('og_title', config('app.brand') . ' · ' . __('Usuários pendentes'))
 @section('og_description', __('Contas aguardando aprovação do gestor municipal.'))
 
 @section('content')

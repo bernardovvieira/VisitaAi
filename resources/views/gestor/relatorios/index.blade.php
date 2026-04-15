@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Relatórios'))
+@section('og_title', config('app.brand') . ' · ' . __('Relatórios'))
 @section('og_description', __('Relatórios de visitas de campo, indicadores do período e resumo do cadastro complementar do imóvel (ocupantes e perfil socioeconômico). Gere PDF conforme os filtros.'))
 
 @section('content')

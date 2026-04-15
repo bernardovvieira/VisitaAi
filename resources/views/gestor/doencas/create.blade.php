@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Nova doença'))
+@section('og_title', config('app.brand') . ' · ' . __('Nova doença'))
 @section('og_description', __('Cadastro municipal de doença monitorada e sintomas associados.'))
 
 @section('content')

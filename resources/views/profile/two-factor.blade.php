@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('og_title', config('app.name') . ' · ' . __('Ativar autenticação em dois fatores (2FA)'))
+@section('og_title', config('app.brand') . ' · ' . __('Ativar autenticação em dois fatores (2FA)'))
 @section('og_description', __('Ative a 2FA com aplicativo autenticador para proteger sua conta.'))
 
 @section('content')
