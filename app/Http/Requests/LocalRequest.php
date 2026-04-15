@@ -85,7 +85,7 @@ class LocalRequest extends FormRequest
 
     public function rules()
     {
-        $localId = $this->route('local')?->loc_id;
+        $localId = $this->editingLocalId();
         $escKeys = array_keys(config('visitaai_municipio.escolaridade_opcoes', []));
         $rendaKeys = array_keys(config('visitaai_municipio.renda_faixa_opcoes', []));
         $corKeys = array_keys(config('visitaai_municipio.cor_raca_opcoes', []));
@@ -144,11 +144,14 @@ class LocalRequest extends FormRequest
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) use ($localId) {
-                    $normalized = mb_strtolower(trim((string) $value));
-                    $existing = Local::query()
-                        ->whereRaw('LOWER(TRIM(loc_endereco)) = ?', [$normalized])
-                        ->first();
-                    if ($existing && (! $localId || (int) $existing->loc_id !== (int) $localId)) {
+                    $normalized = mb_strtolower(trim((string) $value), 'UTF-8');
+                    $q = Local::query()
+                        ->whereRaw('LOWER(TRIM(loc_endereco)) = ?', [$normalized]);
+                    if ($localId) {
+                        $q->where('loc_id', '!=', $localId);
+                    }
+                    $existing = $q->orderBy('loc_id')->first();
+                    if ($existing) {
                         $fail(__('Este endereço já está em uso por outro registro (ID: :id).', ['id' => $existing->loc_id]));
                     }
                 },
@@ -342,6 +345,22 @@ class LocalRequest extends FormRequest
                 $validator->errors()->add('ocupantes', __('Este imóvel já possui um titular cadastrado. Mantenha apenas um ocupante como referência familiar.'));
             }
         });
+    }
+
+    /**
+     * ID do local em edição (PATCH), ou null no cadastro.
+     */
+    private function editingLocalId(): ?int
+    {
+        $param = $this->route('local');
+        if ($param instanceof Local) {
+            return (int) $param->loc_id;
+        }
+        if (is_numeric($param)) {
+            return (int) $param;
+        }
+
+        return null;
     }
 
     private function normalizeStr(string $s): string

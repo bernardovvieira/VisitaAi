@@ -13,6 +13,8 @@
         ['label' => __('Novo')],
     ])" />
 
+    <x-flash-alerts />
+
     <x-section-card class="w-full space-y-4">
         <x-page-header :eyebrow="__('Ocupantes')" :title="__('Novo ocupante')" />
         <div class="rounded-xl border border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-4 shadow-sm dark:border-amber-700/70 dark:from-amber-950/40 dark:to-orange-950/30">

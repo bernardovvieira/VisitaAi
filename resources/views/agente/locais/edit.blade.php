@@ -10,6 +10,8 @@
 
     <x-page-header :eyebrow="__('Cadastro territorial')" :title="__('Editar local')" />
 
+    <x-flash-alerts />
+
     <x-section-card class="v-card--tight v-card--muted border border-sky-200/70 bg-gradient-to-br from-sky-50/90 to-white dark:border-sky-900/40 dark:from-slate-900/70 dark:to-slate-900/40">
         <div class="flex items-start gap-2.5">
             <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300">

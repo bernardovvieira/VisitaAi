@@ -364,7 +364,7 @@ class LocalController extends Controller
         );
 
         return redirect()
-            ->route('agente.locais.index')
+            ->route('agente.locais.edit', $local)
             ->with('success', __('Local atualizado com sucesso.'));
     }
 
@@ -546,8 +546,8 @@ class LocalController extends Controller
 
             // Draw footer texts aligned to page margins
             try {
-                $canvas->page_text($leftMargin, $y, $leftText, $font, 8, [0,0,0]);
-                $canvas->page_text($x, $y, $pageText, $font, 8, [0,0,0]);
+                $canvas->page_text($leftMargin, $y, $leftText, $font, 8, [0, 0, 0]);
+                $canvas->page_text($x, $y, $pageText, $font, 8, [0, 0, 0]);
             } catch (\Throwable $e) {
                 // swallow — footer drawing should not break PDF generation
             }

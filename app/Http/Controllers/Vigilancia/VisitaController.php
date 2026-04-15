@@ -615,8 +615,14 @@ class VisitaController extends Controller
             'Visita atualizada no local: '.$visita->local->loc_endereco.', '.($visita->local->loc_numero ?: 'S/N')
         );
 
+        if ($user->isAgenteSaude()) {
+            return redirect()
+                ->route('saude.visitas.index')
+                ->with('success', __('Visita atualizada com sucesso.'));
+        }
+
         return redirect()
-            ->route($user->isAgenteSaude() ? 'saude.visitas.index' : 'agente.visitas.index')
+            ->route('agente.visitas.edit', $visita)
             ->with('success', __('Visita atualizada com sucesso.'));
     }
 

@@ -19,6 +19,8 @@
         </x-slot>
     </x-page-header>
 
+    <x-flash-alerts />
+
     <x-section-card class="space-y-4 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/50">
         <div class="flex items-center gap-3">
             <x-heroicon-o-wifi class="h-5 w-5 text-sky-500 dark:text-sky-400" aria-hidden="true" />
