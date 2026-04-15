@@ -5,10 +5,11 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\BuildsSocioeconomicoRules;
 use App\Models\Local;
 use App\Models\Morador;
+use App\Support\UploadErrorMessage;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 
 class LocalRequest extends FormRequest
 {
@@ -42,7 +43,7 @@ class LocalRequest extends FormRequest
                 continue;
             }
             $f = $row['mor_documento_pessoal'];
-            if ($f instanceof UploadedFile
+            if ($f instanceof SymfonyUploadedFile
                 && ! $f->isValid()
                 && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
                 unset($all['ocupantes'][$i]['mor_documento_pessoal']);
@@ -50,6 +51,22 @@ class LocalRequest extends FormRequest
         }
 
         $this->files->replace($all);
+        $this->convertedFiles = null;
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'ocupantes.*.mor_documento_pessoal' => __('documento pessoal do ocupante'),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'ocupantes.*.mor_documento_pessoal.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
+            'ocupantes.*.mor_documento_pessoal.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
+        ];
     }
 
     public function rules()
@@ -159,6 +176,35 @@ class LocalRequest extends FormRequest
 
     public function withValidator($validator): void
     {
+        $validator->after(function ($validator) {
+            $ocupantes = $this->input('ocupantes', []);
+            if (! is_array($ocupantes)) {
+                return;
+            }
+            foreach (array_keys($ocupantes) as $i) {
+                $key = "ocupantes.$i.mor_documento_pessoal";
+                if (! $validator->errors()->has($key)) {
+                    continue;
+                }
+                $f = $this->file($key);
+                if (! $f instanceof SymfonyUploadedFile || $f->isValid()) {
+                    continue;
+                }
+                $code = (int) $f->getError();
+                if ($code === UPLOAD_ERR_NO_FILE) {
+                    $validator->errors()->forget($key);
+
+                    continue;
+                }
+                $msg = UploadErrorMessage::forPhpUploadError($code);
+                if ($msg === '') {
+                    continue;
+                }
+                $validator->errors()->forget($key);
+                $validator->errors()->add($key, $msg);
+            }
+        });
+
         $validator->after(function ($validator) {
             $local = $this->route('local');
             if (! $local instanceof Local) {

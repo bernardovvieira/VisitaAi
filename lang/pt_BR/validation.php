@@ -113,11 +113,13 @@ return [
     'string' => 'O campo :attribute deve ser um texto.',
     'timezone' => 'O campo :attribute deve ser um fuso horário válido.',
     'unique' => 'Este :attribute já está em uso.',
-    'uploaded' => 'Falha no upload do :attribute.',
+    'uploaded' => 'Não foi possível enviar :attribute.',
     'url' => 'O formato do campo :attribute é inválido.',
     'uuid' => 'O campo :attribute deve ser um UUID válido.',
 
     'attributes' => [
+        'mor_documento_pessoal' => 'documento pessoal',
+        'ocupantes.*.mor_documento_pessoal' => 'documento pessoal do ocupante',
         'password' => 'senha',
         'use_senha' => 'senha',
         'password_confirmation' => 'confirmação de senha',

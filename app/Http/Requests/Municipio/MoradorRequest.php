@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\Municipio;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Validation\Rule;
 use App\Models\Local;
 use App\Models\Morador;
+use App\Support\UploadErrorMessage;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 
 class MoradorRequest extends FormRequest
 {
@@ -19,13 +20,14 @@ class MoradorRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $f = $this->file('mor_documento_pessoal');
-        if ($f instanceof UploadedFile
-            && ! $f->isValid()
-            && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
-            $all = $this->files->all();
-            unset($all['mor_documento_pessoal']);
-            $this->files->replace($all);
+        $all = $this->files->all();
+        if (isset($all['mor_documento_pessoal']) && $all['mor_documento_pessoal'] instanceof SymfonyUploadedFile) {
+            $f = $all['mor_documento_pessoal'];
+            if (! $f->isValid() && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                unset($all['mor_documento_pessoal']);
+                $this->files->replace($all);
+                $this->convertedFiles = null;
+            }
         }
 
         $this->merge([
@@ -79,8 +81,46 @@ class MoradorRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'mor_documento_pessoal' => __('documento pessoal'),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'mor_documento_pessoal.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
+            'mor_documento_pessoal.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
+        ];
+    }
+
     public function withValidator($validator): void
     {
+        $validator->after(function ($validator) {
+            $key = 'mor_documento_pessoal';
+            if (! $validator->errors()->has($key)) {
+                return;
+            }
+            $f = $this->file($key);
+            if (! $f instanceof SymfonyUploadedFile || $f->isValid()) {
+                return;
+            }
+            $code = (int) $f->getError();
+            if ($code === UPLOAD_ERR_NO_FILE) {
+                $validator->errors()->forget($key);
+
+                return;
+            }
+            $msg = UploadErrorMessage::forPhpUploadError($code);
+            if ($msg === '') {
+                return;
+            }
+            $validator->errors()->forget($key);
+            $validator->errors()->add($key, $msg);
+        });
+
         $validator->after(function ($validator) {
             $refRaw = $this->input('mor_referencia_familiar', false);
             $isTitular = in_array($refRaw, [true, 1, '1', 'true', 'on', 'yes'], true);
