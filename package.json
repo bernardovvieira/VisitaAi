@@ -7,7 +7,8 @@
         "lint": "eslint resources/js tests/e2e playwright.config.ts",
         "lint:fix": "eslint resources/js tests/e2e playwright.config.ts --fix",
         "test:e2e": "playwright test",
-        "test:e2e:headed": "playwright test --headed"
+        "test:e2e:headed": "playwright test --headed",
+        "test:all": "npm run lint && php artisan test && npm run test:e2e"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
