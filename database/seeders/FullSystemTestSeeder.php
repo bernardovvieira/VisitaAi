@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\Visita;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use RuntimeException;
 
 /**
  * Seeder completo para ambiente de testes/demonstração.
@@ -43,6 +45,7 @@ class FullSystemTestSeeder extends Seeder
         $users = $this->ensureUsers();
         $doencas = $this->ensureDoencas();
         $locais = $this->ensureLocais($faker, 72);
+        $this->assertNoDuplicateTerritorialAddresses();
 
         $this->ensureSocioeconomico($faker, $locais);
         $this->ensureMoradores($faker, $locais);
@@ -50,7 +53,7 @@ class FullSystemTestSeeder extends Seeder
     }
 
     /**
-     * @return array{gestor: User, agentes: \Illuminate\Support\Collection<int, User>}
+     * @return array{gestor: User, agentes: Collection<int, User>}
      */
     private function ensureUsers(): array
     {
@@ -122,7 +125,7 @@ class FullSystemTestSeeder extends Seeder
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, Doenca>
+     * @return Collection<int, Doenca>
      */
     private function ensureDoencas()
     {
@@ -149,44 +152,54 @@ class FullSystemTestSeeder extends Seeder
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, Local>
+     * @return Collection<int, Local>
      */
     private function ensureLocais($faker, int $target)
     {
         $existing = Local::query()->count();
 
         $enderecosSoledade = [
-            ['rua' => 'Rua Venancio Aires', 'bairro' => 'Centro', 'cep' => '99300-000'],
+            ['rua' => 'Rua Venâncio Aires', 'bairro' => 'Centro', 'cep' => '99300-000'],
             ['rua' => 'Rua 7 de Setembro', 'bairro' => 'Farroupilha', 'cep' => '99300-000'],
             ['rua' => 'Avenida Marechal Floriano Peixoto', 'bairro' => 'Botucarai', 'cep' => '99300-000'],
-            ['rua' => 'Rua General Osorio', 'bairro' => 'Centro', 'cep' => '99300-000'],
-            ['rua' => 'Rua Bento Goncalves', 'bairro' => 'Expedicionario', 'cep' => '99300-000'],
-            ['rua' => 'Rua Coronel Falcon', 'bairro' => 'Missoes', 'cep' => '99300-000'],
+            ['rua' => 'Rua General Osório', 'bairro' => 'Centro', 'cep' => '99300-000'],
+            ['rua' => 'Rua Bento Gonçalves', 'bairro' => 'Expedicionario', 'cep' => '99300-000'],
+            ['rua' => 'Rua Coronel Falcão', 'bairro' => 'Missoes', 'cep' => '99300-000'],
             ['rua' => 'Rua Benjamin Constant', 'bairro' => 'Ipiranga', 'cep' => '99300-000'],
-            ['rua' => 'Rua Mauricio Cardoso', 'bairro' => 'Fontes', 'cep' => '99300-000'],
+            ['rua' => 'Rua Maurício Cardoso', 'bairro' => 'Fontes', 'cep' => '99300-000'],
             ['rua' => 'Rua Pinheiro Machado', 'bairro' => 'Centro', 'cep' => '99300-000'],
-            ['rua' => 'Rua Julio de Castilhos', 'bairro' => 'Botucarai', 'cep' => '99300-000'],
+            ['rua' => 'Rua Júlio de Castilhos', 'bairro' => 'Botucarai', 'cep' => '99300-000'],
         ];
+
+        $usedTerritorial = [];
 
         for ($i = $existing; $i < $target; $i++) {
             $codigoUnico = $this->nextCodigoUnico();
-            $end = $enderecosSoledade[array_rand($enderecosSoledade)];
+            $end = $enderecosSoledade[$i % count($enderecosSoledade)];
+            // Número único por índice evita colisão (mesmo critério da validação: logradouro + nº + bairro + cidade + UF).
+            $numeroImovel = 500 + $i;
             $centro = self::BAIRRO_CENTROS[$end['bairro']] ?? ['lat' => -28.8286, 'lng' => -52.5096];
             $lat = $this->offsetCoord($centro['lat'], 0.0035);
             $lng = $this->offsetCoord($centro['lng'], 0.0040);
 
+            $sig = $this->territorialSignature($end['rua'], $numeroImovel, $end['bairro'], 'Soledade', 'RS');
+            if (isset($usedTerritorial[$sig])) {
+                throw new RuntimeException("Colisão territorial inesperada no seeder (índice {$i}): {$sig}");
+            }
+            $usedTerritorial[$sig] = true;
+
             Local::query()->create([
                 'loc_cep' => $end['cep'],
-                'loc_tipo' => ['R', 'C', 'T'][array_rand(['R', 'C', 'T'])],
-                'loc_zona' => ['U', 'R'][array_rand(['U', 'R'])],
-                'loc_quarteirao' => (string) random_int(1, 35),
-                'loc_complemento' => random_int(0, 100) <= 35 ? $faker->secondaryAddress() : null,
+                'loc_tipo' => ['R', 'C', 'T'][$i % 3],
+                'loc_zona' => $i % 7 === 0 ? 'R' : 'U',
+                'loc_quarteirao' => (string) (($i % 35) + 1),
+                'loc_complemento' => $i % 4 === 0 ? $faker->secondaryAddress() : null,
                 'loc_categoria' => 'BIR',
-                'loc_sequencia' => random_int(1, 20),
-                'loc_lado' => random_int(1, 4),
-                'loc_codigo' => str_pad((string) random_int(1, 999), 5, '0', STR_PAD_LEFT),
+                'loc_sequencia' => ($i % 20) + 1,
+                'loc_lado' => ($i % 4) + 1,
+                'loc_codigo' => str_pad((string) (($i % 999) + 1), 5, '0', STR_PAD_LEFT),
                 'loc_endereco' => $end['rua'],
-                'loc_numero' => random_int(1, 2500),
+                'loc_numero' => $numeroImovel,
                 'loc_bairro' => $end['bairro'],
                 'loc_cidade' => 'Soledade',
                 'loc_estado' => 'RS',
@@ -194,7 +207,7 @@ class FullSystemTestSeeder extends Seeder
                 'loc_latitude' => number_format($lat, 7, '.', ''),
                 'loc_longitude' => number_format($lng, 7, '.', ''),
                 'loc_codigo_unico' => $codigoUnico,
-                'loc_responsavel_nome' => random_int(0, 100) <= 75 ? $faker->name() : null,
+                'loc_responsavel_nome' => $i % 5 !== 0 ? $faker->name() : null,
             ]);
         }
 
@@ -203,31 +216,26 @@ class FullSystemTestSeeder extends Seeder
 
     private function ensureSocioeconomico($faker, $locais): void
     {
-        $condCasa = array_keys(config('visitaai_socioeconomico.condicao_casa_opcoes', []));
-        $posicao = array_keys(config('visitaai_socioeconomico.posicao_entrevistado_opcoes', []));
         $rendaFam = array_keys(config('visitaai_municipio.renda_faixa_opcoes', []));
-        $rendaTipo = array_keys(config('visitaai_socioeconomico.renda_formal_informal_opcoes', []));
-        $situacaoPosse = array_keys(config('visitaai_socioeconomico.situacao_posse_opcoes', []));
 
         foreach ($locais as $local) {
             if (LocalSocioeconomico::query()->where('fk_local_id', $local->loc_id)->exists()) {
                 continue;
             }
-            
-            // 35% chance de deixar sem ficha socioeconômica
-            if (random_int(0, 100) > 65) {
+
+            // ~35% sem ficha (variação leve por loc_id para ser reprodutível em testes)
+            if (($local->loc_id % 20) < 7) {
                 continue;
             }
 
-            $randoPreenchimento = random_int(0, 100);
-            
-            // 30% chance de preenchimento parcial (alguns campos null)
-            if ($randoPreenchimento < 30) {
+            $randoPreenchimento = $local->loc_id % 10;
+
+            if ($randoPreenchimento < 3) {
                 LocalSocioeconomico::query()->create([
                     'fk_local_id' => $local->loc_id,
                     'lse_data_entrevista' => Carbon::now()->subDays(random_int(1, 240))->toDateString(),
-                    'lse_condicao_casa' => random_int(0, 100) < 60 ? $condCasa[array_rand($condCasa)] ?? 'nao_informado' : null,
-                    'lse_posicao_entrevistado' => $posicao[array_rand($posicao)] ?? 'nao_informado',
+                    'lse_condicao_casa' => $this->randomSocioKey('condicao_casa_opcoes'),
+                    'lse_posicao_entrevistado' => $this->randomSocioKey('posicao_entrevistado_opcoes'),
                     'lse_telefone_contato' => null,
                     'lse_n_moradores_declarado' => random_int(1, 7),
                     'lse_renda_formal_informal' => null,
@@ -235,31 +243,77 @@ class FullSystemTestSeeder extends Seeder
                     'lse_renda_familiar_faixa' => $rendaFam[array_rand($rendaFam)] ?? 'nao_informado',
                     'lse_qtd_contribuintes' => null,
                     'lse_beneficios_sociais' => null,
-                    'lse_situacao_posse' => $situacaoPosse[array_rand($situacaoPosse)] ?? 'nao_informado',
+                    'lse_situacao_posse' => $this->randomSocioKey('situacao_posse_opcoes'),
+                    'lse_uso_imovel' => $this->randomSocioKey('uso_imovel_socio_opcoes'),
+                    'lse_gastos_mensais_faixa' => $this->randomSocioKey('gastos_mensais_faixa_opcoes'),
                     'lse_num_comodos' => null,
                     'lse_num_quartos' => null,
                     'lse_num_banheiros' => null,
                     'lse_observacoes_imovel' => null,
                 ]);
             } else {
-                // 70% chance de preenchimento completo
+                $banInt = random_int(1, 3);
+                $banDentro = random_int(0, $banInt);
                 LocalSocioeconomico::query()->create([
                     'fk_local_id' => $local->loc_id,
                     'lse_data_entrevista' => Carbon::now()->subDays(random_int(1, 240))->toDateString(),
-                    'lse_condicao_casa' => $condCasa[array_rand($condCasa)] ?? 'nao_informado',
-                    'lse_posicao_entrevistado' => $posicao[array_rand($posicao)] ?? 'nao_informado',
+                    'lse_condicao_casa' => $this->randomSocioKey('condicao_casa_opcoes'),
+                    'lse_posicao_entrevistado' => $this->randomSocioKey('posicao_entrevistado_opcoes'),
                     'lse_telefone_contato' => $faker->numerify('(54) 9####-####'),
                     'lse_n_moradores_declarado' => random_int(1, 7),
-                    'lse_renda_formal_informal' => $rendaTipo[array_rand($rendaTipo)] ?? 'nao_informado',
-                    'lse_principal_fonte_renda' => $faker->randomElement(['Assalariado', 'Autônomo', 'Benefício social', 'Aposentadoria']),
+                    'lse_renda_formal_informal' => $this->randomSocioKey('renda_formal_informal_opcoes'),
+                    'lse_principal_fonte_renda' => $faker->randomElement(['Assalariado', 'Autônomo', 'Benefício social', 'Aposentadoria', 'Pensionista']),
                     'lse_renda_familiar_faixa' => $rendaFam[array_rand($rendaFam)] ?? 'nao_informado',
-                    'lse_qtd_contribuintes' => random_int(1, 3),
-                    'lse_beneficios_sociais' => $faker->randomElement(['Bolsa Família', 'BPC', 'Nenhum', 'Auxílio eventual']),
-                    'lse_situacao_posse' => $situacaoPosse[array_rand($situacaoPosse)] ?? 'nao_informado',
-                    'lse_num_comodos' => random_int(3, 9),
-                    'lse_num_quartos' => random_int(1, 4),
-                    'lse_num_banheiros' => random_int(1, 3),
-                    'lse_observacoes_imovel' => random_int(0, 100) < 20 ? $faker->sentence() : null,
+                    'lse_qtd_contribuintes' => random_int(1, 4),
+                    'lse_beneficios_sociais' => $faker->randomElement(['Bolsa Família', 'BPC', 'Nenhum', 'Auxílio eventual', 'Tarifa social']),
+                    'lse_gastos_mensais_faixa' => $this->randomSocioKey('gastos_mensais_faixa_opcoes'),
+                    'lse_situacao_posse' => $this->randomSocioKey('situacao_posse_opcoes'),
+                    'lse_proprietario_nome' => random_int(0, 100) < 35 ? $faker->name() : null,
+                    'lse_proprietario_telefone' => random_int(0, 100) < 35 ? $faker->numerify('(54) 9####-####') : null,
+                    'lse_proprietario_endereco' => random_int(0, 100) < 25 ? $faker->streetAddress().', '.$faker->city() : null,
+                    'lse_uso_imovel' => $this->randomSocioKey('uso_imovel_socio_opcoes'),
+                    'lse_material_predominante' => $this->randomSocioKey('material_predominante_opcoes'),
+                    'lse_condicao_edificacao' => $this->randomSocioKey('condicao_edificacao_opcoes'),
+                    'lse_tipologia' => $this->randomSocioKey('tipologia_opcoes'),
+                    'lse_tipo_implantacao' => $this->randomSocioKey('tipo_implantacao_opcoes'),
+                    'lse_posicao_lote' => $this->randomSocioKey('posicao_lote_opcoes'),
+                    'lse_num_pavimentos' => random_int(1, 3),
+                    'lse_num_comodos' => random_int(3, 10),
+                    'lse_num_quartos' => random_int(1, 5),
+                    'lse_num_banheiros' => $banInt,
+                    'lse_banheiro_dentro' => $banDentro,
+                    'lse_banheiro_fora' => $banInt - $banDentro,
+                    'lse_banheiro_compartilha' => random_int(0, 100) < 15,
+                    'lse_area_externa' => $this->randomSocioKey('area_externa_opcoes'),
+                    'lse_acesso_imovel' => $this->randomSocioKey('acesso_imovel_opcoes'),
+                    'lse_entrada_para' => $this->randomSocioKey('entrada_para_opcoes'),
+                    'lse_area_livre' => random_int(0, 100) < 40 ? (string) random_int(0, 120).' m²' : null,
+                    'lse_viz_frente' => random_int(0, 100) < 30 ? 'Residencial' : null,
+                    'lse_viz_fundos' => random_int(0, 100) < 30 ? 'Muro' : null,
+                    'lse_viz_direita' => random_int(0, 100) < 30 ? 'Via' : null,
+                    'lse_viz_esquerda' => random_int(0, 100) < 30 ? 'Imóvel' : null,
+                    'lse_abastecimento_agua' => $this->randomSocioKey('infra_sim_nao_redes_opcoes'),
+                    'lse_energia_eletrica' => $this->randomSocioKey('infra_energia_opcoes'),
+                    'lse_esgoto' => $this->randomSocioKey('infra_esgoto_opcoes'),
+                    'lse_coleta_lixo' => $this->randomSocioKey('infra_lixo_opcoes'),
+                    'lse_pavimentacao' => $this->randomSocioKey('infra_pavimentacao_opcoes'),
+                    'lse_situacao_terreno' => $this->randomSocioKey('situacao_terreno_opcoes'),
+                    'lse_posse_area' => $this->randomSocioKey('posse_area_opcoes'),
+                    'lse_tempo_residencia_texto' => random_int(1, 40).' anos',
+                    'lse_data_ocupacao' => Carbon::now()->subYears(random_int(1, 25))->toDateString(),
+                    'lse_houve_compra_venda' => $this->randomSocioKey('sim_nao_curto_opcoes'),
+                    'lse_forma_aquisicao' => random_int(0, 100) < 50 ? $faker->randomElement(['Compra', 'Herança', 'Doação', 'Posse']) : null,
+                    'lse_escritura' => $this->randomSocioKey('escritura_opcoes'),
+                    'lse_contrato_promessa' => $this->randomSocioKey('sim_nao_curto_opcoes'),
+                    'lse_documento_quitado' => $this->randomSocioKey('sim_nao_curto_opcoes'),
+                    'lse_sabe_local_vendedor' => $this->randomSocioKey('sim_nao_curto_opcoes'),
+                    'lse_paga_iptu' => $this->randomSocioKey('sim_nao_curto_opcoes'),
+                    'lse_iptu_desde' => random_int(0, 100) < 40 ? (string) random_int(2010, 2023) : null,
+                    'lse_como_ocupou' => random_int(0, 100) < 35 ? $faker->sentence(6) : null,
+                    'lse_proprietario_anterior_nome' => random_int(0, 100) < 20 ? $faker->name() : null,
+                    'lse_proprietario_anterior_doc' => random_int(0, 100) < 15 ? $faker->numerify('###.###.###-##') : null,
+                    'lse_situacao_legal_obs' => random_int(0, 100) < 25 ? $faker->sentence(8) : null,
+                    'lse_observacoes_imovel' => random_int(0, 100) < 30 ? $faker->sentence(12) : null,
                 ]);
             }
         }
@@ -379,6 +433,75 @@ class FullSystemTestSeeder extends Seeder
                 }
             }
         }
+    }
+
+    private function randomSocioKey(string $configKey): string
+    {
+        $keys = array_keys(config('visitaai_socioeconomico.'.$configKey, []));
+        if ($keys === []) {
+            return 'nao_informado';
+        }
+
+        return $keys[array_rand($keys)];
+    }
+
+    /**
+     * Chave alinhada à validação de duplicidade territorial (LocalRequest).
+     */
+    private function territorialSignature(string $endereco, mixed $numero, string $bairro, string $cidade, string $estado): string
+    {
+        $n = $this->normalizeNumeroSignature($numero);
+        $end = mb_strtolower(trim($endereco), 'UTF-8');
+        $bairroNorm = mb_strtolower(trim($bairro), 'UTF-8');
+        $city = $this->normalizeStrAccentInsensitive($cidade);
+        $uf = strtoupper(trim($estado));
+
+        return "{$end}|{$n}|{$bairroNorm}|{$city}|{$uf}";
+    }
+
+    private function territorialSignatureFromLocal(Local $local): string
+    {
+        return $this->territorialSignature(
+            (string) $local->loc_endereco,
+            $local->loc_numero,
+            (string) $local->loc_bairro,
+            (string) $local->loc_cidade,
+            (string) $local->loc_estado
+        );
+    }
+
+    private function normalizeNumeroSignature(mixed $value): string
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+        $s = is_string($value) ? trim($value) : (string) $value;
+        if ($s === '' || strtoupper($s) === 'N/A' || strtoupper($s) === 'S/N') {
+            return '';
+        }
+
+        return is_numeric($s) ? (string) ((int) $s) : '';
+    }
+
+    /** Normalização de cidade semelhante à usada na validação de formulário. */
+    private function normalizeStrAccentInsensitive(string $s): string
+    {
+        $s = mb_strtolower(trim($s), 'UTF-8');
+        $s = preg_replace('/\s+/u', ' ', $s) ?? $s;
+        $map = ['á' => 'a', 'à' => 'a', 'ã' => 'a', 'â' => 'a', 'é' => 'e', 'ê' => 'e', 'í' => 'i', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ú' => 'u', 'ç' => 'c'];
+
+        return strtr($s, $map);
+    }
+
+    private function assertNoDuplicateTerritorialAddresses(): void
+    {
+        $groups = Local::query()->get()->groupBy(fn (Local $l) => $this->territorialSignatureFromLocal($l));
+        $dupes = $groups->filter(fn ($g) => $g->count() > 1);
+        if ($dupes->isEmpty()) {
+            return;
+        }
+        $summary = $dupes->map(fn ($g) => $g->pluck('loc_id')->implode(','))->take(8)->implode(' | ');
+        throw new RuntimeException('Imóveis com o mesmo endereço territorial após o seed. IDs agrupados: '.$summary);
     }
 
     private function nextCodigoUnico(): string
