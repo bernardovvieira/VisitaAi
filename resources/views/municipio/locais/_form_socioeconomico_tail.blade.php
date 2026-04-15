@@ -269,22 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Como ocupou o imóvel') }}</label>
             <textarea name="socio[como_ocupou]" rows="2" class="v-input mt-1 w-full">{{ $sv('como_ocupou') }}</textarea>
         </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Escritura / registro') }}</label>
-            <select name="socio[escritura]" class="v-select mt-1 w-full">
-                @foreach(config('visitaai_socioeconomico.escritura_opcoes', []) as $k => $lab)
-                    <option value="{{ $k }}" @selected($sv('escritura') === $k)>{{ $lab }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Contrato de promessa de compra e venda') }}</label>
-            <select name="socio[contrato_promessa]" class="v-select mt-1 w-full">
-                @foreach(config('visitaai_socioeconomico.sim_nao_curto_opcoes', []) as $k => $lab)
-                    <option value="{{ $k }}" @selected($sv('contrato_promessa') === $k)>{{ $lab }}</option>
-                @endforeach
-            </select>
-        </div>
+        <!-- Contrato / matrícula / escritura removidos: uploads centralizados em card separado -->
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Documento quitado') }}</label>
             <select name="socio[documento_quitado]" class="v-select mt-1 w-full">
