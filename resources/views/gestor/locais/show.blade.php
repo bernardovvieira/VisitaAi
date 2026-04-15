@@ -36,8 +36,7 @@
         'qrCodeBase64' => $qrCodeBase64,
         'qrCodeMime' => $qrCodeMime,
         'fichaPdfUrl' => route('gestor.locais.ficha-socioeconomica-pdf', $local),
+        'moradorResumo' => $moradorResumo,
     ])
-
-    @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 </div>
 @endsection

@@ -1,6 +1,6 @@
 {{--
     Detalhes do imóvel: cadastro, mapa e adesivo (consulta pública).
-    Variáveis: $local, $qrCodeBase64, $qrCodeMime; opcional: $fichaPdfUrl (string|null).
+    Variáveis: $local, $qrCodeBase64, $qrCodeMime; opcional: $fichaPdfUrl (string|null), $moradorResumo (card ocupantes entre cadastro e socioeconômico).
 --}}
 @php
     use App\Support\SocioeconomicoEtiquetas as SE;
@@ -162,6 +162,12 @@
         </div>
     </div>
 </x-section-card>
+
+@if(isset($moradorResumo))
+    <div class="mt-5">
+        @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
+    </div>
+@endif
 
 @php
     $t = config('visitaai_socioeconomico.secao_titulos', []);

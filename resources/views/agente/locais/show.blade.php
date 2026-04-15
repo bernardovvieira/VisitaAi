@@ -28,8 +28,7 @@
         'qrCodeBase64' => $qrCodeBase64,
         'qrCodeMime' => $qrCodeMime,
         'fichaPdfUrl' => $fichaPdfUrl,
+        'moradorResumo' => $moradorResumo,
     ])
-
-    @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
 </div>
 @endsection
