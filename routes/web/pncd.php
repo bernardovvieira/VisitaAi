@@ -24,13 +24,13 @@ Route::middleware('perfil:agente_endemias')->prefix('agente')->name('agente.')->
         ->name('locais.ficha-socioeconomica-pdf')
         ->middleware(['can:view,local', 'throttle:30,1']);
 
-    Route::get('locais/{local}/documento-posse', [LocalController::class, 'downloadDocumentoPosse'])
+    Route::get('locais/{local}/documento-posse/{documento}', [LocalController::class, 'downloadDocumentoPosse'])
         ->name('locais.documento-posse')
         ->middleware(['can:view,local', 'throttle:30,1']);
 
     // Individual morador ficha removed — use imóvel ficha instead
 
-    Route::get('locais/{local}/moradores/{morador}/documento-pessoal', [MoradorController::class, 'downloadDocumentoPessoal'])
+    Route::get('locais/{local}/moradores/{morador}/documento-pessoal/{documento}', [MoradorController::class, 'downloadDocumentoPessoal'])
         ->name('locais.moradores.documento-pessoal')
         ->middleware(['can:view,local', 'can:view,morador', 'throttle:30,1']);
 
@@ -80,11 +80,11 @@ Route::middleware('perfil:agente_saude')->prefix('saude')->name('saude.')->group
         ->name('locais.ficha-socioeconomica-pdf')
         ->middleware(['can:view,local', 'throttle:30,1']);
 
-    Route::get('locais/{local}/documento-posse', [LocalController::class, 'downloadDocumentoPosse'])
+    Route::get('locais/{local}/documento-posse/{documento}', [LocalController::class, 'downloadDocumentoPosse'])
         ->name('locais.documento-posse')
         ->middleware(['can:view,local', 'throttle:30,1']);
 
-    Route::get('locais/{local}/moradores/{morador}/documento-pessoal', [MoradorController::class, 'downloadDocumentoPessoal'])
+    Route::get('locais/{local}/moradores/{morador}/documento-pessoal/{documento}', [MoradorController::class, 'downloadDocumentoPessoal'])
         ->name('locais.moradores.documento-pessoal')
         ->middleware(['can:view,local', 'can:view,morador', 'throttle:30,1']);
 

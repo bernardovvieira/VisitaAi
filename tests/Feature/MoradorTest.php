@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Local;
 use App\Models\Morador;
+use App\Models\MoradorDocumento;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -85,12 +86,17 @@ class MoradorTest extends TestCase
         $local = Local::factory()->create();
         $morador = Morador::factory()->create([
             'fk_local_id' => $local->loc_id,
-            'mor_documento_pessoal_path' => '../../../.env',
-            'mor_documento_pessoal_nome' => 'env.txt',
+        ]);
+        $doc = MoradorDocumento::query()->create([
+            'fk_morador_id' => $morador->mor_id,
+            'path' => '../../../.env',
+            'original_name' => 'env.txt',
+            'mime' => 'text/plain',
+            'size_bytes' => 1,
         ]);
 
         $this->actingAs($gestor)
-            ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador]))
+            ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador, $doc]))
             ->assertNotFound();
     }
 }

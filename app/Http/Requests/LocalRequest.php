@@ -4,7 +4,9 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\BuildsSocioeconomicoRules;
 use App\Models\Local;
+use App\Models\LocalDocumento;
 use App\Models\Morador;
+use App\Models\MoradorDocumento;
 use App\Support\UploadErrorMessage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Http;
@@ -36,24 +38,36 @@ class LocalRequest extends FormRequest
         $all = $this->files->all();
         $touched = false;
 
-        if (isset($all['loc_documento_posse']) && $all['loc_documento_posse'] instanceof SymfonyUploadedFile) {
-            $f = $all['loc_documento_posse'];
-            if (! $f->isValid() && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
-                unset($all['loc_documento_posse']);
+        if (isset($all['loc_documentos_posse']) && is_array($all['loc_documentos_posse'])) {
+            foreach ($all['loc_documentos_posse'] as $i => $f) {
+                if ($f instanceof SymfonyUploadedFile
+                    && ! $f->isValid()
+                    && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                    unset($all['loc_documentos_posse'][$i]);
+                    $touched = true;
+                }
+            }
+            if ($all['loc_documentos_posse'] === []) {
+                unset($all['loc_documentos_posse']);
                 $touched = true;
             }
         }
 
         if (isset($all['ocupantes']) && is_array($all['ocupantes'])) {
             foreach ($all['ocupantes'] as $i => $row) {
-                if (! is_array($row) || ! isset($row['mor_documento_pessoal'])) {
+                if (! is_array($row) || ! isset($row['mor_documentos_pessoal']) || ! is_array($row['mor_documentos_pessoal'])) {
                     continue;
                 }
-                $f = $row['mor_documento_pessoal'];
-                if ($f instanceof SymfonyUploadedFile
-                    && ! $f->isValid()
-                    && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
-                    unset($all['ocupantes'][$i]['mor_documento_pessoal']);
+                foreach ($row['mor_documentos_pessoal'] as $j => $f) {
+                    if ($f instanceof SymfonyUploadedFile
+                        && ! $f->isValid()
+                        && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                        unset($all['ocupantes'][$i]['mor_documentos_pessoal'][$j]);
+                        $touched = true;
+                    }
+                }
+                if (($all['ocupantes'][$i]['mor_documentos_pessoal'] ?? []) === []) {
+                    unset($all['ocupantes'][$i]['mor_documentos_pessoal']);
                     $touched = true;
                 }
             }
@@ -68,18 +82,18 @@ class LocalRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'ocupantes.*.mor_documento_pessoal' => __('documento pessoal do ocupante'),
-            'loc_documento_posse' => __('contrato, matrícula ou escritura do imóvel'),
+            'ocupantes.*.mor_documentos_pessoal.*' => __('documento pessoal do ocupante'),
+            'loc_documentos_posse.*' => __('contrato, matrícula ou escritura do imóvel'),
         ];
     }
 
     public function messages(): array
     {
         return [
-            'ocupantes.*.mor_documento_pessoal.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
-            'ocupantes.*.mor_documento_pessoal.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
-            'loc_documento_posse.max' => __('O documento do imóvel não pode ter mais de 10 MB.'),
-            'loc_documento_posse.mimes' => __('O documento do imóvel tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
+            'ocupantes.*.mor_documentos_pessoal.*.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
+            'ocupantes.*.mor_documentos_pessoal.*.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
+            'loc_documentos_posse.*.max' => __('O documento do imóvel não pode ter mais de 10 MB.'),
+            'loc_documentos_posse.*.mimes' => __('O documento do imóvel tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
         ];
     }
 
@@ -159,13 +173,15 @@ class LocalRequest extends FormRequest
             'loc_codigo' => ['required', 'string'],
             'loc_codigo_unico' => ['nullable', 'string', 'max:255', "unique:locais,loc_codigo_unico,{$localId},loc_id"],
             'loc_responsavel_nome' => ['nullable', 'string', 'max:255'],
-            'loc_documento_posse' => [
+            'loc_documentos_posse' => ['nullable', 'array', 'max:20'],
+            'loc_documentos_posse.*' => [
                 'nullable',
                 'file',
                 'max:10240',
                 'mimes:pdf,jpeg,jpg,png,webp,heic,heif',
             ],
-            'remover_documento_posse' => ['nullable', 'boolean'],
+            'remover_documentos_posse' => ['nullable', 'array', 'max:50'],
+            'remover_documentos_posse.*' => ['integer', 'exists:local_documentos,id'],
 
             'ocupantes' => ['nullable', 'array', 'max:30'],
             'ocupantes.*.mor_id' => ['nullable', 'integer'],
@@ -187,12 +203,15 @@ class LocalRequest extends FormRequest
             'ocupantes.*.mor_rg_orgao' => ['nullable', 'string', 'max:60'],
             'ocupantes.*.mor_rg_expedicao' => ['nullable', 'date'],
             'ocupantes.*.mor_cpf' => ['nullable', 'string', 'max:20'],
-            'ocupantes.*.mor_documento_pessoal' => [
+            'ocupantes.*.mor_documentos_pessoal' => ['nullable', 'array', 'max:15'],
+            'ocupantes.*.mor_documentos_pessoal.*' => [
                 'nullable',
                 'file',
                 'max:10240',
                 'mimes:pdf,jpeg,jpg,png,webp,heic,heif',
             ],
+            'ocupantes.*.remover_documentos_pessoal' => ['nullable', 'array', 'max:30'],
+            'ocupantes.*.remover_documentos_pessoal.*' => ['integer', 'exists:morador_documentos,id'],
             'ocupantes.*.mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
             'ocupantes.*.mor_ajuda_compra_imovel' => ['nullable', 'string', Rule::in(['sim', 'nao'])],
             'ocupantes.*.mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfiKeys)],
@@ -237,14 +256,100 @@ class LocalRequest extends FormRequest
                 $validator->errors()->add($key, $msg);
             };
 
-            $rewrite('loc_documento_posse');
+            $locDocs = $this->file('loc_documentos_posse');
+            if (is_array($locDocs)) {
+                foreach (array_keys($locDocs) as $i) {
+                    $rewrite("loc_documentos_posse.$i");
+                }
+            }
 
             $ocupantes = $this->input('ocupantes', []);
             if (! is_array($ocupantes)) {
                 return;
             }
             foreach (array_keys($ocupantes) as $i) {
-                $rewrite("ocupantes.$i.mor_documento_pessoal");
+                $filesRow = $this->file("ocupantes.$i", []);
+                if (! is_array($filesRow)) {
+                    continue;
+                }
+                $nested = $filesRow['mor_documentos_pessoal'] ?? null;
+                if (! is_array($nested)) {
+                    continue;
+                }
+                foreach (array_keys($nested) as $j) {
+                    $rewrite("ocupantes.$i.mor_documentos_pessoal.$j");
+                }
+            }
+        });
+
+        $validator->after(function ($validator) {
+            $local = $this->route('local');
+            if (! $local instanceof Local) {
+                return;
+            }
+            $ids = $this->input('remover_documentos_posse', []);
+            if (! is_array($ids)) {
+                return;
+            }
+            foreach ($ids as $k => $raw) {
+                $id = is_numeric($raw) ? (int) $raw : 0;
+                if ($id <= 0) {
+                    continue;
+                }
+                $ok = LocalDocumento::query()
+                    ->whereKey($id)
+                    ->where('fk_local_id', $local->loc_id)
+                    ->exists();
+                if (! $ok) {
+                    $validator->errors()->add(
+                        "remover_documentos_posse.$k",
+                        __('Documento do imóvel inválido para remoção.')
+                    );
+                }
+            }
+        });
+
+        $validator->after(function ($validator) {
+            $local = $this->route('local');
+            if (! $local instanceof Local) {
+                return;
+            }
+            $ocupantes = $this->input('ocupantes', []);
+            if (! is_array($ocupantes)) {
+                return;
+            }
+            foreach ($ocupantes as $i => $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $mid = isset($row['mor_id']) ? (int) $row['mor_id'] : 0;
+                $removeIds = $row['remover_documentos_pessoal'] ?? [];
+                if ($mid <= 0 || ! is_array($removeIds)) {
+                    continue;
+                }
+                $okMor = Morador::query()
+                    ->where('mor_id', $mid)
+                    ->where('fk_local_id', $local->loc_id)
+                    ->exists();
+                if (! $okMor) {
+                    continue;
+                }
+                foreach ($removeIds as $k => $raw) {
+                    $id = is_numeric($raw) ? (int) $raw : 0;
+                    if ($id <= 0) {
+                        continue;
+                    }
+                    $ok = MoradorDocumento::query()
+                        ->whereKey($id)
+                        ->where('fk_morador_id', $mid)
+                        ->exists();
+                    if (! $ok) {
+                        $validator->errors()->add(
+                            "ocupantes.$i.remover_documentos_pessoal.$k",
+                            __('Documento pessoal inválido para remoção.')
+                        );
+                    }
+                }
             }
         });
 

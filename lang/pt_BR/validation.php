@@ -118,9 +118,12 @@ return [
     'uuid' => 'O campo :attribute deve ser um UUID válido.',
 
     'attributes' => [
-        'mor_documento_pessoal' => 'documento pessoal',
-        'loc_documento_posse' => 'contrato, matrícula ou escritura do imóvel',
-        'ocupantes.*.mor_documento_pessoal' => 'documento pessoal do ocupante',
+        'mor_documentos_pessoal' => 'arquivos pessoais',
+        'mor_documentos_pessoal.*' => 'arquivo pessoal',
+        'loc_documentos_posse' => 'arquivos da posse do imóvel',
+        'loc_documentos_posse.*' => 'contrato, matrícula ou escritura do imóvel',
+        'ocupantes.*.mor_documentos_pessoal' => 'arquivos pessoais do ocupante',
+        'ocupantes.*.mor_documentos_pessoal.*' => 'arquivo pessoal do ocupante',
         'password' => 'senha',
         'use_senha' => 'senha',
         'password_confirmation' => 'confirmação de senha',

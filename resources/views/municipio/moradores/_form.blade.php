@@ -142,7 +142,8 @@
     </fieldset>
 
     <fieldset class="space-y-4 rounded-lg border border-slate-200 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
-        <legend class="px-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Documentos pessoais') }}</legend>
+        <legend class="px-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Identificação e arquivos') }}</legend>
+        <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('RG, CPF e anexos (digitalizações, fotos, PDF).') }}</p>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
                 <x-form-field name="mor_rg_numero" :label="__('RG (número)')">
@@ -164,49 +165,73 @@
                     <x-text-input id="mor_cpf" name="mor_cpf" type="text" class="mt-1 block w-full" :value="old('mor_cpf', $morador->mor_cpf)" />
                 </x-form-field>
             </div>
-            <div class="lg:col-span-3 space-y-3 rounded-lg border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-700 dark:bg-slate-900/40"
-                 x-data="{
-                    fileName: '',
-                    openPicker() { this.$refs.documentoPessoal.click(); },
-                    updateName(event) { this.fileName = event.target.files && event.target.files.length ? event.target.files[0].name : ''; }
-                 }">
-                <x-form-field name="mor_documento_pessoal" :label="__('Documento pessoal')" :help="__('Você pode selecionar um arquivo do aparelho ou tirar uma foto no celular. Formatos: PDF, JPG, PNG, WEBP, HEIC. Limite: 10 MB.')">
+        </div>
+        <div class="mt-4" x-data="{
+                fileSummary: '',
+                openPicker() { this.$refs.documentoPessoal.click(); },
+                updateName(event) {
+                    const files = event.target.files;
+                    if (!files || !files.length) { this.fileSummary = ''; return; }
+                    if (files.length === 1) { this.fileSummary = files[0].name; return; }
+                    this.fileSummary = files.length + ' {{ __('arquivos selecionados') }}';
+                }
+             }">
+            <x-arquivos-zona
+                variant="ocupante"
+                :titulo="__('Arquivos deste ocupante')"
+                :descricao="__('Um ou mais arquivos: PDF, JPG, PNG, WEBP ou HEIC. Até 10 MB cada.')"
+            >
+                @if($morador->exists && $morador->documentosPessoais->isNotEmpty())
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Arquivos já enviados') }}</p>
+                    <ul class="mb-3 space-y-2">
+                        @foreach($morador->documentosPessoais as $doc)
+                            <li class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2.5 text-xs dark:border-slate-600 dark:bg-slate-800/60">
+                                <span class="min-w-0 flex-1 break-all font-medium text-slate-800 dark:text-slate-100">{{ $doc->original_name ?: __('Arquivo') }}</span>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $morador, $doc]) }}"
+                                       class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                                        {{ __('Baixar') }}
+                                    </a>
+                                    <label class="inline-flex shrink-0 items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                                        <input type="checkbox" name="remover_documentos_pessoal[]" value="{{ $doc->id }}" class="rounded border-slate-300 text-red-600 focus:ring-red-500">
+                                        <span>{{ __('Remover') }}</span>
+                                    </label>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @foreach($errors->keys() as $errKey)
+                        @if(str_starts_with((string) $errKey, 'remover_documentos_pessoal'))
+                            <x-input-error :messages="$errors->get($errKey)" class="mt-1" />
+                        @endif
+                    @endforeach
+                @endif
+                <div class="rounded-lg border border-dashed border-slate-200/90 bg-slate-50/50 p-3 dark:border-slate-600 dark:bg-slate-800/40">
+                    <x-input-label for="mor_documentos_pessoal" :value="__('Adicionar arquivos')" class="text-slate-800 dark:text-slate-200" />
                     <input
                         x-ref="documentoPessoal"
-                        id="mor_documento_pessoal"
-                        name="mor_documento_pessoal"
+                        id="mor_documentos_pessoal"
+                        name="mor_documentos_pessoal[]"
                         type="file"
                         accept="image/*,application/pdf"
                         capture="environment"
+                        multiple
                         class="sr-only"
                         @change="updateName($event)"
                     >
-                    <div class="flex flex-wrap items-center gap-3">
+                    <div class="mt-2 flex flex-wrap items-center gap-3">
                         <button type="button" @click="openPicker()" class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                            {{ __('Selecionar arquivo ou tirar foto') }}
+                            {{ __('Selecionar arquivo(s) ou tirar foto') }}
                         </button>
-                        <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileName || '{{ __('Nenhum arquivo selecionado') }}'"></span>
+                        <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileSummary || '{{ __('Nenhum arquivo selecionado') }}'"></span>
                     </div>
-                </x-form-field>
-
-                @if($morador->exists && $morador->mor_documento_pessoal_path)
-                    <p class="text-xs text-slate-700 dark:text-slate-200">
-                        <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
-                        <span class="break-all">{{ $morador->mor_documento_pessoal_nome ?: __('Documento salvo') }}</span>
-                    </p>
-                    <div class="flex flex-wrap items-center gap-3 text-xs">
-                        <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $morador]) }}"
-                           class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                            {{ __('Baixar documento atual') }}
-                        </a>
-                        <label class="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                            <input type="checkbox" name="remover_documento_pessoal" value="1" class="rounded border-slate-300 text-red-600 focus:ring-red-500">
-                            <span>{{ __('Remover documento atual') }}</span>
-                        </label>
-                    </div>
-                    <x-input-error :messages="$errors->get('remover_documento_pessoal')" class="mt-1" />
-                @endif
-            </div>
+                </div>
+                @foreach($errors->keys() as $errKey)
+                    @if(str_starts_with((string) $errKey, 'mor_documentos_pessoal'))
+                        <x-input-error :messages="$errors->get($errKey)" class="mt-1" />
+                    @endif
+                @endforeach
+            </x-arquivos-zona>
         </div>
     </fieldset>
 </div>

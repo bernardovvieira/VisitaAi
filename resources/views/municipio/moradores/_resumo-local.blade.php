@@ -1,6 +1,7 @@
-{{-- Requer: $local, $moradorResumo | apenas telas de local gestor/ACE (não e-SUS / não ACS). --}}
+{{-- Requer: $local, $moradorResumo | telas de local gestor/ACE/ACS. --}}
 @php
-    $rp = request()->routeIs('gestor.*') ? 'gestor' : 'agente';
+    $rp = auth()->user()->locaisRouteProfile();
+    $ehGestor = auth()->user()->isGestor();
 @endphp
 <x-section-card class="space-y-3">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -9,7 +10,11 @@
         </div>
         <a href="{{ route($rp . '.locais.moradores.index', $local) }}"
            class="v-btn-compact v-btn-compact--blue shrink-0 self-start">
-            {{ config('visitaai_municipio.ocupantes.botao_gerenciar') }} ({{ $moradorResumo['total'] ?? 0 }})
+            @if($ehGestor)
+                {{ __('Ver ocupantes e documentos') }} ({{ $moradorResumo['total'] ?? 0 }})
+            @else
+                {{ config('visitaai_municipio.ocupantes.botao_gerenciar') }} ({{ $moradorResumo['total'] ?? 0 }})
+            @endif
         </a>
     </div>
     @if(($moradorResumo['total'] ?? 0) > 0)

@@ -56,6 +56,11 @@ class Local extends Model
         return $this->hasOne(LocalSocioeconomico::class, 'fk_local_id', 'loc_id');
     }
 
+    public function documentosPosse()
+    {
+        return $this->hasMany(LocalDocumento::class, 'fk_local_id', 'loc_id')->orderBy('id');
+    }
+
     /**
      * Indica se este é o local primário (primeiro cadastrado).
      * Não pode ser editado nem excluído pela UI, apenas por suporte técnico.

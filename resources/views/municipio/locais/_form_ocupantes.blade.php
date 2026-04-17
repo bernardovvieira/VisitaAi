@@ -1,5 +1,6 @@
 {{-- Cadastro de ocupantes + ficha socioeconômica por pessoa. $local opcional na edição. --}}
 @php
+    $local = $local ?? null;
     $esc = config('visitaai_municipio.escolaridade_opcoes', []);
     $renda = config('visitaai_municipio.renda_faixa_opcoes', []);
     $cor = config('visitaai_municipio.cor_raca_opcoes', []);
@@ -8,7 +9,21 @@
     $ec = config('visitaai_socioeconomico.estado_civil_opcoes', []);
     $par = config('visitaai_socioeconomico.parentesco_opcoes', []);
     $rfi = config('visitaai_socioeconomico.renda_formal_informal_opcoes', []);
-    $mapMorador = function ($m) {
+    $rp = auth()->user()->locaisRouteProfile();
+    $mapMorador = function ($m) use ($local, $rp) {
+        $docs = [];
+        if ($m->relationLoaded('documentosPessoais')) {
+            foreach ($m->documentosPessoais as $d) {
+                $docs[] = [
+                    'id' => $d->id,
+                    'nome' => $d->original_name,
+                    'download_url' => (isset($local) && $local->exists && $m->mor_id)
+                        ? route($rp.'.locais.moradores.documento-pessoal', [$local, $m, $d])
+                        : '',
+                ];
+            }
+        }
+
         return [
             'mor_id' => $m->mor_id,
             'mor_nome' => $m->mor_nome,
@@ -28,10 +43,7 @@
             'mor_rg_orgao' => $m->mor_rg_orgao ?? '',
             'mor_rg_expedicao' => $m->mor_rg_expedicao ? $m->mor_rg_expedicao->format('Y-m-d') : '',
             'mor_cpf' => $m->mor_cpf ?? '',
-            'mor_documento_pessoal_path' => $m->mor_documento_pessoal_path ?? '',
-            'mor_documento_pessoal_nome' => $m->mor_documento_pessoal_nome ?? '',
-            'mor_documento_pessoal_mime' => $m->mor_documento_pessoal_mime ?? '',
-            'mor_documento_pessoal_tamanho' => $m->mor_documento_pessoal_tamanho ?? '',
+            'documentos_pessoais' => $docs,
             'mor_tempo_uniao_conjuge' => $m->mor_tempo_uniao_conjuge ?? '',
             'mor_ajuda_compra_imovel' => in_array(strtolower(trim((string) ($m->mor_ajuda_compra_imovel ?? ''))), ['sim', 'nao'], true)
                 ? strtolower(trim((string) ($m->mor_ajuda_compra_imovel ?? '')))
@@ -42,8 +54,20 @@
     };
     $ocupantesRows = old('ocupantes');
     if (! is_array($ocupantesRows) && isset($local)) {
-        $local->loadMissing('moradores');
+        $local->loadMissing('moradores.documentosPessoais');
         $ocupantesRows = $local->moradores->map($mapMorador)->values()->all();
+    } elseif (is_array($ocupantesRows) && isset($local)) {
+        $local->loadMissing('moradores.documentosPessoais');
+        $byId = $local->moradores->keyBy('mor_id');
+        foreach ($ocupantesRows as $i => $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $mid = isset($row['mor_id']) ? (int) $row['mor_id'] : 0;
+            if ($mid > 0 && $byId->has($mid)) {
+                $ocupantesRows[$i] = array_merge($mapMorador($byId->get($mid)), $row);
+            }
+        }
     }
     $emptyRow = [
         'mor_id' => null,
@@ -64,10 +88,7 @@
         'mor_rg_orgao' => '',
         'mor_rg_expedicao' => '',
         'mor_cpf' => '',
-        'mor_documento_pessoal_path' => '',
-        'mor_documento_pessoal_nome' => '',
-        'mor_documento_pessoal_mime' => '',
-        'mor_documento_pessoal_tamanho' => '',
+        'documentos_pessoais' => [],
         'mor_tempo_uniao_conjuge' => '',
         'mor_ajuda_compra_imovel' => '',
         'mor_renda_formal_informal' => '',
@@ -355,7 +376,8 @@
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-section-title">{{ __('Documentos') }}</legend>
+                    <legend class="v-section-title">{{ __('Identificação e arquivos do ocupante') }}</legend>
+                    <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('RG, CPF e anexos (RG digital, comprovantes, fotos, PDF).') }}</p>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                             <x-input-label :value="__('CPF')" />
@@ -373,33 +395,60 @@
                             <x-input-label :value="__('RG: expedição')" />
                             <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_rg_expedicao]'" x-model="row.mor_rg_expedicao" class="v-input mt-1 w-full">
                         </div>
-                        <div class="sm:col-span-2" x-data="{
-                            fileName: '',
+                    </div>
+                    <div class="sm:col-span-2 mt-3" x-data="{
+                            fileSummary: '',
                             openPicker() { this.$refs.documentoPessoal.click(); },
-                            updateName(event) { this.fileName = event.target.files && event.target.files.length ? event.target.files[0].name : ''; }
+                            updateName(event) {
+                                const files = event.target.files;
+                                if (!files || !files.length) { this.fileSummary = ''; return; }
+                                if (files.length === 1) { this.fileSummary = files[0].name; return; }
+                                this.fileSummary = files.length + ' {{ __('arquivos selecionados') }}';
+                            }
                         }">
-                            <x-input-label :value="__('Documento pessoal')" />
-                            <p x-show="row.mor_documento_pessoal_path" class="mt-1 text-xs text-slate-700 dark:text-slate-200">
-                                <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
-                                <span class="break-all" x-text="row.mor_documento_pessoal_nome || '{{ __('Documento salvo') }}'"></span>
-                            </p>
-                            <input type="file"
-                                   x-ref="documentoPessoal"
-                                   x-bind:name="'ocupantes[' + idx + '][mor_documento_pessoal]'"
-                                   accept="image/*,application/pdf"
-                                   capture="environment"
-                                   class="sr-only"
-                                   @change="updateName($event)">
-                            <div class="mt-1 flex flex-wrap items-center gap-3">
-                                <button type="button"
-                                        @click="openPicker()"
-                                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                                    {{ __('Selecionar arquivo ou tirar foto') }}
-                                </button>
-                                <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileName ? ('{{ __('Novo') }}: ' + fileName) : (row.mor_documento_pessoal_path ? '{{ __('Nenhum novo ficheiro selecionado') }}' : '{{ __('Nenhum arquivo selecionado') }}')"></span>
+                        <x-arquivos-zona
+                            variant="ocupante"
+                            :titulo="__('Arquivos deste ocupante')"
+                            :descricao="__('Anexe um ou mais arquivos por pessoa. PDF ou imagem, até 10 MB cada.')"
+                        >
+                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" x-show="(row.documentos_pessoais || []).length">{{ __('Arquivos já enviados') }}</p>
+                            <ul class="mb-3 space-y-2" x-show="(row.documentos_pessoais || []).length">
+                                <template x-for="doc in (row.documentos_pessoais || [])" :key="doc.id">
+                                    <li class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2.5 text-xs dark:border-slate-600 dark:bg-slate-800/60">
+                                        <span class="min-w-0 flex-1 break-all font-medium text-slate-800 dark:text-slate-100" x-text="doc.nome || '{{ __('Arquivo') }}'"></span>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <a x-show="doc.download_url" :href="doc.download_url" target="_blank" rel="noopener"
+                                               class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">{{ __('Baixar') }}</a>
+                                            <label class="inline-flex shrink-0 items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                                                <input type="checkbox" class="rounded border-slate-300 text-red-600 focus:ring-red-500"
+                                                       x-bind:name="'ocupantes[' + idx + '][remover_documentos_pessoal][]'"
+                                                       :value="doc.id">
+                                                <span>{{ __('Remover') }}</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                            <div class="rounded-lg border border-dashed border-slate-200/90 bg-slate-50/50 p-3 dark:border-slate-600 dark:bg-slate-800/40">
+                                <x-input-label :value="__('Adicionar arquivos')" class="text-slate-800 dark:text-slate-200" />
+                                <input type="file"
+                                       x-ref="documentoPessoal"
+                                       x-bind:name="'ocupantes[' + idx + '][mor_documentos_pessoal][]'"
+                                       accept="image/*,application/pdf"
+                                       capture="environment"
+                                       multiple
+                                       class="sr-only"
+                                       @change="updateName($event)">
+                                <div class="mt-2 flex flex-wrap items-center gap-3">
+                                    <button type="button"
+                                            @click="openPicker()"
+                                            class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                        {{ __('Selecionar arquivo(s) ou tirar foto') }}
+                                    </button>
+                                    <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileSummary ? ('{{ __('Novo') }}: ' + fileSummary) : '{{ __('Nenhum arquivo selecionado') }}'"></span>
+                                </div>
                             </div>
-                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('PDF, JPG, PNG, WEBP, HEIC. Limite: 10 MB.') }}</p>
-                        </div>
+                        </x-arquivos-zona>
                     </div>
                 </fieldset>
 

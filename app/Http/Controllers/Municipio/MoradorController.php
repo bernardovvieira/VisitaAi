@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Municipio\MoradorRequest;
 use App\Models\Local;
 use App\Models\Morador;
+use App\Models\MoradorDocumento;
 use App\Models\User;
 use App\Support\SmartSearch;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class MoradorController extends Controller
 {
@@ -44,7 +46,7 @@ class MoradorController extends Controller
         $search = trim((string) $request->query('q', ''));
         $searchNormalized = $this->normalizeSearchTerm($search);
         $terms = SmartSearch::terms($search);
-        $moradoresQuery = $local->moradores()->orderBy('mor_id');
+        $moradoresQuery = $local->moradores()->with('documentosPessoais')->orderBy('mor_id');
 
         if ($search !== '') {
             $moradoresQuery->where(function ($q) use ($terms, $searchNormalized) {
@@ -112,14 +114,18 @@ class MoradorController extends Controller
         $this->authorize('create', Morador::class);
 
         $data = $request->validated();
-        unset($data['mor_documento_pessoal'], $data['remover_documento_pessoal']);
-
-        if ($request->hasFile('mor_documento_pessoal')) {
-            $data = array_merge($data, $this->uploadDocumentoPessoal($request->file('mor_documento_pessoal')));
-        }
+        unset($data['mor_documentos_pessoal'], $data['remover_documentos_pessoal']);
 
         $data['fk_local_id'] = $local->loc_id;
         $morador = Morador::create($data);
+
+        try {
+            $this->anexarNovosDocumentosPessoais($morador, $this->normalizeUploadedFileList($request->file('mor_documentos_pessoal')));
+        } catch (\RuntimeException $e) {
+            throw ValidationException::withMessages([
+                'mor_documentos_pessoal' => [$e->getMessage()],
+            ]);
+        }
 
         LogHelper::registrar(
             'Cadastro de ocupante (Visita Aí)',
@@ -144,6 +150,7 @@ class MoradorController extends Controller
             abort(404);
         }
 
+        $morador->load('documentosPessoais');
         $profile = $this->routeProfile();
 
         return view('municipio.moradores.edit', compact('local', 'morador', 'profile'));
@@ -159,23 +166,18 @@ class MoradorController extends Controller
         }
 
         $data = $request->validated();
-        $removeDocumento = (bool) ($data['remover_documento_pessoal'] ?? false);
-        unset($data['mor_documento_pessoal'], $data['remover_documento_pessoal']);
-
-        if ($removeDocumento) {
-            $this->deleteDocumentoPessoal($morador);
-            $data['mor_documento_pessoal_path'] = null;
-            $data['mor_documento_pessoal_nome'] = null;
-            $data['mor_documento_pessoal_mime'] = null;
-            $data['mor_documento_pessoal_tamanho'] = null;
-        }
-
-        if ($request->hasFile('mor_documento_pessoal')) {
-            $data = array_merge($data, $this->uploadDocumentoPessoal($request->file('mor_documento_pessoal')));
-            $this->deleteDocumentoPessoal($morador);
-        }
+        unset($data['mor_documentos_pessoal'], $data['remover_documentos_pessoal']);
 
         $morador->update($data);
+
+        $this->removerDocumentosPessoaisMarcados($morador, $request->input('remover_documentos_pessoal', []));
+        try {
+            $this->anexarNovosDocumentosPessoais($morador, $this->normalizeUploadedFileList($request->file('mor_documentos_pessoal')));
+        } catch (\RuntimeException $e) {
+            throw ValidationException::withMessages([
+                'mor_documentos_pessoal' => [$e->getMessage()],
+            ]);
+        }
 
         LogHelper::registrar(
             'Atualização de ocupante (Visita Aí)',
@@ -200,7 +202,7 @@ class MoradorController extends Controller
             abort(404);
         }
 
-        $this->deleteDocumentoPessoal($morador);
+        $this->apagarTodosDocumentosPessoaisDoMorador($morador);
 
         $id = $morador->mor_id;
         $morador->delete();
@@ -224,7 +226,7 @@ class MoradorController extends Controller
         // individual ficha generation removed — use LocalController::fichaSocioeconomicaPdf instead
     }
 
-    public function downloadDocumentoPessoal(Local $local, Morador $morador)
+    public function downloadDocumentoPessoal(Local $local, Morador $morador, MoradorDocumento $documento)
     {
         $this->authorize('view', $local);
         $this->authorize('view', $morador);
@@ -232,8 +234,11 @@ class MoradorController extends Controller
         if ((int) $morador->fk_local_id !== (int) $local->loc_id) {
             abort(404);
         }
+        if ((int) $documento->fk_morador_id !== (int) $morador->mor_id) {
+            abort(404);
+        }
 
-        $path = str_replace('\\', '/', ltrim((string) ($morador->mor_documento_pessoal_path ?? ''), '/'));
+        $path = str_replace('\\', '/', ltrim((string) ($documento->path ?? ''), '/'));
         if ($path === '' || str_contains($path, '..') || ! str_starts_with($path, 'moradores/documentos/')) {
             abort(404);
         }
@@ -242,7 +247,7 @@ class MoradorController extends Controller
             abort(404);
         }
 
-        $downloadName = (string) ($morador->mor_documento_pessoal_nome ?: ('documento-pessoal-ocupante-'.$morador->mor_id));
+        $downloadName = (string) ($documento->original_name ?: ('documento-pessoal-ocupante-'.$morador->mor_id));
         $downloadName = trim((string) preg_replace('/[\r\n]+/', '', $downloadName));
         if ($downloadName === '') {
             $downloadName = 'documento-pessoal-ocupante-'.$morador->mor_id;
@@ -251,27 +256,83 @@ class MoradorController extends Controller
         return response()->download(Storage::disk('local')->path($path), $downloadName);
     }
 
-    private function uploadDocumentoPessoal(UploadedFile $file): array
+    /**
+     * @param  list<UploadedFile>  $files
+     */
+    private function anexarNovosDocumentosPessoais(Morador $morador, array $files): void
     {
-        $path = $file->store('moradores/documentos', 'local');
-        if ($path === false || $path === '') {
-            throw new \RuntimeException(__('Não foi possível gravar o documento pessoal. Verifique permissões de armazenamento.'));
+        foreach ($files as $file) {
+            $path = $file->store('moradores/documentos', 'local');
+            if ($path === false || $path === '') {
+                throw new \RuntimeException(__('Não foi possível gravar o documento pessoal. Verifique permissões de armazenamento.'));
+            }
+            $morador->documentosPessoais()->create([
+                'path' => $path,
+                'original_name' => $file->getClientOriginalName(),
+                'mime' => $file->getClientMimeType() ?: $file->getMimeType(),
+                'size_bytes' => $file->getSize(),
+            ]);
         }
-
-        return [
-            'mor_documento_pessoal_path' => $path,
-            'mor_documento_pessoal_nome' => $file->getClientOriginalName(),
-            'mor_documento_pessoal_mime' => $file->getClientMimeType() ?: $file->getMimeType(),
-            'mor_documento_pessoal_tamanho' => $file->getSize(),
-        ];
     }
 
-    private function deleteDocumentoPessoal(Morador $morador): void
+    /**
+     * @param  list<int|string>  $ids
+     */
+    private function removerDocumentosPessoaisMarcados(Morador $morador, mixed $ids): void
     {
-        $path = (string) ($morador->mor_documento_pessoal_path ?? '');
-        if ($path !== '' && Storage::disk('local')->exists($path)) {
-            Storage::disk('local')->delete($path);
+        if (! is_array($ids)) {
+            return;
         }
+        foreach ($ids as $raw) {
+            $id = is_numeric($raw) ? (int) $raw : 0;
+            if ($id <= 0) {
+                continue;
+            }
+            $doc = MoradorDocumento::query()
+                ->where('fk_morador_id', $morador->mor_id)
+                ->whereKey($id)
+                ->first();
+            if (! $doc) {
+                continue;
+            }
+            $path = (string) ($doc->path ?? '');
+            if ($path !== '' && Storage::disk('local')->exists($path)) {
+                Storage::disk('local')->delete($path);
+            }
+            $doc->delete();
+        }
+    }
+
+    private function apagarTodosDocumentosPessoaisDoMorador(Morador $morador): void
+    {
+        foreach ($morador->documentosPessoais()->get() as $doc) {
+            $path = (string) ($doc->path ?? '');
+            if ($path !== '' && Storage::disk('local')->exists($path)) {
+                Storage::disk('local')->delete($path);
+            }
+        }
+        $morador->documentosPessoais()->delete();
+    }
+
+    /**
+     * @return list<UploadedFile>
+     */
+    private function normalizeUploadedFileList(mixed $input): array
+    {
+        if ($input instanceof UploadedFile) {
+            return $input->isValid() ? [$input] : [];
+        }
+        if (! is_array($input)) {
+            return [];
+        }
+        $out = [];
+        foreach ($input as $f) {
+            if ($f instanceof UploadedFile && $f->isValid()) {
+                $out[] = $f;
+            }
+        }
+
+        return $out;
     }
 
     private function normalizeSearchTerm(string $value): string
@@ -280,25 +341,19 @@ class MoradorController extends Controller
     }
 
     /**
-     * @param  array<string, string>  $options
-     * @return array<int, string>
+     * @param  array<string, string>  $opcoes
+     * @return list<string>
      */
-    private function configOptionMatches(string $search, array $options): array
+    private function configOptionMatches(string $needle, array $opcoes): array
     {
-        if ($search === '') {
-            return [];
-        }
-
         $matches = [];
-        foreach ($options as $value => $label) {
-            $valueNormalized = $this->normalizeSearchTerm((string) $value);
-            $labelNormalized = $this->normalizeSearchTerm((string) $label);
-
-            if (str_contains($valueNormalized, $search) || str_contains($labelNormalized, $search)) {
-                $matches[] = (string) $value;
+        foreach ($opcoes as $key => $label) {
+            $labelNorm = $this->normalizeSearchTerm((string) $label);
+            if ($labelNorm !== '' && str_contains($labelNorm, $needle)) {
+                $matches[] = (string) $key;
             }
         }
 
-        return array_values(array_unique($matches));
+        return $matches;
     }
 }

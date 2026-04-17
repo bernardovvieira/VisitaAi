@@ -37,7 +37,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="sm:col-span-2 border-t border-slate-200 pt-4 mt-1 dark:border-slate-600">
+        <div class="sm:col-span-2 mt-3">
             @include('municipio.locais._form_local_documento_posse', ['local' => $local ?? null])
         </div>
         <div>

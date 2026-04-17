@@ -361,7 +361,7 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
             'mor_data_nascimento' => '1990-05-15',
             'mor_escolaridade' => 'medio_completo',
             'mor_renda_faixa' => 'ate_1_sm',
-            'mor_documento_pessoal' => $documentoFile,
+            'mor_documentos_pessoal' => [$documentoFile],
         ];
 
         $response = $this->actingAs($agente)
@@ -372,15 +372,14 @@ class CompleteSystemWorkflowIntegrationTest extends TestCase
         $morador->refresh();
         $this->assertEquals('João Silva Santos', $morador->mor_nome);
 
-        // Se houver documento anexado, deve estar salvo
-        if ($morador->mor_documento_pessoal_path) {
-            $this->assertNotEmpty($morador->mor_documento_pessoal_nome);
-            $this->assertGreaterThan(0, $morador->mor_documento_pessoal_tamanho);
+        $morador->load('documentosPessoais');
+        if ($morador->documentosPessoais->isNotEmpty()) {
+            $doc = $morador->documentosPessoais->first();
+            $this->assertNotEmpty($doc->original_name);
+            $this->assertGreaterThan(0, (int) ($doc->size_bytes ?? 0));
 
-            // === FAZER DOWNLOAD DO DOCUMENTO ===
-            // Gestor should be able to download the document
             $response = $this->actingAs($gestor)
-                ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador]));
+                ->get(route('gestor.locais.moradores.documento-pessoal', [$local, $morador, $doc]));
 
             $this->assertTrue($response->isOk() || $response->isDownload());
         }

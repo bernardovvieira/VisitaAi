@@ -66,6 +66,11 @@ class Morador extends Model
         return $this->belongsTo(Local::class, 'fk_local_id', 'loc_id');
     }
 
+    public function documentosPessoais()
+    {
+        return $this->hasMany(MoradorDocumento::class, 'fk_morador_id', 'mor_id')->orderBy('id');
+    }
+
     /**
      * Idade em anos completos na data atual; null se data de nascimento ausente.
      */

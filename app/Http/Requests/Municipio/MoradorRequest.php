@@ -4,6 +4,7 @@ namespace App\Http\Requests\Municipio;
 
 use App\Models\Local;
 use App\Models\Morador;
+use App\Models\MoradorDocumento;
 use App\Support\UploadErrorMessage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -15,19 +16,32 @@ class MoradorRequest extends FormRequest
     {
         $u = $this->user();
 
-        return $u !== null && ($u->isGestor() || $u->isAgenteEndemias());
+        return $u !== null && ($u->isAgenteEndemias() || $u->isAgenteSaude());
     }
 
     protected function prepareForValidation(): void
     {
         $all = $this->files->all();
-        if (isset($all['mor_documento_pessoal']) && $all['mor_documento_pessoal'] instanceof SymfonyUploadedFile) {
-            $f = $all['mor_documento_pessoal'];
-            if (! $f->isValid() && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
-                unset($all['mor_documento_pessoal']);
-                $this->files->replace($all);
-                $this->convertedFiles = null;
+        $touched = false;
+
+        if (isset($all['mor_documentos_pessoal']) && is_array($all['mor_documentos_pessoal'])) {
+            foreach ($all['mor_documentos_pessoal'] as $i => $f) {
+                if ($f instanceof SymfonyUploadedFile
+                    && ! $f->isValid()
+                    && (int) $f->getError() === UPLOAD_ERR_NO_FILE) {
+                    unset($all['mor_documentos_pessoal'][$i]);
+                    $touched = true;
+                }
             }
+            if (($all['mor_documentos_pessoal'] ?? []) === []) {
+                unset($all['mor_documentos_pessoal']);
+                $touched = true;
+            }
+        }
+
+        if ($touched) {
+            $this->files->replace($all);
+            $this->convertedFiles = null;
         }
 
         $this->merge([
@@ -72,8 +86,10 @@ class MoradorRequest extends FormRequest
             'mor_rg_orgao' => ['nullable', 'string', 'max:60'],
             'mor_rg_expedicao' => ['nullable', 'date'],
             'mor_cpf' => ['nullable', 'string', 'max:20'],
-            'mor_documento_pessoal' => ['nullable', 'file', 'max:10240', 'mimes:pdf,jpeg,jpg,png,webp,heic,heif'],
-            'remover_documento_pessoal' => ['nullable', 'boolean'],
+            'mor_documentos_pessoal' => ['nullable', 'array', 'max:15'],
+            'mor_documentos_pessoal.*' => ['nullable', 'file', 'max:10240', 'mimes:pdf,jpeg,jpg,png,webp,heic,heif'],
+            'remover_documentos_pessoal' => ['nullable', 'array', 'max:30'],
+            'remover_documentos_pessoal.*' => ['integer', 'exists:morador_documentos,id'],
             'mor_tempo_uniao_conjuge' => ['nullable', 'string', 'max:120'],
             'mor_ajuda_compra_imovel' => ['nullable', 'string', 'max:255'],
             'mor_renda_formal_informal' => ['nullable', 'string', Rule::in($rfi)],
@@ -84,41 +100,74 @@ class MoradorRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'mor_documento_pessoal' => __('documento pessoal'),
+            'mor_documentos_pessoal.*' => __('documento pessoal'),
         ];
     }
 
     public function messages(): array
     {
         return [
-            'mor_documento_pessoal.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
-            'mor_documento_pessoal.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
+            'mor_documentos_pessoal.*.max' => __('O documento pessoal não pode ter mais de 10 MB.'),
+            'mor_documentos_pessoal.*.mimes' => __('O documento pessoal tem de ser PDF, JPG, PNG, WEBP ou HEIC/HEIF.'),
         ];
     }
 
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $key = 'mor_documento_pessoal';
-            if (! $validator->errors()->has($key)) {
+            $files = $this->file('mor_documentos_pessoal');
+            if (! is_array($files)) {
                 return;
             }
-            $f = $this->file($key);
-            if (! $f instanceof SymfonyUploadedFile || $f->isValid()) {
-                return;
-            }
-            $code = (int) $f->getError();
-            if ($code === UPLOAD_ERR_NO_FILE) {
-                $validator->errors()->forget($key);
+            foreach (array_keys($files) as $i) {
+                $key = "mor_documentos_pessoal.$i";
+                if (! $validator->errors()->has($key)) {
+                    continue;
+                }
+                $f = $this->file("mor_documentos_pessoal.$i");
+                if (! $f instanceof SymfonyUploadedFile || $f->isValid()) {
+                    continue;
+                }
+                $code = (int) $f->getError();
+                if ($code === UPLOAD_ERR_NO_FILE) {
+                    $validator->errors()->forget($key);
 
+                    continue;
+                }
+                $msg = UploadErrorMessage::forPhpUploadError($code);
+                if ($msg === '') {
+                    continue;
+                }
+                $validator->errors()->forget($key);
+                $validator->errors()->add($key, $msg);
+            }
+        });
+
+        $validator->after(function ($validator) {
+            $moradorAtual = $this->route('morador');
+            if (! $moradorAtual instanceof Morador) {
                 return;
             }
-            $msg = UploadErrorMessage::forPhpUploadError($code);
-            if ($msg === '') {
+            $ids = $this->input('remover_documentos_pessoal', []);
+            if (! is_array($ids)) {
                 return;
             }
-            $validator->errors()->forget($key);
-            $validator->errors()->add($key, $msg);
+            foreach ($ids as $k => $raw) {
+                $id = is_numeric($raw) ? (int) $raw : 0;
+                if ($id <= 0) {
+                    continue;
+                }
+                $ok = MoradorDocumento::query()
+                    ->whereKey($id)
+                    ->where('fk_morador_id', $moradorAtual->mor_id)
+                    ->exists();
+                if (! $ok) {
+                    $validator->errors()->add(
+                        "remover_documentos_pessoal.$k",
+                        __('Documento pessoal inválido para remoção.')
+                    );
+                }
+            }
         });
 
         $validator->after(function ($validator) {

@@ -10,25 +10,25 @@ final class UploadErrorMessage
     {
         return match ($code) {
             UPLOAD_ERR_INI_SIZE => self::iniSizeExceededMessage(),
-            UPLOAD_ERR_FORM_SIZE => __('O ficheiro excede o limite de 10 MB permitido neste formulário.'),
-            UPLOAD_ERR_PARTIAL => __('O envio do ficheiro ficou incompleto. Verifique a rede e tente novamente.'),
+            UPLOAD_ERR_FORM_SIZE => __('O arquivo excede o limite de 10 MB permitido neste formulário.'),
+            UPLOAD_ERR_PARTIAL => __('O envio do arquivo ficou incompleto. Verifique a rede e tente novamente.'),
             UPLOAD_ERR_NO_TMP_DIR,
             UPLOAD_ERR_CANT_WRITE,
-            UPLOAD_ERR_EXTENSION => __('O servidor não conseguiu guardar o ficheiro. Tente de novo mais tarde ou contacte o suporte.'),
+            UPLOAD_ERR_EXTENSION => __('O servidor não conseguiu salvar o arquivo. Tente de novo mais tarde ou entre em contato com o suporte.'),
             UPLOAD_ERR_NO_FILE => '',
-            default => __('Não foi possível concluir o envio do ficheiro. Tente novamente.'),
+            default => __('Não foi possível concluir o envio do arquivo. Tente novamente.'),
         };
     }
 
     /**
-     * UPLOAD_ERR_INI_SIZE: o PHP recusou o ficheiro antes da validação da app (ex.: ficheiro de 3 MB com upload_max_filesize=2M).
+     * UPLOAD_ERR_INI_SIZE: o PHP recusou o arquivo antes da validação da app (ex.: arquivo de 3 MB com upload_max_filesize=2M).
      */
     private static function iniSizeExceededMessage(): string
     {
         $bytes = SymfonyUploadedFile::getMaxFilesize();
         $limit = self::formatBytesForHumans($bytes);
 
-        return __('O servidor só aceita envios de até cerca de :limit por ficheiro. Ficheiros maiores são rejeitados antes do limite de 10 MB da aplicação. Reduza o ficheiro ou peça ao suporte para aumentar o limite de envio no PHP.', [
+        return __('O servidor só aceita envios de até cerca de :limit por arquivo. Arquivos maiores são rejeitados antes do limite de 10 MB da aplicação. Reduza o arquivo ou peça ao suporte para aumentar o limite de envio no PHP.', [
             'limit' => $limit,
         ]);
     }

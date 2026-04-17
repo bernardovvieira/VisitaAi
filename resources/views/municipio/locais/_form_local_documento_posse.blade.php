@@ -1,58 +1,77 @@
 {{-- Contrato / matrícula / escritura do imóvel. $local opcional (edição). --}}
 @php
     $local = $local ?? null;
-    $hasDoc = $local && $local->exists && $local->loc_documento_posse_path;
-    $downloadUrl = null;
-    if ($hasDoc) {
-        $downloadUrl = route(auth()->user()->locaisRouteProfile().'.locais.documento-posse', $local);
-    }
+    $rp = auth()->user()->locaisRouteProfile();
+    $docs = ($local && $local->exists)
+        ? $local->documentosPosse
+        : collect();
 @endphp
 
-<div class="space-y-2">
-    <p class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Contrato, matrícula ou escritura do imóvel') }}</p>
-    <p class="text-[11px] text-slate-500 dark:text-slate-400">{{ __('Opcional. PDF ou imagem. Limite: 10 MB.') }}</p>
-
-    <div class="space-y-3 rounded-lg border border-slate-200 bg-slate-50/60 p-3 dark:border-slate-700 dark:bg-slate-900/40"
+<x-arquivos-zona
+    variant="imovel"
+    :titulo="__('Arquivos do imóvel (posse)')"
+    :descricao="__('Contrato, matrícula, escritura ou outro comprovativo. PDF ou imagem, até 10 MB por arquivo. Pode anexar vários.')"
+    class="mt-1"
+>
+    <div class="space-y-3"
          x-data="{
-            fileName: '',
+            fileSummary: '',
             openPicker() { this.$refs.locDocPosse.click(); },
-            updateName(event) { this.fileName = event.target.files && event.target.files.length ? event.target.files[0].name : ''; }
+            updateName(event) {
+                const files = event.target.files;
+                if (!files || !files.length) { this.fileSummary = ''; return; }
+                if (files.length === 1) { this.fileSummary = files[0].name; return; }
+                this.fileSummary = files.length + ' {{ __('arquivos selecionados') }}';
+            }
          }">
-        @if($hasDoc)
-            <p class="text-xs text-slate-700 dark:text-slate-200">
-                <span class="font-semibold">{{ __('Arquivo atual') }}:</span>
-                <span class="break-all">{{ $local->loc_documento_posse_nome ?: __('Documento salvo') }}</span>
-            </p>
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ $downloadUrl }}" target="_blank" rel="noopener"
-                   class="inline-flex items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                    {{ __('Baixar documento atual') }}
-                </a>
-            </div>
-            <label class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
-                <input type="checkbox" name="remover_documento_posse" value="1" class="rounded border-slate-300 text-red-600 focus:ring-red-500">
-                <span>{{ __('Remover documento atual') }}</span>
-            </label>
+        @if($docs->isNotEmpty())
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Arquivos já enviados') }}</p>
+            <ul class="space-y-2">
+                @foreach($docs as $doc)
+                    <li class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2.5 text-xs dark:border-slate-600 dark:bg-slate-800/60">
+                        <span class="min-w-0 flex-1 break-all font-medium text-slate-800 dark:text-slate-100">{{ $doc->original_name ?: __('Arquivo') }}</span>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <a href="{{ route($rp.'.locais.documento-posse', [$local, $doc]) }}" target="_blank" rel="noopener"
+                               class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                                {{ __('Baixar') }}
+                            </a>
+                            <label class="inline-flex shrink-0 items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                                <input type="checkbox" name="remover_documentos_posse[]" value="{{ $doc->id }}" class="rounded border-slate-300 text-red-600 focus:ring-red-500">
+                                <span>{{ __('Remover') }}</span>
+                            </label>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
         @endif
 
-        <div>
-            <x-input-label for="loc_documento_posse" :value="__('Enviar ficheiro')" />
+        <div class="rounded-lg border border-dashed border-slate-200/90 bg-slate-50/50 p-3 dark:border-slate-600 dark:bg-slate-800/40">
+            <x-input-label for="loc_documentos_posse" :value="__('Adicionar arquivos')" class="text-slate-800 dark:text-slate-200" />
             <input type="file"
                    x-ref="locDocPosse"
-                   id="loc_documento_posse"
-                   name="loc_documento_posse"
+                   id="loc_documentos_posse"
+                   name="loc_documentos_posse[]"
                    accept="image/*,application/pdf,.pdf"
+                   multiple
                    class="sr-only"
                    @change="updateName($event)">
-            <div class="mt-1 flex flex-wrap items-center gap-3">
+            <div class="mt-2 flex flex-wrap items-center gap-3">
                 <button type="button" @click="openPicker()"
                         class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                    {{ __('Selecionar arquivo') }}
+                    {{ __('Selecionar arquivo(s)') }}
                 </button>
-                <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileName ? ('{{ __('Novo') }}: ' + fileName) : '{{ __('Nenhum arquivo selecionado') }}'"></span>
+                <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileSummary ? ('{{ __('Novo') }}: ' + fileSummary) : '{{ __('Nenhum arquivo selecionado') }}'"></span>
             </div>
         </div>
-        <x-input-error :messages="$errors->get('loc_documento_posse')" class="mt-1" />
-        <x-input-error :messages="$errors->get('remover_documento_posse')" class="mt-1" />
+        @foreach($errors->keys() as $errKey)
+            @if(str_starts_with((string) $errKey, 'loc_documentos_posse'))
+                <x-input-error :messages="$errors->get($errKey)" class="mt-1" />
+            @endif
+        @endforeach
+        @foreach($errors->keys() as $errKey)
+            @if(str_starts_with((string) $errKey, 'remover_documentos_posse'))
+                <x-input-error :messages="$errors->get($errKey)" class="mt-1" />
+            @endif
+        @endforeach
     </div>
-</div>
+</x-arquivos-zona>

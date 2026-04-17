@@ -6,7 +6,7 @@ use App\Models\Morador;
 use App\Models\User;
 
 /**
- * Ocupantes no imóvel (dados do Visita Aí): gestor, ACE e ACS no fluxo de cadastro territorial.
+ * Ocupantes no imóvel (Visita Aí): gestor consulta e baixa anexos; ACE/ACS cadastram e editam.
  */
 class MoradorPolicy
 {
@@ -20,6 +20,7 @@ class MoradorPolicy
         return $user->isGestor() || $user->isAgenteEndemias() || $user->isAgenteSaude();
     }
 
+    /** Anexar/editar/remover ocupantes e documentos pessoais (campo). */
     public function create(User $user): bool
     {
         return $user->isAgenteEndemias() || $user->isAgenteSaude();

@@ -6,13 +6,12 @@ use App\Models\Local;
 use App\Models\User;
 
 /**
- * Cadastro e gestão de imóveis/locais: gestor (local primário), ACE e ACS com as mesmas regras de campo
- * (exceto primário, só gestor na criação inicial).
+ * Imóveis/locais: gestor vê tudo e baixa anexos; ACE/ACS editam cadastro territorial (exceto primário na UI).
  */
 class LocalPolicy
 {
     /**
-     * ACE, ACS e gestores podem listar e visualizar locais.
+     * ACE, ACS e gestores podem listar e visualizar locais (inclui documentos de posse em modo leitura).
      */
     public function viewAny(User $user): bool
     {

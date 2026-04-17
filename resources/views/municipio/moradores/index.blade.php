@@ -83,9 +83,10 @@
                         <th scope="col">{{ __('Renda') }}</th>
                         <th scope="col">{{ __('Cor/raça') }}</th>
                         <th scope="col">{{ __('Trabalho') }}</th>
-                            @if($perfilCampoLocais)
-                                <th scope="col" class="text-right">{{ __('Ações') }}</th>
-                            @endif
+                        <th scope="col" class="min-w-[10rem]">{{ __('Arquivos do ocupante') }}</th>
+                        @if($perfilCampoLocais)
+                            <th scope="col" class="text-right">{{ __('Ações') }}</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -105,34 +106,58 @@
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '' }}">{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '-' }}</td>
                             <td class="max-w-[9rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '' }}">{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '-' }}</td>
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
-                            <td class="text-right whitespace-nowrap">
-                                <div class="inline-flex justify-end gap-1.5">
-                                    {{-- individual ficha removed: use imóvel ficha export instead --}}
-                                    @if($perfilCampoLocais)
-                                        <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
-                                           class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                                           title="{{ __('Editar') }}"
-                                           aria-label="{{ __('Editar ocupante') }}">
-                                            <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
-                                        </a>
-                                        <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit"
-                                                    data-confirm-message="{{ __('Excluir este registro de ocupante?') }}"
-                                                    class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
-                                                    title="{{ __('Excluir') }}"
-                                                    aria-label="{{ __('Excluir ocupante') }}">
-                                                <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
-                                            </button>
-                                        </form>
-                                    @endif
-                                </div>
+                            <td class="max-w-[15rem] align-top text-xs">
+                                @can('view', $m)
+                                    <div class="rounded-lg border border-slate-200/90 border-l-4 border-l-teal-500 bg-slate-50/80 p-2 dark:border-slate-600 dark:border-l-teal-400 dark:bg-slate-800/50">
+                                        @if($m->documentosPessoais->isEmpty())
+                                            <p class="text-center text-[11px] text-slate-500 dark:text-slate-400">{{ __('Sem anexos') }}</p>
+                                        @else
+                                            <ul class="space-y-1.5">
+                                                @foreach($m->documentosPessoais as $doc)
+                                                    <li class="min-w-0 rounded border border-slate-200/60 bg-white/90 px-2 py-1.5 dark:border-slate-600 dark:bg-slate-900/60">
+                                                        <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $m, $doc]) }}"
+                                                           class="inline-flex max-w-full items-center gap-1 break-all font-medium text-sky-800 hover:text-sky-950 dark:text-sky-200 dark:hover:text-sky-50">
+                                                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                                                            <span class="min-w-0">{{ $doc->original_name ?: __('Arquivo') }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </div>
+                                @endcan
                             </td>
+                            @if($perfilCampoLocais)
+                                <td class="text-right whitespace-nowrap">
+                                    <div class="inline-flex justify-end gap-1.5">
+                                        @can('update', $m)
+                                            <a href="{{ route($profile . '.locais.moradores.edit', [$local, $m]) }}"
+                                               class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                                               title="{{ __('Gerir ocupante e anexos') }}"
+                                               aria-label="{{ __('Gerir ocupante e anexos') }}">
+                                                <x-heroicon-o-pencil-square class="h-4 w-4 shrink-0" />
+                                            </a>
+                                        @endcan
+                                        @can('delete', $m)
+                                            <form action="{{ route($profile . '.locais.moradores.destroy', [$local, $m]) }}" method="post" class="inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit"
+                                                        data-confirm-message="{{ __('Excluir este registro de ocupante?') }}"
+                                                        class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm transition hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+                                                        title="{{ __('Excluir') }}"
+                                                        aria-label="{{ __('Excluir ocupante') }}">
+                                                    <x-heroicon-o-trash class="h-4 w-4 shrink-0" />
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="!p-0">
+                            <td colspan="{{ $perfilCampoLocais ? 9 : 8 }}" class="!p-0">
                                 <x-empty-state
                                     :title="__('Nenhum ocupante registrado neste imóvel.')"
                                     icon="heroicon-o-user-group"
