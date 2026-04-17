@@ -207,17 +207,17 @@
                 <h3 class="v-section-title">{{ __('Ficha socioeconômica do imóvel') }}</h3>
                 <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Ordem sugerida: secções 1 a 3 (entrevista e economia), ocupantes (4), características e histórico do imóvel (5 a 8) e anexos (9). Abra cada bloco conforme precisar.') }}</p>
 
-                <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                    @include('municipio.locais._form_socioeconomico_head', ['local' => null])
-                </div>
-
-                <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                    @include('municipio.locais._form_ocupantes')
-                </div>
-
-                <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
-                    <h3 class="v-section-title">{{ __('Imóvel, infraestrutura e posse') }}</h3>
-                    @include('municipio.locais._form_socioeconomico_tail', ['local' => null])
+                <div class="mt-2 divide-y divide-gray-200 dark:divide-gray-600">
+                    <div class="space-y-4 border-t border-gray-200 pt-6 dark:border-gray-600">
+                        @include('municipio.locais._form_socioeconomico_head', ['local' => null])
+                    </div>
+                    <div class="space-y-4 py-6">
+                        @include('municipio.locais._form_ocupantes')
+                    </div>
+                    <div class="space-y-4 pt-6">
+                        <h3 class="v-section-title">{{ __('Imóvel, infraestrutura e posse') }}</h3>
+                        @include('municipio.locais._form_socioeconomico_tail', ['local' => null])
+                    </div>
                 </div>
             </div>
 

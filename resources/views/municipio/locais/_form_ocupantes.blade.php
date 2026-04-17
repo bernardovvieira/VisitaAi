@@ -399,65 +399,6 @@
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-section-title">{{ __('Arquivos') }}</legend>
-                    <div class="sm:col-span-2" x-data="{
-                            fileSummary: '',
-                            openPicker() { this.$refs.documentoPessoal.click(); },
-                            updateName(event) {
-                                const files = event.target.files;
-                                if (!files || !files.length) { this.fileSummary = ''; return; }
-                                if (files.length === 1) { this.fileSummary = files[0].name; return; }
-                                this.fileSummary = files.length + ' {{ __('arquivos selecionados') }}';
-                            }
-                        }">
-                        <x-arquivos-zona
-                            variant="ocupante"
-                            :accent-border="false"
-                            :titulo="__('Arquivos deste ocupante')"
-                            :descricao="__('Anexe um ou mais arquivos por pessoa. PDF ou imagem, até 10 MB cada.')"
-                        >
-                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" x-show="(row.documentos_pessoais || []).length">{{ __('Arquivos já enviados') }}</p>
-                            <ul class="mb-3 space-y-2" x-show="(row.documentos_pessoais || []).length">
-                                <template x-for="doc in (row.documentos_pessoais || [])" :key="doc.id">
-                                    <li class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2.5 text-xs dark:border-slate-600 dark:bg-slate-800/60">
-                                        <span class="min-w-0 flex-1 break-all font-medium text-slate-800 dark:text-slate-100" x-text="doc.nome || '{{ __('Arquivo') }}'"></span>
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <a x-show="doc.download_url" :href="doc.download_url" target="_blank" rel="noopener"
-                                               class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">{{ __('Baixar') }}</a>
-                                            <label class="inline-flex shrink-0 items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                                                <input type="checkbox" class="rounded border-slate-300 text-red-600 focus:ring-red-500"
-                                                       x-bind:name="'ocupantes[' + idx + '][remover_documentos_pessoal][]'"
-                                                       :value="doc.id">
-                                                <span>{{ __('Remover') }}</span>
-                                            </label>
-                                        </div>
-                                    </li>
-                                </template>
-                            </ul>
-                            <div class="rounded-lg border border-dashed border-slate-200/90 bg-slate-50/50 p-3 dark:border-slate-600 dark:bg-slate-800/40">
-                                <x-input-label :value="__('Adicionar arquivos')" class="text-slate-800 dark:text-slate-200" />
-                                <input type="file"
-                                       x-ref="documentoPessoal"
-                                       x-bind:name="'ocupantes[' + idx + '][mor_documentos_pessoal][]'"
-                                       accept="image/*,application/pdf"
-                                       capture="environment"
-                                       multiple
-                                       class="sr-only"
-                                       @change="updateName($event)">
-                                <div class="mt-2 flex flex-wrap items-center gap-3">
-                                    <button type="button"
-                                            @click="openPicker()"
-                                            class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-                                        {{ __('Selecionar arquivo(s) ou tirar foto') }}
-                                    </button>
-                                    <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileSummary ? ('{{ __('Novo') }}: ' + fileSummary) : '{{ __('Nenhum arquivo selecionado') }}'"></span>
-                                </div>
-                            </div>
-                        </x-arquivos-zona>
-                    </div>
-                </fieldset>
-
-                <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
                     <legend class="v-section-title">{{ __('Perfil socioeconômico') }}</legend>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
@@ -521,6 +462,65 @@
                                 <option value="nao">{{ __('Não') }}</option>
                             </select>
                         </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
+                    <legend class="v-section-title">{{ __('Arquivos') }}</legend>
+                    <div class="sm:col-span-2" x-data="{
+                            fileSummary: '',
+                            openPicker() { this.$refs.documentoPessoal.click(); },
+                            updateName(event) {
+                                const files = event.target.files;
+                                if (!files || !files.length) { this.fileSummary = ''; return; }
+                                if (files.length === 1) { this.fileSummary = files[0].name; return; }
+                                this.fileSummary = files.length + ' {{ __('arquivos selecionados') }}';
+                            }
+                        }">
+                        <x-arquivos-zona
+                            variant="ocupante"
+                            :accent-border="false"
+                            :titulo="__('Arquivos deste ocupante')"
+                            :descricao="__('Anexe um ou mais arquivos por pessoa. PDF ou imagem, até 10 MB cada.')"
+                        >
+                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" x-show="(row.documentos_pessoais || []).length">{{ __('Arquivos já enviados') }}</p>
+                            <ul class="mb-3 space-y-2" x-show="(row.documentos_pessoais || []).length">
+                                <template x-for="doc in (row.documentos_pessoais || [])" :key="doc.id">
+                                    <li class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2.5 text-xs dark:border-slate-600 dark:bg-slate-800/60">
+                                        <span class="min-w-0 flex-1 break-all font-medium text-slate-800 dark:text-slate-100" x-text="doc.nome || '{{ __('Arquivo') }}'"></span>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <a x-show="doc.download_url" :href="doc.download_url" target="_blank" rel="noopener"
+                                               class="inline-flex shrink-0 items-center rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">{{ __('Baixar') }}</a>
+                                            <label class="inline-flex shrink-0 items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                                                <input type="checkbox" class="rounded border-slate-300 text-red-600 focus:ring-red-500"
+                                                       x-bind:name="'ocupantes[' + idx + '][remover_documentos_pessoal][]'"
+                                                       :value="doc.id">
+                                                <span>{{ __('Remover') }}</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                            <div class="rounded-lg border border-dashed border-slate-200/90 bg-slate-50/50 p-3 dark:border-slate-600 dark:bg-slate-800/40">
+                                <x-input-label :value="__('Adicionar arquivos')" class="text-slate-800 dark:text-slate-200" />
+                                <input type="file"
+                                       x-ref="documentoPessoal"
+                                       x-bind:name="'ocupantes[' + idx + '][mor_documentos_pessoal][]'"
+                                       accept="image/*,application/pdf"
+                                       capture="environment"
+                                       multiple
+                                       class="sr-only"
+                                       @change="updateName($event)">
+                                <div class="mt-2 flex flex-wrap items-center gap-3">
+                                    <button type="button"
+                                            @click="openPicker()"
+                                            class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                                        {{ __('Selecionar arquivo(s) ou tirar foto') }}
+                                    </button>
+                                    <span class="text-xs text-slate-600 dark:text-slate-400" x-text="fileSummary ? ('{{ __('Novo') }}: ' + fileSummary) : '{{ __('Nenhum arquivo selecionado') }}'"></span>
+                                </div>
+                            </div>
+                        </x-arquivos-zona>
                     </div>
                 </fieldset>
 
