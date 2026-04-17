@@ -83,7 +83,7 @@
                         <th scope="col">{{ __('Renda') }}</th>
                         <th scope="col">{{ __('Cor/raça') }}</th>
                         <th scope="col">{{ __('Trabalho') }}</th>
-                        <th scope="col" class="min-w-[10rem]">{{ __('Arquivos do ocupante') }}</th>
+                        <th scope="col" class="w-24 whitespace-nowrap text-center">{{ __('Anexos') }}</th>
                         @if($perfilCampoLocais)
                             <th scope="col" class="text-right">{{ __('Ações') }}</th>
                         @endif
@@ -106,25 +106,33 @@
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '' }}">{{ $m->mor_renda_faixa ? ($rendaOpcoes[$m->mor_renda_faixa] ?? $m->mor_renda_faixa) : '-' }}</td>
                             <td class="max-w-[9rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '' }}">{{ $m->mor_cor_raca ? ($corOpcoes[$m->mor_cor_raca] ?? $m->mor_cor_raca) : '-' }}</td>
                             <td class="max-w-[11rem] truncate text-slate-700 dark:text-slate-300" title="{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '' }}">{{ $m->mor_situacao_trabalho ? ($trabOpcoes[$m->mor_situacao_trabalho] ?? $m->mor_situacao_trabalho) : '-' }}</td>
-                            <td class="max-w-[15rem] align-top text-xs">
+                            <td class="align-middle text-center text-xs">
                                 @can('view', $m)
-                                    <div class="rounded-lg border border-slate-200/90 border-l-4 border-l-teal-500 bg-slate-50/80 p-2 dark:border-slate-600 dark:border-l-teal-400 dark:bg-slate-800/50">
-                                        @if($m->documentosPessoais->isEmpty())
-                                            <p class="text-center text-[11px] text-slate-500 dark:text-slate-400">{{ __('Sem anexos') }}</p>
-                                        @else
-                                            <ul class="space-y-1.5">
-                                                @foreach($m->documentosPessoais as $doc)
-                                                    <li class="min-w-0 rounded border border-slate-200/60 bg-white/90 px-2 py-1.5 dark:border-slate-600 dark:bg-slate-900/60">
-                                                        <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $m, $doc]) }}"
-                                                           class="inline-flex max-w-full items-center gap-1 break-all font-medium text-sky-800 hover:text-sky-950 dark:text-sky-200 dark:hover:text-sky-50">
-                                                            <x-heroicon-o-arrow-down-tray class="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                                                            <span class="min-w-0">{{ $doc->original_name ?: __('Arquivo') }}</span>
-                                                        </a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    </div>
+                                    @if($m->documentosPessoais->isEmpty())
+                                        <span class="text-slate-400 dark:text-slate-500" title="{{ __('Sem anexos') }}">—</span>
+                                    @else
+                                        <details class="relative inline-block text-left">
+                                            <summary class="inline-flex cursor-pointer list-none items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-700 [&::-webkit-details-marker]:hidden">
+                                                <x-heroicon-o-document-text class="h-4 w-4 shrink-0" aria-hidden="true" />
+                                                <span class="min-w-[1.1rem] rounded-full bg-slate-100 px-1 text-[10px] font-bold tabular-nums text-slate-700 dark:bg-slate-700 dark:text-slate-200">{{ $m->documentosPessoais->count() }}</span>
+                                                <span class="sr-only">{{ __('Ver documentos do ocupante') }}</span>
+                                            </summary>
+                                            <div class="absolute right-0 z-30 mt-1 w-[min(18rem,calc(100vw-2rem))] min-w-[12rem] rounded-lg border border-slate-200 bg-white py-2 shadow-lg ring-1 ring-slate-900/5 dark:border-slate-600 dark:bg-slate-900 dark:ring-white/10">
+                                                <p class="border-b border-slate-100 px-3 pb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:text-slate-400">{{ __('Documentos') }}</p>
+                                                <ul class="max-h-60 overflow-y-auto px-2 pt-1">
+                                                    @foreach($m->documentosPessoais as $doc)
+                                                        <li class="min-w-0">
+                                                            <a href="{{ route($profile . '.locais.moradores.documento-pessoal', [$local, $m, $doc]) }}"
+                                                               class="flex items-start gap-2 rounded-md px-2 py-1.5 text-left text-xs font-medium text-sky-800 hover:bg-slate-50 dark:text-sky-200 dark:hover:bg-slate-800/80">
+                                                                <x-heroicon-o-arrow-down-tray class="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                                                                <span class="min-w-0 break-words">{{ $doc->original_name ?: __('Arquivo') }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </details>
+                                    @endif
                                 @endcan
                             </td>
                             @if($perfilCampoLocais)

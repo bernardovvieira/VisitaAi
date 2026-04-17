@@ -1,18 +1,22 @@
 {{--
     Zona visual unificada para anexos do imóvel (posse) ou do ocupante — cadastro, edição e consulta.
-    Props: titulo (obrigatório), descricao (opcional), variant: imovel | ocupante
+    Props: titulo (obrigatório), descricao (opcional), variant: imovel | ocupante, accentBorder (borda lateral colorida)
 --}}
 @props([
     'titulo',
     'descricao' => null,
     'variant' => 'imovel',
+    'accentBorder' => true,
 ])
 
 @php
-    $accent = $variant === 'ocupante'
-        ? 'border-l-teal-500 dark:border-l-teal-400'
-        : 'border-l-amber-600 dark:border-l-amber-500';
-    $frame = 'overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-sm ring-1 ring-slate-900/5 dark:border-slate-700/90 dark:bg-slate-900/60 dark:ring-white/5 border-l-4 '.$accent;
+    $frame = 'overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-sm ring-1 ring-slate-900/5 dark:border-slate-700/90 dark:bg-slate-900/60 dark:ring-white/5';
+    if ($accentBorder) {
+        $accent = $variant === 'ocupante'
+            ? 'border-l-teal-500 dark:border-l-teal-400'
+            : 'border-l-amber-600 dark:border-l-amber-500';
+        $frame .= ' border-l-4 '.$accent;
+    }
 @endphp
 
 <div {{ $attributes->class($frame) }}>

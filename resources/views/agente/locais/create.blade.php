@@ -205,7 +205,7 @@
 
             <div class="mt-8 space-y-4 border-t border-slate-200/90 pt-8 dark:border-slate-700">
                 <h3 class="v-section-title">{{ __('Ficha socioeconômica do imóvel') }}</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Ordem sugerida: secções 1 a 3 (entrevista e economia), ocupantes (4), depois imóvel e histórico (5 a 8). Abra cada bloco conforme precisar.') }}</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('Ordem sugerida: secções 1 a 3 (entrevista e economia), ocupantes (4), características e histórico do imóvel (5 a 8) e anexos (9). Abra cada bloco conforme precisar.') }}</p>
 
                 <div class="space-y-4 border-t border-gray-200 pt-6 mt-2 dark:border-gray-600">
                     @include('municipio.locais._form_socioeconomico_head', ['local' => null])

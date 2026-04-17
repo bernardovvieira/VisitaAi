@@ -259,7 +259,7 @@
 </div>
 
 <div class="panel section">
-    <h2>{{ $titulos['finalizacao'] ?? '9. Finalização' }}</h2>
+    <h2>{{ $titulos['finalizacao'] ?? '10. Finalização' }}</h2>
     <table class="compact">
         <tr><th>{{ __('Local e data (texto)') }}</th><td>{{ $s?->lse_local_data_assinatura ?? '-' }}</td></tr>
     </table>

@@ -142,8 +142,8 @@
     </fieldset>
 
     <fieldset class="space-y-4 rounded-lg border border-slate-200 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
-        <legend class="px-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Identificação e arquivos') }}</legend>
-        <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('RG, CPF e anexos (digitalizações, fotos, PDF).') }}</p>
+        <legend class="px-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Identificação') }}</legend>
+        <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('RG e CPF informados no cadastro (números e datas).') }}</p>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
                 <x-form-field name="mor_rg_numero" :label="__('RG (número)')">
@@ -166,7 +166,11 @@
                 </x-form-field>
             </div>
         </div>
-        <div class="mt-4" x-data="{
+    </fieldset>
+
+    <fieldset class="space-y-4 rounded-lg border border-slate-200 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-900/30">
+        <legend class="px-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{{ __('Arquivos') }}</legend>
+        <div x-data="{
                 fileSummary: '',
                 openPicker() { this.$refs.documentoPessoal.click(); },
                 updateName(event) {
@@ -178,8 +182,9 @@
              }">
             <x-arquivos-zona
                 variant="ocupante"
+                :accent-border="false"
                 :titulo="__('Arquivos deste ocupante')"
-                :descricao="__('Um ou mais arquivos: PDF, JPG, PNG, WEBP ou HEIC. Até 10 MB cada.')"
+                :descricao="__('Anexe um ou mais arquivos por pessoa. PDF ou imagem, até 10 MB cada.')"
             >
                 @if($morador->exists && $morador->documentosPessoais->isNotEmpty())
                     <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ __('Arquivos já enviados') }}</p>

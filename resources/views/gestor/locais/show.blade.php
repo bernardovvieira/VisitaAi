@@ -37,6 +37,7 @@
         'qrCodeMime' => $qrCodeMime,
         'fichaPdfUrl' => route('gestor.locais.ficha-socioeconomica-pdf', $local),
         'moradorResumo' => $moradorResumo,
+        'arquivosZonaSemBordaLateral' => true,
     ])
 </div>
 @endsection

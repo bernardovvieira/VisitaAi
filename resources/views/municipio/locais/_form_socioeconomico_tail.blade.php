@@ -1,4 +1,4 @@
-{{-- Ficha socioeconômica: imóvel, físico, infra, terreno, histórico, finalização --}}
+{{-- Ficha socioeconômica: imóvel (5), infra (6), terreno (7), histórico (8), arquivos do imóvel (9) --}}
 @php
     /** @var \App\Models\Local|null $local */
     $sf = old('socio');
@@ -36,9 +36,6 @@
                     <option value="{{ $k }}" @selected($sv('situacao_posse') === $k)>{{ $lab }}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="sm:col-span-2 mt-3">
-            @include('municipio.locais._form_local_documento_posse', ['local' => $local ?? null])
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Tipologia') }}</label>
@@ -325,6 +322,18 @@ document.addEventListener('DOMContentLoaded', function () {
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">{{ __('Situação legal (observações)') }}</label>
             <textarea name="socio[situacao_legal_obs]" rows="2" class="v-input mt-1 w-full">{{ $sv('situacao_legal_obs') }}</textarea>
         </div>
+    </div>
+</x-ui.disclosure>
+
+<x-ui.disclosure variant="muted-card-simple" :open="false" accordionGroup="ficha-socio">
+    <x-slot name="summary">
+        <span class="border-b border-dotted border-slate-400 pb-px dark:border-slate-500">{{ $t['arquivos_imovel'] ?? __('9. Arquivos do imóvel') }}</span>
+    </x-slot>
+    <div class="space-y-3">
+        @include('municipio.locais._form_local_documento_posse', [
+            'local' => $local ?? null,
+            'accentBorderArquivosImovel' => false,
+        ])
     </div>
 </x-ui.disclosure>
 

@@ -5,12 +5,14 @@
     $docs = ($local && $local->exists)
         ? $local->documentosPosse
         : collect();
+    $accentBorderArquivosImovel = filter_var($accentBorderArquivosImovel ?? false, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
 <x-arquivos-zona
     variant="imovel"
-    :titulo="__('Arquivos do imóvel (posse)')"
-    :descricao="__('Contrato, matrícula, escritura ou outro comprovativo. PDF ou imagem, até 10 MB por arquivo. Pode anexar vários.')"
+    :accent-border="$accentBorderArquivosImovel"
+    :titulo="__('Arquivos do imóvel')"
+    :descricao="__('Comprovantes de posse, área do terreno, laudos, fotos ou outros arquivos. PDF ou imagem, até 10 MB por arquivo. Pode anexar vários.')"
     class="mt-1"
 >
     <div class="space-y-3"

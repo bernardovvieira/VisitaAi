@@ -376,8 +376,8 @@
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-section-title">{{ __('Identificação e arquivos do ocupante') }}</legend>
-                    <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('RG, CPF e anexos (RG digital, comprovantes, fotos, PDF).') }}</p>
+                    <legend class="v-section-title">{{ __('Identificação') }}</legend>
+                    <p class="text-xs text-slate-600 dark:text-slate-400">{{ __('RG e CPF informados no cadastro (números e datas).') }}</p>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                             <x-input-label :value="__('CPF')" />
@@ -396,7 +396,11 @@
                             <input type="date" x-bind:name="'ocupantes[' + idx + '][mor_rg_expedicao]'" x-model="row.mor_rg_expedicao" class="v-input mt-1 w-full">
                         </div>
                     </div>
-                    <div class="sm:col-span-2 mt-3" x-data="{
+                </fieldset>
+
+                <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
+                    <legend class="v-section-title">{{ __('Arquivos') }}</legend>
+                    <div class="sm:col-span-2" x-data="{
                             fileSummary: '',
                             openPicker() { this.$refs.documentoPessoal.click(); },
                             updateName(event) {
@@ -408,6 +412,7 @@
                         }">
                         <x-arquivos-zona
                             variant="ocupante"
+                            :accent-border="false"
                             :titulo="__('Arquivos deste ocupante')"
                             :descricao="__('Anexe um ou mais arquivos por pessoa. PDF ou imagem, até 10 MB cada.')"
                         >

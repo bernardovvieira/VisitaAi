@@ -42,7 +42,7 @@
             default => null,
         };
         if ($legivel === null) {
-            return [__('Ficheiro anexado'), $mimeNorm];
+            return [__('Arquivo anexado'), $mimeNorm];
         }
 
         return [$legivel, null];
@@ -168,43 +168,6 @@
     <div class="mt-5">
         @include('municipio.moradores._resumo-local', ['local' => $local, 'moradorResumo' => $moradorResumo])
     </div>
-@endif
-
-@if($local->relationLoaded('moradores'))
-    @php
-        $moradoresComDocs = $local->moradores->filter(fn ($mor) => $mor->documentosPessoais && $mor->documentosPessoais->isNotEmpty());
-    @endphp
-    @if($moradoresComDocs->isNotEmpty())
-        <x-section-card class="mt-5 space-y-4">
-            <div>
-                <h2 class="v-section-title">{{ __('Arquivos por ocupante') }}</h2>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ __('Cada bloco corresponde a uma pessoa cadastrada no imóvel. Use os links para descarregar os anexos.') }}</p>
-            </div>
-            <div class="space-y-4">
-                @foreach($moradoresComDocs as $mor)
-                    @can('view', $mor)
-                        <x-arquivos-zona
-                            variant="ocupante"
-                            :titulo="$mor->mor_nome ?: __('Ocupante #:id', ['id' => $mor->mor_id])"
-                            :descricao="__('Arquivos pessoais anexados a este cadastro.')"
-                        >
-                            <ul class="space-y-2">
-                                @foreach($mor->documentosPessoais as $docMor)
-                                    <li class="rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2 dark:border-slate-600 dark:bg-slate-800/50">
-                                        <a href="{{ route($rp.'.locais.moradores.documento-pessoal', [$local, $mor, $docMor]) }}"
-                                           class="inline-flex w-full min-w-0 items-center gap-2 break-all text-sm font-medium text-sky-800 hover:text-sky-950 dark:text-sky-200 dark:hover:text-sky-50">
-                                            <x-heroicon-o-arrow-down-tray class="h-4 w-4 shrink-0" aria-hidden="true" />
-                                            <span class="min-w-0">{{ $docMor->original_name ?: __('Arquivo') }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </x-arquivos-zona>
-                    @endcan
-                @endforeach
-            </div>
-        </x-section-card>
-    @endif
 @endif
 
 @php
@@ -377,8 +340,9 @@
 <div class="mt-5">
     <x-arquivos-zona
         variant="imovel"
-        :titulo="__('Arquivos do imóvel (posse)')"
-        :descricao="__('Contrato, matrícula, escritura ou outro comprovativo enviado no cadastro territorial.')"
+        :accent-border="! ($arquivosZonaSemBordaLateral ?? false)"
+        :titulo="__('Arquivos do imóvel')"
+        :descricao="__('Comprovantes de posse, área do terreno, laudos, fotos ou outros arquivos ligados ao cadastro territorial do imóvel.')"
     >
         @if($documentosPosse->isNotEmpty())
             <ul class="space-y-3">
@@ -408,7 +372,7 @@
             </ul>
         @else
             <div class="rounded-lg border border-dashed border-slate-200/90 bg-slate-50/60 py-6 text-center text-sm text-slate-600 dark:border-slate-600 dark:bg-slate-800/40 dark:text-slate-400">
-                {{ __('Nenhum arquivo de posse foi anexado a este imóvel.') }}
+                {{ __('Nenhum arquivo foi anexado a este imóvel.') }}
             </div>
         @endif
     </x-arquivos-zona>

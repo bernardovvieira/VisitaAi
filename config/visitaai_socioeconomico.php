@@ -222,7 +222,8 @@ return [
         'infraestrutura' => '6. Infraestrutura e serviços',
         'terreno' => '7. Terreno e uso',
         'historico' => '8. Histórico da posse',
-        'finalizacao' => '9. Finalização',
+        'arquivos_imovel' => '9. Arquivos do imóvel',
+        'finalizacao' => '10. Finalização',
         'moradores' => 'Composição familiar: cada morador',
     ],
 
