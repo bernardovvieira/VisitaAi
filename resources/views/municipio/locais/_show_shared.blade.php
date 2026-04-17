@@ -340,7 +340,7 @@
 <div class="mt-5">
     <x-arquivos-zona
         variant="imovel"
-        :accent-border="! ($arquivosZonaSemBordaLateral ?? false)"
+        :accent-border="false"
         :titulo="__('Arquivos do imóvel')"
         :descricao="__('Comprovantes de posse, área do terreno, laudos, fotos ou outros arquivos ligados ao cadastro territorial do imóvel.')"
     >

@@ -466,7 +466,7 @@
                 </fieldset>
 
                 <fieldset class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-                    <legend class="v-section-title border-l-4 border-l-sky-600 pl-3 dark:border-l-sky-400">{{ __('Observações') }}</legend>
+                    <legend class="v-section-title">{{ __('Observações') }}</legend>
                     <textarea x-bind:name="'ocupantes[' + idx + '][mor_observacao]'" x-model="row.mor_observacao" rows="2" class="v-input mt-1 w-full" placeholder="{{ __('Notas sobre este ocupante (opcional)') }}"></textarea>
                 </fieldset>
 
