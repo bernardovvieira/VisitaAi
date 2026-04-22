@@ -2,12 +2,20 @@ name: Tests
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, develop]
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  php:
+  test:
+    name: PHP · ESLint · E2E
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,29 +24,52 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, openssl, intl, fileinfo, opcache, sodium, gd, exif
           coverage: none
+          tools: composer:v2
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: PHPUnit (Feature + Unit)
+      - name: PHPUnit
         run: php artisan test
+        env:
+          CI: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install Node dependencies
         run: npm ci
 
-      - name: ESLint (JS + E2E)
+      - name: ESLint
         run: npm run lint
+
+      - name: Build frontend (Vite)
+        run: npm run build
+        env:
+          CI: true
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
       - name: Playwright (E2E)
         run: npm run test:e2e
+        env:
+          CI: true

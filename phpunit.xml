@@ -19,6 +19,8 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <!-- Chave fixa de teste (CI/local); nunca use em produção. Alinhada a playwright.config.ts (E2E). -->
+        <env name="APP_KEY" value="base64:/eBG7nbmDvQwnBN7VNsU+4YJmvW8aYK5XzmGXTxJ3dg="/>
         <env name="APP_URL" value="http://localhost"/>
         <env name="CACHE_STORE" value="array"/>
 
