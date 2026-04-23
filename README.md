@@ -272,6 +272,18 @@ Cada município tem **o seu recurso** no Coolify: **mesma branch Git**, **URL pr
 
 `Dockerfile` + `entrypoint.sh`: build Vite + PHP-FPM. O `entrypoint.sh` corre `migrate`, `route:clear` e `config:clear` ao arrancar. O `docker-compose.yml` do repo sobe **só MySQL** para dev local.
 
+#### Backup de banco (configurável)
+
+Há suporte para rotina de backup MySQL por script, com envio por e-mail e agendamento via cron/Coolify:
+
+- Script: `scripts/backup/mysql_dump_email.sh`
+- Guia de configuração: `scripts/backup/README.md`
+
+Recomendação operacional para produção:
+- manter uma rotina por instância/cliente (ex.: `demo`, município A, município B);
+- usar retenção local + cópia remota (S3/Backblaze/Wasabi) quando possível;
+- validar restauração periodicamente em ambiente isolado.
+
 #### Post-deploy: migrations e seeds
 
 **Importante:** não use `migrate:fresh` no post-deploy de produção: toda subida de build apagaria o banco. Use apenas migrações incrementais.
